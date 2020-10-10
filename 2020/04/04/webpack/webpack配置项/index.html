@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    webpack配置项 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-webpack/webpack配置项" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  webpack配置项
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/04/webpack/webpack%E9%85%8D%E7%BD%AE%E9%A1%B9/" class="article-date">
+  <time datetime="2020-04-04T12:27:31.000Z" itemprop="datePublished">2020-04-04</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/webpack/">webpack</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.5k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">10分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>webpack 是需要传入一个配置对象。</p>
+<p>整个配置中我们使用 Node 内置的<code>path</code>模块，并在它前面加上<code>__dirname</code>这个全局变量。可以防止不同操作系统之间的文件路径问题，并且可以使相对路径按照预期工作。</p>
+<h1 id="模式-mode"><a href="#模式-mode" class="headerlink" title="模式(mode)"></a>模式(mode)</h1><p><code>mode</code>配置选项用来指定当前的构建环境。<br>设置<code>mode</code>可以使用 webpack 内置的函数，默认值为<code>production</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">"production"</span> <span class="comment">// production | development | none</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>development</code></td>
+<td align="left">会将<code>process.env.NODE_ENV</code>的值设为<code>development</code>。启用<code>NamedChunksPlugin</code>和<code>NamedModulesPlugin</code>。</td>
+</tr>
+<tr>
+<td align="center"><code>production</code></td>
+<td align="left">会将<code>process.env.NODE_ENV</code>的值设为<code>production</code>。启用<code>FlagDependencyUsagePlugin</code>，<code>FlagIncludedChunksPlugin</code>，<code>ModuleConcatenationPlugin</code>，<code>NoEmitOnErrorsPlugin</code>，<code>OccurrenceOrderPlugin</code>，<code>SideEffectsFlagPlugin</code>和<code>UglifyJsPlugin</code>。</td>
+</tr>
+<tr>
+<td align="center"><code>none</code></td>
+<td align="left">不开启任何优化选项</td>
+</tr>
+</tbody></table>
+<h1 id="入口-entry"><a href="#入口-entry" class="headerlink" title="入口(entry)"></a>入口(entry)</h1><p><code>entry</code>用来指定 webpack 的打包入口。<br>简单规则：每个 HTML 页面都有一个入口起点。单页应用(SPA)：一个入口起点，多页应用(MPA)：多个入口起点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">"./app/entry"</span>, <span class="comment">// string | object | array</span></span><br><span class="line">  <span class="comment">// 如果传递一个数组，那么数组的每一项都会执行</span></span><br><span class="line">  entry: [<span class="string">"./app/entry1"</span>, <span class="string">"./app/entry2"</span>],</span><br><span class="line">  entry: &#123;</span><br><span class="line">    a: <span class="string">"./app/entry-a"</span>,</span><br><span class="line">    b: [<span class="string">"./app/entry-b1"</span>, <span class="string">"./app/entry-b2"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果传入一个字符串或字符串数组，<code>chunk</code>会被命名为<code>main</code>。如果传入一个对象，则每个键(<code>key</code>)会是<code>chunk</code>的名称，该值描述了<code>chunk</code>的入口起点。</p>
+<h1 id="输出-output"><a href="#输出-output" class="headerlink" title="输出(output)"></a>输出(output)</h1><p><code>output</code>用来告诉 webpack 如何将编译后的文件输出到磁盘。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    <span class="comment">// webpack 如何输出结果的相关选项</span></span><br><span class="line">    path: path.resolve(__dirname, <span class="string">"dist"</span>), <span class="comment">// string</span></span><br><span class="line">    <span class="comment">// 所有输出文件的目标路径</span></span><br><span class="line">    <span class="comment">// 必须是绝对路径（使用 Node.js 的 path 模块）</span></span><br><span class="line"></span><br><span class="line">    filename: <span class="string">"bundle.js"</span>, <span class="comment">// string</span></span><br><span class="line">    filename: <span class="string">"[name].js"</span>, <span class="comment">// 用于多个入口点</span></span><br><span class="line">    filename: <span class="string">"[chunkhash].js"</span>, <span class="comment">// 用于长效缓存</span></span><br><span class="line">    <span class="comment">// 「入口分块(entry chunk)」的文件名模板</span></span><br><span class="line"></span><br><span class="line">    publicPath: <span class="string">"/assets/"</span>, <span class="comment">// string</span></span><br><span class="line">    publicPath: <span class="string">""</span>,</span><br><span class="line">    publicPath: <span class="string">"https://cdn.example.com/"</span>,</span><br><span class="line">    <span class="comment">// 输出解析文件的目录，url 相对于 HTML 页面</span></span><br><span class="line"></span><br><span class="line">    library: <span class="string">"MyLibrary"</span>, <span class="comment">// string, 导出库(exported library)的名称</span></span><br><span class="line"></span><br><span class="line">    libraryTarget: <span class="string">"umd"</span>, <span class="comment">// 通用模块定义</span></span><br><span class="line">        libraryTarget: <span class="string">"umd2"</span>, <span class="comment">// 通用模块定义</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs2"</span>, <span class="comment">// exported with module.exports</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs-module"</span>, <span class="comment">// 使用 module.exports 导出</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs"</span>, <span class="comment">// 作为 exports 的属性导出</span></span><br><span class="line">        libraryTarget: <span class="string">"amd"</span>, <span class="comment">// 使用 AMD 定义方法来定义</span></span><br><span class="line">        libraryTarget: <span class="string">"this"</span>, <span class="comment">// 在 this 上设置属性</span></span><br><span class="line">        libraryTarget: <span class="string">"var"</span>, <span class="comment">// 变量定义于根作用域下</span></span><br><span class="line">        libraryTarget: <span class="string">"assign"</span>, <span class="comment">// 盲分配(blind assignment)</span></span><br><span class="line">        libraryTarget: <span class="string">"window"</span>, <span class="comment">// 在 window 对象上设置属性</span></span><br><span class="line">        libraryTarget: <span class="string">"global"</span>, <span class="comment">// property set to global object</span></span><br><span class="line">        libraryTarget: <span class="string">"jsonp"</span>, <span class="comment">// jsonp wrapper</span></span><br><span class="line">    <span class="comment">// 导出库(exported library)的类型</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="output-path"><a href="#output-path" class="headerlink" title="output.path"></a>output.path</h2><p><code>output</code>目录对应一个绝对路径。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path: path.resolve(__dirname, <span class="string">'dist/assets'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="output-filename"><a href="#output-filename" class="headerlink" title="output.filename"></a>output.filename</h2><p>此选项决定了每个输出<code>bundle</code>的名称。这些<code>bundle</code>将写入到<code>output.path</code>选项指定的目录下。</p>
+<p>对于单个入口起点，<code>filename</code>会是一个静态名称。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename: <span class="string">"bundle.js"</span></span><br></pre></td></tr></table></figure>
+<p>然而，当通过多个入口起点、代码拆分或各种插件创建多个<code>bundle</code>，应该使用以下一种替换方式，来赋予每个<code>bundle</code>一个唯一的名称。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用入口名称：</span></span><br><span class="line">filename: <span class="string">"[name].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用内部chunk id</span></span><br><span class="line">filename: <span class="string">"[id].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用每次构建过程中，唯一的 hash 生成</span></span><br><span class="line">filename: <span class="string">"[name].[hash].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用基于每个 chunk 内容的 hash：</span></span><br><span class="line">filename: <span class="string">"[chunkhash].bundle.js"</span></span><br></pre></td></tr></table></figure>
+<p>可以使用以下替换模板字符串：</p>
+<table>
+<thead>
+<tr>
+<th align="center">模板</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>[hash]</code></td>
+<td align="center">模块标识符的<code>hash</code></td>
+</tr>
+<tr>
+<td align="center"><code>[chunkhash]</code></td>
+<td align="center"><code>chunk</code>内容的<code>hash</code></td>
+</tr>
+<tr>
+<td align="center"><code>[name]</code></td>
+<td align="center">模块名称</td>
+</tr>
+<tr>
+<td align="center"><code>[id]</code></td>
+<td align="center">模块标识符</td>
+</tr>
+<tr>
+<td align="center"><code>[query]</code></td>
+<td align="center">模块的<code>query</code>，例如，文件名<code>?</code>后面的字符串</td>
+</tr>
+</tbody></table>
+<p><code>[hash]</code>和<code>[chunkhash]</code>的长度可以使用<code>[hash:16]</code>（默认为20）来指定。</p>
+<h2 id="output-publicPath"><a href="#output-publicPath" class="headerlink" title="output.publicPath"></a>output.publicPath</h2><p>对于按需加载或加载外部资源（如图片、文件等）来说，<code>output.publicPath</code>是很重要的选项。如果指定了一个错误的值，则在加载这些资源时会收到 404 错误。</p>
+<p>此选项指定在浏览器中所引用的「此输出目录对应的公开 URL」。相对 URL会被相对于 HTML 页面（或<code>&lt;base&gt;</code>标签）解析。相对于服务的 URL，相对于协议的 URL或绝对 URL 也可是可能用到的，或者有时必须用到，例如：当将资源托管到 CDN 时。</p>
+<p>该选项的值是以<code>runtime</code>(运行时) 或<code>loader</code>(载入时) 所创建的每个 URL 为前缀。因此，在多数情况下，此选项的值都会以<code>/</code>结束。</p>
+<p>默认值是一个空字符串<code>&quot;&quot;</code>。</p>
+<p>简单规则如下：<code>output.path</code>中的 URL 以 HTML 页面为基准。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path: path.resolve(__dirname, <span class="string">"public/assets"</span>),</span><br><span class="line">publicPath: <span class="string">"https://cdn.example.com/assets/"</span></span><br></pre></td></tr></table></figure>
+<p>对于这个配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">publicPath: <span class="string">"/assets/"</span>,</span><br><span class="line">chunkFilename: <span class="string">"[id].chunk.js"</span></span><br></pre></td></tr></table></figure>
+<p>对于一个<code>chunk</code>请求，看起来像这样<code>/assets/4.chunk.js</code>。</p>
+<p>对于一个输出 HTML 的<code>loader</code>可能会像这样输出：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"/assets/spinner.gif"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>或者在加载 CSS 的一个图片时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">background-image: url(&#x2F;assets&#x2F;spinner.gif);</span><br></pre></td></tr></table></figure>
+<p><code>webpack-dev-server</code>也会默认从<code>publicPath</code>为基准，使用它来决定在哪个目录下启用服务，来访问 webpack 输出的文件。</p>
+<p>注意，参数中的<code>[hash]</code>将会被替换为编译过程的<code>hash</code>。</p>
+<p>示例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">publicPath: <span class="string">"https://cdn.example.com/assets/"</span>, <span class="comment">// CDN（总是 HTTPS 协议）</span></span><br><span class="line">publicPath: <span class="string">"//cdn.example.com/assets/"</span>, <span class="comment">// CDN (协议相同)</span></span><br><span class="line">publicPath: <span class="string">"/assets/"</span>, <span class="comment">// 相对于服务</span></span><br><span class="line">publicPath: <span class="string">"assets/"</span>, <span class="comment">// 相对于 HTML 页面</span></span><br><span class="line">publicPath: <span class="string">"../assets/"</span>, <span class="comment">// 相对于 HTML 页面</span></span><br><span class="line">publicPath: <span class="string">""</span>, <span class="comment">// 相对于 HTML 页面（目录相同）</span></span><br></pre></td></tr></table></figure>
+<h1 id="模块-module"><a href="#模块-module" class="headerlink" title="模块(module)"></a>模块(module)</h1><p>这些选项决定了如何处理项目中的不同类型的模块。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    <span class="comment">// 关于模块配置</span></span><br><span class="line">    rules: [</span><br><span class="line">      <span class="comment">// 模块规则（配置 loader、解析器等选项）</span></span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.jsx?$/</span>,</span><br><span class="line">        include: [</span><br><span class="line">          path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">        ],</span><br><span class="line">        exclude: [</span><br><span class="line">          path.resolve(__dirname, <span class="string">"app/demo-files"</span>)</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment">// 这里是匹配条件，每个选项都接收一个正则表达式或字符串</span></span><br><span class="line">        <span class="comment">// test 和 include 具有相同的作用，都是必须匹配选项</span></span><br><span class="line">        <span class="comment">// exclude 是必不匹配选项（优先于 test 和 include）</span></span><br><span class="line">        <span class="comment">// 最佳实践：</span></span><br><span class="line">        <span class="comment">// - 只在 test 和 文件名匹配 中使用正则表达式</span></span><br><span class="line">        <span class="comment">// - 在 include 和 exclude 中使用绝对路径数组</span></span><br><span class="line">        <span class="comment">// - 尽量避免 exclude，更倾向于使用 include</span></span><br><span class="line"></span><br><span class="line">        loader: <span class="string">"babel-loader"</span>,</span><br><span class="line">        <span class="comment">// 应该应用的 loader，它相对上下文解析</span></span><br><span class="line"></span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [<span class="string">"es2015"</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// loader 的可选项</span></span><br><span class="line">      &#125;,</span><br><span class="line"></span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.html$/</span>,</span><br><span class="line">        test: <span class="string">"\.html$"</span></span><br><span class="line"></span><br><span class="line">        use: [</span><br><span class="line">          <span class="comment">// 应用多个 loader 和选项</span></span><br><span class="line">          <span class="string">"htmllint-loader"</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            loader: <span class="string">"html-loader"</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">              <span class="comment">/* ... */</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    noParse: [</span><br><span class="line">      /special-library\.js$/</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 不解析这里的模块</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="module-rules"><a href="#module-rules" class="headerlink" title="module.rules"></a>module.rules</h2><p>创建模块时，匹配请求的规则数组。这些规则能够修改模块的创建方式。这些规则能够对模块应用<code>loader</code>，或者修改解析器。</p>
+<h2 id="module-noParse"><a href="#module-noParse" class="headerlink" title="module.noParse"></a>module.noParse</h2><p>防止 webpack 解析那些任何与给定正则表达式相匹配的文件。忽略的文件中不应该含有<code>import, require, define</code>的调用，或任何其他导入机制。忽略大型的<code>library</code>可以提高构建性能。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">noParse: <span class="regexp">/jquery|lodash/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 webpack 3.0.0 开始</span></span><br><span class="line">noParse: <span class="function"><span class="keyword">function</span>(<span class="params">content</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="regexp">/jquery|lodash/</span>.test(content);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="解析-resolve"><a href="#解析-resolve" class="headerlink" title="解析(resolve)"></a>解析(resolve)</h1><p>这些选项能设置模块如何被解析。例如，当调用<code>import &quot;lodash&quot;</code>，<code>resolve</code>选项能够对 webpack 查找<code>lodash</code>的方式去做修改。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    <span class="comment">// 解析模块请求的选项</span></span><br><span class="line">    <span class="comment">// （不适用于对 loader 解析）</span></span><br><span class="line"></span><br><span class="line">    modules: [</span><br><span class="line">      <span class="string">"node_modules"</span>,</span><br><span class="line">      path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 用于查找模块的目录</span></span><br><span class="line"></span><br><span class="line">    extensions: [<span class="string">".js"</span>, <span class="string">".json"</span>, <span class="string">".jsx"</span>, <span class="string">".css"</span>],</span><br><span class="line">    <span class="comment">// 使用的扩展名</span></span><br><span class="line"></span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="comment">// 模块别名列表</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"module"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">      <span class="comment">// 起别名："module" -&gt; "new-module" 和 "module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"only-module$"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">      <span class="comment">// 起别名 "only-module" -&gt; "new-module"，但不匹配 "only-module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"module"</span>: path.resolve(__dirname, <span class="string">"app/third/module.js"</span>),</span><br><span class="line">      <span class="comment">// 起别名 "module" -&gt; "./app/third/module.js" 和 "module/file" 会导致错误</span></span><br><span class="line">      <span class="comment">// 模块别名相对于当前上下文导入</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="resolve-alias"><a href="#resolve-alias" class="headerlink" title="resolve.alias"></a>resolve.alias</h2><p>创建<code>import</code>或<code>require</code>的别名，来确保模块引入变得更简单。例如，一些位于<code>src/</code>文件夹下的常用模块：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">  Utilities: path.resolve(__dirname, <span class="string">'src/utilities/'</span>),</span><br><span class="line">  Templates: path.resolve(__dirname, <span class="string">'src/templates/'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，替换「在导入时使用相对路径」这种方式，就像这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Utility <span class="keyword">from</span> <span class="string">'../../utilities/utility'</span>;</span><br></pre></td></tr></table></figure>
+<p>你可以这样使用别名：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Utility <span class="keyword">from</span> <span class="string">'Utilities/utility'</span>;</span><br></pre></td></tr></table></figure>
+<p>也可以在给定对象的键后的末尾添加<code>$</code>，以表示精准匹配：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">  xyz$: path.resolve(__dirname, <span class="string">'path/to/file.js'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这将产生以下结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Test1 <span class="keyword">from</span> <span class="string">'xyz'</span>; <span class="comment">// 精确匹配，所以 path/to/file.js 被解析和导入</span></span><br><span class="line"><span class="keyword">import</span> Test2 <span class="keyword">from</span> <span class="string">'xyz/file.js'</span>; <span class="comment">// 非精确匹配，触发普通解析</span></span><br></pre></td></tr></table></figure>
+<h2 id="resolve-extensions"><a href="#resolve-extensions" class="headerlink" title="resolve.extensions"></a>resolve.extensions</h2><p>自动解析确定的扩展。默认值为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extensions: [<span class="string">".js"</span>, <span class="string">".json"</span>]</span><br></pre></td></tr></table></figure>
+<p>能够使用户在引入模块时不带扩展：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> File <span class="keyword">from</span> <span class="string">'../path/to/file'</span></span><br></pre></td></tr></table></figure>
+<p>使用此选项，会覆盖默认数组，这就意味着 webpack 将不再尝试使用默认扩展来解析模块。对于使用其扩展导入的模块，例如，<code>import SomeFile from &quot;./somefile.ext&quot;</code>，要想正确的解析，一个包含“*”的字符串必须包含在数组中。</p>
+<h1 id="devtool"><a href="#devtool" class="headerlink" title="devtool"></a>devtool</h1><p>此选项控制是否生成，以及如何生成<code>source map</code>。</p>
+<p>使用<code>SourceMapDevToolPlugin</code>进行更细粒度的配置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  devtool: <span class="string">"source-map"</span>, <span class="comment">// enum</span></span><br><span class="line">  devtool: <span class="string">"inline-source-map"</span>, <span class="comment">// 嵌入到源文件中</span></span><br><span class="line">  devtool: <span class="string">"eval-source-map"</span>, <span class="comment">// 将 SourceMap 嵌入到每个模块中</span></span><br><span class="line">  devtool: <span class="string">"hidden-source-map"</span>, <span class="comment">// SourceMap 不在源文件中引用</span></span><br><span class="line">  devtool: <span class="string">"cheap-source-map"</span>, <span class="comment">// 没有模块映射(module mappings)的 SourceMap 低级变体</span></span><br><span class="line">  devtool: <span class="string">"cheap-module-source-map"</span>, <span class="comment">// 有模块映射的 SourceMap 低级变体</span></span><br><span class="line">  devtool: <span class="string">"eval"</span>, <span class="comment">// 没有模块映射，而是命名模块。以牺牲细节达到最快。</span></span><br><span class="line">  <span class="comment">// 通过在浏览器调试工具(browser devtools)中添加元信息增强调试</span></span><br><span class="line">  <span class="comment">// 牺牲了构建速度的 `source-map' 是最详细的。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="context"><a href="#context" class="headerlink" title="context"></a>context</h1><p>基础目录，绝对路径，用于从配置中解析入口起点和<code>loader</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context: path.resolve(__dirname, <span class="string">"app"</span>)</span><br></pre></td></tr></table></figure>
+<p>默认使用当前目录，但是推荐在配置中传递一个值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   context: __dirname, <span class="comment">// string（绝对路径！）</span></span><br><span class="line">  <span class="comment">// webpack 的主目录</span></span><br><span class="line">  <span class="comment">// entry 和 module.rules.loader 选项</span></span><br><span class="line">  <span class="comment">// 相对于此目录解析</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="开发中-Server-devServer"><a href="#开发中-Server-devServer" class="headerlink" title="开发中 Server(devServer)"></a>开发中 Server(devServer)</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   devServer: &#123;</span><br><span class="line">    proxy: &#123; <span class="comment">// proxy URLs to backend development server</span></span><br><span class="line">      <span class="string">'/api'</span>: <span class="string">'http://localhost:3000'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    contentBase: path.join(__dirname, <span class="string">'public'</span>), <span class="comment">// boolean | string | array, static file location</span></span><br><span class="line">    compress: <span class="literal">true</span>, <span class="comment">// enable gzip compression</span></span><br><span class="line">    historyApiFallback: <span class="literal">true</span>, <span class="comment">// true for index.html upon 404, object for multiple paths</span></span><br><span class="line">    hot: <span class="literal">true</span>, <span class="comment">// hot module replacement. Depends on HotModuleReplacementPlugin</span></span><br><span class="line">    https: <span class="literal">false</span>, <span class="comment">// true for self-signed, object for cert authority</span></span><br><span class="line">    noInfo: <span class="literal">true</span>, <span class="comment">// only errors &amp; warns on hot reload</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="插件-plugins"><a href="#插件-plugins" class="headerlink" title="插件(plugins)"></a>插件(plugins)</h1><p><code>plugins</code>选项用于以各种方式自定义 webpack 构建过程。webpack 附带了各种内置插件，可以通过<code>webpack.[plugin-name]</code>访问这些插件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="comment">// 例如，当多个 bundle 共享一些相同的依赖，</span></span><br><span class="line">    <span class="comment">// CommonsChunkPlugin 有助于提取这些依赖到共享的 bundle 中，来避免重复打包。</span></span><br><span class="line">    <span class="keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/04/webpack/webpack%E9%85%8D%E7%BD%AE%E9%A1%B9/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/04/css/CSS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            CSS代码片段
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/02/css/CSS%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">CSS常见问题</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2020
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    JS代码片段(Array) |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-js/进阶/JS 代码片段(Array)" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS代码片段(Array)
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/09/06/js/%E8%BF%9B%E9%98%B6/JS%20%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Array)/" class="article-date">
+  <time datetime="2019-09-06T11:08:18.000Z" itemprop="datePublished">2019-09-06</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.5k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">25分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="all"><a href="#all" class="headerlink" title="all"></a>all</h2><p>函数封装了<code>every</code>函数，判断条件默认为元素转为<code>boolean</code>值，如果都为<code>true</code>，则返回<code>true</code>。否则，返回<code>false</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> all = <span class="function">(<span class="params">arr, fn = <span class="built_in">Boolean</span></span>) =&gt;</span> arr.every(fn);</span><br><span class="line"></span><br><span class="line">all([<span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>], x =&gt; x &gt; <span class="number">1</span>); <span class="comment">// true</span></span><br><span class="line">all([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="allEqual"><a href="#allEqual" class="headerlink" title="allEqual"></a>allEqual</h2><p>检查数组中的所有元素是否相等。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> allEqual = <span class="function"><span class="params">arr</span> =&gt;</span> arr.every(<span class="function"><span class="params">val</span> =&gt;</span> val === arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">allEqual([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]); <span class="comment">// false</span></span><br><span class="line">allEqual([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>]); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="any"><a href="#any" class="headerlink" title="any"></a>any</h2><p>检查数组中的所有元素是否基于<code>fn</code>返回<code>true</code>。只要数组元素有一个转为<code>true</code>，则返回<code>true</code>。省略第二个参数<code>fn</code>，将布尔值用作默认值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> any = <span class="function">(<span class="params">arr, fn = <span class="built_in">Boolean</span></span>) =&gt;</span> arr.some(fn);</span><br><span class="line"></span><br><span class="line">any([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>], x =&gt; x &gt;= <span class="number">2</span>); <span class="comment">// true</span></span><br><span class="line">any([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="arrayMax"><a href="#arrayMax" class="headerlink" title="arrayMax"></a>arrayMax</h2><p>返回数组中的最大值。<br><code>Math.max()</code>返回参数中最大的值。如果没有参数，返回<code>-Infinity</code>。如果有某个参数为<code>NaN</code>，或是不能转换成数字的非数字值，则返回<code>NaN</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arrayMax = <span class="function"><span class="params">arr</span> =&gt;</span> <span class="built_in">Math</span>.max(...arr);</span><br><span class="line">arrayMax([<span class="number">10</span>, <span class="number">1</span>, <span class="number">5</span>]) <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<h2 id="arrayMin"><a href="#arrayMin" class="headerlink" title="arrayMin"></a>arrayMin</h2><p>返回数组中的最小值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arrayMin = <span class="function"><span class="params">arr</span> =&gt;</span> <span class="built_in">Math</span>.min(...arr);</span><br><span class="line">arrayMin([<span class="number">10</span>, <span class="number">1</span>, <span class="number">5</span>]) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h2><p>把一个数组分块成指定大小的小数组。<br>使用<code>Array.from()</code>创建一个新的数组，它的长度与将要生成的<code>chunk</code>(块) 数量相匹配。 使用<code>Array.slice()</code>将新数组的每个元素映射到长度为<code>size</code>的<code>chunk</code>中。 如果原始数组不能均匀分割，最后的<code>chunk</code>将包含剩余的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> chunk = <span class="function">(<span class="params">arr, size</span>) =&gt;</span></span><br><span class="line">  <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: <span class="built_in">Math</span>.ceil(arr.length / size) &#125;, (v, i) =&gt;</span><br><span class="line">    arr.slice(i * size, i * size + size)</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">chunk([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], <span class="number">2</span>); <span class="comment">// [[1,2],[3,4],[5]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="compact"><a href="#compact" class="headerlink" title="compact"></a>compact</h2><p>过滤掉数组中所有假值元素。<br>使用<code>Array.filter()</code>过滤掉数组中所有假值元素(<code>false, null, 0, &quot;&quot;, undefined, NaN</code>)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> compact = <span class="function"><span class="params">arr</span> =&gt;</span> arr.filter(<span class="built_in">Boolean</span>);</span><br><span class="line"></span><br><span class="line">compact([<span class="number">0</span>, <span class="number">1</span>, <span class="literal">false</span>, <span class="number">2</span>, <span class="string">''</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="string">'e'</span> * <span class="number">23</span>, <span class="literal">NaN</span>, <span class="string">'s'</span>, <span class="number">34</span>]);</span><br><span class="line"><span class="comment">// [ 1, 2, 3, 'a', 's', 34 ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="countOccurrences"><a href="#countOccurrences" class="headerlink" title="countOccurrences"></a>countOccurrences</h2><p>计数数组中某个值的出现次数。<br>使用<code>Array.reduce()</code>在每次遇到数组中的特定值时递增计数器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> countOccurrences = <span class="function">(<span class="params">arr, val</span>) =&gt;</span> arr.reduce(<span class="function">(<span class="params">a, v</span>) =&gt;</span> (v === val ? a + <span class="number">1</span> : a), <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">countOccurrences([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">1</span>); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<h2 id="deepFlatten"><a href="#deepFlatten" class="headerlink" title="deepFlatten"></a>deepFlatten</h2><p>深度平铺数组。<br>使用递归。 通过空数组(<code>[]</code>) 使用<code>Array.concat()</code>，结合展开运算符(<code>...</code>) 来平铺数组。 递归平铺每个数组元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> deepFlatten = <span class="function"><span class="params">arr</span> =&gt;</span> [].concat(...arr.map(<span class="function"><span class="params">v</span> =&gt;</span> <span class="built_in">Array</span>.isArray(v) ? deepFlatten(v) : v));</span><br><span class="line"></span><br><span class="line">deepFlatten([<span class="number">1</span>, [<span class="number">2</span>], [[<span class="number">3</span>], <span class="number">4</span>], <span class="number">5</span>]); <span class="comment">// [1,2,3,4,5]</span></span><br></pre></td></tr></table></figure>
+<p>其他方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> deepFlatten = <span class="function">(<span class="params">arr</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span>(arr.some(<span class="function"><span class="params">item</span> =&gt;</span> <span class="built_in">Array</span>.isArray(item))) &#123;</span><br><span class="line">    arr = [].contact(...arr);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">deepFlatten([<span class="number">1</span>, [<span class="number">2</span>], [[<span class="number">3</span>], <span class="number">4</span>], <span class="number">5</span>]); <span class="comment">// [1,2,3,4,5]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES6 flat()</span></span><br><span class="line">[<span class="number">1</span>, [<span class="number">2</span>, [<span class="number">3</span>]]].flat(<span class="literal">Infinity</span>) <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="difference"><a href="#difference" class="headerlink" title="difference"></a>difference</h2><p>返回两个数组之间的差异。<br>根据数组<code>b</code>创建一个<code>Set</code>对象，然后在数组<code>a</code>上使用<code>Array.filter()</code>方法，过滤出数组<code>b</code>中不包含的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> difference = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> s = <span class="keyword">new</span> <span class="built_in">Set</span>(b);</span><br><span class="line">  <span class="keyword">return</span> a.filter(<span class="function"><span class="params">x</span> =&gt;</span> !s.has(x));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">difference([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>]); <span class="comment">// [3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="differenceWith"><a href="#differenceWith" class="headerlink" title="differenceWith"></a>differenceWith</h2><p>过滤出数组中比较函数不返回<code>true</code>的所有值。 类似于<code>difference</code>，除了接受一个<code>comparator</code>（比较函数）。<br>使用<code>Array.filter()</code>和<code>Array.findIndex()</code>来查找合适的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> differenceWith = <span class="function">(<span class="params">arr, val, comp</span>) =&gt;</span> arr.filter(<span class="function"><span class="params">a</span> =&gt;</span> val.findIndex(<span class="function"><span class="params">b</span> =&gt;</span> comp(a, b)) === <span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">differenceWith([<span class="number">1</span>, <span class="number">1.2</span>, <span class="number">1.5</span>, <span class="number">3</span>, <span class="number">0</span>], [<span class="number">1.9</span>, <span class="number">3</span>, <span class="number">0</span>], (a, b) =&gt; <span class="built_in">Math</span>.round(a) === <span class="built_in">Math</span>.round(b)); <span class="comment">// [1, 1.2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="drop"><a href="#drop" class="headerlink" title="drop"></a>drop</h2><p>从数组开头删除<code>n</code>位元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> drop = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> arr.slice(n);</span><br><span class="line"></span><br><span class="line">drop([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [2,3]</span></span><br><span class="line">drop([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [3]</span></span><br><span class="line">drop([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">42</span>); <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<h2 id="dropRight"><a href="#dropRight" class="headerlink" title="dropRight"></a>dropRight</h2><p>返回从右开始删除<code>n</code>个元素的新数组。<br>检查<code>n</code>是否小于给定数组的长度，并且使用<code>Array.slice()</code>来从右开始删除指定数量的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> dropRight = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> arr.slice(<span class="number">0</span>, -n);</span><br><span class="line"></span><br><span class="line">dropRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [1,2]</span></span><br><span class="line">dropRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [1]</span></span><br><span class="line">dropRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">42</span>); <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<h2 id="dropWhile"><a href="#dropWhile" class="headerlink" title="dropWhile"></a>dropWhile</h2><p>从数组左边开始删除元素，判断条件为<code>func</code>。一直删除到数组左边直至遇到能让<code>func</code>变为<code>true</code>的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> dropWhile = <span class="function">(<span class="params">arr, func</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (arr.length &gt; <span class="number">0</span> &amp;&amp; !func(arr[<span class="number">0</span>])) arr = arr.slice(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="dropRightWhile"><a href="#dropRightWhile" class="headerlink" title="dropRightWhile"></a>dropRightWhile</h2><p>从数组右边开始删除元素，判断条件为<code>func</code>。一直删除到数组右边直至遇到能让<code>func</code>变为<code>true</code>的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> dropRightWhile = <span class="function">(<span class="params">arr, func</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> rightIndex = arr.length;</span><br><span class="line">  <span class="keyword">while</span> (rightIndex-- &amp;&amp; !func(arr[rightIndex]));</span><br><span class="line">  <span class="keyword">return</span> arr.slice(<span class="number">0</span>, rightIndex + <span class="number">1</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">dropRightWhile([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n &lt; <span class="number">3</span>); <span class="comment">// [1, 2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="everyNth"><a href="#everyNth" class="headerlink" title="everyNth"></a>everyNth</h2><p>返回数组中的每个第<code>n</code>个元素。<br>使用<code>Array.filter()</code>创建一个包含给定数组的每个第<code>n</code>个元素的新数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> everyNth = <span class="function">(<span class="params">arr, nth</span>) =&gt;</span> arr.filter(<span class="function">(<span class="params">e, i</span>) =&gt;</span> i % nth === nth - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">everyNth([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="number">2</span>); <span class="comment">// [ 2, 4, 6 ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="filterFalsy"><a href="#filterFalsy" class="headerlink" title="filterFalsy"></a>filterFalsy</h2><p>去除数组中能转换为<code>false</code>的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> filterFalsy = <span class="function"><span class="params">arr</span> =&gt;</span> arr.filter(<span class="built_in">Boolean</span>);</span><br><span class="line"></span><br><span class="line">filterFalsy([<span class="string">''</span>, <span class="literal">true</span>, &#123;&#125;, <span class="literal">false</span>, <span class="string">'sample'</span>, <span class="number">1</span>, <span class="number">0</span>]); <span class="comment">// [true, &#123;&#125;, 'sample', 1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="filterNonUnique"><a href="#filterNonUnique" class="headerlink" title="filterNonUnique"></a>filterNonUnique</h2><p>去掉数组中的非唯一值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> filterNonUnique = <span class="function"><span class="params">arr</span> =&gt;</span> arr.filter(<span class="function"><span class="params">i</span> =&gt;</span> arr.indexOf(i) === arr.lastIndexOf(i));</span><br><span class="line"></span><br><span class="line">filterNonUnique([<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">// [1, 3, 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="filterNonUniqueBy"><a href="#filterNonUniqueBy" class="headerlink" title="filterNonUniqueBy"></a>filterNonUniqueBy</h2><p>扩展了<code>filterNonUnique</code>方法，通过方法<code>fn</code>进行判断。<code>fn</code>四个参数是比较两个元素的值和索引（方便<code>fn</code>方法的扩展）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(i === j) === fn(v, x, i, j)</span><br></pre></td></tr></table></figure>
+<p>注意<code>arr.every()</code>，当数组内所有索引和值比较过，都为<code>true</code>，那个元素才是独一无二的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> filterNonUniqueBy = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span></span><br><span class="line">  arr.filter(<span class="function">(<span class="params">v, i</span>) =&gt;</span> arr.every(<span class="function">(<span class="params">x, j</span>) =&gt;</span> (i === j) === fn(v, x, i, j)));</span><br><span class="line"></span><br><span class="line">filterNonUniqueBy(</span><br><span class="line">  [</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">value</span>: <span class="string">'a'</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">value</span>: <span class="string">'b'</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">value</span>: <span class="string">'c'</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">value</span>: <span class="string">'d'</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">value</span>: <span class="string">'e'</span> &#125;</span><br><span class="line">  ],</span><br><span class="line">  (a, b) =&gt; a.id == b.id</span><br><span class="line">); <span class="comment">// [ &#123; id: 2, value: 'c' &#125; ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="findLast"><a href="#findLast" class="headerlink" title="findLast"></a>findLast</h2><p>寻找数组最后一个能满足<code>fn</code>的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> findLast = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span> arr.filter(fn).pop();</span><br><span class="line"></span><br><span class="line">findLast([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n % <span class="number">2</span> === <span class="number">1</span>); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<h2 id="findLastIndex"><a href="#findLastIndex" class="headerlink" title="findLastIndex"></a>findLastIndex</h2><p>寻找数组最后一个能满足<code>fn</code>的元素的索引。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> findLastIndex = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span></span><br><span class="line">  arr</span><br><span class="line">    .map(<span class="function">(<span class="params">val, i</span>) =&gt;</span> [i, val])</span><br><span class="line">    .filter(<span class="function">(<span class="params">[i, val]</span>) =&gt;</span> fn(val, i, arr))</span><br><span class="line">    .pop()[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">findLastIndex([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n % <span class="number">2</span> === <span class="number">1</span>); <span class="comment">// 2 (index of the value 3)</span></span><br></pre></td></tr></table></figure>
+<h2 id="flatten"><a href="#flatten" class="headerlink" title="flatten"></a>flatten</h2><p>根据指定的<code>depth</code>平铺数组。<br>每次递归，使<code>depth</code>减1 。使用<code>Array.reduce()</code>和<code>Array.concat()</code>来合并元素或数组。默认情况下， <code>depth</code>等于1时停递归。省略第二个参数<code>depth</code>，只能平铺1层的深度 (单层平铺)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> flatten = <span class="function">(<span class="params">arr, depth = <span class="number">1</span></span>) =&gt;</span></span><br><span class="line">  arr.reduce(<span class="function">(<span class="params">a, v</span>) =&gt;</span> a.concat(depth &gt; <span class="number">1</span> &amp;&amp; <span class="built_in">Array</span>.isArray(v) ? flatten(v, depth - <span class="number">1</span>) : v), []);</span><br><span class="line"></span><br><span class="line">flatten([<span class="number">1</span>, [<span class="number">2</span>], <span class="number">3</span>, <span class="number">4</span>]); <span class="comment">// [1, 2, 3, 4]</span></span><br><span class="line">flatten([<span class="number">1</span>, [<span class="number">2</span>, [<span class="number">3</span>, [<span class="number">4</span>, <span class="number">5</span>], <span class="number">6</span>], <span class="number">7</span>], <span class="number">8</span>], <span class="number">2</span>); <span class="comment">// [1, 2, 3, [4, 5], 6, 7, 8]</span></span><br></pre></td></tr></table></figure>
+<p>ES6方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, [<span class="number">3</span>, [<span class="number">4</span>, <span class="number">5</span>]]].flat() <span class="comment">// [1, 2, 3, [4, 5]]</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, [<span class="number">3</span>, [<span class="number">4</span>, <span class="number">5</span>]]].flat(<span class="number">2</span>) <span class="comment">// [1, 2, 3, 4, 5]</span></span><br><span class="line">[<span class="number">1</span>, [<span class="number">2</span>, [<span class="number">3</span>]]].flat(<span class="literal">Infinity</span>) <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="forEachRight"><a href="#forEachRight" class="headerlink" title="forEachRight"></a>forEachRight</h2><p>从数组的最后一个元素开始，为每个数组元素执行一次提供的函数。<br>使用<code>Array.slice(0)</code>克隆给定的数组，<code>Array.reverse()</code>反转数组，<code>Array.forEach()</code>遍历这个反向数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> forEachRight = <span class="function">(<span class="params">arr, callback</span>) =&gt;</span></span><br><span class="line">  arr</span><br><span class="line">    .slice(<span class="number">0</span>)</span><br><span class="line">    .reverse()</span><br><span class="line">    .forEach(callback);</span><br><span class="line"></span><br><span class="line">forEachRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], val =&gt; <span class="built_in">console</span>.log(val)); <span class="comment">// '4', '3', '2', '1'</span></span><br></pre></td></tr></table></figure>
+<h2 id="groupBy"><a href="#groupBy" class="headerlink" title="groupBy"></a>groupBy</h2><p>根据给定的函数对数组元素进行分组。<br>使用<code>Array.map()</code>将数组的值映射到函数或属性名称。使用<code>Array.reduce()</code>来创建一个对象，其中的<code>key</code>是从映射结果中产生。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> groupBy = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span></span><br><span class="line">  arr.map(<span class="keyword">typeof</span> fn === <span class="string">'function'</span> ? fn : <span class="function"><span class="params">val</span> =&gt;</span> val[fn]).reduce(<span class="function">(<span class="params">acc, val, i</span>) =&gt;</span> &#123;</span><br><span class="line">    acc[val] = (acc[val] || []).concat(arr[i]);</span><br><span class="line">    <span class="keyword">return</span> acc;</span><br><span class="line">  &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line">groupBy([<span class="number">6.1</span>, <span class="number">4.2</span>, <span class="number">6.3</span>], <span class="built_in">Math</span>.floor); <span class="comment">// &#123;4: [4.2], 6: [6.1, 6.3]&#125;</span></span><br><span class="line">groupBy([<span class="string">'one'</span>, <span class="string">'two'</span>, <span class="string">'three'</span>], <span class="string">'length'</span>); <span class="comment">// &#123;3: ['one', 'two'], 5: ['three']&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="head"><a href="#head" class="headerlink" title="head"></a>head</h2><p>获取数组的第一个元素。<br>使用<code>arr[0]</code>返回传递数组的第一个元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> head = <span class="function"><span class="params">arr</span> =&gt;</span> arr[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">head([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="indexOfAll"><a href="#indexOfAll" class="headerlink" title="indexOfAll"></a>indexOfAll</h2><p>返回数组中所有<code>val</code>的索引。 如果<code>val</code>从不出现，则返回<code>[]</code>。<br>使用<code>Array.forEach()</code>循环元素和<code>Array.push()</code>来存储匹配元素的索引。返回索引数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> indexOfAll = <span class="function">(<span class="params">arr, val</span>) =&gt;</span> arr.reduce(<span class="function">(<span class="params">acc, el, i</span>) =&gt;</span> (el === val ? [...acc, i] : acc), []);</span><br><span class="line"></span><br><span class="line">indexOfAll([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">1</span>); <span class="comment">// [0,3]</span></span><br><span class="line">indexOfAll([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>); <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<h2 id="initial"><a href="#initial" class="headerlink" title="initial"></a>initial</h2><p>返回一个数组中除了最后一个元素以外的所有元素。<br>使用<code>arr.slice(0,-1)</code>返回排除了最后一个元素的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initial = <span class="function"><span class="params">arr</span> =&gt;</span> arr.slice(<span class="number">0</span>, <span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">initial([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [1,2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="initialize2DArray"><a href="#initialize2DArray" class="headerlink" title="initialize2DArray"></a>initialize2DArray</h2><p>初始化一个给定行数和列数，及值的二维数组。<br>使用<code>Array.map()</code>生成<code>h</code>行，其中每个行都是一个长度为<code>w</code>的新数组。 如果未提供值<code>val</code>，则默认为<code>null</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialize2DArray = <span class="function">(<span class="params">w, h, val = <span class="literal">null</span></span>) =&gt;</span></span><br><span class="line">  <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: h &#125;).map(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: w &#125;).fill(val));</span><br><span class="line"></span><br><span class="line">initialize2DArray(<span class="number">2</span>, <span class="number">2</span>, <span class="number">0</span>); <span class="comment">// [[0,0], [0,0]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="initializeArrayWithRange"><a href="#initializeArrayWithRange" class="headerlink" title="initializeArrayWithRange"></a>initializeArrayWithRange</h2><p>初始化一个数组，该数组包含指定范围内的数字，包括<code>start</code>和<code>end</code>，数字间隔为<code>step</code>。<br>使用<code>Array.from(Math.ceil((end+1-start)/step))</code>创建一个所需长度的数组（元素的数量等于 (<code>end-start)/step</code>或者<code>(end+1-start)/step</code>包括<code>end</code>）， 用<code>Array.map()</code>填充在这个范围内要求的值。你可以省略<code>start</code>来使用默认值0。 您可以省略<code>step</code>使用默认值1 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initializeArrayWithRange = <span class="function">(<span class="params">end, start = <span class="number">0</span>, step = <span class="number">1</span></span>) =&gt;</span></span><br><span class="line">  <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: <span class="built_in">Math</span>.ceil(<span class="function">(<span class="params">end - start + <span class="number">1</span></span>) / <span class="params">step</span>) &#125;, (<span class="params">v, i</span>) =&gt;</span> i * step + start);</span><br><span class="line"></span><br><span class="line">initializeArrayWithRange(<span class="number">5</span>); <span class="comment">// [0,1,2,3,4,5]</span></span><br><span class="line">initializeArrayWithRange(<span class="number">7</span>, <span class="number">3</span>); <span class="comment">// [3,4,5,6,7]</span></span><br><span class="line">initializeArrayWithRange(<span class="number">9</span>, <span class="number">0</span>, <span class="number">2</span>); <span class="comment">// [0,2,4,6,8]</span></span><br></pre></td></tr></table></figure>
+<h2 id="initializeArrayWithValues"><a href="#initializeArrayWithValues" class="headerlink" title="initializeArrayWithValues"></a>initializeArrayWithValues</h2><p>使用指定的值初始化和填充数组。<br>使用<code>Array(n)</code>创建所需长度的数组，使用<code>fill(v)</code>以填充所需的值。你可以忽略<code>val</code>，使用默认值0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const initializeArrayWithValues &#x3D; (n, val &#x3D; 0) &#x3D;&gt; Array(n).fill(val);</span><br><span class="line"></span><br><span class="line">initializeArrayWithValues(5, 2); &#x2F;&#x2F; [2, 2, 2, 2, 2]</span><br></pre></td></tr></table></figure>
+<h2 id="intersection"><a href="#intersection" class="headerlink" title="intersection"></a>intersection</h2><p>返回两个数组中都存在的元素列表。<br>根据数组 <code>b</code>创建一个<code>Set</code>对象，然后在数组<code>a</code>上使用<code>Array.filter()</code>方法，只保留数组<code>b</code>中也包含的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> intersection = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> s = <span class="keyword">new</span> <span class="built_in">Set</span>(b);</span><br><span class="line">  <span class="keyword">return</span> a.filter(<span class="function"><span class="params">x</span> =&gt;</span> s.has(x));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">intersection([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>]); <span class="comment">// [2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="join"><a href="#join" class="headerlink" title="join"></a>join</h2><p>将数组的所有元素拼接成一个字符串并返回此字符串。 使用分隔符和结束分隔符。<br>使用<code>Array.reduce()</code>将元素拼接成一个字符串。 省略第二个参数<code>separator</code>，则默认使用分隔符<code>,</code>。 省略第三个参数<code>end</code>，默认使用与<code>separator</code>相同的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> join = <span class="function">(<span class="params">arr, separator = <span class="string">','</span>, end = separator</span>) =&gt;</span></span><br><span class="line">  arr.reduce(</span><br><span class="line">    (acc, val, i) =&gt;</span><br><span class="line">      i === arr.length - <span class="number">2</span></span><br><span class="line">        ? acc + val + end</span><br><span class="line">        : i === arr.length - <span class="number">1</span></span><br><span class="line">          ? acc + val</span><br><span class="line">          : acc + val + separator,</span><br><span class="line">    <span class="string">''</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">join([<span class="string">'pen'</span>, <span class="string">'pineapple'</span>, <span class="string">'apple'</span>, <span class="string">'pen'</span>], <span class="string">','</span>, <span class="string">'&amp;'</span>); <span class="comment">// "pen,pineapple,apple&amp;pen"</span></span><br><span class="line">join([<span class="string">'pen'</span>, <span class="string">'pineapple'</span>, <span class="string">'apple'</span>, <span class="string">'pen'</span>], <span class="string">','</span>); <span class="comment">// "pen,pineapple,apple,pen"</span></span><br><span class="line">join([<span class="string">'pen'</span>, <span class="string">'pineapple'</span>, <span class="string">'apple'</span>, <span class="string">'pen'</span>]); <span class="comment">// "pen,pineapple,apple,pen"</span></span><br></pre></td></tr></table></figure>
+<h2 id="last"><a href="#last" class="headerlink" title="last"></a>last</h2><p>返回数组中的最后一个元素。<br>使用<code>arr.length - 1</code>来计算给定数组的最后一个元素的索引并返回。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> last = <span class="function"><span class="params">arr</span> =&gt;</span> arr[arr.length - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">last([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<h2 id="longestItem"><a href="#longestItem" class="headerlink" title="longestItem"></a>longestItem</h2><p>获取任何数量的可迭代对象或具有<code>length</code>属性的对象，并返回最长的一个。<br>使用<code>Array.sort()</code>按<code>length</code>对所有参数进行排序，返回第一个（最长）元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> longestItem = <span class="function">(<span class="params">...vals</span>) =&gt;</span> vals.reduce(<span class="function">(<span class="params">a, x</span>) =&gt;</span> (x.length &gt; a.length ? x : a));</span><br><span class="line"></span><br><span class="line">longestItem(<span class="string">'this'</span>, <span class="string">'is'</span>, <span class="string">'a'</span>, <span class="string">'testcase'</span>); <span class="comment">// 'testcase'</span></span><br><span class="line">longestItem(...[<span class="string">'a'</span>, <span class="string">'ab'</span>, <span class="string">'abc'</span>]); <span class="comment">// 'abc'</span></span><br><span class="line">longestItem(...[<span class="string">'a'</span>, <span class="string">'ab'</span>, <span class="string">'abc'</span>], <span class="string">'abcd'</span>); <span class="comment">// 'abcd'</span></span><br><span class="line">longestItem([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">// [1, 2, 3, 4, 5]</span></span><br><span class="line">longestItem([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="string">'foobar'</span>); <span class="comment">// 'foobar'</span></span><br></pre></td></tr></table></figure>
+<h2 id="mapObject"><a href="#mapObject" class="headerlink" title="mapObject"></a>mapObject</h2><p>使用一个函数将数组的值映射到对象，其键值对中，原始值作为键，映射值作为值。<br>使用一个匿名的内部函数作用域来声明一个<code>undefined</code>的内存空间，使用闭包来存储返回值。 使用一个新的<code>Array</code>来存储带有函数映射的数组和一个逗号运算符来返回第二个步骤，而不需要从一个上下文移动到另一个上下文（由于闭包和操作顺序）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapObject = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span></span><br><span class="line">  (<span class="function"><span class="params">a</span> =&gt;</span> (</span><br><span class="line">    (a = [arr, arr.map(fn)]), a[<span class="number">0</span>].reduce(<span class="function">(<span class="params">acc, val, ind</span>) =&gt;</span> ((acc[val] = a[<span class="number">1</span>][ind]), acc), &#123;&#125;)</span><br><span class="line">  ))();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> squareIt = <span class="function"><span class="params">arr</span> =&gt;</span> mapObject(arr, a =&gt; a * a);</span><br><span class="line">squareIt([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// &#123; 1: 1, 2: 4, 3: 9 &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="maxN"><a href="#maxN" class="headerlink" title="maxN"></a>maxN</h2><p>从提供的数组中返回<code>n</code>个最大元素。如果<code>n</code>大于或等于提供的数组长度，则返回原数组（按降序排列）。<br>结合使用<code>Array.sort()</code>与展开操作符(<code>...</code>) ，创建一个数组的浅克隆，并按降序排列。使用<code>Array.slice()</code>以获得指定的元素个数。 忽略第二个参数<code>n</code>，默认获取单个元素（以数组的形式）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> maxN = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> [...arr].sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> b - a).slice(<span class="number">0</span>, n);</span><br><span class="line"></span><br><span class="line">maxN([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [3]</span></span><br><span class="line">maxN([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [3,2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="minN"><a href="#minN" class="headerlink" title="minN"></a>minN</h2><p>从提供的数组中返回<code>n</code>个最小元素。如果<code>n</code>大于或等于提供的数组长度，则返回原数组（按降序排列）。<br>结合使用<code>Array.sort()</code>与展开操作符(<code>...</code>) ，创建一个数组的浅克隆，并按降序排列。使用<code>Array.slice()</code>以获得指定的元素个数。 忽略第二个参数<code>n</code>，默认获取单个元素（以数组的形式）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> minN = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> [...arr].sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b).slice(<span class="number">0</span>, n);</span><br><span class="line"></span><br><span class="line">minN([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [1]</span></span><br><span class="line">minN([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [1,2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="nthElement"><a href="#nthElement" class="headerlink" title="nthElement"></a>nthElement</h2><p>返回数组的第<code>n</code>个元素。<br>使用<code>Array.slice()</code>获取数组的第<code>n</code>个元素。如果索引超出范围，则返回<code>[]</code>。省略第二个参数<code>n</code>，将得到数组的第一个元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nthElement = <span class="function">(<span class="params">arr, n = <span class="number">0</span></span>) =&gt;</span> (n === <span class="number">-1</span> ? arr.slice(n) : arr.slice(n, n + <span class="number">1</span>))[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">nthElement([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>], <span class="number">1</span>); <span class="comment">// 'b'</span></span><br><span class="line">nthElement([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'b'</span>], <span class="number">-3</span>); <span class="comment">// 'a'</span></span><br></pre></td></tr></table></figure>
+<h2 id="partition"><a href="#partition" class="headerlink" title="partition"></a>partition</h2><p>根据所提供的函数对每个元素进行迭代，将这些元素分成两个数组。<br>使用<code>Array.reduce()</code>创建两个数组的数组。 使用<code>Array.push()</code>将<code>fn</code>返回为<code>true</code>的元素添加到第一个数组，而<code>fn</code>返回<code>false</code>的元素到第二个元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> partition = <span class="function">(<span class="params">arr, fn</span>) =&gt;</span></span><br><span class="line">  arr.reduce(</span><br><span class="line">    (acc, val, i, arr) =&gt; &#123;</span><br><span class="line">      acc[fn(val, i, arr) ? <span class="number">0</span> : <span class="number">1</span>].push(val);</span><br><span class="line">      <span class="keyword">return</span> acc;</span><br><span class="line">    &#125;,</span><br><span class="line">    [[], []]</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> users = [&#123; <span class="attr">user</span>: <span class="string">'barney'</span>, <span class="attr">age</span>: <span class="number">36</span>, <span class="attr">active</span>: <span class="literal">false</span> &#125;, &#123; <span class="attr">user</span>: <span class="string">'fred'</span>, <span class="attr">age</span>: <span class="number">40</span>, <span class="attr">active</span>: <span class="literal">true</span> &#125;];</span><br><span class="line">partition(users, o =&gt; o.active); </span><br><span class="line"><span class="comment">// [[&#123; 'user': 'fred', 'age': 40, 'active': true &#125;],[&#123; 'user': 'barney', 'age': 36, 'active': false &#125;]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="pull"><a href="#pull" class="headerlink" title="pull"></a>pull</h2><p>改变原始数组，过滤掉指定的值。<br>使用<code>Array.filter()</code>和<code>Array.includes()</code>来剔除指定的值。使用<code>Array.length = 0</code>将数组中的长度重置为零，并且通过<code>Array.push()</code>只使用<code>pulled</code>值重新填充数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pull = <span class="function">(<span class="params">arr, ...args</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> argState = <span class="built_in">Array</span>.isArray(args[<span class="number">0</span>]) ? args[<span class="number">0</span>] : args;</span><br><span class="line">  <span class="keyword">let</span> pulled = arr.filter(<span class="function">(<span class="params">v, i</span>) =&gt;</span> !argState.includes(v));</span><br><span class="line">  arr.length = <span class="number">0</span>;</span><br><span class="line">  pulled.forEach(<span class="function"><span class="params">v</span> =&gt;</span> arr.push(v));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myArray = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>];</span><br><span class="line">pull(myArray, <span class="string">'a'</span>, <span class="string">'c'</span>); <span class="comment">// myArray = [ 'b', 'b' ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="pullAtIndex"><a href="#pullAtIndex" class="headerlink" title="pullAtIndex"></a>pullAtIndex</h2><p>改变原始数组，过滤掉指定索引的值。<br>使用<code>Array.filter()</code>和<code>Array.includes()</code>来剔除指定的值。使用<code>Array.length = 0</code>将数组中的长度重置为零，并且通过<code>Array.push()</code>只使用<code>pulled</code>值重新填充数组。使用<code>Array.push()</code>来跟踪<code>pulled</code>值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pullAtIndex = <span class="function">(<span class="params">arr, pullArr</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> removed = [];</span><br><span class="line">  <span class="keyword">let</span> pulled = arr</span><br><span class="line">    .map(<span class="function">(<span class="params">v, i</span>) =&gt;</span> (pullArr.includes(i) ? removed.push(v) : v))</span><br><span class="line">    .filter(<span class="function">(<span class="params">v, i</span>) =&gt;</span> !pullArr.includes(i));</span><br><span class="line">  arr.length = <span class="number">0</span>;</span><br><span class="line">  pulled.forEach(<span class="function"><span class="params">v</span> =&gt;</span> arr.push(v));</span><br><span class="line">  <span class="keyword">return</span> removed;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myArray = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>];</span><br><span class="line"><span class="keyword">let</span> pulled = pullAtIndex(myArray, [<span class="number">1</span>, <span class="number">3</span>]); <span class="comment">// myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="pullAtValue"><a href="#pullAtValue" class="headerlink" title="pullAtValue"></a>pullAtValue</h2><p>改变原始数组，过滤出指定的值。 返回删除的元素。<br>使用<code>Array.filter()</code>和<code>Array.includes()</code>来剔除指定的值。使用<code>Array.length = 0</code>将数组中的长度重置为零， 并且通过<code>Array.push()</code>只使用<code>pulled</code>值重新填充数组。使用<code>Array.push()</code>来跟踪<code>pulled</code>值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pullAtValue = <span class="function">(<span class="params">arr, pullArr</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> removed = [],</span><br><span class="line">    pushToRemove = arr.forEach(<span class="function">(<span class="params">v, i</span>) =&gt;</span> (pullArr.includes(v) ? removed.push(v) : v)),</span><br><span class="line">    mutateTo = arr.filter(<span class="function">(<span class="params">v, i</span>) =&gt;</span> !pullArr.includes(v));</span><br><span class="line">  arr.length = <span class="number">0</span>;</span><br><span class="line">  mutateTo.forEach(<span class="function"><span class="params">v</span> =&gt;</span> arr.push(v));</span><br><span class="line">  <span class="keyword">return</span> removed;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myArray = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>];</span><br><span class="line"><span class="keyword">let</span> pulled = pullAtValue(myArray, [<span class="string">'b'</span>, <span class="string">'d'</span>]); <span class="comment">// myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="reducedFilter"><a href="#reducedFilter" class="headerlink" title="reducedFilter"></a>reducedFilter</h2><p>根据条件过滤一个对象数组，同时过滤掉未指定的键（<code>key</code>）。<br>使用<code>Array.filter()</code>根据断言<code>fn</code>过滤数组，以便返回条件为真值（<code>truthy</code>）的对象。在过滤出来的数组上，使用<code>Array.map()</code>和<code>Array.reduce()</code>返回新的对象来过滤掉<code>keys</code>参数中未提供的键。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> reducedFilter = <span class="function">(<span class="params">data, keys, fn</span>) =&gt;</span></span><br><span class="line">  data.filter(fn).map(<span class="function"><span class="params">el</span> =&gt;</span></span><br><span class="line">    keys.reduce(<span class="function">(<span class="params">acc, key</span>) =&gt;</span> &#123;</span><br><span class="line">      acc[key] = el[key];</span><br><span class="line">      <span class="keyword">return</span> acc;</span><br><span class="line">    &#125;, &#123;&#125;)</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = [</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">1</span>,</span><br><span class="line">    name: <span class="string">'john'</span>,</span><br><span class="line">    age: <span class="number">24</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">2</span>,</span><br><span class="line">    name: <span class="string">'mike'</span>,</span><br><span class="line">    age: <span class="number">50</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">reducedFilter(data, [<span class="string">'id'</span>, <span class="string">'name'</span>], item =&gt; item.age &gt; <span class="number">24</span>); <span class="comment">// [&#123; id: 2, name: 'mike'&#125;]</span></span><br></pre></td></tr></table></figure>
+<h2 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h2><p>从数组中移除给定函数返回<code>false</code>的元素。<br>使用<code>Array.filter()</code>和<code>Array.reduce()</code>来查找返回真值的数组元素，使用<code>Array.splice()</code>来移除元素。<code>func</code>有三个参数<code>(value, index, array)</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> remove = <span class="function">(<span class="params">arr, func</span>) =&gt;</span></span><br><span class="line">  <span class="built_in">Array</span>.isArray(arr)</span><br><span class="line">    ? arr.filter(func).reduce(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> &#123;</span><br><span class="line">      arr.splice(arr.indexOf(val), <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">return</span> acc.concat(val);</span><br><span class="line">    &#125;, [])</span><br><span class="line">    : [];</span><br><span class="line"></span><br><span class="line">remove([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n % <span class="number">2</span> === <span class="number">0</span>); <span class="comment">// [2, 4]</span></span><br></pre></td></tr></table></figure>
+<h2 id="sample"><a href="#sample" class="headerlink" title="sample"></a>sample</h2><p>从数组中随机返回一个元素。<br>使用<code>Math.random()</code>生成一个随机数，乘以<code>length</code>，并使用<code>Math.floor()</code>舍去小数获得到最接近的整数。这个方法也适用于字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sample = <span class="function"><span class="params">arr</span> =&gt;</span> arr[<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * arr.length)];</span><br><span class="line"></span><br><span class="line">sample([<span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">11</span>]); <span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<h2 id="sampleSize"><a href="#sampleSize" class="headerlink" title="sampleSize"></a>sampleSize</h2><p>从<code>array</code>中获取<code>n</code>个唯一键随机元素。<br>使用<code>Fisher-Yates</code>（洗牌算法）对数组进行打乱。使用<code>Array.slice()</code>获取第一个<code>n</code>元素。 省略第二个参数，<code>n</code>从数组中随机取得1个元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sampleSize = <span class="function">(<span class="params">[...arr], n = <span class="number">1</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> m = arr.length;</span><br><span class="line">  <span class="keyword">while</span> (m) &#123;</span><br><span class="line">    <span class="keyword">const</span> i = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * m--);</span><br><span class="line">    [arr[m], arr[i]] = [arr[i], arr[m]];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr.slice(<span class="number">0</span>, n);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">sampleSize([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [3,1]</span></span><br><span class="line">sampleSize([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">4</span>); <span class="comment">// [2,3,1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="shank"><a href="#shank" class="headerlink" title="shank"></a>shank</h2><p>与<code>array.prototype.splice()</code>具有相同的功能，但返回新数组而不是改变原始数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shank = <span class="function">(<span class="params">arr, index = <span class="number">0</span>, delCount = <span class="number">0</span>, ...elements</span>) =&gt;</span></span><br><span class="line">  arr</span><br><span class="line">    .slice(<span class="number">0</span>, index)</span><br><span class="line">    .concat(elements)</span><br><span class="line">    .concat(arr.slice(index + delCount));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> names = [<span class="string">'alpha'</span>, <span class="string">'bravo'</span>, <span class="string">'charlie'</span>];</span><br><span class="line"><span class="keyword">const</span> namesAndDelta = shank(names, <span class="number">1</span>, <span class="number">0</span>, <span class="string">'delta'</span>); <span class="comment">// [ 'alpha', 'delta', 'bravo', 'charlie' ]</span></span><br><span class="line"><span class="keyword">const</span> namesNoBravo = shank(names, <span class="number">1</span>, <span class="number">1</span>); <span class="comment">// [ 'alpha', 'charlie' ]</span></span><br><span class="line"><span class="built_in">console</span>.log(names); <span class="comment">// ['alpha', 'bravo', 'charlie']</span></span><br></pre></td></tr></table></figure>
+<h2 id="shuffle"><a href="#shuffle" class="headerlink" title="shuffle"></a>shuffle</h2><p>随机排列指定数组的值，返回一个新的数组。<br>使用<code>Fisher-Yates</code>算法对数组元素进行重新排序。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> shuffle = <span class="function">(<span class="params">[...arr]</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> m = arr.length;</span><br><span class="line">  <span class="keyword">while</span> (m) &#123;</span><br><span class="line">    <span class="keyword">const</span> i = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * m--);</span><br><span class="line">    [arr[m], arr[i]] = [arr[i], arr[m]];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> foo = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line">shuffle(foo); <span class="comment">// [2, 3, 1], foo = [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="similarity"><a href="#similarity" class="headerlink" title="similarity"></a>similarity</h2><p>返回存在于两个数组中的元素数组。<br>使用<code>Array.filter()</code>移除不在<code>values</code>中的值，使用<code>Array.includes()</code>确定。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const similarity &#x3D; (arr, values) &#x3D;&gt; arr.filter(v &#x3D;&gt; values.includes(v));</span><br><span class="line"></span><br><span class="line">similarity([1, 2, 3], [1, 2, 4]); &#x2F;&#x2F; [1, 2]</span><br></pre></td></tr></table></figure>
+<h2 id="symmetricDifference"><a href="#symmetricDifference" class="headerlink" title="symmetricDifference"></a>symmetricDifference</h2><p>返回两个数组之间的差集。<br>根据每个数组创建一个<code>Set</code>，然后在每个数组上使用<code>Array.filter()</code>，只保留另一个数组不包含的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> symmetricDifference = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> sA = <span class="keyword">new</span> <span class="built_in">Set</span>(a),</span><br><span class="line">    sB = <span class="keyword">new</span> <span class="built_in">Set</span>(b);</span><br><span class="line">  <span class="keyword">return</span> [...a.filter(<span class="function"><span class="params">x</span> =&gt;</span> !sB.has(x)), ...b.filter(<span class="function"><span class="params">x</span> =&gt;</span> !sA.has(x))];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">symmetricDifference([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>]); <span class="comment">// [3, 4]</span></span><br><span class="line">symmetricDifference([<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>], [<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>]); <span class="comment">// [2, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="symmetricDifferenceBy"><a href="#symmetricDifferenceBy" class="headerlink" title="symmetricDifferenceBy"></a>symmetricDifferenceBy</h2><p>将提供的函数应用于两个数组的每个数组元素后，返回两个数组之间的差集。<br>通过对每个数组的元素应用<code>fn</code>创建一个集合，然后对每个元素使用<code>array.prototype.filter()</code>来只保留不包含在另一个数组中的值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> symmetricDifferenceBy = <span class="function">(<span class="params">a, b, fn</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> sA = <span class="keyword">new</span> <span class="built_in">Set</span>(a.map(<span class="function"><span class="params">v</span> =&gt;</span> fn(v))),</span><br><span class="line">    sB = <span class="keyword">new</span> <span class="built_in">Set</span>(b.map(<span class="function"><span class="params">v</span> =&gt;</span> fn(v)));</span><br><span class="line">  <span class="keyword">return</span> [...a.filter(<span class="function"><span class="params">x</span> =&gt;</span> !sB.has(fn(x))), ...b.filter(<span class="function"><span class="params">x</span> =&gt;</span> !sA.has(fn(x)))];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">symmetricDifferenceBy([<span class="number">2.1</span>, <span class="number">1.2</span>], [<span class="number">2.3</span>, <span class="number">3.4</span>], <span class="built_in">Math</span>.floor); <span class="comment">// [ 1.2, 3.4 ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h2><p>返回剔除第一个元素后的数组。<br>如果数组的<code>length</code>大于1，则返回<code>arr.slice(1)</code>，否则返回整个数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tail = <span class="function"><span class="params">arr</span> =&gt;</span> (arr.length &gt; <span class="number">1</span> ? arr.slice(<span class="number">1</span>) : arr);</span><br><span class="line"></span><br><span class="line">tail([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [2,3]</span></span><br><span class="line">tail([<span class="number">1</span>]); <span class="comment">// [1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="take"><a href="#take" class="headerlink" title="take"></a>take</h2><p>从一个给定的数组中创建一个前<code>n</code>个元素的数组。<br>使用<code>Array.slice()</code>创建一个数组包含第一个元素开始，到<code>n</code>个元素结束的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> take = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> arr.slice(<span class="number">0</span>, n);</span><br><span class="line"></span><br><span class="line">take([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">5</span>); <span class="comment">// [1, 2, 3]</span></span><br><span class="line">take([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">0</span>); <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<h2 id="takeRight"><a href="#takeRight" class="headerlink" title="takeRight"></a>takeRight</h2><p>从一个给定的数组中创建一个后<code>n</code>个元素的数组。<br>使用<code>Array.slice()</code>来创建一个从第<code>n</code>个元素开始至末尾的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> takeRight = <span class="function">(<span class="params">arr, n = <span class="number">1</span></span>) =&gt;</span> arr.slice(arr.length - n, arr.length);</span><br><span class="line"></span><br><span class="line">takeRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>); <span class="comment">// [ 2, 3 ]</span></span><br><span class="line">takeRight([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// [3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="takeWhile"><a href="#takeWhile" class="headerlink" title="takeWhile"></a>takeWhile</h2><p>移除数组中的元素，直到传递的函数返回<code>true</code>。返回删除的元素。<br>循环数组，使用<code>for…of</code>循环<code>array.prototype.entries()</code>，直到函数返回的值为<code>true</code>。使用<code>array.prototype.slice()</code>返回删除的元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> takeWhile = <span class="function">(<span class="params">arr, func</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> [i, val] <span class="keyword">of</span> arr.entries()) <span class="keyword">if</span> (func(val)) <span class="keyword">return</span> arr.slice(<span class="number">0</span>, i);</span><br><span class="line">  <span class="keyword">return</span> arr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">takeWhile([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n &gt;= <span class="number">3</span>); <span class="comment">// [1, 2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="takeRightWhile"><a href="#takeRightWhile" class="headerlink" title="takeRightWhile"></a>takeRightWhile</h2><p>从数组末尾移除元素，直到传递的函数返回<code>true</code>。返回删除的元素。<br>使用<code>array.prototype.reducceright()</code>循环数组，并在函数返回错误值时累积元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> takeRightWhile = <span class="function">(<span class="params">arr, func</span>) =&gt;</span></span><br><span class="line">  arr.reduceRight(<span class="function">(<span class="params">acc, el</span>) =&gt;</span> (func(el) ? acc : [el, ...acc]), []);</span><br><span class="line"></span><br><span class="line">takeRightWhile([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], n =&gt; n &lt; <span class="number">3</span>); <span class="comment">// [3, 4]</span></span><br></pre></td></tr></table></figure>
+<h2 id="union"><a href="#union" class="headerlink" title="union"></a>union</h2><p>返回两个数组中任何一个中存在的每个元素一次。<br>创建一个包含A和B所有值的集合，并转换为数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> union = <span class="function">(<span class="params">a, b</span>) =&gt;</span> <span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>([...a, ...b]));</span><br><span class="line"></span><br><span class="line">union([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>]); <span class="comment">// [1,2,3,4]</span></span><br></pre></td></tr></table></figure>
+<h2 id="unionBy"><a href="#unionBy" class="headerlink" title="unionBy"></a>unionBy</h2><p>将提供的函数应用于两个数组的每个数组元素之后，返回两个数组中任何一个数组中存在的每个元素一次。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> unionBy = <span class="function">(<span class="params">a, b, fn</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> s = <span class="keyword">new</span> <span class="built_in">Set</span>(a.map(fn));</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>([...a, ...b.filter(<span class="function"><span class="params">x</span> =&gt;</span> !s.has(fn(x)))]));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">unionBy([<span class="number">2.1</span>], [<span class="number">1.2</span>, <span class="number">2.3</span>], <span class="built_in">Math</span>.floor); <span class="comment">// [2.1, 1.2]</span></span><br></pre></td></tr></table></figure>
+<h2 id="uniqueElements"><a href="#uniqueElements" class="headerlink" title="uniqueElements"></a>uniqueElements</h2><p>返回数组的所有唯一值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uniqueElements = <span class="function"><span class="params">arr</span> =&gt;</span> [...new <span class="built_in">Set</span>(arr)];</span><br><span class="line"></span><br><span class="line">uniqueElements([<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">// [1, 2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="without"><a href="#without" class="headerlink" title="without"></a>without</h2><p>从数组中排除给定值。<br>使用<code>Array.filter()</code>创建一个不包括所有给定值的数组。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const without &#x3D; (arr, ...args) &#x3D;&gt; arr.filter(v &#x3D;&gt; !args.includes(v));</span><br><span class="line"></span><br><span class="line">without([2, 1, 2, 3], 1, 2); &#x2F;&#x2F; [3]</span><br></pre></td></tr></table></figure>
+<h2 id="xProd"><a href="#xProd" class="headerlink" title="xProd"></a>xProd</h2><p>通过从数组中创建每个可能的对，从提供的两个数组中创建一个新数组。<br>使用<code>array.prototype.reduce()、array.prototype.map()</code>和<code>array.prototype.concat()</code>从两个数组的元素中生成每个可能的对，并将它们保存在一个数组中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xProd = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a.reduce(<span class="function">(<span class="params">acc, x</span>) =&gt;</span> acc.concat(b.map(<span class="function"><span class="params">y</span> =&gt;</span> [x, y])), []);</span><br><span class="line"></span><br><span class="line">xProd([<span class="number">1</span>, <span class="number">2</span>], [<span class="string">'a'</span>, <span class="string">'b'</span>]); <span class="comment">// [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]</span></span><br></pre></td></tr></table></figure>
+<h2 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h2><p>创建一组元素，根据原始数组中的位置进行分组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> zip = <span class="function">(<span class="params">...arrays</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> maxLength = <span class="built_in">Math</span>.max(...arrays.map(<span class="function"><span class="params">x</span> =&gt;</span> x.length));</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: maxLength &#125;).map(<span class="function">(<span class="params">_, i</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>.from(&#123; <span class="attr">length</span>: arrays.length &#125;, (_, k) =&gt; arrays[k][i]);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">zip([<span class="string">'a'</span>, <span class="string">'b'</span>], [<span class="number">1</span>, <span class="number">2</span>], [<span class="literal">true</span>, <span class="literal">false</span>]); <span class="comment">// [['a', 1, true], ['b', 2, false]]</span></span><br><span class="line">zip([<span class="string">'a'</span>], [<span class="number">1</span>, <span class="number">2</span>], [<span class="literal">true</span>, <span class="literal">false</span>]); <span class="comment">// [['a', 1, true], [undefined, 2, false]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="zipObject"><a href="#zipObject" class="headerlink" title="zipObject"></a>zipObject</h2><p>给定一个有效属性标识符数组和一个值数组，返回一个将属性与值关联的对象。<br>由于一个对象可以有未定义的值，但不存在未定义的属性，该属性数组用于使用<code>Array.reduce()</code>来决定结果对象的结构。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> zipObject = <span class="function">(<span class="params">props, values</span>) =&gt;</span></span><br><span class="line">  props.reduce(<span class="function">(<span class="params">obj, prop, index</span>) =&gt;</span> ((obj[prop] = values[index]), obj), &#123;&#125;);</span><br><span class="line"></span><br><span class="line">zipObject([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>], [<span class="number">1</span>, <span class="number">2</span>]); <span class="comment">// &#123;a: 1, b: 2, c: undefined&#125;</span></span><br><span class="line">zipObject([<span class="string">'a'</span>, <span class="string">'b'</span>], [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// &#123;a: 1, b: 2&#125;</span></span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/09/06/js/%E8%BF%9B%E9%98%B6/JS%20%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Array)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS-code/" rel="tag">JS code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E8%BF%9B%E9%98%B6/" rel="tag">JS进阶</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2019/09/09/js/%E8%BF%9B%E9%98%B6/JS%20%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS防抖和节流
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/07/30/ES6/ES6%20Set%E5%92%8CMap%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">ES6 Set和Map数据结构</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2020
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>
