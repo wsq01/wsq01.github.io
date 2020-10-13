@@ -80,6 +80,503 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-SQL/SQL 范式设计" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/"
+    >SQL/SQL 范式设计</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/" class="article-date">
+  <time datetime="2020-08-17T09:57:34.169Z" itemprop="datePublished">2020-08-17</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <!-- ---
+title: SQL 范式设计
+date: 2020-03-02 16:24:06
+tags: [SQL]
+categories: [SQL]
+--- -->
+
+
+<p>范式是数据表设计的基本原则，又很容易被忽略。很多时候，当数据库运行了一段时间之后，我们才发现数据表设计得有问题。重新调整数据表的结构，就需要做数据迁移，还有可能影响程序的业务逻辑，以及网站正常的访问。所以在开始设置数据库的时候，我们就需要重视数据表的设计。</p>
+<h1 id="数据库的设计范式都包括哪些"><a href="#数据库的设计范式都包括哪些" class="headerlink" title="数据库的设计范式都包括哪些"></a>数据库的设计范式都包括哪些</h1><p>我们在设计关系型数据库模型的时候，需要对关系内部各个属性之间联系的合理化程度进行定义，这就有了不同等级的规范要求，这些规范要求被称为范式（NF）。你可以把范式理解为，一张数据表的设计结构需要满足的某种设计标准的级别。</p>
+<p>目前关系型数据库一共有 6 种范式，按照范式级别，从低到高分别是：1NF（第一范式）、2NF（第二范式）、3NF（第三范式）、BCNF（巴斯 - 科德范式）、4NF（第四范式）和 5NF（第五范式，又叫做完美范式）。</p>
+<p>数据库的范式设计越高阶，冗余度就越低，同时高阶的范式一定符合低阶范式的要求，比如满足 2NF 的一定满足 1NF，满足 3NF 的一定满足 2NF，依次类推。</p>
+<p>你可能会问，这么多范式是不是都要掌握呢？</p>
+<p>一般来说数据表的设计应尽量满足 3NF。但也不绝对，有时候为了提高某些查询性能，我们还需要破坏范式规则，也就是反规范化。</p>
+<img src="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/img1.jpeg" class="">
+
+<h1 id="数据表中的那些键"><a href="#数据表中的那些键" class="headerlink" title="数据表中的那些键"></a>数据表中的那些键</h1><p>范式的定义会使用到主键和候选键（因为主键和候选键可以唯一标识元组），数据库中的键（Key）由一个或者多个属性组成。数据表中常用的几种键和属性的定义：</p>
+<ul>
+<li>超键：能唯一标识元组的属性集叫做超键。</li>
+<li>候选键：如果超键不包括多余的属性，那么这个超键就是候选键。</li>
+<li>主键：用户可以从候选键中选择一个作为主键。</li>
+<li>外键：如果数据表 R1 中的某属性集不是 R1 的主键，而是另一个数据表 R2 的主键，那么这个属性集就是数据表 R1 的外键。</li>
+<li>主属性：包含在任一候选键中的属性称为主属性。</li>
+<li>非主属性：与主属性相对，指的是不包含在任何一个候选键中的属性。</li>
+</ul>
+<p>通常，我们也将候选键称之为“码”，把主键也称为“主码”。因为键可能是由多个属性组成的，针对单个属性，我们还可以用主属性和非主属性来进行区分。</p>
+<p>比如有一个 NBA 的球员表（<code>player</code>）和球队表（<code>team</code>）。这里我可以把球员表定义为包含球员编号、姓名、身份证号、年龄和球队编号；球队表包含球队编号、主教练和球队所在地。</p>
+<p>对于球员表来说，超键就是包括球员编号或者身份证号的任意组合，比如（球员编号）（球员编号，姓名）（身份证号，年龄）等。</p>
+<p>候选键就是最小的超键，对于球员表来说，候选键就是（球员编号）或者（身份证号）。</p>
+<p>主键是我们自己选定，也就是从候选键中选择一个，比如（球员编号）。</p>
+<p>外键就是球员表中的球队编号。</p>
+<p>在<code>player</code>表中，主属性是（球员编号）（身份证号），其他的属性（姓名）（年龄）（球队编号）都是非主属性。</p>
+<h1 id="从-1NF-到-3NF"><a href="#从-1NF-到-3NF" class="headerlink" title="从 1NF 到 3NF"></a>从 1NF 到 3NF</h1><p>1NF 指的是数据库表中的任何属性都是原子性的，不可再分。这很好理解，我们在设计某个字段的时候，对于字段 X 来说，就不能把字段 X 拆分成字段 X-1 和字段 X-2。事实上，任何的 DBMS 都会满足第一范式的要求，不会将字段进行拆分。</p>
+<p>2NF 指的数据表里的非主属性都要和这个数据表的候选键有完全依赖关系。所谓完全依赖不同于部分依赖，也就是不能仅依赖候选键的一部分属性，而必须依赖全部属性。</p>
+<p>这里我举一个没有满足 2NF 的例子，比如说我们设计一张球员比赛表<code>player_game</code>，里面包含球员编号、姓名、年龄、比赛编号、比赛时间和比赛场地等属性，这里候选键和主键都为（球员编号，比赛编号），我们可以通过候选键来决定如下的关系：</p>
+<p>(球员编号, 比赛编号) → (姓名, 年龄, 比赛时间, 比赛场地，得分)</p>
+<p>上面这个关系说明球员编号和比赛编号的组合决定了球员的姓名、年龄、比赛时间、比赛地点和该比赛的得分数据。</p>
+<p>但是这个数据表不满足第二范式，因为数据表中的字段之间还存在着如下的对应关系：</p>
+<p>(球员编号) → (姓名，年龄)</p>
+<p>(比赛编号) → (比赛时间, 比赛场地)</p>
+<p>也就是说候选键中的某个字段决定了非主属性。你也可以理解为，对于非主属性来说，并非完全依赖候选键。这样会产生怎样的问题呢？</p>
+<ol>
+<li>数据冗余：如果一个球员可以参加 m 场比赛，那么球员的姓名和年龄就重复了 m-1 次。一个比赛也可能会有 n 个球员参加，比赛的时间和地点就重复了 n-1 次。</li>
+<li>插入异常：如果我们想要添加一场新的比赛，但是这时还没有确定参加的球员都有谁，那么就没法插入。</li>
+<li>删除异常：如果我要删除某个球员编号，如果没有单独保存比赛表的话，就会同时把比赛信息删除掉。</li>
+<li>更新异常：如果我们调整了某个比赛的时间，那么数据表中所有这个比赛的时间都需要进行调整，否则就会出现一场比赛时间不同的情况。</li>
+</ol>
+<p>为了避免出现上述的情况，我们可以把球员比赛表设计为下面的三张表。</p>
+<p>球员<code>player</code>表包含球员编号、姓名和年龄等属性；比赛<code>game</code>表包含比赛编号、比赛时间和比赛场地等属性；球员比赛关系<code>player_game</code>表包含球员编号、比赛编号和得分等属性。</p>
+<p>这样的话，每张数据表都符合第二范式，也就避免了异常情况的发生。某种程度上 2NF 是对 1NF 原子性的升级。1NF 告诉我们字段属性需要是原子性的，而 2NF 告诉我们一张表就是一个独立的对象，也就是说一张表只表达一个意思。</p>
+<p>3NF 在满足 2NF 的同时，对任何非主属性都不传递依赖于候选键。也就是说不能存在非主属性 A 依赖于非主属性 B，非主属性 B 依赖于候选键的情况。</p>
+<p>我们用球员<code>player</code>表举例子，这张表包含的属性包括球员编号、姓名、球队名称和球队主教练。现在，我们把属性之间的依赖关系画出来，如下图所示：</p>
+<img src="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/img2.jpeg" class="">
+
+<p>你能看到球员编号决定了球队名称，同时球队名称决定了球队主教练，非主属性球队主教练就会传递依赖于球员编号，因此不符合 3NF 的要求。</p>
+<p>如果要达到 3NF 的要求，需要把数据表拆成下面这样：</p>
+<p>球员表的属性包括球员编号、姓名和球队名称；球队表的属性包括球队名称、球队主教练。</p>
+<p>总结，1NF 需要保证表中每个属性都保持原子性；2NF 需要保证表中的非主属性与候选键完全依赖；3NF 需要保证表中的非主属性与候选键不存在传递依赖。</p>
+<h1 id="BCNF（巴斯范式）"><a href="#BCNF（巴斯范式）" class="headerlink" title="BCNF（巴斯范式）"></a>BCNF（巴斯范式）</h1><p>如果数据表的关系模式符合 3NF 的要求，就不存在问题了吗？我们来看下这张仓库管理关系<code>warehouse_keeper</code>表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">仓库名</th>
+<th align="center">管理员</th>
+<th align="center">物品名</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">北京仓</td>
+<td align="center">张三</td>
+<td align="center">iphone XR</td>
+<td align="center">10</td>
+</tr>
+<tr>
+<td align="center">北京仓</td>
+<td align="center">张三</td>
+<td align="center">iphone7</td>
+<td align="center">20</td>
+</tr>
+<tr>
+<td align="center">上海仓</td>
+<td align="center">李四</td>
+<td align="center">iphone 7p</td>
+<td align="center">30</td>
+</tr>
+<tr>
+<td align="center">上海仓</td>
+<td align="center">李四</td>
+<td align="center">iphone8</td>
+<td align="center">40</td>
+</tr>
+</tbody></table>
+<p>在这个数据表中，一个仓库只有一个管理员，同时一个管理员也只管理一个仓库。我们先来梳理下这些属性之间的依赖关系。</p>
+<p>仓库名决定了管理员，管理员也决定了仓库名，同时（仓库名，物品名）的属性集合可以决定数量这个属性。</p>
+<p>这样，我们就可以找到数据表的候选键是（管理员，物品名）和（仓库名，物品名），</p>
+<p>然后我们从候选键中选择一个作为主键，比如（仓库名，物品名）。</p>
+<p>在这里，主属性是包含在任一候选键中的属性，也就是仓库名，管理员和物品名。非主属性是数量这个属性。</p>
+<p>如何判断一张表的范式呢？我们需要根据范式的等级，从低到高来进行判断。</p>
+<p>首先，数据表每个属性都是原子性的，符合 1NF 的要求；其次，数据表中非主属性”数量“都与候选键全部依赖，（仓库名，物品名）决定数量，（管理员，物品名）决定数量，因此，数据表符合 2NF 的要求；最后，数据表中的非主属性，不传递依赖于候选键。因此符合 3NF 的要求。</p>
+<p>既然数据表已经符合了 3NF 的要求，是不是就不存在问题了呢？我们来看下下面的情况：</p>
+<p>增加一个仓库，但是还没有存放任何物品。根据数据表实体完整性的要求，主键不能有空值，因此会出现插入异常；<br>如果仓库更换了管理员，我们就可能会修改数据表中的多条记录；<br>如果仓库里的商品都卖空了，那么此时仓库名称和相应的管理员名称也会随之被删除。<br>你能看到，即便数据表符合 3NF 的要求，同样可能存在插入，更新和删除数据的异常情况。</p>
+<p>这种情况下该怎么解决呢？</p>
+<p>首先我们需要确认造成异常的原因：主属性仓库名对于候选键（管理员，物品名）是部分依赖的关系，这样就有可能导致上面的异常情况。人们在 3NF 的基础上进行了改进，提出了BCNF，也叫做巴斯 - 科德范式，它在 3NF 的基础上消除了主属性对候选键的部分依赖或者传递依赖关系。</p>
+<p>根据 BCNF 的要求，我们需要把仓库管理关系 warehouse_keeper 表拆分成下面这样：</p>
+<p>仓库表：（仓库名，管理员）</p>
+<p>库存表：（仓库名，物品名，数量）</p>
+<p>这样就不存在主属性对于候选键的部分依赖或传递依赖，上面数据表的设计就符合 BCNF。</p>
+<h1 id="反范式设计"><a href="#反范式设计" class="headerlink" title="反范式设计"></a>反范式设计</h1><p>尽管围绕着数据表的设计有很多范式，但事实上，我们在设计数据表的时候却不一定要参照这些标准。</p>
+<p>我们在之前已经了解了越高阶的范式得到的数据表越多，数据冗余度越低。但有时候，我们在设计数据表的时候，还需要为了性能和读取效率违反范式化的原则。反范式就是相对范式化而言的，换句话说，就是允许少量的冗余，通过空间来换时间。</p>
+<p>如果我们想对查询效率进行优化，有时候反范式优化也是一种优化思路。</p>
+<p>比如我们想要查询某个商品的前 1000 条评论，会涉及到两张表。</p>
+<p>商品评论表<code>product_comment</code>，对应的字段名称及含义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">comment_id</th>
+<th align="center">product_id</th>
+<th align="center">comment_text</th>
+<th align="center">comment_time</th>
+<th align="center">user_id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">含义</td>
+<td align="center">商品评论ID</td>
+<td align="center">商品ID</td>
+<td align="center">评论内容</td>
+<td align="center">评论时间</td>
+<td align="center">用户ID</td>
+</tr>
+</tbody></table>
+<p>用户表<code>user</code>，对应的字段名称及含义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">uer_id</th>
+<th align="center">user_name</th>
+<th align="center">create_time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">含义</td>
+<td align="center">用户ID</td>
+<td align="center">用户昵称</td>
+<td align="center">注册时间</td>
+</tr>
+</tbody></table>
+<p>下面，我们就用这两张表模拟一下反范式优化。</p>
+<h2 id="实验数据：模拟两张百万量级的数据表"><a href="#实验数据：模拟两张百万量级的数据表" class="headerlink" title="实验数据：模拟两张百万量级的数据表"></a>实验数据：模拟两张百万量级的数据表</h2><p>为了更好地进行 SQL 优化实验，我们需要给用户表和商品评论表随机模拟出百万量级的数据。我们可以通过存储过程来实现模拟数据。</p>
+<p>下面是给用户表随机生成 100 万用户的代码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DEFINER=<span class="string">`root`</span>@<span class="string">`localhost`</span> <span class="keyword">PROCEDURE</span> <span class="string">`insert_many_user`</span>(<span class="keyword">IN</span> <span class="keyword">start</span> <span class="built_in">INT</span>(<span class="number">10</span>), <span class="keyword">IN</span> max_num <span class="built_in">INT</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">DECLARE</span> i <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">DECLARE</span> date_start DATETIME <span class="keyword">DEFAULT</span> (<span class="string">'2017-01-01 00:00:00'</span>);</span><br><span class="line"><span class="keyword">DECLARE</span> date_temp DATETIME;</span><br><span class="line"><span class="keyword">SET</span> date_temp = date_start;</span><br><span class="line"><span class="keyword">SET</span> autocommit=<span class="number">0</span>;</span><br><span class="line">REPEAT</span><br><span class="line"><span class="keyword">SET</span> i=i+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">SET</span> date_temp = <span class="keyword">date_add</span>(date_temp, <span class="built_in">interval</span> <span class="keyword">RAND</span>()*<span class="number">60</span> <span class="keyword">second</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">user</span>(user_id, user_name, create_time)</span><br><span class="line"><span class="keyword">VALUES</span>((<span class="keyword">start</span>+i), <span class="keyword">CONCAT</span>(<span class="string">'user_'</span>,i), date_temp);</span><br><span class="line">UNTIL i = max_num</span><br><span class="line"><span class="keyword">END</span> <span class="keyword">REPEAT</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>我用<code>date_start</code>变量来定义初始的注册时间，时间为 2017 年 1 月 1 日 0 点 0 分 0 秒，然后用<code>date_temp</code>变量计算每个用户的注册时间，新的注册用户与上一个用户注册的时间间隔为 60 秒内的随机值。然后使用<code>REPEAT … UNTIL … END REPEAT</code>循环，对<code>max_num</code>个用户的数据进行计算。在循环前，我们将<code>autocommit</code>设置为 0，这样等计算完成再统一插入，执行效率更高。</p>
+<p>然后我们来运行<code>call insert_many_user(10000, 1000000);</code>调用存储过程。这里需要通过<code>start</code>和<code>max_num</code>两个参数对初始的<code>user_id</code>和要创建的用户数量进行设置。运行结果：</p>
+<img src="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/img3.png" class="">
+
+<p>你能看到在 MySQL 里，创建 100 万的用户数据用时 1 分 37 秒。</p>
+<p>接着我们再来给商品评论表<code>product_comment</code>随机生成 100 万条商品评论。这里我们设置为给某一款商品评论，比如<code>product_id=10001</code>。评论的内容为随机的 20 个字母。以下是创建随机的 100 万条商品评论的存储过程：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DEFINER=<span class="string">`root`</span>@<span class="string">`localhost`</span> <span class="keyword">PROCEDURE</span> <span class="string">`insert_many_product_comments`</span>(<span class="keyword">IN</span> <span class="keyword">START</span> <span class="built_in">INT</span>(<span class="number">10</span>), <span class="keyword">IN</span> max_num <span class="built_in">INT</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">DECLARE</span> i <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">DECLARE</span> date_start DATETIME <span class="keyword">DEFAULT</span> (<span class="string">'2018-01-01 00:00:00'</span>);</span><br><span class="line"><span class="keyword">DECLARE</span> date_temp DATETIME;</span><br><span class="line"><span class="keyword">DECLARE</span> comment_text <span class="built_in">VARCHAR</span>(<span class="number">25</span>);</span><br><span class="line"><span class="keyword">DECLARE</span> user_id <span class="built_in">INT</span>;</span><br><span class="line"><span class="keyword">SET</span> date_temp = date_start;</span><br><span class="line"><span class="keyword">SET</span> autocommit=<span class="number">0</span>;</span><br><span class="line">REPEAT</span><br><span class="line"><span class="keyword">SET</span> i=i+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">SET</span> date_temp = <span class="keyword">date_add</span>(date_temp, <span class="built_in">INTERVAL</span> <span class="keyword">RAND</span>()*<span class="number">60</span> <span class="keyword">SECOND</span>);</span><br><span class="line"><span class="keyword">SET</span> comment_text = <span class="keyword">substr</span>(<span class="keyword">MD5</span>(<span class="keyword">RAND</span>()),<span class="number">1</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">SET</span> user_id = <span class="keyword">FLOOR</span>(<span class="keyword">RAND</span>()*<span class="number">1000000</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> product_comment(comment_id, product_id, comment_text, comment_time, user_id)</span><br><span class="line"><span class="keyword">VALUES</span>((<span class="keyword">START</span>+i), <span class="number">10001</span>, comment_text, date_temp, user_id);</span><br><span class="line">UNTIL i = max_num</span><br><span class="line"><span class="keyword">END</span> <span class="keyword">REPEAT</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>同样的，我用<code>date_start</code>变量来定义初始的评论时间。这里新的评论时间与上一个评论的时间间隔还是 60 秒内的随机值，商品评论表中的<code>user_id</code>为随机值。我们使用<code>REPEAT … UNTIL … END REPEAT</code>循环，来对<code>max_num</code>个商品评论的数据进行计算。</p>
+<p>然后调用存储过程，运行结果如下：</p>
+<img src="/2020/08/17/SQL/SQL%20%E8%8C%83%E5%BC%8F%E8%AE%BE%E8%AE%A1/img4.png" class="">
+
+<p>MySQL 一共花了 2 分 7 秒完成了商品评论数据的创建。</p>
+<h2 id="反范式优化实验对比"><a href="#反范式优化实验对比" class="headerlink" title="反范式优化实验对比"></a>反范式优化实验对比</h2><p>如果我们想要查询某个商品<code>ID</code>，比如 10001 的前 1000 条评论，需要写成下面这样：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> p.comment_text, p.comment_time, u.user_name <span class="keyword">FROM</span> product_comment <span class="keyword">AS</span> p </span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> <span class="keyword">user</span> <span class="keyword">AS</span> u </span><br><span class="line"><span class="keyword">ON</span> p.user_id = u.user_id </span><br><span class="line"><span class="keyword">WHERE</span> p.product_id = <span class="number">10001</span> </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> p.comment_id <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（1000 条数据行）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">comment_text</th>
+<th align="center">comment_time</th>
+<th align="center">user_name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">462eed7ac6e79129a79</td>
+<td align="center">2018-12-14 04:53:25</td>
+<td align="center">user_546655</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">52f6a51769daf701bc68</td>
+<td align="center">2018-12-13 20:35:28</td>
+<td align="center">user_698675</td>
+</tr>
+</tbody></table>
+<p>运行时长为 0.395 秒，查询效率并不高。</p>
+<p>这是因为在实际生活中，我们在显示商品评论的时候，通常会显示这个用户的昵称，而不是用户<code>ID</code>，因此我们还需要关联<code>product_comment</code>和<code>user</code>这两张表来进行查询。当表数据量不大的时候，查询效率还好，但如果表数据量都超过了百万量级，查询效率就会变低。这是因为查询会在<code>product_comment</code>表和<code>user</code>表这两个表上进行聚集索引扫描，然后再嵌套循环，这样一来查询所耗费的时间就有几百毫秒甚至更多。对于网站的响应来说，这已经很慢了，用户体验会非常差。</p>
+<p>如果我们想要提升查询的效率，可以允许适当的数据冗余，也就是在商品评论表中增加用户昵称字段，在<code>product_comment</code>数据表的基础上增加<code>user_name</code>字段，就得到了<code>product_comment2</code>数据表。</p>
+<p>你可以在百度网盘中下载这三张数据表<code>product_comment、product_comment2</code>和<code>user</code>表，密码为<code>n3l8</code>。</p>
+<p>这样一来，只需单表查询就可以得到数据集结果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> comment_text, comment_time, user_name <span class="keyword">FROM</span> product_comment2 <span class="keyword">WHERE</span> product_id = <span class="number">10001</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> comment_id <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>优化之后只需要扫描一次聚集索引即可，运行时间为 0.039 秒，查询时间是之前的 1/10。 你能看到，在数据量大的情况下，查询效率会有显著的提升。</p>
+<h2 id="反范式存在的问题-amp-适用场景"><a href="#反范式存在的问题-amp-适用场景" class="headerlink" title="反范式存在的问题 &amp; 适用场景"></a>反范式存在的问题 &amp; 适用场景</h2><p>从上面的例子中可以看出，反范式可以通过空间换时间，提升查询的效率，但是反范式也会带来一些新问题。</p>
+<p>在数据量小的情况下，反范式不能体现性能的优势，可能还会让数据库的设计更加复杂。比如采用存储过程来支持数据的更新、删除等额外操作，很容易增加系统的维护成本。</p>
+<p>比如用户每次更改昵称的时候，都需要执行存储过程来更新，如果昵称更改频繁，会非常消耗系统资源。</p>
+<p>那么反范式优化适用于哪些场景呢？</p>
+<p>在现实生活中，我们经常需要一些冗余信息，比如订单中的收货人信息，包括姓名、电话和地址等。每次发生的订单收货信息都属于历史快照，需要进行保存，但用户可以随时修改自己的信息，这时保存这些冗余信息是非常有必要的。</p>
+<p>当冗余信息有价值或者能大幅度提高查询效率的时候，我们就可以采取反范式的优化。</p>
+<p>此外反范式优化也常用在数据仓库的设计中，因为数据仓库通常存储历史数据，对增删改的实时性要求不强，对历史数据的分析需求强。这时适当允许数据的冗余度，更方便进行数据分析。</p>
+<p>数据仓库和数据库在使用上的区别：</p>
+<ul>
+<li>数据库设计的目的在于捕获数据，而数据仓库设计的目的在于分析数据；</li>
+<li>数据库对数据的增删改实时性要求强，需要存储在线的用户数据，而数据仓库存储的一般是历史数据；</li>
+<li>数据库设计需要尽量避免冗余，但为了提高查询效率也允许一定的冗余度，而数据仓库在设计上更偏向采用反范式设计。</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>范式本身没有优劣之分，只有适用场景不同。没有完美的设计，只有合适的设计，我们在数据表的设计中，还需要根据需求将范式和反范式混合使用。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-SQL/SQL 索引" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/17/SQL/SQL%20%E7%B4%A2%E5%BC%95/"
+    >SQL/SQL 索引</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/08/17/SQL/SQL%20%E7%B4%A2%E5%BC%95/" class="article-date">
+  <time datetime="2020-08-17T09:57:34.168Z" itemprop="datePublished">2020-08-17</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="索引是万能的吗？"><a href="#索引是万能的吗？" class="headerlink" title="索引是万能的吗？"></a>索引是万能的吗？</h1><p>数据库中的索引，就好比一本书的目录，它可以帮我们快速进行特定值的定位与查找，从而加快数据查询的效率。</p>
+<p>索引就是帮助数据库管理系统高效获取数据的数据结构。</p>
+<p>如果我们不使用索引，就必须从第 1 条记录开始扫描，直到把所有的数据表都扫描完，才能找到想要的数据。既然如此，如果我们想要快速查找数据，就只需要创建更多的索引就好了呢？</p>
+<p>其实索引不是万能的，在有些情况下使用索引反而会让效率变低。</p>
+<p>索引的价值是帮我们从海量数据中找到想要的数据，如果数据量少，那么是否使用索引对结果的影响并不大。</p>
+<p>在数据表中的数据行数比较少的情况下，比如不到 1000 行，是不需要创建索引的。另外，当数据重复度大，比如高于 10% 的时候，也不需要对这个字段使用索引。比如性别这个字段，就不需要对它创建索引。这是为什么呢？如果你想要在 100 万行数据中查找其中的 50 万行（比如性别为男的数据），一旦创建了索引，你需要先访问 50 万次索引，然后再访问 50 万次数据表，这样加起来的开销比不使用索引可能还要大。</p>
+<h2 id="实验-1：数据行数少的情况下，索引效率如何"><a href="#实验-1：数据行数少的情况下，索引效率如何" class="headerlink" title="实验 1：数据行数少的情况下，索引效率如何"></a>实验 1：数据行数少的情况下，索引效率如何</h2><p>比如<a href="https://github.com/wsq01/SQL-repo/blob/master/heros_without_index.sql" target="_blank" rel="noopener">heros_without_index.sql</a>和<a href="https://github.com/wsq01/SQL-repo/blob/master/heros_with_index.sql" target="_blank" rel="noopener">heros_with_index.sql</a>这两个数据表。</p>
+<p>在第一个数据表中，除了自增的<code>id</code>以外没有建立额外的索引。第二张数据表中，对<code>name</code>字段建立了唯一索引。</p>
+<p><code>heros</code>数据表一共有 69 个英雄，数据量很少。当我们对<code>name</code>进行条件查询的时候，我们观察一下创建索引前后的效率。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, hp_max, mp_max <span class="keyword">FROM</span> heros_without_index <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">'刘禅'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（1 条数据，运行时间 0.072s）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+<th align="center">mp_max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10015</td>
+<td align="center">刘禅</td>
+<td align="center">8581</td>
+<td align="center">1694</td>
+</tr>
+</tbody></table>
+<p>我对<code>name</code>字段建立索引后，再进行查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, hp_max, mp_max <span class="keyword">FROM</span> heros_with_index <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">'刘禅'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（1 条数据，运行时间 0.080s）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+<th align="center">mp_max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10015</td>
+<td align="center">刘禅</td>
+<td align="center">8581</td>
+<td align="center">1694</td>
+</tr>
+</tbody></table>
+<p>你能看到运行结果相同，但是创建了<code>name</code>字段索引的效率比没有创建索引时效率更低。在数据量不大的情况下，索引就发挥不出作用了。</p>
+<h2 id="实验-2：性别（男或女）字段真的不应该创建索引吗？"><a href="#实验-2：性别（男或女）字段真的不应该创建索引吗？" class="headerlink" title="实验 2：性别（男或女）字段真的不应该创建索引吗？"></a>实验 2：性别（男或女）字段真的不应该创建索引吗？</h2><p>如果一个字段的取值少，比如性别这个字段，通常是不需要创建索引的。那么有没有特殊的情况呢？</p>
+<p>下面我们来看一个例子，假设有一个女儿国，人口总数为 100 万人，男性只有 10 个人，也就是占总人口的 10 万分之 1。</p>
+<p>女儿国的人口数据表<a href="https://github.com/wsq01/SQL-repo/blob/master/user_gender.sql" target="_blank" rel="noopener">user_gender.sql</a>。其中数据表中的<code>user_gender</code>字段取值为 0 或 1，0 代表女性，1 代表男性。</p>
+<p>如果我们要筛选出这个国家中的男性，可以使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_gender = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（10 条数据，运行时间 0.696s）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">user_id</th>
+<th align="center">user_name</th>
+<th align="center">user_gender</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">110000</td>
+<td align="center">student_100000</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">210000</td>
+<td align="center">student_200000</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">101000</td>
+<td align="center">Student_100000</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p>你能看到在未创建索引的情况下，运行的效率并不高。如果我们针对<code>user_gender</code>字段创建索引：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_gender = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>同样是 10 条数据，运行结果相同，时间却缩短到了 0.052s，大幅提升了查询的效率。</p>
+<p>其实通过这两个实验你也能看出来，索引的价值是帮你快速定位。如果想要定位的数据有很多，那么索引就失去了它的使用价值，比如通常情况下的性别字段。不过有时候，我们还要考虑这个字段中的数值分布的情况，在实验 2 中，性别字段的数值分布非常特殊，男性的比例非常少。</p>
+<p>我们不仅要看字段中的数值个数，还要根据数值的分布情况来考虑是否需要创建索引。</p>
+<h1 id="索引的种类有哪些？"><a href="#索引的种类有哪些？" class="headerlink" title="索引的种类有哪些？"></a>索引的种类有哪些？</h1><p>虽然使用索引的本质目的是帮我们快速定位想要查找的数据，但实际上，索引有很多种类。</p>
+<p>从功能逻辑上说，索引主要有 4 种，分别是普通索引、唯一索引、主键索引和全文索引。</p>
+<p>普通索引是基础的索引，没有任何约束，主要用于提高查询效率。唯一索引就是在普通索引的基础上增加了数据唯一性的约束，在一张数据表里可以有多个唯一索引。主键索引在唯一索引的基础上增加了不为空的约束，也就是<code>NOT NULL+UNIQUE</code>，一张表里最多只有一个主键索引。全文索引用的不多，MySQL 自带的全文索引只支持英文。我们通常可以采用专门的全文搜索引擎，比如ES(ElasticSearch) 和 Solr。</p>
+<p>其实前三种索引（普通索引、唯一索引和主键索引）都是一类索引，只不过对数据的约束性逐渐提升。在一张数据表中只能有一个主键索引，这是由主键索引的物理实现方式决定的，因为数据存储在文件中只能按照一种顺序进行存储。但可以有多个普通索引或者多个唯一索引。</p>
+<p>按照物理实现方式，索引可以分为 2 种：聚集索引和非聚集索引。我们也把非聚集索引称为二级索引或者辅助索引。</p>
+<p>聚集索引可以按照主键来排序存储数据，这样在查找行的时候非常有效。举个例子，如果是一本汉语字典，我们想要查找“数”这个字，直接在书中找汉语拼音的位置即可，也就是拼音“shu”。这样找到了索引的位置，在它后面就是我们想要找的数据行。</p>
+<p>非聚集索引又是什么呢？</p>
+<p>在数据库系统会有单独的存储空间存放非聚集索引，这些索引项是按照顺序存储的，但索引项指向的内容是随机存储的。也就是说系统会进行两次查找，第一次先找到索引，第二次找到索引对应的位置取出数据行。非聚集索引不会把索引指向的内容像聚集索引一样直接放到索引的后面，而是维护单独的索引表（只维护索引，不维护索引指向的数据），为数据检索提供方便。我们还以汉语字典为例，如果想要查找“数”字，那么按照部首查找的方式，先找到“数”字的偏旁部首，然后这个目录会告诉我们“数”字存放到第多少页，我们再去指定的页码找这个字。</p>
+<p>聚集索引指表中数据行按索引的排序方式进行存储，对查找行很有效。只有当表包含聚集索引时，表内的数据行才会按找索引列的值在磁盘上进行物理排序和存储。每一个表只能有一个聚集索引，因为数据行本身只能按一个顺序存储。</p>
+<p>聚集索引与非聚集索引的原理不同，在使用上也有一些区别：</p>
+<p>聚集索引的叶子节点存储的就是我们的数据记录，非聚集索引的叶子节点存储的是数据位置。非聚集索引不会影响数据表的物理存储顺序。<br>一个表只能有一个聚集索引，因为只能有一种排序存储的方式，但可以有多个非聚集索引，也就是多个索引目录提供数据检索。<br>使用聚集索引的时候，数据的查询效率高，但如果对数据进行插入，删除，更新等操作，效率会比非聚集索引低。</p>
+<h2 id="实验-3：使用聚集索引和非聚集索引的查询效率"><a href="#实验-3：使用聚集索引和非聚集索引的查询效率" class="headerlink" title="实验 3：使用聚集索引和非聚集索引的查询效率"></a>实验 3：使用聚集索引和非聚集索引的查询效率</h2><p>还是针对刚才的<code>user_gender</code>数据表，我们来看下使用聚集索引和非聚集索引的查询效率有什么区别。在<code>user_gender</code>表中，我设置了<code>user_id</code>为主键，也就是聚集索引的字段是<code>user_id</code>。这里我们查询下<code>user_id=90001</code>的用户信息：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（1 条数据，运行时间 0.043s）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">user_id</th>
+<th align="center">user_name</th>
+<th align="center">user_gender</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">900001</td>
+<td align="center">student_890001</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<p>我们再直接对<code>user_name</code>字段进行条件查询，此时<code>user_name</code>字段没有创建索引：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：1 条数据，运行时间 0.961s。</p>
+<p>对没有建立索引的字段进行条件查询，查询效率明显降低了。</p>
+<p>然后我们对<code>user_name</code>字段创建普通索引，进行 SQL 查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：1 条数据，运行时间 0.050s。</p>
+<p>通过对这 3 次 SQL 查询结果的对比，我们可以总结出以下两点内容：</p>
+<p>对<code>WHERE</code>子句的字段建立索引，可以大幅提升查询效率。<br>采用聚集索引进行数据查询，比使用非聚集索引的查询效率略高。如果查询次数比较多，还是尽量使用主键索引进行数据查询。<br>除了业务逻辑和物理实现方式，索引还可以按照字段个数进行划分，分成单一索引和联合索引。</p>
+<p>索引列为一列时为单一索引；多个列组合在一起创建的索引叫做联合索引。</p>
+<p>创建联合索引时，我们需要注意创建时的顺序问题，因为联合索引 (<code>x, y, z</code>) 和 (<code>z, y, x</code>) 在使用的时候效率可能会存在差别。</p>
+<p>这里需要说明的是联合索引存在最左匹配原则，也就是按照最左优先的方式进行索引的匹配。比如刚才举例的 (<code>x, y, z</code>)，如果查询条件是<code>WHERE x=1 AND y=2 AND z=3</code>，就可以匹配上联合索引；如果查询条件是<code>WHERE y=2</code>，就无法匹配上联合索引。</p>
+<h2 id="实验-4：联合索引的最左原则"><a href="#实验-4：联合索引的最左原则" class="headerlink" title="实验 4：联合索引的最左原则"></a>实验 4：联合索引的最左原则</h2><p>还是针对<code>user_gender</code>数据表，我们把<code>user_id</code>和<code>user_name</code>字段设置为联合主键，然后看下 SQL 查询效率有什么区别。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span> <span class="keyword">AND</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（1 条数据，运行时间 0.046s）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">user_id</th>
+<th align="center">user_name</th>
+<th align="center">user_gender</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">900001</td>
+<td align="center">student_890001</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：1 条数据，运行时间 0.046s。</p>
+<p>我们再来看下普通的条件查询是什么样子的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：1 条数据，运行时间 0.943s。</p>
+<p>当我们使用了联合索引 (<code>user_id, user_name</code>) 的时候，在<code>WHERE</code>子句中对联合索引中的字段<code>user_id</code>和<code>user_name</code>进行条件查询，或者只对<code>user_id</code>进行查询，效率基本上是一样的。当我们对<code>user_name</code>进行条件查询时，效率就会降低很多，这是因为根据联合索引的最左原则，<code>user_id</code>在<code>user_name</code>的左侧，如果没有使用<code>user_id</code>，而是直接使用<code>user_name</code>进行条件查询，联合索引就会失效。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用索引可以帮助我们从海量的数据中快速定位想要查找的数据，不过索引也存在一些不足，比如占用存储空间、降低数据库写操作的性能等，如果有多个索引还会增加索引选择的时间。当我们使用索引时，需要平衡索引的利（提升查询效率）和弊（维护索引所需的代价）。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-SQL/SQL 事务处理" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1344,292 +1841,13 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-webpack/webpack配置项" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/04/webpack/webpack%E9%85%8D%E7%BD%AE%E9%A1%B9/"
-    >webpack配置项</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/04/webpack/webpack%E9%85%8D%E7%BD%AE%E9%A1%B9/" class="article-date">
-  <time datetime="2020-04-04T12:27:31.000Z" itemprop="datePublished">2020-04-04</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/webpack/">webpack</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>webpack 是需要传入一个配置对象。</p>
-<p>整个配置中我们使用 Node 内置的<code>path</code>模块，并在它前面加上<code>__dirname</code>这个全局变量。可以防止不同操作系统之间的文件路径问题，并且可以使相对路径按照预期工作。</p>
-<h1 id="模式-mode"><a href="#模式-mode" class="headerlink" title="模式(mode)"></a>模式(mode)</h1><p><code>mode</code>配置选项用来指定当前的构建环境。<br>设置<code>mode</code>可以使用 webpack 内置的函数，默认值为<code>production</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">"production"</span> <span class="comment">// production | development | none</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th align="center">选项</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><code>development</code></td>
-<td align="left">会将<code>process.env.NODE_ENV</code>的值设为<code>development</code>。启用<code>NamedChunksPlugin</code>和<code>NamedModulesPlugin</code>。</td>
-</tr>
-<tr>
-<td align="center"><code>production</code></td>
-<td align="left">会将<code>process.env.NODE_ENV</code>的值设为<code>production</code>。启用<code>FlagDependencyUsagePlugin</code>，<code>FlagIncludedChunksPlugin</code>，<code>ModuleConcatenationPlugin</code>，<code>NoEmitOnErrorsPlugin</code>，<code>OccurrenceOrderPlugin</code>，<code>SideEffectsFlagPlugin</code>和<code>UglifyJsPlugin</code>。</td>
-</tr>
-<tr>
-<td align="center"><code>none</code></td>
-<td align="left">不开启任何优化选项</td>
-</tr>
-</tbody></table>
-<h1 id="入口-entry"><a href="#入口-entry" class="headerlink" title="入口(entry)"></a>入口(entry)</h1><p><code>entry</code>用来指定 webpack 的打包入口。<br>简单规则：每个 HTML 页面都有一个入口起点。单页应用(SPA)：一个入口起点，多页应用(MPA)：多个入口起点。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">"./app/entry"</span>, <span class="comment">// string | object | array</span></span><br><span class="line">  <span class="comment">// 如果传递一个数组，那么数组的每一项都会执行</span></span><br><span class="line">  entry: [<span class="string">"./app/entry1"</span>, <span class="string">"./app/entry2"</span>],</span><br><span class="line">  entry: &#123;</span><br><span class="line">    a: <span class="string">"./app/entry-a"</span>,</span><br><span class="line">    b: [<span class="string">"./app/entry-b1"</span>, <span class="string">"./app/entry-b2"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果传入一个字符串或字符串数组，<code>chunk</code>会被命名为<code>main</code>。如果传入一个对象，则每个键(<code>key</code>)会是<code>chunk</code>的名称，该值描述了<code>chunk</code>的入口起点。</p>
-<h1 id="输出-output"><a href="#输出-output" class="headerlink" title="输出(output)"></a>输出(output)</h1><p><code>output</code>用来告诉 webpack 如何将编译后的文件输出到磁盘。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    <span class="comment">// webpack 如何输出结果的相关选项</span></span><br><span class="line">    path: path.resolve(__dirname, <span class="string">"dist"</span>), <span class="comment">// string</span></span><br><span class="line">    <span class="comment">// 所有输出文件的目标路径</span></span><br><span class="line">    <span class="comment">// 必须是绝对路径（使用 Node.js 的 path 模块）</span></span><br><span class="line"></span><br><span class="line">    filename: <span class="string">"bundle.js"</span>, <span class="comment">// string</span></span><br><span class="line">    filename: <span class="string">"[name].js"</span>, <span class="comment">// 用于多个入口点</span></span><br><span class="line">    filename: <span class="string">"[chunkhash].js"</span>, <span class="comment">// 用于长效缓存</span></span><br><span class="line">    <span class="comment">// 「入口分块(entry chunk)」的文件名模板</span></span><br><span class="line"></span><br><span class="line">    publicPath: <span class="string">"/assets/"</span>, <span class="comment">// string</span></span><br><span class="line">    publicPath: <span class="string">""</span>,</span><br><span class="line">    publicPath: <span class="string">"https://cdn.example.com/"</span>,</span><br><span class="line">    <span class="comment">// 输出解析文件的目录，url 相对于 HTML 页面</span></span><br><span class="line"></span><br><span class="line">    library: <span class="string">"MyLibrary"</span>, <span class="comment">// string, 导出库(exported library)的名称</span></span><br><span class="line"></span><br><span class="line">    libraryTarget: <span class="string">"umd"</span>, <span class="comment">// 通用模块定义</span></span><br><span class="line">        libraryTarget: <span class="string">"umd2"</span>, <span class="comment">// 通用模块定义</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs2"</span>, <span class="comment">// exported with module.exports</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs-module"</span>, <span class="comment">// 使用 module.exports 导出</span></span><br><span class="line">        libraryTarget: <span class="string">"commonjs"</span>, <span class="comment">// 作为 exports 的属性导出</span></span><br><span class="line">        libraryTarget: <span class="string">"amd"</span>, <span class="comment">// 使用 AMD 定义方法来定义</span></span><br><span class="line">        libraryTarget: <span class="string">"this"</span>, <span class="comment">// 在 this 上设置属性</span></span><br><span class="line">        libraryTarget: <span class="string">"var"</span>, <span class="comment">// 变量定义于根作用域下</span></span><br><span class="line">        libraryTarget: <span class="string">"assign"</span>, <span class="comment">// 盲分配(blind assignment)</span></span><br><span class="line">        libraryTarget: <span class="string">"window"</span>, <span class="comment">// 在 window 对象上设置属性</span></span><br><span class="line">        libraryTarget: <span class="string">"global"</span>, <span class="comment">// property set to global object</span></span><br><span class="line">        libraryTarget: <span class="string">"jsonp"</span>, <span class="comment">// jsonp wrapper</span></span><br><span class="line">    <span class="comment">// 导出库(exported library)的类型</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="output-path"><a href="#output-path" class="headerlink" title="output.path"></a>output.path</h2><p><code>output</code>目录对应一个绝对路径。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path: path.resolve(__dirname, <span class="string">'dist/assets'</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="output-filename"><a href="#output-filename" class="headerlink" title="output.filename"></a>output.filename</h2><p>此选项决定了每个输出<code>bundle</code>的名称。这些<code>bundle</code>将写入到<code>output.path</code>选项指定的目录下。</p>
-<p>对于单个入口起点，<code>filename</code>会是一个静态名称。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename: <span class="string">"bundle.js"</span></span><br></pre></td></tr></table></figure>
-<p>然而，当通过多个入口起点、代码拆分或各种插件创建多个<code>bundle</code>，应该使用以下一种替换方式，来赋予每个<code>bundle</code>一个唯一的名称。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用入口名称：</span></span><br><span class="line">filename: <span class="string">"[name].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用内部chunk id</span></span><br><span class="line">filename: <span class="string">"[id].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用每次构建过程中，唯一的 hash 生成</span></span><br><span class="line">filename: <span class="string">"[name].[hash].bundle.js"</span></span><br><span class="line"><span class="comment">// 使用基于每个 chunk 内容的 hash：</span></span><br><span class="line">filename: <span class="string">"[chunkhash].bundle.js"</span></span><br></pre></td></tr></table></figure>
-<p>可以使用以下替换模板字符串：</p>
-<table>
-<thead>
-<tr>
-<th align="center">模板</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><code>[hash]</code></td>
-<td align="center">模块标识符的<code>hash</code></td>
-</tr>
-<tr>
-<td align="center"><code>[chunkhash]</code></td>
-<td align="center"><code>chunk</code>内容的<code>hash</code></td>
-</tr>
-<tr>
-<td align="center"><code>[name]</code></td>
-<td align="center">模块名称</td>
-</tr>
-<tr>
-<td align="center"><code>[id]</code></td>
-<td align="center">模块标识符</td>
-</tr>
-<tr>
-<td align="center"><code>[query]</code></td>
-<td align="center">模块的<code>query</code>，例如，文件名<code>?</code>后面的字符串</td>
-</tr>
-</tbody></table>
-<p><code>[hash]</code>和<code>[chunkhash]</code>的长度可以使用<code>[hash:16]</code>（默认为20）来指定。</p>
-<h2 id="output-publicPath"><a href="#output-publicPath" class="headerlink" title="output.publicPath"></a>output.publicPath</h2><p>对于按需加载或加载外部资源（如图片、文件等）来说，<code>output.publicPath</code>是很重要的选项。如果指定了一个错误的值，则在加载这些资源时会收到 404 错误。</p>
-<p>此选项指定在浏览器中所引用的「此输出目录对应的公开 URL」。相对 URL会被相对于 HTML 页面（或<code>&lt;base&gt;</code>标签）解析。相对于服务的 URL，相对于协议的 URL或绝对 URL 也可是可能用到的，或者有时必须用到，例如：当将资源托管到 CDN 时。</p>
-<p>该选项的值是以<code>runtime</code>(运行时) 或<code>loader</code>(载入时) 所创建的每个 URL 为前缀。因此，在多数情况下，此选项的值都会以<code>/</code>结束。</p>
-<p>默认值是一个空字符串<code>&quot;&quot;</code>。</p>
-<p>简单规则如下：<code>output.path</code>中的 URL 以 HTML 页面为基准。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path: path.resolve(__dirname, <span class="string">"public/assets"</span>),</span><br><span class="line">publicPath: <span class="string">"https://cdn.example.com/assets/"</span></span><br></pre></td></tr></table></figure>
-<p>对于这个配置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">publicPath: <span class="string">"/assets/"</span>,</span><br><span class="line">chunkFilename: <span class="string">"[id].chunk.js"</span></span><br></pre></td></tr></table></figure>
-<p>对于一个<code>chunk</code>请求，看起来像这样<code>/assets/4.chunk.js</code>。</p>
-<p>对于一个输出 HTML 的<code>loader</code>可能会像这样输出：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"/assets/spinner.gif"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-<p>或者在加载 CSS 的一个图片时：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">background-image: url(&#x2F;assets&#x2F;spinner.gif);</span><br></pre></td></tr></table></figure>
-<p><code>webpack-dev-server</code>也会默认从<code>publicPath</code>为基准，使用它来决定在哪个目录下启用服务，来访问 webpack 输出的文件。</p>
-<p>注意，参数中的<code>[hash]</code>将会被替换为编译过程的<code>hash</code>。</p>
-<p>示例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">publicPath: <span class="string">"https://cdn.example.com/assets/"</span>, <span class="comment">// CDN（总是 HTTPS 协议）</span></span><br><span class="line">publicPath: <span class="string">"//cdn.example.com/assets/"</span>, <span class="comment">// CDN (协议相同)</span></span><br><span class="line">publicPath: <span class="string">"/assets/"</span>, <span class="comment">// 相对于服务</span></span><br><span class="line">publicPath: <span class="string">"assets/"</span>, <span class="comment">// 相对于 HTML 页面</span></span><br><span class="line">publicPath: <span class="string">"../assets/"</span>, <span class="comment">// 相对于 HTML 页面</span></span><br><span class="line">publicPath: <span class="string">""</span>, <span class="comment">// 相对于 HTML 页面（目录相同）</span></span><br></pre></td></tr></table></figure>
-<h1 id="模块-module"><a href="#模块-module" class="headerlink" title="模块(module)"></a>模块(module)</h1><p>这些选项决定了如何处理项目中的不同类型的模块。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    <span class="comment">// 关于模块配置</span></span><br><span class="line">    rules: [</span><br><span class="line">      <span class="comment">// 模块规则（配置 loader、解析器等选项）</span></span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.jsx?$/</span>,</span><br><span class="line">        include: [</span><br><span class="line">          path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">        ],</span><br><span class="line">        exclude: [</span><br><span class="line">          path.resolve(__dirname, <span class="string">"app/demo-files"</span>)</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment">// 这里是匹配条件，每个选项都接收一个正则表达式或字符串</span></span><br><span class="line">        <span class="comment">// test 和 include 具有相同的作用，都是必须匹配选项</span></span><br><span class="line">        <span class="comment">// exclude 是必不匹配选项（优先于 test 和 include）</span></span><br><span class="line">        <span class="comment">// 最佳实践：</span></span><br><span class="line">        <span class="comment">// - 只在 test 和 文件名匹配 中使用正则表达式</span></span><br><span class="line">        <span class="comment">// - 在 include 和 exclude 中使用绝对路径数组</span></span><br><span class="line">        <span class="comment">// - 尽量避免 exclude，更倾向于使用 include</span></span><br><span class="line"></span><br><span class="line">        loader: <span class="string">"babel-loader"</span>,</span><br><span class="line">        <span class="comment">// 应该应用的 loader，它相对上下文解析</span></span><br><span class="line"></span><br><span class="line">        options: &#123;</span><br><span class="line">          presets: [<span class="string">"es2015"</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// loader 的可选项</span></span><br><span class="line">      &#125;,</span><br><span class="line"></span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.html$/</span>,</span><br><span class="line">        test: <span class="string">"\.html$"</span></span><br><span class="line"></span><br><span class="line">        use: [</span><br><span class="line">          <span class="comment">// 应用多个 loader 和选项</span></span><br><span class="line">          <span class="string">"htmllint-loader"</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            loader: <span class="string">"html-loader"</span>,</span><br><span class="line">            options: &#123;</span><br><span class="line">              <span class="comment">/* ... */</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    noParse: [</span><br><span class="line">      /special-library\.js$/</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 不解析这里的模块</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="module-rules"><a href="#module-rules" class="headerlink" title="module.rules"></a>module.rules</h2><p>创建模块时，匹配请求的规则数组。这些规则能够修改模块的创建方式。这些规则能够对模块应用<code>loader</code>，或者修改解析器。</p>
-<h2 id="module-noParse"><a href="#module-noParse" class="headerlink" title="module.noParse"></a>module.noParse</h2><p>防止 webpack 解析那些任何与给定正则表达式相匹配的文件。忽略的文件中不应该含有<code>import, require, define</code>的调用，或任何其他导入机制。忽略大型的<code>library</code>可以提高构建性能。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">noParse: <span class="regexp">/jquery|lodash/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 webpack 3.0.0 开始</span></span><br><span class="line">noParse: <span class="function"><span class="keyword">function</span>(<span class="params">content</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="regexp">/jquery|lodash/</span>.test(content);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="解析-resolve"><a href="#解析-resolve" class="headerlink" title="解析(resolve)"></a>解析(resolve)</h1><p>这些选项能设置模块如何被解析。例如，当调用<code>import &quot;lodash&quot;</code>，<code>resolve</code>选项能够对 webpack 查找<code>lodash</code>的方式去做修改。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    <span class="comment">// 解析模块请求的选项</span></span><br><span class="line">    <span class="comment">// （不适用于对 loader 解析）</span></span><br><span class="line"></span><br><span class="line">    modules: [</span><br><span class="line">      <span class="string">"node_modules"</span>,</span><br><span class="line">      path.resolve(__dirname, <span class="string">"app"</span>)</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 用于查找模块的目录</span></span><br><span class="line"></span><br><span class="line">    extensions: [<span class="string">".js"</span>, <span class="string">".json"</span>, <span class="string">".jsx"</span>, <span class="string">".css"</span>],</span><br><span class="line">    <span class="comment">// 使用的扩展名</span></span><br><span class="line"></span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="comment">// 模块别名列表</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"module"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">      <span class="comment">// 起别名："module" -&gt; "new-module" 和 "module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"only-module$"</span>: <span class="string">"new-module"</span>,</span><br><span class="line">      <span class="comment">// 起别名 "only-module" -&gt; "new-module"，但不匹配 "only-module/path/file" -&gt; "new-module/path/file"</span></span><br><span class="line"></span><br><span class="line">      <span class="string">"module"</span>: path.resolve(__dirname, <span class="string">"app/third/module.js"</span>),</span><br><span class="line">      <span class="comment">// 起别名 "module" -&gt; "./app/third/module.js" 和 "module/file" 会导致错误</span></span><br><span class="line">      <span class="comment">// 模块别名相对于当前上下文导入</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="resolve-alias"><a href="#resolve-alias" class="headerlink" title="resolve.alias"></a>resolve.alias</h2><p>创建<code>import</code>或<code>require</code>的别名，来确保模块引入变得更简单。例如，一些位于<code>src/</code>文件夹下的常用模块：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">  Utilities: path.resolve(__dirname, <span class="string">'src/utilities/'</span>),</span><br><span class="line">  Templates: path.resolve(__dirname, <span class="string">'src/templates/'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在，替换「在导入时使用相对路径」这种方式，就像这样：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Utility <span class="keyword">from</span> <span class="string">'../../utilities/utility'</span>;</span><br></pre></td></tr></table></figure>
-<p>你可以这样使用别名：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Utility <span class="keyword">from</span> <span class="string">'Utilities/utility'</span>;</span><br></pre></td></tr></table></figure>
-<p>也可以在给定对象的键后的末尾添加<code>$</code>，以表示精准匹配：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">  xyz$: path.resolve(__dirname, <span class="string">'path/to/file.js'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这将产生以下结果：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Test1 <span class="keyword">from</span> <span class="string">'xyz'</span>; <span class="comment">// 精确匹配，所以 path/to/file.js 被解析和导入</span></span><br><span class="line"><span class="keyword">import</span> Test2 <span class="keyword">from</span> <span class="string">'xyz/file.js'</span>; <span class="comment">// 非精确匹配，触发普通解析</span></span><br></pre></td></tr></table></figure>
-<h2 id="resolve-extensions"><a href="#resolve-extensions" class="headerlink" title="resolve.extensions"></a>resolve.extensions</h2><p>自动解析确定的扩展。默认值为：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extensions: [<span class="string">".js"</span>, <span class="string">".json"</span>]</span><br></pre></td></tr></table></figure>
-<p>能够使用户在引入模块时不带扩展：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> File <span class="keyword">from</span> <span class="string">'../path/to/file'</span></span><br></pre></td></tr></table></figure>
-<p>使用此选项，会覆盖默认数组，这就意味着 webpack 将不再尝试使用默认扩展来解析模块。对于使用其扩展导入的模块，例如，<code>import SomeFile from &quot;./somefile.ext&quot;</code>，要想正确的解析，一个包含“*”的字符串必须包含在数组中。</p>
-<h1 id="devtool"><a href="#devtool" class="headerlink" title="devtool"></a>devtool</h1><p>此选项控制是否生成，以及如何生成<code>source map</code>。</p>
-<p>使用<code>SourceMapDevToolPlugin</code>进行更细粒度的配置。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  devtool: <span class="string">"source-map"</span>, <span class="comment">// enum</span></span><br><span class="line">  devtool: <span class="string">"inline-source-map"</span>, <span class="comment">// 嵌入到源文件中</span></span><br><span class="line">  devtool: <span class="string">"eval-source-map"</span>, <span class="comment">// 将 SourceMap 嵌入到每个模块中</span></span><br><span class="line">  devtool: <span class="string">"hidden-source-map"</span>, <span class="comment">// SourceMap 不在源文件中引用</span></span><br><span class="line">  devtool: <span class="string">"cheap-source-map"</span>, <span class="comment">// 没有模块映射(module mappings)的 SourceMap 低级变体</span></span><br><span class="line">  devtool: <span class="string">"cheap-module-source-map"</span>, <span class="comment">// 有模块映射的 SourceMap 低级变体</span></span><br><span class="line">  devtool: <span class="string">"eval"</span>, <span class="comment">// 没有模块映射，而是命名模块。以牺牲细节达到最快。</span></span><br><span class="line">  <span class="comment">// 通过在浏览器调试工具(browser devtools)中添加元信息增强调试</span></span><br><span class="line">  <span class="comment">// 牺牲了构建速度的 `source-map' 是最详细的。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="context"><a href="#context" class="headerlink" title="context"></a>context</h1><p>基础目录，绝对路径，用于从配置中解析入口起点和<code>loader</code>。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context: path.resolve(__dirname, <span class="string">"app"</span>)</span><br></pre></td></tr></table></figure>
-<p>默认使用当前目录，但是推荐在配置中传递一个值。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   context: __dirname, <span class="comment">// string（绝对路径！）</span></span><br><span class="line">  <span class="comment">// webpack 的主目录</span></span><br><span class="line">  <span class="comment">// entry 和 module.rules.loader 选项</span></span><br><span class="line">  <span class="comment">// 相对于此目录解析</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="开发中-Server-devServer"><a href="#开发中-Server-devServer" class="headerlink" title="开发中 Server(devServer)"></a>开发中 Server(devServer)</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   devServer: &#123;</span><br><span class="line">    proxy: &#123; <span class="comment">// proxy URLs to backend development server</span></span><br><span class="line">      <span class="string">'/api'</span>: <span class="string">'http://localhost:3000'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    contentBase: path.join(__dirname, <span class="string">'public'</span>), <span class="comment">// boolean | string | array, static file location</span></span><br><span class="line">    compress: <span class="literal">true</span>, <span class="comment">// enable gzip compression</span></span><br><span class="line">    historyApiFallback: <span class="literal">true</span>, <span class="comment">// true for index.html upon 404, object for multiple paths</span></span><br><span class="line">    hot: <span class="literal">true</span>, <span class="comment">// hot module replacement. Depends on HotModuleReplacementPlugin</span></span><br><span class="line">    https: <span class="literal">false</span>, <span class="comment">// true for self-signed, object for cert authority</span></span><br><span class="line">    noInfo: <span class="literal">true</span>, <span class="comment">// only errors &amp; warns on hot reload</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="插件-plugins"><a href="#插件-plugins" class="headerlink" title="插件(plugins)"></a>插件(plugins)</h1><p><code>plugins</code>选项用于以各种方式自定义 webpack 构建过程。webpack 附带了各种内置插件，可以通过<code>webpack.[plugin-name]</code>访问这些插件。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="comment">// 例如，当多个 bundle 共享一些相同的依赖，</span></span><br><span class="line">    <span class="comment">// CommonsChunkPlugin 有助于提取这些依赖到共享的 bundle 中，来避免重复打包。</span></span><br><span class="line">    <span class="keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-css/CSS常见问题" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/04/02/css/CSS%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"
-    >CSS常见问题</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/04/02/css/CSS%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-date">
-  <time datetime="2020-04-02T12:27:31.000Z" itemprop="datePublished">2020-04-02</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/CSS/">CSS</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="display-inline-block"><a href="#display-inline-block" class="headerlink" title="display:inline-block"></a>display:inline-block</h1><p>两个<code>display: inline-block</code>元素放到一起会产生一段空白。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span>左<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>右<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.left</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">  <span class="attribute">background</span>: red;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.right</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">  <span class="attribute">background</span>: blue;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/2020/04/02/css/CSS%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/img1.png" class="">
-
-<h2 id="产生空白的原因"><a href="#产生空白的原因" class="headerlink" title="产生空白的原因"></a>产生空白的原因</h2><p>元素被当成行内元素排版的时候，元素之间的空白符（空格、回车换行等）都会被浏览器处理，根据CSS中<code>white-space</code>属性的处理方式（默认是normal，合并多余空白），原来HTML代码中的回车换行被转成一个空白符，在字体不为0的情况下，空白符占据一定宽度，所以<code>inline-block</code>的元素之间就出现了空隙。</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ol>
-<li>将子元素标签的结束符和下一个标签的开始符写在同一行或把所有子标签写在同一行。<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"left"</span>&gt;</span>左<span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"right"</span>&gt;</span>右<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>父元素中设置<code>font-size: 0</code>，在子元素上重置正确的<code>font-size</code>。<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span>&#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>为子元素设置<code>float: left</code>。<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.left</span>&#123;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">  <span class="attribute">background</span>: red;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line">// right是同理</span><br></pre></td></tr></table></figure>
-<h1 id="background-position"><a href="#background-position" class="headerlink" title="background-position"></a>background-position</h1>在CSS中，背景图片的定位方法有3种：</li>
-</ol>
-<ul>
-<li>关键字：<code>background-position: top left;</code></li>
-<li>像素：<code>background-position: 0px 0px;</code></li>
-<li>百分比：<code>background-position: 0% 0%;</code></li>
-</ul>
-<p>上面这三句语句，都将图片定位在背景的左上角，表面上看效果是一样的，实际上第三种定位机制与前两种完全不同。</p>
-<p>前两种定位，都是将背景图片左上角的原点，放置在规定的位置。<br>但是第三种定位，也就是百分比定位，不是这样。它的放置规则是，图片本身（x%,y%）的那个点，与背景区域的（x%,y%）的那个点重合。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/" rel="tag">CSS</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/6/">下一页</a>
   </nav>
   
 </section>
