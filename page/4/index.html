@@ -80,136 +80,6 @@ var _hmt = _hmt || [];
     
     
     
-    <article id="post-微服务/如何将注册中心落地" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/"
-    >微服务/如何将注册中心落地</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/" class="article-date">
-  <time datetime="2020-09-10T01:40:52.334Z" itemprop="datePublished">2020-09-10</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>在落地注册中心的过程中，我们需要解决一系列的问题，包括如何存储服务信息、如何注册节点、如何反注册、如何查询节点信息以及如何订阅服务变更等。</p>
-<h1 id="注册中心如何存储服务信息"><a href="#注册中心如何存储服务信息" class="headerlink" title="注册中心如何存储服务信息"></a>注册中心如何存储服务信息</h1><p>服务信息除了包含节点信息（IP 和端口号）以外，还包含其他一些信息，比如请求失败时重试的次数、请求结果是否压缩等信息。因此服务信息通常用 JSON 字符串来存储，包含多个字段，每个字段代表不同的含义。</p>
-<p>除此之外，服务一般会分成多个不同的分组，每个分组的目的不同。一般来说有下面几种分组方式。</p>
-<ul>
-<li>核心与非核心，从业务的核心程度来分。</li>
-<li>机房，从机房的维度来分。</li>
-<li>线上环境与测试环境，从业务场景维度来区分。</li>
-</ul>
-<p>所以注册中心存储的服务信息一般包含三部分内容：分组、服务名以及节点信息，节点信息又包括节点地址和节点其他信息。从注册中心中获取的信息结构大致如下图所示。</p>
-<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/img1.png" class="">
-
-<p>具体存储的时候，一般是按照“服务 - 分组 - 节点信息”三层结构来存储，可以用下图来描述。Service 代表服务的具体分组，Cluster 代表服务的接口名，节点信息用 KV 存储。</p>
-<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/img2.jpg" class="">
-
-<p>搞清楚了注册中心存储服务信息的原理后，再来看下注册中心具体是如何工作的，包括四个流程。</p>
-<ul>
-<li>服务提供者注册流程。</li>
-<li>服务提供者反注册流程。</li>
-<li>服务消费者查询流程。</li>
-<li>服务消费者订阅变更流程。</li>
-</ul>
-<h1 id="注册中心是如何工作的"><a href="#注册中心是如何工作的" class="headerlink" title="注册中心是如何工作的"></a>注册中心是如何工作的</h1><h2 id="1-如何注册节点"><a href="#1-如何注册节点" class="headerlink" title="1. 如何注册节点"></a>1. 如何注册节点</h2><p>服务注册流程：</p>
-<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/img3.png" class="">
-
-<p>服务注册流程主要有下面几个步骤：</p>
-<ul>
-<li>首先查看要注册的节点是否在白名单内？如果不在就抛出异常，在的话继续下一步。</li>
-<li>其次要查看注册的 Cluster（服务的接口名）是否存在？如果不存在就抛出异常，存在的话继续下一步。</li>
-<li>然后要检查 Service（服务的分组）是否存在？如果不存在则抛出异常，存在的话继续下一步。</li>
-<li>最后将节点信息添加到对应的 Service 和 Cluster 下面的存储中。</li>
-</ul>
-<h2 id="2-如何反注册"><a href="#2-如何反注册" class="headerlink" title="2. 如何反注册"></a>2. 如何反注册</h2><p>服务提供者节点反注册的流程：</p>
-<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/img4.png" class="">
-
-<p>节点反注册流程主要包含下面几个步骤：</p>
-<ul>
-<li>查看 Service（服务的分组）是否存在，不存在就抛出异常，存在就继续下一步。</li>
-<li>查看 Cluster（服务的接口名）是否存在，不存在就抛出异常，存在就继续下一步。</li>
-<li>删除存储中 Service 和 Cluster 下对应的节点信息。</li>
-<li>更新 Cluster 的 sign 值。</li>
-</ul>
-<h2 id="3-如何查询节点信息"><a href="#3-如何查询节点信息" class="headerlink" title="3. 如何查询节点信息"></a>3. 如何查询节点信息</h2><p>服务消费者从注册中心查询服务提供者的节点信息流程：</p>
-<p>服务消费者查询节点信息主要分为下面几个步骤：</p>
-<p>首先从 localcache（本机内存）中查找，如果没有就继续下一步。这里为什么服务消费者要把服务信息存在本机内存呢？主要是因为服务节点信息并不总是时刻变化的，并不需要每一次服务调用都要调用注册中心获取最新的节点信息，只需要在本机内存中保留最新的服务提供者的节点列表就可以。</p>
-<p>接着从 snapshot（本地快照）中查找，如果没有就继续下一步。这里为什么服务消费者要在本地磁盘存储一份服务提供者的节点信息的快照呢？这是因为服务消费者同注册中心之间的网络不一定总是可靠的，服务消费者重启时，本机内存中还不存在服务提供者的节点信息，如果此时调用注册中心失败，那么服务消费者就拿不到服务节点信息了，也就没法调用了。本地快照就是为了防止这种情况的发生，即使服务消费者重启后请求注册中心失败，依然可以读取本地快照，获取到服务节点信息。</p>
-<h2 id="4-如何订阅服务变更"><a href="#4-如何订阅服务变更" class="headerlink" title="4. 如何订阅服务变更"></a>4. 如何订阅服务变更</h2><p>服务消费者订阅服务提供者的变更信息流程：</p>
-<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%B0%86%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E8%90%BD%E5%9C%B0/img5.png" class="">
-
-<p>主要分为下面几个步骤：</p>
-<ul>
-<li>服务消费者从注册中心获取了服务的信息后，就订阅了服务的变化，会在本地保留 Cluster 的<code>sign</code>值。</li>
-<li>服务消费者每隔一段时间，调用<code>getSign()</code>函数，从注册中心获取服务端该 Cluster 的<code>sign</code>值，并与本地保留的<code>sign</code>值做对比，如果不一致，就从服务端拉取新的节点信息，并更新<code>localcache</code>和<code>snapshot</code>。</li>
-</ul>
-<h1 id="注册与发现的几个问题"><a href="#注册与发现的几个问题" class="headerlink" title="注册与发现的几个问题"></a>注册与发现的几个问题</h1><h2 id="1-多注册中心"><a href="#1-多注册中心" class="headerlink" title="1. 多注册中心"></a>1. 多注册中心</h2><p>理论上对于一个服务消费者来说，同一个注册中心交互是最简单的。但是不可避免的是，服务消费者可能订阅了多个服务，多个服务可能是由多个业务部门提供的，而且每个业务部门都有自己的注册中心，提供的服务只在自己的注册中心里有记录。这样的话，就要求服务消费者要具备在启动时，能够从多个注册中心订阅服务的能力。</p>
-<p>根据我的经验，还有一种情况是，一个服务提供者提供了某个服务，可能作为静态服务对外提供，有可能又作为动态服务对外提供，这两个服务部署在不同的注册中心，所以要求服务提供者在启动的时候，要能够同时向多个注册中心注册服务。</p>
-<p>也就是说，对于服务消费者来说，要能够同时从多个注册中心订阅服务；对于服务提供者来说，要能够同时向多个注册中心注册服务。</p>
-<h2 id="2-并行订阅服务"><a href="#2-并行订阅服务" class="headerlink" title="2. 并行订阅服务"></a>2. 并行订阅服务</h2><p>通常一个服务消费者订阅了不止一个服务，在我经历的一个项目中，一个服务消费者订阅了几十个不同的服务，每个服务都有自己的方法列表以及节点列表。服务消费者在服务启动时，会加载订阅的服务配置，调用注册中心的订阅接口，获取每个服务的节点列表并初始化连接。</p>
-<p>最开始我们采用了串行订阅的方式，每订阅一个服务，服务消费者调用一次注册中心的订阅接口，获取这个服务的节点列表并初始化连接，总共需要执行几十次这样的过程。在某些服务节点的初始化连接过程中，出现连接超时的情况，后续所有的服务节点的初始化连接都需要等待它完成，导致服务消费者启动变慢，最后耗费了将近五分钟时间来完成所有服务节点的初始化连接过程。</p>
-<p>后来我们改成了并行订阅的方式，每订阅一个服务就单独用一个线程来处理，这样的话即使遇到个别服务节点连接超时，其他服务节点的初始化连接也不受影响，最慢也就是这个服务节点的初始化连接耗费的时间，最终所有服务节点的初始化连接耗时控制在了 30 秒以内。</p>
-<h2 id="3-批量反注册服务"><a href="#3-批量反注册服务" class="headerlink" title="3. 批量反注册服务"></a>3. 批量反注册服务</h2><p>通常一个服务提供者节点提供不止一个服务，所以注册和反注册都需要多次调用注册中心。在与注册中心的多次交互中，可能由于网络抖动、注册中心集群异常等原因，导致个别调用失败。对于注册中心来说，偶发的注册调用失败对服务调用基本没有影响，其结果顶多就是某一个服务少了一个可用的节点。但偶发的反注册调用失败会导致不可用的节点残留在注册中心中，变成“僵尸节点”，但服务消费者端还会把它当成“活节点”，继续发起调用，最终导致调用失败。</p>
-<p>以前我们的业务中经常遇到这个问题，需要定时去清理注册中心中的“僵尸节点”。后来我们通过优化反注册逻辑，对于下线机器、节点销毁的场景，通过调用注册中心提供的批量反注册接口，一次调用就可以把该节点上提供的所有服务同时反注册掉，从而避免了“僵尸节点”的出现。</p>
-<h2 id="4-服务变更信息增量更新"><a href="#4-服务变更信息增量更新" class="headerlink" title="4. 服务变更信息增量更新"></a>4. 服务变更信息增量更新</h2><p>服务消费者端启动时，除了会查询订阅服务的可用节点列表做初始化连接，还会订阅服务的变更，每隔一段时间从注册中心获取最新的服务节点信息标记 sign，并与本地保存的 sign 值作比对，如果不一样，就会调用注册中心获取最新的服务节点信息。</p>
-<p>一般情况下，按照这个过程是没问题的，但是在网络频繁抖动时，服务提供者上报给注册中心的心跳可能会一会儿失败一会儿成功，这时候注册中心就会频繁更新服务的可用节点信息，导致服务消费者频繁从注册中心拉取最新的服务可用节点信息，严重时可能产生网络风暴，导致注册中心带宽被打满。</p>
-<p>为了减少服务消费者从注册中心中拉取的服务可用节点信息的数据量，这个时候可以通过增量更新的方式，注册中心只返回变化的那部分节点信息，尤其在只有少数节点信息变更时，此举可以大大减少服务消费者从注册中心拉取的数据量，从而最大程度避免产生网络风暴。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
     <article id="post-计算机网络/数据链路层——使用点对点信道" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1344,6 +1214,156 @@ var _hmt = _hmt || [];
 <p>光线路终端 OLT(<code>Optical Line Terminal</code>)是连接到光纤干线的终端设备。OLT 把收到的下行数据发往无源的1:N光分路器，然后用广播方式向所有用户端的光网络单元 ONU(<code>Optical Network Unit</code>) 发送。每个 ONU 根据特有的标识只接收发送给自己的数据，然后转换为电信号发往用户家中。</p>
 <p>当 ONU 发送上行数据时，先把电信号转换为光信号，光分路器把各 ONU 发来的上行数据汇总后，以 TDMA 方式发往 OLT，而发送时间和长度都由 OLT集中控制，以便有序的共享光纤主干。</p>
 <p>光配线网采用波分复用，上行和下行分别使用不同的波长。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/物理层——信道复用技术" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/"
+    >物理层——信道复用技术</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/" class="article-date">
+  <time datetime="2020-09-06T07:42:42.000Z" itemprop="datePublished">2020-09-06</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>复用(<code>multiplexing</code>)是通信技术中的基本概念。它允许用户使用一个共享信道进行通信，降低成本，提高利用率。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img1.png" class="">
+
+<p>在进行通信时，复用器和分用器总是成对出的使用。在复用器和分用器之间是用户共享的高速信道。</p>
+<h1 id="频分复用-FDM-Frequency-Division-Multiplexing"><a href="#频分复用-FDM-Frequency-Division-Multiplexing" class="headerlink" title="频分复用 FDM (Frequency Division Multiplexing)"></a>频分复用 FDM (Frequency Division Multiplexing)</h1><p>将整个带宽分为多份，用户在分配到一定的频带后，在通信过程中自始至终都占用这个频带。</p>
+<p>频分复用的所有用户在同样的时间占用不同的带宽资源（这里的“带宽”是频率带宽而不是数据的发送速率）。 </p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img2.png" class="">
+
+<h1 id="时分复用TDM-Time-Division-Multiplexing"><a href="#时分复用TDM-Time-Division-Multiplexing" class="headerlink" title="时分复用TDM (Time Division Multiplexing)"></a>时分复用TDM (Time Division Multiplexing)</h1><p>时分复用是将时间划分为一段段等长的时分复用帧（TDM帧）。每一个时分复用的用户在每一个 TDM 帧中占用固定序号的时隙。</p>
+<p>每一个用户所占用的时隙是周期性地出现（其周期就是TDM帧的长度）的。因此，TDM 信号也称为等时信号。</p>
+<p>时分复用的所有用户在不同的时间占用同样的频带宽度。</p>
+<p>时分复用更有利于数字信号的传输。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img3.png" class="">
+
+<p>时分复用可能会造成线路资源的浪费。</p>
+<p>使用时分复用系统传送计算机数据时，由于计算机数据的突发性质，用户对分配到的子信道的利用率一般是不高的。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img4.png" class="">
+
+<h1 id="统计时分复用-STDM-Statistic-TDM"><a href="#统计时分复用-STDM-Statistic-TDM" class="headerlink" title="统计时分复用 STDM  (Statistic TDM)"></a>统计时分复用 STDM  (Statistic TDM)</h1><p>STDM 是一种改进的时分复用，它能明显的提高信道的利用率。集中器常使用统计时分复用。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img5.png" class="">
+
+<p>上图是一个使用 STDM 的集中器连接 4 个低速用户，然后将它们的数据集中起来通过高速线路发送到一个远地计算机。</p>
+<p>各用户有了数据就随时发往集中器的输入缓存，然后集中器按顺序依次扫描输入缓存，把缓存中的输入数据放入 STDM 帧中。对没有数据的缓存就跳过去。当一个帧的数据放满了就发送出去。</p>
+<p>在输出线路上，某一个用户所占用的时隙并不是周期性的出现。因此 STDM 又称为异步时分复用，而普通的时分复用称为同步时分复用。</p>
+<p>假定所有的用户都不间断的向集中器发送数据，那么集中器肯定无法应付，它内部设置的缓存都将溢出。所以集中器能够正常工作的前提是假定各用户都是间歇的工作。</p>
+<h1 id="波分复用"><a href="#波分复用" class="headerlink" title="波分复用"></a>波分复用</h1><p>波分复用 WDM(<code>Wavelength Division Multiplexing</code>)就是光的频分复用。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img6.png" class="">
+
+<p>随着技术的发展，在一根光纤上复用的光载波信号的路数越来越多，于是就有了密集波分复用(<code>Dense Wavelength Division Multiplexing</code>)。</p>
+<h1 id="码分复用"><a href="#码分复用" class="headerlink" title="码分复用"></a>码分复用</h1><p>码分复用 CDM(<code>Code Division Multiplexing</code>)，常用的名词是码分多址 CDMA(<code>Code Division Multiple Access</code>)。每一个用户可以在同样的时间使用同样的频带进行通信。各用户使用经过特殊挑选的不同码型，因此彼此不会造成干扰。</p>
+<p>这种系统发送的信号有很强的抗干扰能力，其频谱类似于白噪声，不易被敌人发现。</p>
+<h2 id="码片序列-chip-sequence"><a href="#码片序列-chip-sequence" class="headerlink" title="码片序列(chip sequence)"></a>码片序列(chip sequence)</h2><p>在 CDMA 中，每一个比特时间划分为<code>m</code>个短的间隔，称为码片(<code>chip</code>)。通常<code>m</code>的值是64或128。</p>
+<p>每个站被指派一个唯一的<code>m bit</code>码片序列。如发送比特 1，则发送自己的<code>m bit</code>码片序列。如发送比特 0，则发送该码片序列的二进制反码。 </p>
+<p>例如，S 站的<code>8 bit</code>码片序列是<code>00011011</code>。发送比特 1 时，就发送序列<code>00011011</code>，发送比特 0 时，就发送序列<code>11100100</code>。</p>
+<p>为了方便，将码片中的 0 写为 -1，1 写为 +1。S 站的码片序列：<code>(–1 –1 –1 +1 +1 –1 +1 +1)</code>。</p>
+<p>假定 S 站要发送信息的数据率为<code>b bit/s</code>。由于每一个比特要转换成<code>m</code>个比特的码片，因此 S 站实际上发送的数据率提高到<code>mb bit/s</code>，同时 S 站所占用的频带宽度也提高到原来数值的<code>m</code>倍。这种通信方式是扩频(<code>spread spectrum</code>)通信中的一种。</p>
+<p>扩频通信通常有两大类：</p>
+<ul>
+<li>一种是直接序列扩频 DSSS(<code>Direct Sequence Spread Spectrum</code>)，如上面使用码片序列就是这一类。</li>
+<li>另一种是跳频扩频 FHSS(<code>Frequency Hopping Spread Spectrum</code>)。</li>
+</ul>
+<p>CDMA 的一个重要特点：每个站分配的码片序列不仅必须各不相同，并且还必须互相正交。在实用的系统中是使用伪随机码序列。 </p>
+<h2 id="码片序列的正交关系"><a href="#码片序列的正交关系" class="headerlink" title="码片序列的正交关系"></a>码片序列的正交关系</h2><p>令向量<code>S</code>表示站 S的码片向量，令<code>T</code>表示其他任何站的码片向量。</p>
+<p>两个不同站的码片序列正交，就是向量<code>S</code>和<code>T</code>的规格化内积(<code>inner product</code>)等于 0：</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img7.png" class="">
+
+<h2 id="正交关系的另一个重要特性"><a href="#正交关系的另一个重要特性" class="headerlink" title="正交关系的另一个重要特性"></a>正交关系的另一个重要特性</h2><p>任何一个码片向量和该码片向量自己的规格化内积都是 1。</p>
+<img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img8.png" class="">
+
+<p>一个码片向量和该码片反码的向量的规格化内积值是 –1。</p>
+<h2 id="CDMA-的工作原理"><a href="#CDMA-的工作原理" class="headerlink" title="CDMA 的工作原理"></a>CDMA 的工作原理</h2><img src="/2020/09/06/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E4%BF%A1%E9%81%93%E5%A4%8D%E7%94%A8%E6%8A%80%E6%9C%AF/img9.png" class="">
+
+<h1 id="数字传输系统"><a href="#数字传输系统" class="headerlink" title="数字传输系统"></a>数字传输系统</h1><p>在早期电话网中，从市话局到用户电话机的用户线是采用最廉价的双绞线电缆，而长途干线采用的是频分复用 FDM 的模拟传输方式。</p>
+<p>与模拟通信相比，数字通信无论是在传输质量上还是经济上都有明显的优势。目前，长途干线大都采用时分复用 PCM 的数字传输方式。</p>
+<p>脉码调制 PCM 体制最初是为了在电话局之间的中继线上传送多路的电话。</p>
+<p>由于历史上的原因，PCM 有两个互不兼容的国际标准：北美的 24 路 PCM（简称为 T1）；欧洲的 30 路 PCM（简称为 E1）。我国采用的是欧洲的 E1 标准。</p>
+<p>E1 的速率是<code>2.048 Mbit/s</code>，而 T1 的速率是<code>1.544 Mbit/s</code>。</p>
+<p>当需要有更高的数据率时，可采用复用的方法。</p>
+<p>旧的数字传输系统存在许多缺点，最主要的是以下两个方面： </p>
+<ul>
+<li>速率标准不统一，如果不对高次群的数字传输速率进行标准化，国际范围的基于光纤高速数据传输就很难实现。 </li>
+<li>不是同步传输，在过去相当长的时间，为了节约经费，各国的数字网主要采用准同步方式。<br>当数据传输的速率很高时，收发双方的时钟同步就成为很大的问题。 </li>
+</ul>
+<p>同步光纤网 SONET(<code>Synchronous Optical Network</code>)的各级时钟都来自一个非常精确的主时钟。</p>
+<p>SONET 为光纤传输系统定义了同步传输的线路速率等级结构：</p>
+<ul>
+<li>对电信信号称为第 1 级同步传送信号 STS-1(<code>Synchronous Transport Signal</code>)，其传输速率是<code>51.84 Mbit/s</code>。</li>
+<li>对光信号则称为第 1 级光载波 OC-1。</li>
+</ul>
+<p>ITU-T 以美国标准 SONET 为基础，制订出国际标准同步数字系列 SDH(<code>Synchronous Digital Hierarchy</code>)。</p>
+<p>一般可认为 SDH 与 SONET 是同义词。其主要不同点是：SDH的基本速率为<code>155.52 Mbit/s</code>，称为第 1 级同步传递模块 (<code>Synchronous Transfer Module</code>)，即 STM-1，相当于 SONET 体系中的 OC-3 速率。</p>
+<p>SONET / SDH 标准的意义：</p>
+<ul>
+<li>使不同的数字传输体制在 STM-1 等级上获得了统一。</li>
+<li>第一次真正实现了数字传输体制上的世界性标准。</li>
+<li>已成为公认的新一代理想的传输网体制。</li>
+<li>SDH 标准也适合于微波和卫星传输的技术体制。</li>
+</ul>
 
       
       <!-- reward -->

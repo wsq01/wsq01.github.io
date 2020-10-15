@@ -80,130 +80,6 @@ var _hmt = _hmt || [];
     
     
     
-    <article id="post-js/基础/JS Navigator对象、Screen对象" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2019/01/09/js/%E5%9F%BA%E7%A1%80/JS%20Navigator%E5%AF%B9%E8%B1%A1%E3%80%81Screen%E5%AF%B9%E8%B1%A1/"
-    >JS Navigator对象、Screen对象</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2019/01/09/js/%E5%9F%BA%E7%A1%80/JS%20Navigator%E5%AF%B9%E8%B1%A1%E3%80%81Screen%E5%AF%B9%E8%B1%A1/" class="article-date">
-  <time datetime="2019-01-09T13:01:25.000Z" itemprop="datePublished">2019-01-09</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的<code>Navigator</code>对象。脚本通过这个属性了解用户的环境信息。</p>
-<h1 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h1><h2 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h2><p><code>navigator.userAgent</code>属性返回浏览器的<code>User Agent</code>字符串，表示浏览器的厂商和版本信息。</p>
-<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.userAgent</span><br><span class="line"><span class="comment">// "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"</span></span><br></pre></td></tr></table></figure>
-<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
-<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.userAgent.toLowerCase();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.test(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.test(ua)</span><br></pre></td></tr></table></figure>
-<h2 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h2><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是<code>Plugin</code>实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.plugins.length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].name);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].filename);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].description);</span><br><span class="line">  <span class="built_in">console</span>.log(navigator.plugins[i].version);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h2><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.platform <span class="comment">// "Linux x86_64"</span></span><br></pre></td></tr></table></figure>
-<h2 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h2><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.onLine <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
-<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'offline'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; <span class="built_in">console</span>.log(<span class="string">'offline'</span>); &#125;);</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'online'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; <span class="built_in">console</span>.log(<span class="string">'online'</span>); &#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h2><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.language <span class="comment">// "en"</span></span><br></pre></td></tr></table></figure>
-<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.languages  <span class="comment">// ["en-US", "en", "zh-CN", "zh", "zh-TW"]</span></span><br></pre></td></tr></table></figure>
-<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
-<h2 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h2><p><code>Navigator.geolocation</code>属性返回一个<code>Geolocation</code>对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
-<p><code>Geolocation</code>对象提供下面三个方法。</p>
-<ul>
-<li><code>Geolocation.getCurrentPosition()</code>：得到用户的当前位置</li>
-<li><code>Geolocation.watchPosition()</code>：监听用户位置变化</li>
-<li><code>Geolocation.clearWatch()</code>：取消<code>watchPosition()</code>方法指定的监听函数</li>
-</ul>
-<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
-<h2 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h2><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.cookieEnabled <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
-<h1 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h1><h2 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h2><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.javaEnabled() <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
-<h2 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h2><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据。</p>
-<h1 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h1><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。<br>该对象有下面的属性。</p>
-<ul>
-<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
-<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
-<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
-<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
-<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供24位色彩。</li>
-<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，<code>colorDepth</code>表示应用程序的颜色深度，<code>pixelDepth</code>表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
-<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>。</li>
-</ul>
-<p>下面是<code>Screen.orientation</code>的例子。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.orientation</span><br><span class="line"><span class="comment">// &#123; angle: 0, type: "landscape-primary", onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
-<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.screen.width &gt;= <span class="number">1024</span> &amp;&amp; <span class="built_in">window</span>.screen.height &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((screen.width &lt;= <span class="number">800</span>) &amp;&amp; (screen.height &lt;= <span class="number">600</span>)) &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">'small.html'</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">window</span>.location.replace(<span class="string">'wide.html'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
     <article id="post-js/基础/JS window对象" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -2259,6 +2135,109 @@ var _hmt = _hmt || [];
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.queryCommandSupported(<span class="string">'SelectAll'</span>)) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>document.queryCommandEnabled()</code>方法返回一个布尔值。</p>
 <h2 id="document-getSelection"><a href="#document-getSelection" class="headerlink" title="document.getSelection()"></a>document.getSelection()</h2><p>这个方法指向<code>window.getSelection()</code>。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-js/基础/JS DOM——ParentNode、ChildNode接口" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/11/07/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94ParentNode%E3%80%81ChildNode%E6%8E%A5%E5%8F%A3/"
+    >JS DOM——ParentNode、ChildNode接口</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2018/11/07/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94ParentNode%E3%80%81ChildNode%E6%8E%A5%E5%8F%A3/" class="article-date">
+  <time datetime="2018-11-07T03:31:12.000Z" itemprop="datePublished">2018-11-07</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>节点对象除了继承<code>Node</code>接口以外，还会继承其他接口。<code>ParentNode</code>接口表示当前节点是一个父节点，提供一些处理子节点的方法。<code>ChildNode</code>接口表示当前节点是一个子节点，提供一些相关方法。</p>
+<h1 id="ParentNode-接口"><a href="#ParentNode-接口" class="headerlink" title="ParentNode 接口"></a>ParentNode 接口</h1><p>如果当前节点是父节点，就会继承<code>ParentNode</code>接口。由于只有元素节点（<code>element</code>）、文档节点（<code>document</code>）和文档片段节点（<code>documentFragment</code>）拥有子节点，因此只有这三类节点会继承<code>ParentNode</code>接口。</p>
+<h2 id="ParentNode-children"><a href="#ParentNode-children" class="headerlink" title="ParentNode.children"></a>ParentNode.children</h2><p><code>children</code>属性返回一个<code>HTMLCollection</code>实例，成员是当前节点的所有元素子节点。该属性只读。</p>
+<p>下面是遍历某个节点的所有元素子节点的示例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; el.children.length; i++) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，<code>children</code>属性只包括元素子节点，不包括其他类型的子节点（比如文本子节点）。如果没有元素类型的子节点，返回值<code>HTMLCollection</code>实例的<code>length</code>属性为<code>0</code>。</p>
+<p>另外，<code>HTMLCollection</code>是动态集合，会实时反映 DOM 的任何变化。</p>
+<h2 id="ParentNode-firstElementChild"><a href="#ParentNode-firstElementChild" class="headerlink" title="ParentNode.firstElementChild"></a>ParentNode.firstElementChild</h2><p><code>firstElementChild</code>属性返回当前节点的第一个元素子节点。如果没有任何元素子节点，则返回<code>null</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.firstElementChild.nodeName <span class="comment">// "HTML"</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>document</code>节点的第一个元素子节点是<code>&lt;HTML&gt;</code>。</p>
+<h2 id="ParentNode-lastElementChild"><a href="#ParentNode-lastElementChild" class="headerlink" title="ParentNode.lastElementChild"></a>ParentNode.lastElementChild</h2><p><code>lastElementChild</code>属性返回当前节点的最后一个元素子节点，如果不存在任何元素子节点，则返回<code>null</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.lastElementChild.nodeName <span class="comment">// "HTML"</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>document</code>节点的最后一个元素子节点是<code>&lt;HTML&gt;</code>（因为<code>document</code>只包含这一个元素子节点）。</p>
+<h2 id="ParentNode-childElementCount"><a href="#ParentNode-childElementCount" class="headerlink" title="ParentNode.childElementCount"></a>ParentNode.childElementCount</h2><p><code>childElementCount</code>属性返回一个整数，表示当前节点的所有元素子节点的数目。如果不包含任何元素子节点，则返回<code>0</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.childElementCount <span class="comment">// 13</span></span><br></pre></td></tr></table></figure>
+<h2 id="ParentNode-append-，ParentNode-prepend"><a href="#ParentNode-append-，ParentNode-prepend" class="headerlink" title="ParentNode.append()，ParentNode.prepend()"></a>ParentNode.append()，ParentNode.prepend()</h2><p><code>append</code>方法为当前节点追加一个或多个子节点，位置是最后一个元素子节点的后面。</p>
+<p>该方法不仅可以添加元素子节点，还可以添加文本子节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> parent = <span class="built_in">document</span>.body;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加元素子节点</span></span><br><span class="line"><span class="keyword">var</span> p = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line">parent.append(p);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加文本子节点</span></span><br><span class="line">parent.append(<span class="string">'Hello'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加多个元素子节点</span></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line">parent.append(p1, p2);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加元素子节点和文本子节点</span></span><br><span class="line"><span class="keyword">var</span> p = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line">parent.append(<span class="string">'Hello'</span>, p);</span><br></pre></td></tr></table></figure>
+<p>注意，该方法没有返回值。</p>
+<p><code>prepend</code>方法为当前节点追加一个或多个子节点，位置是第一个元素子节点的前面。它的用法与<code>append</code>方法完全一致，也是没有返回值。</p>
+<h1 id="ChildNode-接口"><a href="#ChildNode-接口" class="headerlink" title="ChildNode 接口"></a>ChildNode 接口</h1><p>如果一个节点有父节点，那么该节点就继承了<code>ChildNode</code>接口。</p>
+<h2 id="ChildNode-remove"><a href="#ChildNode-remove" class="headerlink" title="ChildNode.remove()"></a>ChildNode.remove()</h2><p><code>remove</code>方法用于从父节点移除当前节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">el.remove()</span><br></pre></td></tr></table></figure>
+<p>上面代码在 DOM 里面移除了<code>el</code>节点。</p>
+<h2 id="ChildNode-before-，ChildNode-after"><a href="#ChildNode-before-，ChildNode-after" class="headerlink" title="ChildNode.before()，ChildNode.after()"></a>ChildNode.before()，ChildNode.after()</h2><p><code>before</code>方法用于在当前节点的前面，插入一个或多个同级节点。两者拥有相同的父节点。</p>
+<p>注意，该方法不仅可以插入元素节点，还可以插入文本节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="built_in">document</span>.createElement(<span class="string">'p'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入元素节点</span></span><br><span class="line">el.before(p);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入文本节点</span></span><br><span class="line">el.before(<span class="string">'Hello'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入多个元素节点</span></span><br><span class="line">el.before(p, p1);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入元素节点和文本节点</span></span><br><span class="line">el.before(p, <span class="string">'Hello'</span>);</span><br></pre></td></tr></table></figure>
+<p><code>after</code>方法用于在当前节点的后面，插入一个或多个同级节点，两者拥有相同的父节点。用法与<code>before</code>方法完全相同。</p>
+<h2 id="ChildNode-replaceWith"><a href="#ChildNode-replaceWith" class="headerlink" title="ChildNode.replaceWith()"></a>ChildNode.replaceWith()</h2><p><code>replaceWith</code>方法使用参数节点，替换当前节点。参数可以是元素节点，也可以是文本节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> span = <span class="built_in">document</span>.createElement(<span class="string">'span'</span>);</span><br><span class="line">el.replaceWith(span);</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>el</code>节点将被<code>span</code>节点替换。</p>
 
       
       <!-- reward -->

@@ -80,6 +80,127 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-计算机网络/网络层——VPN和NAT" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/"
+    >网络层——VPN和NAT</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/" class="article-date">
+  <time datetime="2020-10-09T08:51:33.000Z" itemprop="datePublished">2020-10-09</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="虚拟专用网-VPN"><a href="#虚拟专用网-VPN" class="headerlink" title="虚拟专用网 VPN"></a>虚拟专用网 VPN</h1><p>由于 IP 地址的紧缺，一个机构能够申请到的IP地址数往往远小于本机构所拥有的主机数。</p>
+<p>考虑到互联网并不很安全，一个机构内也并不需要把所有的主机接入到外部的互联网。</p>
+<p>假定在一个机构内部的计算机通信也是采用 TCP/IP 协议，那么从原则上讲，对于这些仅在机构内部使用的计算机就可以由本机构自行分配其 IP 地址。</p>
+<h2 id="本地地址与全球地址"><a href="#本地地址与全球地址" class="headerlink" title="本地地址与全球地址"></a>本地地址与全球地址</h2><p>本地地址——仅在机构内部使用的 IP 地址，可以由本机构自行分配，而不需要向互联网的管理机构申请。</p>
+<p>全球地址——全球唯一的 IP 地址，必须向互联网的管理机构申请。 </p>
+<p>在内部使用的本地地址就有可能和互联网中某个 IP 地址重合，这样就会出现地址的二义性问题。</p>
+<p>RFC 1918 指明了一些专用地址。专用地址只能用作本地地址而不能用作全球地址。在互联网中的所有路由器，对目的地址是专用地址的数据报一律不进行转发。</p>
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img1.png" class="">
+
+<p>采用这样的专用 IP 地址的互连网络称为专用互联网或本地互联网，或更简单些，就叫做专用网。</p>
+<p>因为这些专用地址仅在本机构内部使用。专用IP地址也叫做可重用地址(<code>reusable address</code>)。</p>
+<p>利用公用的互联网作为本机构各专用网之间的通信载体，这样的专用网又称为虚拟专用网 VPN(<code>Virtual Private Network</code>)。</p>
+<p>“专用网”是因为这种网络是为本机构的主机用于机构内部的通信，而不是用于和网络外非本机构的主机通信。</p>
+<p>“虚拟”表示“好像是”，但实际上并不是，因为现在并没有真正使用通信专线，而VPN只是在效果上和真正的专用网一样。</p>
+<p>如果专用网不同网点之间的通信必须经过公用的互联网，但又有保密的要求，那么所有通过互联网传送的数据都必须加密。</p>
+<p>一个机构要构建自己的 VPN 就必须为它的每一个场所购买专门的硬件和软件，并进行配置，使每一个场所的 VPN 系统都知道其他场所的地址。</p>
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img2.png" class="">
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img3.png" class="">
+
+<h3 id="内联网-intranet-和外联网-extranet"><a href="#内联网-intranet-和外联网-extranet" class="headerlink" title="内联网 intranet 和外联网 extranet"></a>内联网 intranet 和外联网 extranet</h3><p>它们都是基于 TCP/IP 协议的。</p>
+<p>由部门 A 和 B 的内部网络所构成的虚拟专用网 VPN 又称为内联网(<code>intranet</code>)，表示部门 A 和 B 都是在同一个机构的内部。一个机构和某些外部机构共同建立的虚拟专用网 VPN 又称为外联网(<code>extranet</code>)。 </p>
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img4.png" class="">
+
+<p>远程接入 VPN(<code>remote access VPN</code>) 可以满足外部流动员工访问公司网络的需求。</p>
+<p>在外地工作的员工拨号接入互联网，而驻留在员工 PC 机中的 VPN 软件可在员工的 PC 机和公司的主机之间建立 VPN 隧道，因而外地员工与公司通信的内容是保密的，员工们感到好像就是使用公司内部的本地网络。 </p>
+<h1 id="网络地址转换-NAT"><a href="#网络地址转换-NAT" class="headerlink" title="网络地址转换 NAT"></a>网络地址转换 NAT</h1><p>在专用网上使用专用地址的主机如何与互联网上的主机通信（并不需要加密）？</p>
+<p>再申请一些全球 IP 地址。但这在很多情况下是不容易做到的。目前使用得最多的方法是采用网络地址转换 NAT(<code>Network Address Translation</code>)。</p>
+<p>需要在专用网连接到互联网的路由器上安装 NAT 软件。装有 NAT 软件的路由器叫做 NAT 路由器，它至少有一个有效的外部全球 IP 地址。</p>
+<p>所有使用本地地址的主机在和外界通信时，都要在 NAT 路由器上将其本地地址转换成全球 IP 地址，才能和互联网连接。</p>
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img5.png" class="">
+
+<p>内部主机 A 用本地地址 IPA 和互联网上主机 B 通信所发送的数据报必须经过 NAT 路由器。</p>
+<p>NAT 路由器将数据报的源地址 IPA 转换成全球地址 IPG ，并把转换结果记录到NAT地址转换表中，目的地址 IPB 保持不变，然后发送到互联网。</p>
+<p>NAT 路由器收到主机 B 发回的数据报时，知道数据报中的源地址是 IPB 而目的地址是 IPG。</p>
+<p>根据 NAT 转换表，NAT 路由器将目的地址 IPG 转换为 IPA ，转发给最终的内部主机 A。 </p>
+<p>可以看出，在内部主机与外部主机通信时，在NAT路由器上发生了两次地址转换：</p>
+<ul>
+<li>离开专用网时：替换源地址，将内部地址替换为全球地址；</li>
+<li>进入专用网时：替换目的地址，将全球地址替换为内部地址；</li>
+</ul>
+<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img6.png" class="">
+
+<p>当 NAT 路由器具有 n 个全球 IP 地址时，专用网内最多可以同时有 n 台主机接入到互联网。这样就可以使专用网内较多数量的主机，轮流使用 NAT 路由器有限数量的全球 IP 地址。</p>
+<p>通过 NAT 路由器的通信必须由专用网内的主机发起。专用网内部的主机不能充当服务器用，因为互联网上的客户无法请求专用网内的服务器提供服务。</p>
+<p>为了更加有效地利用 NAT 路由器上的全球IP地址，现在常用的 NAT 转换表把运输层的端口号也利用上。这样，就可以使多个拥有本地地址的主机，共用一个 NAT 路由器上的全球 IP 地址，因而可以同时和互联网上的不同主机进行通信。</p>
+<p>使用端口号的 NAT 叫做网络地址与端口号转换NAPT(<code>Network Address and Port Translation</code>)，而不使用端口号的 NAT 就叫做传统的 NAT(<code>traditional NAT</code>)。</p>
+<h2 id="NAPT-地址转换表"><a href="#NAPT-地址转换表" class="headerlink" title="NAPT 地址转换表"></a>NAPT 地址转换表</h2><img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img7.png" class="">
+
+<p>NAPT 把专用网内不同的源 IP 地址，都转换为同样的全球 IP 地址。但对源主机所采用的 TCP 端口号（不管相同或不同），则转换为不同的新的端口号。因此，当 NAPT 路由器收到从互联网发来的应答时，就可以从 IP 数据报的数据部分找出运输层的端口号，然后根据不同的目的端口号，从 NAPT 转换表中找到正确的目的主机。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-计算机网络/网络层——IP多播" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1716,167 +1837,6 @@ var _hmt = _hmt || [];
 <p>现在的光纤宽带接入 FTTx 都要使用 PPPoE 的方式进行接入。在 PPPoE 弹出的窗口中键入在网络运营商购买的用户名和密码，就可以进行宽带上网了。</p>
 <p>利用 ADSL 进行宽带上网时，从用户个人电脑到家中的 ADSL 调制解调器之间，也是使用 RJ-45 和 5 类线（即以太网使用的网线）进行连接的，并且也是使用 PPPoE 弹出的窗口进行拨号连接的。</p>
 
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/数据链路层——扩展的以太网" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/"
-    >数据链路层——扩展的以太网</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-date">
-  <time datetime="2020-09-15T02:32:13.000Z" itemprop="datePublished">2020-09-15</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="在物理层扩展以太网"><a href="#在物理层扩展以太网" class="headerlink" title="在物理层扩展以太网"></a>在物理层扩展以太网</h1><h2 id="使用光纤扩展"><a href="#使用光纤扩展" class="headerlink" title="使用光纤扩展"></a>使用光纤扩展</h2><p>主机使用光纤（通常是一对光纤）和一对光纤调制解调器连接到集线器。很容易使主机和几公里以外的集线器相连接。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img1.png" class="">
-
-<h2 id="使用集线器扩展"><a href="#使用集线器扩展" class="headerlink" title="使用集线器扩展"></a>使用集线器扩展</h2><p>将多个以太网段连成更大的、多级星形结构的以太网。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img2.png" class="">
-
-<p>用集线器扩展以太网优点：使原来属于不同碰撞域的以太网上的计算机能够进行跨碰撞域的通信。扩大了以太网覆盖的地理范围。<br>用集线器扩展以太网缺点：碰撞域增大了，但总的吞吐量并未提高。如果不同的碰撞域使用不同的数据率，那么就不能用集线器将它们互连起来。 </p>
-<h2 id="碰撞域"><a href="#碰撞域" class="headerlink" title="碰撞域"></a>碰撞域</h2><p>碰撞域（<code>collision domain</code>）又称为冲突域，是指网络中一个站点发出的帧会与其他站点发出的帧产生碰撞或冲突的那部分网络。</p>
-<p>碰撞域越大，发生碰撞的概率越高。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img3.png" class="">
-
-<h1 id="在数据链路层扩展以太网"><a href="#在数据链路层扩展以太网" class="headerlink" title="在数据链路层扩展以太网"></a>在数据链路层扩展以太网</h1><p>扩展以太网更常用的方法是在数据链路层进行。早期使用网桥，现在使用以太网交换机。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img4.png" class="">
-
-<h2 id="网桥与以太网交换机"><a href="#网桥与以太网交换机" class="headerlink" title="网桥与以太网交换机"></a>网桥与以太网交换机</h2><p>网桥工作在数据链路层。它根据 MAC 帧的目的地址对收到的帧进行转发和过滤。当网桥收到一个帧时，并不是向所有的接口转发此帧，而是先检查此帧的目的 MAC 地址，然后再确定将该帧转发到哪一个接口，或把它丢弃。 </p>
-<p>1990 年问世的交换式集线器(<code>switching hub</code>)可明显地提高以太网的性能。交换式集线器常称为以太网交换机或第二层交换机(<code>L2 switch</code>)，强调这种交换机工作在数据链路层。</p>
-<h2 id="以太网交换机的特点"><a href="#以太网交换机的特点" class="headerlink" title="以太网交换机的特点"></a>以太网交换机的特点</h2><p>以太网交换机实质上就是一个多接口的网桥。通常都有十几个或更多的接口。每个接口都直接与一个单台主机或另一个以太网交换机相连，并且一般都工作在全双工方式。</p>
-<p>以太网交换机具有并行性。能同时连通多对接口，使多对主机能同时通信。相互通信的主机都是独占传输媒体，无碰撞地传输数据。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img5.png" class="">
-
-<p>以太网交换机的每个接口是一个碰撞域。</p>
-<p>以太网交换机的接口有存储器，能在输出端口繁忙时把到来的帧进行缓存。</p>
-<p>以太网交换机是一种即插即用设备，其内部的帧交换表（又称为地址表）是通过自学习算法自动地逐渐建立起来的。</p>
-<p>以太网交换机使用了专用的交换结构芯片，用硬件转发，其转发速率要比使用软件转发的网桥快很多。</p>
-<p>以太网交换机的性能远远超过普通的集线器，而且价格并不贵。</p>
-<h2 id="以太网交换机的优点"><a href="#以太网交换机的优点" class="headerlink" title="以太网交换机的优点"></a>以太网交换机的优点</h2><ul>
-<li>用户独享带宽，增加了总容量。</li>
-<li>从共享总线以太网转到交换式以太网时，所有接入设备的软件和硬件、适配器等都不需要做任何改动。</li>
-<li>以太网交换机一般都具有多种速率的接口，方便了各种不同情况的用户。</li>
-</ul>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img6.png" class="">
-
-<h2 id="以太网交换机的交换方式"><a href="#以太网交换机的交换方式" class="headerlink" title="以太网交换机的交换方式"></a>以太网交换机的交换方式</h2><p>存储转发方式：把整个数据帧先缓存后再进行处理。<br>直通 (cut-through) 方式：接收数据帧的同时就立即按数据帧的目的 MAC 地址决定该帧的转发接口，因而提高了帧的转发速度。缺点是它不检查差错就直接将帧转发出去，因此有可能也将一些无效帧转发给其他的站。</p>
-<p>在某些情况下，仍需要采用基于软件的存储转发方式进行交换，例如，当需要进行线路速率匹配、协议转换或差错检测时。</p>
-<h2 id="以太网交换机的自学习功能"><a href="#以太网交换机的自学习功能" class="headerlink" title="以太网交换机的自学习功能"></a>以太网交换机的自学习功能</h2><p>以太网交换机运行自学习算法自动维护交换表。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img7.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img8.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img9.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img10.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img11.png" class="">
-
-<p>以太网交换机的这种自学习方法使得以太网交换机能够即插即用，不必人工进行配置，因此非常方便。</p>
-<h2 id="交换机自学习和转发帧的步骤归纳"><a href="#交换机自学习和转发帧的步骤归纳" class="headerlink" title="交换机自学习和转发帧的步骤归纳"></a>交换机自学习和转发帧的步骤归纳</h2><img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img12.png" class="">
-
-<h2 id="理解以太网交换机的自学习功能"><a href="#理解以太网交换机的自学习功能" class="headerlink" title="理解以太网交换机的自学习功能"></a>理解以太网交换机的自学习功能</h2><img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img13.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img14.png" class="">
-
-<h2 id="交换机使用了生成树协议"><a href="#交换机使用了生成树协议" class="headerlink" title="交换机使用了生成树协议"></a>交换机使用了生成树协议</h2><p>IEEE 802.1D 标准制定了一个生成树协议 STP(<code>Spanning Tree Protocol</code>)。</p>
-<p>其要点是：不改变网络的实际拓扑，但在逻辑上则切断某些链路，使得从一台主机到所有其他主机的路径是无环路的树状结构，从而消除了兜圈子现象。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img15.png" class="">
-
-<h2 id="从总线以太网到星形以太网"><a href="#从总线以太网到星形以太网" class="headerlink" title="从总线以太网到星形以太网"></a>从总线以太网到星形以太网</h2><p>早期，以太网采用无源的总线结构。现在，采用以太网交换机的星形结构成为以太网的首选拓扑。</p>
-<p>总线以太网使用 CSMA/CD 协议，以半双工方式工作。</p>
-<p>以太网交换机不使用共享总线，没有碰撞问题，因此不使用 CSMA/CD 协议，以全双工方式工作。但仍然采用以太网的帧结构。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img16.png" class="">
-
-<p>局域网存在的以下几个方面的问题：扩展性、、安全性、可管理性等。</p>
-<p>所有计算机都处于同一个碰撞域（或冲突域）中和同一个广播域中。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img17.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img18.png" class="">
-
-<h2 id="广播域"><a href="#广播域" class="headerlink" title="广播域"></a>广播域</h2><p>广播域（<code>broadcast domain</code>）：指这样一部分网络，其中任何一台设备发出的广播通信都能被该部分网络中的所有其他设备所接收。</p>
-<p>采用以太网交换机的星形以太网，每个接口都处于一个独立的碰撞域（或冲突域）中，但所有计算机都处于同一个广播域中。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img19.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img20.png" class="">
-
-<h1 id="虚拟局域网"><a href="#虚拟局域网" class="headerlink" title="虚拟局域网"></a>虚拟局域网</h1><p>利用以太网交换机可以很方便地实现虚拟局域网 VLAN(<code>Virtual LAN</code>)。</p>
-<p>IEEE 802.1Q 对虚拟局域网 VLAN 的定义：虚拟局域网 VLAN 是由一些局域网网段构成的与物理位置无关的逻辑组，而这些网段具有某些共同的需求。每一个 VLAN 的帧都有一个明确的标识符，指明发送这个帧的计算机是属于哪一个 VLAN。</p>
-<p>虚拟局域网其实只是局域网给用户提供的一种服务，而并不是一种新型局域网。</p>
-<p>由于虚拟局域网是用户和网络资源的逻辑组合，因此可按照需要将有关设备和资源非常方便地重新组合，使用户从不同的服务器或数据库中存取所需的资源。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img21.png" class="">
-
-<p>10 台计算机划分为三个虚拟局域网：VLAN1, VLAN2 和 VLAN3。</p>
-<p>每个虚拟局域网是一个广播域。VLAN1, VLAN2 和 VLAN3 是三个不同的广播域。</p>
-<p>当 B1 向 VLAN2 工作组内成员发送数据时，工作站 B2 和 B3 将会收到其广播的信息。</p>
-<p>B1 发送数据时，VLAN1 和 VLAN3 中的工作站 A1，A2 和 C1 等都不会收到 B1 发出的广播信息。</p>
-<p>虚拟局域网限制了接收广播信息的工作站数，使得网络不会因传播过多的广播信息 (即“广播风暴”) 而引起性能恶化。</p>
-<p>虚拟局域网（VLAN）技术具有以下主要优点：改善了性能、简化了管理、降低了成本、改善了安全性。</p>
-<h2 id="划分虚拟局域网的方法"><a href="#划分虚拟局域网的方法" class="headerlink" title="划分虚拟局域网的方法"></a>划分虚拟局域网的方法</h2><ul>
-<li>基于交换机端口的方法：最简单、也是最常用的方法。属于在第一层划分虚拟局域网的方法。缺点：不允许用户移动。</li>
-<li>基于计算机网卡的MAC地址的方法：根据用户计算机的MAC地址划分虚拟局域网。属于在第二层划分虚拟局域网的方法。允许用户移动。缺点：需要输入和管理大量的MAC地址。如果用户的MAC地址改变了，则需要管理员重新配置VLAN。</li>
-<li>基于协议类型的方法：根据以太网帧的第三个字段“类型”字段确定该类型的协议属于哪一个虚拟局域网。属于在第二层划分虚拟局域网的方法。</li>
-<li>基于IP子网地址的方法：根据以太网帧的第三个字段“类型”字段和IP分组首部中的源 IP 地址字段确定该 IP 分组属于哪一个虚拟局域网。属于在第三层划分虚拟局域网的方法。</li>
-<li>基于高层应用或服务的方法：根据高层应用或服务、或者它们的组合划分虚拟局域网。更加灵活，但更加复杂。</li>
-</ul>
-<h2 id="虚拟局域网使用的以太网帧格式"><a href="#虚拟局域网使用的以太网帧格式" class="headerlink" title="虚拟局域网使用的以太网帧格式"></a>虚拟局域网使用的以太网帧格式</h2><p>IEEE 批准了 802.3ac 标准，该标准定义了以太网的帧格式的扩展，以支持虚拟局域网。</p>
-<p>虚拟局域网协议允许在以太网的帧格式中插入一个4字节的标识符，称为 VLAN 标记，用来指明该帧属于哪一个虚拟局域网。</p>
-<p>插入VLAN标记得出的帧称为 802.1Q 帧或带标记的以太网帧。</p>
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img22.png" class="">
-<img src="/2020/09/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E6%89%A9%E5%B1%95%E7%9A%84%E4%BB%A5%E5%A4%AA%E7%BD%91/img23.png" class="">
       
       <!-- reward -->
       
