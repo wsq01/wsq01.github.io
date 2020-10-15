@@ -80,6 +80,143 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-计算机网络/网络层——MPLS" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/"
+    >网络层——MPLS</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/" class="article-date">
+  <time datetime="2020-10-10T07:33:51.000Z" itemprop="datePublished">2020-10-10</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>IETF于1997年成立了 MPLS 工作组，开发出一种新的协议——多协议标记交换 MPLS(<code>MultiProtocol Label Switching</code>)。</p>
+<p>“多协议”表示在 MPLS 的上层可以采用多种协议，例如：IP，IPX；可以使用多种数据链路层协议，例如：PPP，以太网，ATM 等。</p>
+<p>“标记”是指每个分组被打上一个标记，根据该标记对分组进行转发。</p>
+<p>为了实现交换，可以利用面向连接的概念，使每个分组携带一个叫做标记的小整数。当分组到达交换机（即标记交换路由器）时，交换机读取分组的标记，并用标记值来检索分组转发表。 这样就比查找路由表来转发分组要快得多。</p>
+<h2 id="MPLS-特点"><a href="#MPLS-特点" class="headerlink" title="MPLS 特点"></a>MPLS 特点</h2><p>MPLS 并没有取代 IP，而是作为一种 IP 增强技术，被广泛地应用在互联网中。</p>
+<p>MPLS 具有以下三个方面的特点：</p>
+<ul>
+<li>支持面向连接的服务质量；</li>
+<li>支持流量工程，平衡网络负载；</li>
+<li>有效地支持虚拟专用网 VPN。</li>
+</ul>
+<h1 id="MPLS-的工作原理"><a href="#MPLS-的工作原理" class="headerlink" title="MPLS 的工作原理"></a>MPLS 的工作原理</h1><h2 id="基本工作过程"><a href="#基本工作过程" class="headerlink" title="基本工作过程"></a>基本工作过程</h2><p>IP 分组的转发</p>
+<ol>
+<li>在传统的 IP 网络中，分组每到达一个路由器后，都必须提取出其目的地址，按目的地址查找路由表，并按照“最长前缀匹配”的原则找到下一跳的 IP 地址（请注意，前缀的长度是不确定的）。</li>
+<li>当网络很大时，查找含有大量项目的路由表要花费很多的时间。</li>
+<li>在出现突发性的通信量时，往往还会使缓存溢出，这就会引起分组丢失、传输时延增大和服务质量下降。</li>
+</ol>
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img2.png" class="">
+
+<p>在 MPLS 域的入口处，给每一个 IP 数据报打上固定长度“标记”，然后对打上标记的 IP 数据报用硬件进行转发。</p>
+<p>采用硬件技术对打上标记的 IP 数据报进行转发就称为标记交换。</p>
+<p>“交换”也表示在转发时不再上升到第三层查找转发表，而是根据标记在第二层（链路层）用硬件进行转发。</p>
+<p>MPLS 域是指该域中有许多彼此相邻的路由器，并且所有的路由器都是支持 MPLS 技术的标记交换路由器 LSR(<code>Label Switching Router</code>)。</p>
+<p>LSR 同时具有标记交换和路由选择这两种功能，标记交换功能是为了快速转发，但在这之前 LSR 需要使用路由选择功能构造转发表。</p>
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img3.png" class="">
+
+<p>MPLS 的基本工作过程：</p>
+<ol>
+<li>MPLS 域中的各 LSR 使用专门的标记分配协议 LDP 交换报文，并找出标记交换路径 LSP。各 LSR 根据这些路径构造出分组转发表。 </li>
+<li>分组进入到 MPLS 域时， MPLS 入口结点把分组打上标记，并按照转发表将分组转发给下一个 LSR。给 IP 数据报打标记的过程叫做分类 (classification)。</li>
+<li>一个标记仅仅在两个标记交换路由器 LSR 之间才有意义。分组每经过一个 LSR，LSR 就要做两件事：一是转发，二是更换新的标记，即把入标记更换成为出标记。这就叫做标记对换(<code>label swapping</code>)。</li>
+</ol>
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img4.png" class="">
+
+<p>项目含义：从入接口 0 收到一个入标记为 3 的IP 数据报，转发时，应当把该IP数据报从出接口 1 转发出去，同时把标记对换为 1。</p>
+<ol start="4">
+<li>当分组离开 MPLS 域时，MPLS 出口结点把分组的标记去除。再以后就按照一般分组的转发方法进行转发。</li>
+</ol>
+<p>上述的这种“由入口 LSR 确定进入 MPLS 域以后的转发路径”称为显式路由选择(<code>explicit routing</code>)，它和互联网中通常使用的“每一个路由器逐跳进行路由选择”有着很大的区别。</p>
+<h2 id="转发等价类-FEC"><a href="#转发等价类-FEC" class="headerlink" title="转发等价类 FEC"></a>转发等价类 FEC</h2><p>MPLS 有个很重要的概念就是转发等价类 FEC(<code>Forwarding Equivalence Class</code>)。</p>
+<p>“转发等价类”就是路由器按照同样方式对待的分组的集合。 </p>
+<p>“按照同样方式对待”表示：从同样接口转发到同样的下一跳地址，并且具有同样服务类别和同样丢弃优先级等。</p>
+<p>划分 FEC 的方法不受什么限制，这都由网络管理员来控制，因此非常灵活。</p>
+<p>入口结点并不是给每一个分组指派一个不同的标记，而是将属于同样 FEC 的分组都指派同样的标记。</p>
+<p>FEC 和标记是一一对应的关系。</p>
+<p>FEC 用于负载平衡</p>
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img5.png" class="">
+
+<h3 id="流量工程"><a href="#流量工程" class="headerlink" title="流量工程"></a>流量工程</h3><p>(1) 网络管理员采用自定义的 FEC 就可以更好地管理网络的资源。</p>
+<p>(2) 这种均衡网络负载的做法也称为流量工程 TE(<code>Traffic Engineering</code>) 或通信量工程。</p>
+<h1 id="MPLS-首部的位置与格式"><a href="#MPLS-首部的位置与格式" class="headerlink" title="MPLS 首部的位置与格式"></a>MPLS 首部的位置与格式</h1><p>MPLS 并不要求下层的网络都使用面向连接的技术。</p>
+<p>下层的网络并不提供打标记的手段，而 IPv4 数据报首部也没有多余的位置存放 MPLS 标记。</p>
+<p>这就需要使用一种封装技术：在把 IP 数据报封装成以太网帧之前，先要插入一个 MPLS 首部。</p>
+<p>从层次的角度看，MPLS 首部就处在第二层和第三层之间。</p>
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img6.png" class="">
+<img src="/2020/10/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94MPLS/img7.png" class="">
+
+<p>“给 IP 数据报打上标记”其实就是在以太网的帧首部和  IP 数据报的首部之间插入一个 4 字节的 MPLS 首部。</p>
+<p>MPLS 首部共包括以下四个字段：</p>
+<ul>
+<li>标记值（占 20 位）。可以同时容纳高达 220 个流（即 1048576 个流）。实际上几乎没有哪个 MPLS 实例会使用很大数目的流，因为通常需要管理员人工管理和设置每条交换路径。</li>
+<li>试验（占 3 位）。目前保留用作试验。</li>
+<li>栈S（占 1 位）。在有“标记栈”时使用。</li>
+<li>生存时间TTL（占 8 位）。用来防止 MPLS 分组在 MPLS 域中兜圈子。</li>
+</ul>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-计算机网络/网络层——VPN和NAT" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1701,141 +1838,6 @@ var _hmt = _hmt || [];
 </ol>
 <p>路由表没有给分组指明到某个网络的完整路径。</p>
 <p>路由表指出，到某个网络应当先到某个路由器（即下一跳路由器）。在到达下一跳路由器后，再继续查找其路由表，知道再下一步应当到哪一个路由器。这样一步一步地查找下去，直到最后到达目的网络。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/数据链路层——高速以太网" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/"
-    >数据链路层——高速以太网</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-date">
-  <time datetime="2020-09-18T03:32:13.000Z" itemprop="datePublished">2020-09-18</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="100BASE-T-以太网"><a href="#100BASE-T-以太网" class="headerlink" title="100BASE-T 以太网"></a>100BASE-T 以太网</h1><p>速率达到或超过 100 Mbit/s 的以太网称为高速以太网。</p>
-<p>100BASE-T 在双绞线上传送 100 Mbit/s 基带信号的星形拓扑以太网，仍使用 IEEE 802.3 的 CSMA/CD 协议。</p>
-<p>100BASE-T 以太网又称为快速以太网(Fast Ethernet)。</p>
-<p>1995 年IEEE已把 100BASE-T 的快速以太网定为正式标准，其代号为 IEEE 802.3u。</p>
-<h2 id="100BASE-T-以太网的特点"><a href="#100BASE-T-以太网的特点" class="headerlink" title="100BASE-T 以太网的特点"></a>100BASE-T 以太网的特点</h2><p>可在全双工方式下工作而无冲突发生。在全双工方式下工作时，不使用 CSMA/CD 协议。</p>
-<p>MAC 帧格式仍然是 802.3 标准规定的。</p>
-<p>保持最短帧长不变，但将一个网段的最大电缆长度减小到 100 米。</p>
-<p>帧间时间间隔从原来的<code>9.6μs</code>改为现在的<code>0.96μs</code>。</p>
-<p><code>100 Mbit/s</code>以太网的三种不同的物理层标准：</p>
-<ul>
-<li>100BASE-TX：使用 2 对 UTP 5 类线 或 屏蔽双绞线 STP。网段最大程度：100 米。</li>
-<li>100BASE-T4：使用 4 对 UTP 3 类线 或 5 类线。 网段最大程度：100 米。</li>
-<li>100BASE-FX：使用 2 对光纤。 网段最大程度：2000 米。</li>
-</ul>
-<h1 id="吉比特以太网"><a href="#吉比特以太网" class="headerlink" title="吉比特以太网"></a>吉比特以太网</h1><p>吉比特以太网特点：</p>
-<ul>
-<li>允许在<code>1 Gbit/s</code>下以全双工和半双工两种方式工作。</li>
-<li>使用 IEEE 802.3 协议规定的帧格式。</li>
-<li>在半双工方式下使用 CSMA/CD 协议，全双工方式不使用 CSMA/CD 协议。</li>
-<li>与 10BASE-T 和 100BASE-T 技术向后兼容。</li>
-</ul>
-<p>吉比特以太网可用作现有网络的主干网，也可在高带宽（高速率）的应用场合中。</p>
-<h2 id="吉比特以太网的物理层"><a href="#吉比特以太网的物理层" class="headerlink" title="吉比特以太网的物理层"></a>吉比特以太网的物理层</h2><p>使用两种成熟的技术：一种来自现有的以太网，另一种则是美国国家标准协会 ANSI 制定的光纤通道 FC(<code>Fiber Channel</code>)。</p>
-<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/img1.png" class="">
-
-<h2 id="半双工方式工作的吉比特以太网"><a href="#半双工方式工作的吉比特以太网" class="headerlink" title="半双工方式工作的吉比特以太网"></a>半双工方式工作的吉比特以太网</h2><p>吉比特以太网工作在半双工方式时，就必须进行碰撞检测。</p>
-<p>为保持 64 字节最小帧长度，以及 100 米的网段的最大长度，吉比特以太网增加了两个功能：载波延伸(<code>carrier extension</code>)、分组突发(<code>packet bursting</code>)。</p>
-<h2 id="载波延伸"><a href="#载波延伸" class="headerlink" title="载波延伸"></a>载波延伸</h2><p>使最短帧长仍为 64 字节（这样可以保持兼容性），同时将争用时间增大为 512 字节。<br>凡发送的 MAC 帧长不足 512 字节时，就用一些特殊字符填充在帧的后面，使MAC 帧的发送长度增大到 512 字节。接收端在收到以太网的 MAC 帧<br>后，要将所填充的特殊字符删除后才向高层交付。</p>
-<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/img2.png" class="">
-
-<h2 id="分组突发"><a href="#分组突发" class="headerlink" title="分组突发"></a>分组突发</h2><p>当很多短帧要发送时，第一个短帧要采用载波延伸方法进行填充，随后的一些短帧则可一个接一个地发送，只需留有必要的帧间最小间隔即可。这样就形成可一串分组的突发，直到达到 1500 字节或稍多一些为止。</p>
-<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/img3.png" class="">
-
-<h2 id="全双工方式工作的吉比特以太网"><a href="#全双工方式工作的吉比特以太网" class="headerlink" title="全双工方式工作的吉比特以太网"></a>全双工方式工作的吉比特以太网</h2><p>当吉比特以太网工作在全双工方式时（即通信双方可同时进行发送和接收数据），不使用载波延伸和分组突发。</p>
-<h1 id="10-吉比特以太网和更快的以太网"><a href="#10-吉比特以太网和更快的以太网" class="headerlink" title="10 吉比特以太网和更快的以太网"></a>10 吉比特以太网和更快的以太网</h1><p>10 吉比特以太网（10GE）并非把吉比特以太网的速率简单地提高到 10 倍，其主要特点有：</p>
-<ul>
-<li>与<code>10 Mbit/s</code>、<code>100 Mbit/s</code>和<code>1 Gbit/s</code>以太网的帧格式完全相同。</li>
-<li>保留了 802.3 标准规定的以太网最小和最大帧长，便于升级。</li>
-<li>不再使用铜线而只使用光纤作为传输媒体。</li>
-<li>只工作在全双工方式，因此没有争用问题，也不使用 CSMA/CD 协议。 </li>
-</ul>
-<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/img4.png" class="">
-<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E9%AB%98%E9%80%9F%E4%BB%A5%E5%A4%AA%E7%BD%91/img5.png" class="">
-
-<h2 id="端到端的以太网传输"><a href="#端到端的以太网传输" class="headerlink" title="端到端的以太网传输"></a>端到端的以太网传输</h2><p>以太网的工作范围已经从局域网（校园网、企业网）扩大到城域网和广域网，从而实现了端到端的以太网传输。</p>
-<p>这种工作方式的好处有： </p>
-<ul>
-<li>技术成熟；</li>
-<li>互操作性很好；</li>
-<li>在广域网中使用以太网时价格便宜；</li>
-<li>采用统一的以太网帧格式，简化了操作和管理。</li>
-</ul>
-<h1 id="使用以太网进行宽带接入"><a href="#使用以太网进行宽带接入" class="headerlink" title="使用以太网进行宽带接入"></a>使用以太网进行宽带接入</h1><p>IEEE 在 2001 年初成立了 802.3 EFM 工作组，专门研究高速以太网的宽带接入技术问题。</p>
-<p>以太网宽带接入具有以下特点：</p>
-<ul>
-<li>可以提供双向的宽带通信。</li>
-<li>可以根据用户对带宽的需求灵活地进行带宽升级。</li>
-<li>可以实现端到端的以太网传输，中间不需要再进行帧格式的转换。这就提高了数据的传输效率且降低了传输的成本。</li>
-<li>但是不支持用户身份鉴别。</li>
-</ul>
-<h2 id="PPPoE"><a href="#PPPoE" class="headerlink" title="PPPoE"></a>PPPoE</h2><p>PPPoE(<code>PPP over Ethernet</code>)的意思是“在以太网上运行 PPP”，它把 PPP 协议与以太网协议结合起来 —— 将 PPP 帧再封装到以太网中来传输。</p>
-<p>现在的光纤宽带接入 FTTx 都要使用 PPPoE 的方式进行接入。在 PPPoE 弹出的窗口中键入在网络运营商购买的用户名和密码，就可以进行宽带上网了。</p>
-<p>利用 ADSL 进行宽带上网时，从用户个人电脑到家中的 ADSL 调制解调器之间，也是使用 RJ-45 和 5 类线（即以太网使用的网线）进行连接的，并且也是使用 PPPoE 弹出的窗口进行拨号连接的。</p>
 
       
       <!-- reward -->
