@@ -80,6 +80,137 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-微服务/如何搭建微服务治理平台" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/"
+    >微服务/如何搭建微服务治理平台</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/" class="article-date">
+  <time datetime="2020-09-10T04:51:33.103Z" itemprop="datePublished">2020-09-10</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>单体应用改造为微服务架构后，服务调用从本地调用变成了远程方法调用后，面临的各种不确定因素变多了，一方面你需要能够监控各个服务的实时运行状态、服务调用的链路和拓扑图；另一方面你需要在出现故障时，能够快速定位故障的原因并可以通过诸如降级、限流、切流量、扩容等手段快速干预止损。这个时候就需要微服务治理平台了。</p>
+<h1 id="微服务治理平台的基本功能"><a href="#微服务治理平台的基本功能" class="headerlink" title="微服务治理平台的基本功能"></a>微服务治理平台的基本功能</h1><p>你可能先会问，到底什么是微服务治理平台？根据我的理解，微服务治理平台就是与服务打交道的统一入口，无论是开发人员还是运维人员，都能通过这个平台对服务进行各种操作，比如开发人员可以通过这个平台对服务进行降级操作，运维人员可以通过这个平台对服务进行上下线操作，而不需要关心这个操作背后的具体实现。</p>
+<p>接下来我就结合下面这张图，给你介绍一下一个微服务治理平台应该具备哪些基本功能。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img1.png" class="">
+
+<ol>
+<li>服务管理</li>
+</ol>
+<p>通过微服务治理平台，可以调用注册中心提供的各种管理接口来实现服务的管理。根据我的经验，服务管理一般包括以下几种操作：</p>
+<p>服务上下线。当上线一个新服务的时候，可以通过调用注册中心的服务添加接口，新添加一个服务，同样要下线一个已有服务的时候，也可以通过调用注册中心的服务注销接口，删除一个服务。</p>
+<p>节点添加 / 删除。当需要给服务新添加节点时候，可以通过调用注册中心的节点注册接口，来给服务新增加一个节点。而当有故障节点出现或者想临时下线一些节点时，可以通过调用注册中心的节点反注册接口，来删除节点。</p>
+<p>服务查询。这个操作会调用注册中心的服务查询接口，可以查询当前注册中心里共注册了多少个服务，每个服务的详细信息。</p>
+<p>服务节点查询。这个操作会调用注册中心的节点查询接口，来查询某个服务下一共有多少个节点。</p>
+<ol start="2">
+<li>服务治理</li>
+</ol>
+<p>通过微服务治理平台，可以调用配置中心提供的接口，动态地修改各种配置来实现服务的治理。根据我的经验，常用的服务治理手段包括以下几种：</p>
+<p>限流。一般是在系统出现故障的时候，比如像微博因为热点突发事件的发生，可能会在短时间内流量翻几倍，超出系统的最大容量。这个时候就需要调用配置中心的接口，去修改非核心服务的限流阈值，从而减少非核心服务的调用，给核心服务留出充足的冗余度。</p>
+<p>降级。跟限流一样，降级也是系统出现故障时的应对方案。要么是因为突发流量的到来，导致系统的容量不足，这时可以通过降级一些非核心业务，来增加系统的冗余度；要么是因为某些依赖服务的问题，导致系统被拖慢，这时可以降级对依赖服务的调用，避免被拖死。</p>
+<p>切流量。通常为了服务的异地容灾考虑，服务部署在不止一个 IDC 内。当某个 IDC 因为电缆被挖断、机房断电等不可抗力时，需要把故障 IDC 的流量切换到其他正常 IDC，这时候可以调用配置中心的接口，向所有订阅了故障 IDC 服务的消费者下发指令，将流量统统切换到其他正常 IDC，从而避免服务消费者受影响。</p>
+<ol start="3">
+<li>服务监控</li>
+</ol>
+<p>微服务治理平台一般包括两个层面的监控。一个是整体监控，比如服务依赖拓扑图，将整个系统内服务间的调用关系和依赖关系进行可视化的展示；一个是具体服务监控，比如服务的 QPS、AvgTime、P999 等监控指标。其中整体监控可以使用服务追踪系统提供的服务依赖拓扑图，而具体服务监控则可以通过 Grafana 等监控系统 UI 来展示。</p>
+<ol start="4">
+<li>问题定位</li>
+</ol>
+<p>微服务治理平台实现问题定位，可以从两个方面来进行。一个是宏观层面，即通过服务监控来发觉异常，比如某个服务的平均耗时异常导致调用失败；一个是微观层面，即通过服务追踪来具体定位一次用户请求失败具体是因为服务调用全链路的哪一层导致的。</p>
+<ol start="5">
+<li>日志查询</li>
+</ol>
+<p>微服务治理平台可以通过接入类似 ELK 的日志系统，能够实时地查询某个用户的请求的详细信息或者某一类用户请求的数据统计。</p>
+<ol start="6">
+<li>服务运维</li>
+</ol>
+<p>微服务治理平台可以调用容器管理平台，来实现常见的运维操作。根据我的经验，服务运维主要包括下面几种操作：</p>
+<p>发布部署。当服务有功能变更，需要重新发布部署的时候，可以调用容器管理平台分批按比例进行重新部署，然后发布到线上。</p>
+<p>扩缩容。在流量增加或者减少的时候，需要相应地增加或者缩减服务在线上部署的实例，这时候可以调用容器管理平台来扩容或者缩容。</p>
+<h1 id="如何搭建微服务治理平台"><a href="#如何搭建微服务治理平台" class="headerlink" title="如何搭建微服务治理平台"></a>如何搭建微服务治理平台</h1><p>微服务治理平台之所以能够实现上面所说的功能，关键之处就在于它能够封装对微服务架构内的各个基础设施组件的调用，从而对外提供统一的服务操作 API，而且还提供了可视化的界面，以方便开发人员和运维人员操作。</p>
+<p>根据我的经验，一个微服务治理平台的组成主要包括三部分：Web Portal 层、API 层以及数据存储 DB 层，结合下面这张图我来详细讲解下每一层该如何实现。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img2.png" class="">
+
+<p>第一层：Web Portal。也就是微服务治理平台的前端展示层，一般包含以下几个功能界面：</p>
+<p>服务管理界面，可以进行节点的操作，比如查询节点、删除节点。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img3.png" class="">
+
+<p>服务治理界面，可以进行服务治理操作，比如切流量、降级等，还可以查看操作记录。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img4.png" class="">
+
+<p>服务监控界面，可以查看服务的详细信息，比如 QPS、AvgTime、耗时分布区间以及 P999 等。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img5.png" class="">
+
+<p>服务运维界面，可以执行服务的扩缩容操作，还可以查看扩缩容的操作历史。</p>
+<img src="/2020/09/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/img6.png" class="">
+
+<p>第二层，API。也就是微服务治理平台的后端服务层，这一层对应的需要提供 Web Portal 接口以调用，对应的一般包含下面几个接口功能：</p>
+<p>添加服务接口。这个接口会调用注册中心提供的服务添加接口来新发布一个服务。</p>
+<p>删除服务接口。这个接口会调用注册中心提供的服务注销接口来下线一个服务。</p>
+<p>服务降级 / 限流 / 切流量接口。这几个接口会调用配置中心提供的配置修改接口，来修改对应服务的配置，然后订阅这个服务的消费者就会从配置中心拉取最新的配置，从而实现降级、限流以及流量切换。</p>
+<p>服务扩缩容接口。这个接口会调用容器平台提供的扩缩容接口，来实现服务的实例添加和删除。</p>
+<p>服务部署接口。这个接口会调用容器平台提供的上线部署接口，来实现服务的线上部署。</p>
+<p>第三层，DB。也就是微服务治理平台的数据存储层，因为微服务治理平台不仅需要调用其他组件提供的接口，还需要存储一些基本信息，主要分为以下几种：</p>
+<p>用户权限。因为微服务治理平台的功能十分强大，所以要对用户的权限进行管理。一般可以分为可浏览、可更改以及管理员三个权限。而且还需要对可更改的权限进行细分，按照不同服务的负责人进行权限划分，一个人只能对它负责的服务的进行更改操作，而不能修改其他人负责的服务。</p>
+<p>操作记录。用来记录下用户在平台上所进行的变更操作，比如降级记录、扩缩容记录、切流量记录等。</p>
+<p>元数据。主要是用来把服务在各个系统中对应的记录映射到微服务治理平台中，统一进行管理。比如某个服务在监控系统里可能有个特殊标识，在注册中心里又使用了另外一个标识，为了统一就需要在微服务治理平台统一进行转换，然后进行数据串联。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-微服务/如何将注册中心落地" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1207,157 +1338,6 @@ var _hmt = _hmt || [];
     <footer class="article-footer">
       
       
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/物理层——宽带接入技术" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/"
-    >物理层——宽带接入技术</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/" class="article-date">
-  <time datetime="2020-09-07T04:21:42.000Z" itemprop="datePublished">2020-09-07</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>用户要连接到互联网，必须先连接到某个 ISP，以便获得上网所需的 IP 地址。</p>
-<p>在互联网的发展初期，用户都是利用电话的用户线通过调制解调器连接到 ISP 的，电话用户线接入到互联网的速率最高仅达到<code>56 kbit/s</code>。</p>
-<p>下行速率达到<code>25 Mbit/s</code>，上行速率达到<code>3 Mbit/s</code>就是宽带。</p>
-<p>从宽带接入的媒体来看，可以划分为两大类：有线宽带接入、无线宽带接入。</p>
-<h1 id="ADSL技术"><a href="#ADSL技术" class="headerlink" title="ADSL技术"></a>ADSL技术</h1><p>非对称数字用户线 ADSL(<code>Asymmetric Digital Subscriber Line</code>) 技术就是用数字技术对现有的模拟电话用户线进行改造，使它能够承载宽带业务。</p>
-<p>标准模拟电话信号的频带被限制在<code>300~3400 Hz</code>的范围内，但用户线本身实际可通过的信号频率超过<code>1 MHz</code>。</p>
-<p>ADSL 技术就把<code>0~4 kHz</code>低端频谱留给传统电话使用，而把原来没有被利用的高端频谱留给用户上网使用。</p>
-<p>DSL 就是数字用户线(<code>Digital Subscriber Line</code>)的缩写。</p>
-<p>DSL 的几种类型：</p>
-<ul>
-<li>ADSL(<code>Asymmetric Digital Subscriber Line</code>)：非对称数字用户线</li>
-<li>HDSL(<code>High speed DSL</code>)：高速数字用户线，使用1对线或2对线的对称DSL</li>
-<li>SDSL(<code>Single-line DSL</code>)：1 对线的数字用户线</li>
-<li>VDSL(<code>Very high speed DSL</code>)：甚高速数字用户线</li>
-<li>DSL(<code>Digital Subscriber Line</code>) ：数字用户线</li>
-<li>RADSL(<code>Rate-Adaptive DSL</code>)：速率自适应 DSL，是 ADSL 的一个子集，可自动调节线路速率</li>
-</ul>
-<h2 id="ADSL-的传输距离"><a href="#ADSL-的传输距离" class="headerlink" title="ADSL 的传输距离"></a>ADSL 的传输距离</h2><p>ADSL 的传输距离取决于数据率和用户线的线径（用户线越细，信号传输时的衰减就越大）。</p>
-<p>ADSL 所能得到的最高数据传输速率与实际的用户线上的信噪比密切相关。</p>
-<p>例如：0.5 毫米线径的用户线，传输速率为<code>1.5~2.0 Mbit/s</code>时可传送<code>5.5km</code>，但当传输速率提高到<code>6.1 Mbit/s</code>时，传输距离就缩短为<code>3.7km</code>。如果把用户线的线径减小到 0.4 毫米，那么在<code>6.1 Mbit/s</code>的传输速率下就只能传送<code>2.7km</code>。</p>
-<h2 id="ADSL-的特点"><a href="#ADSL-的特点" class="headerlink" title="ADSL 的特点"></a>ADSL 的特点</h2><p>上行和下行带宽做成不对称的。由于用户在上网时主要是从互联网下载各种文档，而向互联网发送的信息量一般都不太大，因此下行（从ISP到用户）带宽都远远大于上行。</p>
-<p>上行指从用户到 ISP，而下行指从 ISP 到用户。</p>
-<h2 id="DMT-技术"><a href="#DMT-技术" class="headerlink" title="DMT 技术"></a>DMT 技术</h2><p>ADSL 在用户线（铜线）的两端各安装一个 ADSL 调制解调器。调制解调器的实现有很多，我国目前采用的方案是离散多音调 DMT (<code>Discrete Multi-Tone</code>)调制技术。这里的“多音调”就是“多载波”或“多子信道”的意思。</p>
-<p>DMT 调制技术采用频分复用的方法，把<code>40 kHz</code>以上一直到<code>1.1 MHz</code>的高端频谱划分为许多子信道，其中 25 个子信道用于上行信道，而 249 个子信道用于下行信道。</p>
-<p>每个子信道占据<code>4 kHz</code>带宽（严格讲是<code>4.3125 kHz</code>），并使用不同的载波（即不同的音调）进行数字调制。这种做法相当于在一对用户线上使用许多小的调制解调器并行地传送数据。</p>
-<h2 id="DMT-技术的频谱分布"><a href="#DMT-技术的频谱分布" class="headerlink" title="DMT 技术的频谱分布"></a>DMT 技术的频谱分布</h2><img src="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/img16.png" class="" title="DMT 技术的频谱分布">
-
-<h2 id="ADSL-的数据率"><a href="#ADSL-的数据率" class="headerlink" title="ADSL 的数据率"></a>ADSL 的数据率</h2><p>由于用户线的具体条件往往相差很大（距离、线径、受到相邻用户线的干扰程度等都不同），因此 ADSL 采用自适应调制技术使用户线能够传送尽可能高的数据率。</p>
-<p>当 ADSL 启动时，用户线两端的 ADSL 调制解调器就测试可用的频率、各子信道受到的干扰情况，以及在每一个频率上测试信号的传输质量。</p>
-<p>ADSL 不能保证固定的数据率。对于质量很差的用户线甚至无法开通 ADSL。</p>
-<p>通常下行数据率在<code>32 kbit/s</code>到<code>6.4 Mbit/s</code>之间，而上行数据率在<code>32 kbit/s</code>到<code>640 kbit/s</code>之间。</p>
-<h2 id="ADSL-的组成"><a href="#ADSL-的组成" class="headerlink" title="ADSL 的组成"></a>ADSL 的组成</h2><img src="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/img17.png" class="">
-
-<p>ADSL 调制解调器有两个插口，较大的一个是 RJ-45 插口，用来和计算机相连。较小的是 RJ-11 插口，用来和电话分离器相连。</p>
-<p>ADSL 借助于在用户线两端安装的 ADSL 调制解调器对数字信号进行了调制，使得调制后的数字信号的频谱适合在原来的用户线上传输，用户线本身并没有发生变化。</p>
-<h2 id="第二代-ADSL"><a href="#第二代-ADSL" class="headerlink" title="第二代 ADSL"></a>第二代 ADSL</h2><p>包括 ADSL2（G.992.3 和 G.992.4）和 ADSL2+（G.992.5）。</p>
-<p>通过提高调制效率得到了更高的数据率。</p>
-<ul>
-<li>ADSL2 要求至少应支持下行<code>8 Mbit/s</code>、上行<code>800 kbit/s</code>的速率。</li>
-<li>ADSL2+ 则将频谱范围从<code>1.1 MHz</code>扩展至<code>2.2 MHz</code>，下行速率可达<code>16 Mbit/s</code>（最大传输速率可达<code>25 Mbit/s</code>），而上行速率可达<code>800 kbit/s</code>。</li>
-</ul>
-<p>采用了无缝速率自适应技术 SRA(<code>Seamless Rate Adaptation</code>)，可在运营中不中断通信和不产生误码的情况下，自适应地调整数据率。</p>
-<p>改善了线路质量评测和故障定位功能，这对提高网络的运行维护水平具有非常重要的意义。</p>
-<h1 id="光纤同轴混合网（HFC网）"><a href="#光纤同轴混合网（HFC网）" class="headerlink" title="光纤同轴混合网（HFC网）"></a>光纤同轴混合网（HFC网）</h1><p>HFC(<code>Hybrid Fiber Coax</code>)网是在目前覆盖面很广的有线电视网 CATV 的基础上开发的一种居民宽带接入网。</p>
-<p>HFC 网除可传送 CATV 外，还提供电话、数据和其他宽带交互型业务。</p>
-<p>现有的 CATV 网是树形拓扑结构的同轴电缆网络，它采用模拟技术的频分复用对电视节目进行单向传输。</p>
-<p>HFC 网对 CATV 网进行了改造。HFC 网将原 CATV 网中的同轴电缆主干部分改换为光纤，并使用模拟光纤技术。</p>
-<p>在模拟光纤中采用光的振幅调制AM，这比使用数字光纤更为经济。</p>
-<p>模拟光纤从头端连接到光纤结点(<code>fiber node</code>)，即光分配结点 ODN(<code>Optical Distribution Node</code>)。在光纤结点光信号被转换为电信号。在光纤结点以下就是同轴电缆。</p>
-<img src="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/img18.png" class="">
-
-<p>HFC 网具有双向传输功能，扩展了传输频带。</p>
-<img src="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/img19.png" class="">
-
-<p>每个家庭要安装一个用户接口盒。用户接口盒 UIB(<code>User Interface Box</code>)要提供三种连接，即：</p>
-<ul>
-<li>使用同轴电缆连接到机顶盒，然后再连接到用户的电视机。</li>
-<li>使用双绞线连接到用户的电话机。</li>
-<li>使用电缆调制解调器连接到用户的计算机。</li>
-</ul>
-<h2 id="电缆调制解调器-Cable-Modem"><a href="#电缆调制解调器-Cable-Modem" class="headerlink" title="电缆调制解调器 (Cable Modem)"></a>电缆调制解调器 (Cable Modem)</h2><p>电缆调制解调器是为 HFC 网而使用的调制解调器。电缆调制解调器最大的特点就是传输速率高。</p>
-<ul>
-<li>下行速率一般在<code>3 ~ 10 Mbit/s</code>之间，最高可达<code>30 Mbit/s</code>。</li>
-<li>上行速率一般为<code>0.2 ~ 2 Mbit/s</code>，最高可达<code>10 Mbit/s</code>。</li>
-</ul>
-<p>电缆调制解调器比在普通电话线上使用的调制解调器要复杂得多，并且不是成对使用，而是只安装在用户端。 </p>
-<h1 id="FTTx技术"><a href="#FTTx技术" class="headerlink" title="FTTx技术"></a>FTTx技术</h1><p>FTTx 是一种实现宽带居民接入网的方案，代表多种宽带光纤接入方式。<br>FTTx 表示<code>Fiber To The…</code>（光纤到…），例如：</p>
-<ul>
-<li>光纤到户 FTTH(<code>Fiber To The Home</code>)：光纤一直铺设到用户家庭，可能是居民接入网最后的解决方法。</li>
-<li>光纤到大楼 FTTB(<code>Fiber To The Building</code>)：光纤进入大楼后就转换为电信号，然后用电缆或双绞线分配到各用户。</li>
-<li>光纤到路边 FTTC(<code>Fiber To The Curb</code>)：光纤铺到路边，从路边到各用户可使用星形结构双绞线作为传输媒体。</li>
-</ul>
-<h2 id="无源光网络-PON-Passive-Optical-Network"><a href="#无源光网络-PON-Passive-Optical-Network" class="headerlink" title="无源光网络 PON (Passive Optical Network)"></a>无源光网络 PON (Passive Optical Network)</h2><img src="/2020/09/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%AE%BD%E5%B8%A6%E6%8E%A5%E5%85%A5%E6%8A%80%E6%9C%AF/img20.png" class="">
-
-<p>光配线网 ODN(<code>Optical Distribution Node</code>)是在光纤和用户之间的转换装置，使用户能够共享一根光纤干线。</p>
-<p>无源表明在光配线网中无须配备电源，因此基本上不用维护，长期运营成本和管理成本都很低。无源的光配线网常称为无源光网络 PON。</p>
-<p>光线路终端 OLT(<code>Optical Line Terminal</code>)是连接到光纤干线的终端设备。OLT 把收到的下行数据发往无源的1:N光分路器，然后用广播方式向所有用户端的光网络单元 ONU(<code>Optical Network Unit</code>) 发送。每个 ONU 根据特有的标识只接收发送给自己的数据，然后转换为电信号发往用户家中。</p>
-<p>当 ONU 发送上行数据时，先把电信号转换为光信号，光分路器把各 ONU 发来的上行数据汇总后，以 TDMA 方式发往 OLT，而发送时间和长度都由 OLT集中控制，以便有序的共享光纤主干。</p>
-<p>光配线网采用波分复用，上行和下行分别使用不同的波长。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
 
     </footer>
 

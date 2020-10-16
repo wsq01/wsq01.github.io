@@ -80,6 +80,170 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-js/深入/浏览器安全——HTTPS" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/"
+    >浏览器安全——HTTPS</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/" class="article-date">
+  <time datetime="2019-12-26T02:56:33.000Z" itemprop="datePublished">2019-12-26</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/javascript/">javascript</a> / <a class="article-category-link" href="/categories/javascript/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/">浏览器工作原理与实践</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>起初设计 HTTP 协议的目的很单纯，就是为了传输超文本文件，那时候也没有太强的加密传输的数据需求，所以 HTTP 一直保持着明文传输数据的特征。但这样的话，在传输过程中的每一个环节，数据都有可能被窃取或者篡改，这也意味着你和服务器之间还可能有个中间人，<br>你们在通信过程中的一切内容都在中间人的掌握中，如下图：</p>
+<img src="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/img1.png" class="" title="中间人攻击">
+
+<p>从上图可以看出，我们使用 HTTP 传输的内容很容易被中间人窃取、伪造和篡改，通常我们把这种攻击方式称为中间人攻击。</p>
+<p>具体来讲，在将 HTTP 数据提交给 TCP 层之后，数据会经过用户电脑、WiFi 路由器、运营商和目标服务器，在这中间的每个环节中，数据都有可能被窃取或篡改。比如用户电脑被黑客安装了恶意软件，那么恶意软件就能抓取和篡改所发出的 HTTP 请求的内容。或者用户<br>一不小心连接上了 WiFi 钓鱼路由器，那么数据也都能被黑客抓取或篡改。</p>
+<h1 id="在-HTTP-协议栈中引入安全层"><a href="#在-HTTP-协议栈中引入安全层" class="headerlink" title="在 HTTP 协议栈中引入安全层"></a>在 HTTP 协议栈中引入安全层</h1><p>鉴于 HTTP 的明文传输使得传输过程毫无安全性可言，且制约了网上购物、在线转账等一系列场景应用，于是倒逼着我们要引入加密方案。</p>
+<p>从 HTTP 协议栈层面来看，我们可以在 TCP 和 HTTP 之间插入一个安全层，所有经过安全层的数据都会被加密或者解密，你可以参考下图：</p>
+<img src="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/img2.png" class="" title="HTTP VS HTTPS">
+
+<p>从图中我们可以看出 HTTPS 并非是一个新的协议，通常 HTTP 直接和 TCP 通信，HTTPS则先和安全层通信，然后安全层再和 TCP 层通信。也就是说 HTTPS 所有的安全核心都在安全层，它不会影响到上面的 HTTP 协议，也不会影响到下面的 TCP/IP，因此要搞清楚<br>HTTPS 是如何工作的，就要弄清楚安全层是怎么工作的。</p>
+<p>总的来说，安全层有两个主要的职责：对发起 HTTP 请求的数据进行加密操作和对接收到 HTTP 的内容进行解密操作。</p>
+<p>我们知道了安全层最重要的就是加解密，那么接下来我们就利用这个安全层，一步一步实现一个从简单到复杂的 HTTPS 协议。</p>
+<h2 id="第一版：使用对称加密"><a href="#第一版：使用对称加密" class="headerlink" title="第一版：使用对称加密"></a>第一版：使用对称加密</h2><p>提到加密，最简单的方式是使用对称加密。所谓对称加密是指加密和解密都使用的是相同的密钥。</p>
+<p>了解了对称加密，下面我们就使用对称加密来实现第一版的 HTTPS。</p>
+<p>要在两台电脑上加解密同一个文件，我们至少需要知道加解密方式和密钥，因此，在 HTTPS 发送数据之前，浏览器和服务器之间需要协商加密方式和密钥，过程如下所示：</p>
+<img src="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/img3.png" class="" title="使用对称加密实现 HTTPS">
+
+<p>通过上图我们可以看出，HTTPS 首先要协商加解密方式，这个过程就是 HTTPS 建立安全连接的过程。为了让加密的密钥更加难以破解，我们让服务器和客户端同时决定密钥，具体过程如下：</p>
+<ul>
+<li>浏览器发送它所支持的加密套件列表和一个随机数<code>client-random</code>，这里的加密套件是指加密的方法，加密套件列表就是指浏览器能支持多少种加密方法列表。</li>
+<li>服务器会从加密套件列表中选取一个加密套件，然后还会生成一个随机数<code>service-random</code>，并将<code>service-random</code>和加密套件列表返回给浏览器。</li>
+<li>最后浏览器和服务器分别返回确认消息。</li>
+</ul>
+<p>这样浏览器端和服务器端都有相同的<code>client-random</code>和<code>service-random</code>了，然后它们再使用相同的方法将<code>client-random</code>和<code>service-random</code>混合起来生成一个密钥<code>master secret</code>，有了密钥<code>master secret</code>和加密套件之后，双方就可以进行数据的加密传输了。</p>
+<p>通过将对称加密应用在安全层上，我们实现了第一个版本的 HTTPS，虽然这个版本能够很好地工作，但是其中传输<code>client-random</code>和<code>service-random</code>的过程却是明文的，这意味着黑客也可以拿到协商的加密套件和双方的随机数，由于利用随机数合成密钥的算法是公开的，所以黑客拿到随机数之后，也可以合成密钥，这样数据依然可以被破解，那么黑客也就可以使用密钥来伪造或篡改数据了。</p>
+<h2 id="第二版：使用非对称加密"><a href="#第二版：使用非对称加密" class="headerlink" title="第二版：使用非对称加密"></a>第二版：使用非对称加密</h2><p>不过非对称加密能够解决这个问题，因此接下来我们就利用非对称加密来实现我们第二版的 HTTPS，我们先看看什么是非对称加密。</p>
+<p>和对称加密只有一个密钥不同，非对称加密算法有 A、B 两把密钥，如果你用 A 密钥来加密，那么只能使用 B 密钥来解密；反过来，如果你要 B 密钥来加密，那么只能用 A 密钥来解密。</p>
+<p>在 HTTPS 中，服务器会将其中的一个密钥通过明文的形式发送给浏览器，我们把这个密钥称为公钥，服务器自己留下的那个密钥称为私钥。顾名思义，公钥是每个人都能获取到的，而私钥只有服务器才能知道，不对任何人公开。下图是使用非对称加密改造的 HTTPS 协<br>议：</p>
+<img src="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/img4.png" class="" title="非对称加密实现 HTTPS">
+
+<p>根据该图，我们来分析下使用非对称加密的请求流程。</p>
+<ul>
+<li>首先浏览器还是发送加密套件列表给服务器。</li>
+<li>然后服务器会选择一个加密套件，不过和对称加密不同的是，使用非对称加密时服务器上需要有用于浏览器加密的公钥和服务器解密 HTTP 数据的私钥，由于公钥是给浏览器加密使用的，因此服务器会将加密套件和公钥一道发送给浏览器。</li>
+<li>最后就是浏览器和服务器返回确认消息。</li>
+</ul>
+<p>这样浏览器端就有了服务器的公钥，在浏览器端向服务器端发送数据时，就可以使用该公钥来加密数据。由于公钥加密的数据只有私钥才能解密，所以即便黑客截获了数据和公钥，他也是无法使用公钥来解密数据的。</p>
+<p>因此采用非对称加密，就能保证浏览器发送给服务器的数据是安全的了，这看上去似乎很完美，不过这种方式依然存在两个严重的问题。</p>
+<ul>
+<li>第一个是非对称加密的效率太低。这会严重影响到加解密数据的速度，进而影响到用户打开页面的速度。</li>
+<li>第二个是无法保证服务器发送给浏览器的数据安全。虽然浏览器端可以使用公钥来加密，但是服务器端只能采用私钥来加密，私钥加密只有公钥能解密，但黑客也是可以获取得到公钥的，这样就不能保证服务器端数据的安全了。</li>
+</ul>
+<h2 id="第三版：对称加密和非对称加密搭配使用"><a href="#第三版：对称加密和非对称加密搭配使用" class="headerlink" title="第三版：对称加密和非对称加密搭配使用"></a>第三版：对称加密和非对称加密搭配使用</h2><p>基于以上两点原因，我们最终选择了一个更加完美的方案，那就是在传输数据阶段依然使用对称加密，但是对称加密的密钥我们采用非对称加密来传输。下图就是改造后的版本：</p>
+<img src="/2019/12/26/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94HTTPS/img5.png" class="" title="混合加密实现 HTTPS">
+
+<p>从图中可以看出，改造后的流程是这样的：</p>
+<ul>
+<li>首先浏览器向服务器发送对称加密套件列表、非对称加密套件列表和随机数<code>client-random</code>；</li>
+<li>服务器保存随机数<code>client-random</code>，选择对称加密和非对称加密的套件，然后生成随机数<code>service-random</code>，向浏览器发送选择的加密套件、<code>service-random</code>和公钥；</li>
+<li>浏览器保存公钥，并利用<code>client-random</code>和<code>service-random</code>计算出来<code>pre-master</code>，然后利用公钥对<code>pre-master</code>加密，并向服务器发送加密后的数据；</li>
+<li>最后服务器拿出自己的私钥，解密出<code>pre-master</code>数据，并返回确认消息。</li>
+</ul>
+<p>到此为止，服务器和浏览器就有了共同的<code>client-random、service-random</code>和<code>pre-master</code>，然后服务器和浏览器会使用这三组随机数生成对称密钥，因为服务器和浏览器使用同一套方法来生成密钥，所以最终生成的密钥也是相同的。</p>
+<p>有了对称加密的密钥之后，双方就可以使用对称加密的方式来传输数据了。</p>
+<p>需要特别注意的一点，<code>pre-master</code>是经过公钥加密之后传输的，所以黑客无法获取到<code>pre-master</code>，这样黑客就无法生成密钥，也就保证了黑客无法破解传输过程中的数据了。</p>
+<h2 id="第四版：添加数字证书"><a href="#第四版：添加数字证书" class="headerlink" title="第四版：添加数字证书"></a>第四版：添加数字证书</h2><p>通过对称和非对称混合方式，我们完美地实现了数据的加密传输。不过这种方式依然存在着问题，比如我要打开百度的官网，但是黑客通过 DNS 劫持将百度官网的 IP 地址替换成了黑客的 IP 地址，这样我访问的其实是黑客的服务器了，黑客就可以在自己的服务<br>器上实现公钥和私钥，而对浏览器来说，它完全不知道现在访问的是个黑客的站点。</p>
+<p>所以我们还需要服务器向浏览器提供证明“我就是我”，那怎么证明呢？</p>
+<p>这里我们结合实际生活中的一个例子，比如你要买房子，首先你需要给房管局提交你买房的材料，包括银行流水、银行证明、身份证等，然后房管局工作人员在验证无误后，会发给你一本盖了章的房产证，房产证上包含了你的名字、身份证号、房产地址、实际面积、公摊面<br>积等信息。</p>
+<p>在这个例子中，你之所以能证明房子是你自己的，是因为引进了房管局这个权威机构，并通过这个权威机构给你颁发一个证书：房产证。</p>
+<p>同理，一个网站要证明这个服务器就是这个网站的，也需要使用权威机构颁发的证书，这个权威机构称为CA（<code>Certificate Authority</code>），颁发的证书就称为数字证书（<code>DigitalCertificate</code>)。</p>
+<p>对于浏览器来说，数字证书有两个作用：一个是通过数字证书向浏览器证明服务器的身份，另一个是数字证书里面包含了服务器公钥。</p>
+<p>接下来我们看看含有数字证书的 HTTPS 的请求流程，你可以参考下图：</p>
+
+
+<p>相较于第三版的 HTTPS 协议，这里主要有两点改变：</p>
+<ol>
+<li>服务器没有直接返回公钥给浏览器，而是返回了数字证书，而公钥正是包含在数字证书中的；</li>
+<li>在浏览器端多了一个证书验证的操作，验证了证书之后，才继续后续流程。</li>
+</ol>
+<p>通过引入数字证书，我们就实现了服务器的身份认证功能，这样即便黑客伪造了服务器，但是由于证书是没有办法伪造的，所以依然无法欺骗用户。</p>
+<h1 id="数字证书的申请和验证"><a href="#数字证书的申请和验证" class="headerlink" title="数字证书的申请和验证"></a>数字证书的申请和验证</h1><p>通过上面四个版本的迭代，我们实现了目前的 HTTPS 架构。</p>
+<p>在第四版的 HTTPS 中，我们提到过，有了数字证书，黑客就无法欺骗用户了，不过我们并没有解释清楚如何通过数字证书来证明用户身份，所以接下来我们再来把这个问题解释清楚。</p>
+<h2 id="如何申请数字证书"><a href="#如何申请数字证书" class="headerlink" title="如何申请数字证书"></a>如何申请数字证书</h2><p>我们先来看看如何向 CA 申请证书。通常的申请流程分以下几步：</p>
+<ul>
+<li>首先需要准备一套私钥和公钥，私钥留着自己使用；</li>
+<li>然后向 CA 机构提交公钥、公司、站点等信息并等待认证，这个认证过程可能是收费的；</li>
+<li>CA 通过线上、线下等多种渠道来验证网站所提供信息的真实性，如公司是否存在、企业是否合法、域名是否归属该企业等；</li>
+<li>如信息审核通过，CA 会向网站签发认证的数字证书，包含了网站的公钥、组织信息、CA 的信息、有效时间、证书序列号等，这些信息都是明文的，同时包含一个 CA生成的签名。</li>
+</ul>
+<p>这样我们就完成了数字证书的申请过程。前面几步都很好理解，不过最后一步数字签名的过程还需要解释下：首先 CA 使用<code>Hash</code>函数来计算网站提交的明文信息，并得出信息摘要；然后 CA 再使用它的私钥对信息摘要进行加密，加密后的密文就是 CA 颁给网站的数字签名。这就相当于房管局在房产证上盖的章，这个章是可以去验证的，同样我们也可以通过数字签名来验证是否是该 CA 颁发的。</p>
+<h2 id="浏览器如何验证数字证书"><a href="#浏览器如何验证数字证书" class="headerlink" title="浏览器如何验证数字证书"></a>浏览器如何验证数字证书</h2><p>有了 CA 签名过的数字证书，当浏览器向极客时间服务器发出请求时，服务器会返回数字证书给浏览器。</p>
+<p>浏览器接收到数字证书之后，会对数字证书进行验证。首先浏览器读取证书中相关的明文信息，采用 CA 签名时相同的<code>Hash</code>函数来计算并得到信息摘要 A；然后再利用对应 CA 的公钥解密签名数据，得到信息摘要 B；对比信息摘要 A 和信息摘要 B，如果一致，则可以确<br>认证书是合法的，即证明了这个服务器是极客时间的；同时浏览器还会验证证书相关的域名信息、有效时间等信息。</p>
+<p>这时候相当于验证了 CA 是谁，但是这个 CA 可能比较小众，浏览器不知道该不该信任它，然后浏览器会继续查找给这个 CA 颁发证书的 CA，再以同样的方式验证它上级 CA 的可靠性。通常情况下，操作系统中会内置信任的顶级 CA 的证书信息（包含公钥），如果这个<br>CA 链中没有找到浏览器内置的顶级的 CA，证书也会被判定非法。</p>
+<p>另外，在申请和使用证书的过程中，还需要注意以下三点：</p>
+<ol>
+<li>申请数字证书是不需要提供私钥的，要确保私钥永远只能由服务器掌握；</li>
+<li>数字证书最核心的是 CA 使用它的私钥生成的数字签名；</li>
+<li>内置 CA 对应的证书称为根证书，根证书是最权威的机构，它们自己为自己签名，我们把这称为自签名证书。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>由于 HTTP 的明文传输特性，在传输过程中的每一个环节，数据都有可能被窃取或者篡改，这倒逼着我们需要引入加密机制。于是我们在 HTTP 协议栈的 TCP 和 HTTP 层之间插入了一个安全层，负责数据的加密和解密操作。</p>
+<p>我们使用对称加密实现了安全层，但是由于对称加密的密钥需要明文传输，所以我们又将对称加密改造成了非对称加密。但是非对称加密效率低且不能加密服务器到浏览器端的数据，于是我们又继续改在安全层，采用对称加密的方式加密传输数据和非对称加密的方式来传输<br>密钥，这样我们就解决传输效率和两端数据安全传输的问题。</p>
+<p>采用这种方式虽然能保证数据的安全传输，但是依然没办法证明服务器是可靠的，于是又引入了数字证书，数字证书是由 CA 签名过的，所以浏览器能够验证该证书的可靠性。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8/" rel="tag">浏览器安全</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-js/深入/浏览器安全——CSRF攻击" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1317,174 +1481,6 @@ var _hmt = _hmt || [];
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-css/移动端响应式相关概念" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2019/11/25/css/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/"
-    >移动端响应式相关概念</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2019/11/25/css/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%93%8D%E5%BA%94%E5%BC%8F%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/" class="article-date">
-  <time datetime="2019-11-25T12:01:45.000Z" itemprop="datePublished">2019-11-25</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/CSS/">CSS</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="CSS像素-CSS-pixels"><a href="#CSS像素-CSS-pixels" class="headerlink" title="CSS像素(CSS pixels)"></a>CSS像素(CSS pixels)</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>CSS像素是虚拟像素，可以理解为直觉像素，CSS和JS中使用的抽象单位，浏览器内的长度都是以CSS像素为单位的，CSS像素的单位是<code>px</code>。</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>在CSS规范中，长度单位可以分为两类，绝对单位以及相对单位。<code>px</code>是一个相对单位，相对的是设备像素(<code>device pixel</code>)。在没有缩放的情况下，1个CSS像素等同于一个设备独立像素。</p>
-<p>在同样一个设备上，每1个CSS像素所代表的物理像素是可以变化的。</p>
-<p>在不同的设备之间，每1个CSS像素所代表的物理像素是可以变化的。</p>
-<p>CSS像素在视觉上是很容易改变大小的，比如缩放浏览器页面，就是改变的CSS像素，当放大一倍，那么一个CSS像素在横向或者纵向上会覆盖两个设备独立像素。例如宽度<code>100px</code>像素，当页面放大一倍，它会在横向上由原本占据100个设备独立像素，变成占据200个设备独立像素；如果缩小，则恰好相反，只能占据50个设备独立像素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">页面的缩放系数 &#x3D; CSS像素 &#x2F; 设备独立像素</span><br></pre></td></tr></table></figure>
-<h2 id="px"><a href="#px" class="headerlink" title="px"></a>px</h2><p><code>px</code>实际是<code>pixel</code>（像素）的缩写，它是图像显示的基本单元，既不是一个确定的物理量，也不是一个点或者小方块，而是一个抽象概念。所以在谈论像素时一定要清楚它的上下文！</p>
-<p>不同的设备，图像基本采样单元是不同的，显示器上的物理像素等于显示器的点距，而打印机的物理像素等于打印机的墨点。而衡量点距大小和打印机墨点大小的单位分别称为<code>ppi</code>和<code>dpi</code>：</p>
-<ul>
-<li><code>ppi</code>：每英寸多少像素数，放到显示器上说的是每英寸多少物理像素及显示器设备的点距。</li>
-<li><code>dpi</code>：每英寸多少点。</li>
-</ul>
-<p>当用于描述显示器设备时<code>ppi</code>与<code>dpi</code>是同一个概念 。</p>
-<h1 id="设备像素-device-pixels，DP"><a href="#设备像素-device-pixels，DP" class="headerlink" title="设备像素(device pixels，DP)"></a>设备像素(device pixels，DP)</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p>设备像素也被称作物理像素，顾名思义，显示屏是由一个个物理像素点组成的，通过控制每个像素点的颜色，使屏幕显示出不同的图像，此像素是设备的固有属性，也就是说，从出厂的那一刻，设备像素已经固定，不会再发生改变。单位<code>pt</code>。</p>
-<h2 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h2><p><code>pt</code>在CSS单位中属于真正的绝对单位，<code>1pt = 1/72(英寸)</code>，而1英寸等于2.54厘米。</p>
-<p>通常使用分辨率来描述设备像素，例如<code>1920*1080</code>，表示设备横向有1920个像素点，纵向有1080个像素点。</p>
-<!-- ## 设备像素(DP)与CSS像素之间的关系
-设备像素和设备独立像素的比例关系叫做设备像素比。 -->
-<h1 id="设备像素比-device-pixel-ratio，DPR"><a href="#设备像素比-device-pixel-ratio，DPR" class="headerlink" title="设备像素比(device pixel ratio，DPR)"></a>设备像素比(device pixel ratio，DPR)</h1><p>设备像素比描述的是未缩放状态下，设备像素和设备独立像素的比例关系。</p>
-<p>在JS中可以通过<code>window.devicePixelRatio</code>获取。</p>
-<p>在CSS中，可以通过<code>-webkit-device-pixel-ratio</code>，<code>-webkit-min-device-pixel-ratio</code>和<code>-webkit-max-device-pixel-ratio</code>进行媒体查询，对不同DPR的设备，做一些样式适配。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DPR &#x3D; 设备像素 &#x2F; 设备独立像素</span><br></pre></td></tr></table></figure>
-<p>当这个比率为<code>1:1</code>时，使用1个设备像素显示1个CSS像素。当这个比率为<code>2:1</code>时，使用4个设备像素显示1个CSS像素，当这个比率为3:1时，使用9（3*3）个设备像素显示1个CSS像素。</p>
-<h1 id="设备独立像素-Device-independent-Pixel，DIP"><a href="#设备独立像素-Device-independent-Pixel，DIP" class="headerlink" title="设备独立像素(Device independent Pixel，DIP)"></a>设备独立像素(Device independent Pixel，DIP)</h1><p>设备独立像素，也称为逻辑像素，简称DIP。</p>
-<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><p>从 iphone4 开始，苹果公司推出了 Retina 屏，物理像素变成<code>640 * 960</code>，但是屏幕尺寸没有变化，也就是说单位面积上的物理像素的数量增加了，或者说屏幕密度增加了。如果还按照原来那样，<code>1px</code>CSS 像素由 1 个物理像素来渲染， 那么<code>width: 320px</code>的元素只会占据半个屏幕的宽度。原来在 iphone3 上能够占满屏的网页，在 iphone4 上只会占一半的屏幕，同时<code>font-size: 20px</code>的字体在 iphone4 上的尺寸也会缩小。</p>
-<p>为了让同一个网页在 iphone4 和 iphone3 上的有相同的显示效果，引入了独立像素的概念。iphone4 的独立像素为<code>320 * 480</code>，是 iphone4 的物理像素的一半，和 iphone3 的物理像素一样。也就是说，iphone4 上的 1 个独立像素 = 2 个物理像素。在 iphone4 上，在不缩放的前提下，CSS 中的<code>1px</code>便由 1 个独立像素来渲染，相当于 2 个物理像素。这样，<code>width: 320px</code>的元素由 320 个独立像素来渲染，也就是由 640 个物理像素来渲染，正好占满 iphopn4 的屏幕宽度。<code>font-size: 20px</code>的字体在 iphone3 和 iphone4 上的尺寸也相同，只不过在 iphone4 上的字体更清楚。</p>
-<h2 id="与CSS像素的关系"><a href="#与CSS像素的关系" class="headerlink" title="与CSS像素的关系"></a>与CSS像素的关系</h2><p>在没有缩放的情况下，1个CSS像素等同于一个设备独立像素。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CSS像素 &#x3D; 设备独立像素</span><br></pre></td></tr></table></figure>
-<p>因此DPR也可以用设备独立像素计算得出。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DPR &#x3D; 设备像素 &#x2F; CSS像素(或设备独立像素)</span><br></pre></td></tr></table></figure>
-<h1 id="PPI-pixels-per-inch"><a href="#PPI-pixels-per-inch" class="headerlink" title="PPI(pixels per inch)"></a>PPI(pixels per inch)</h1><h2 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h2><p>每英寸像素取值，更确切的说法应该是像素密度，也就是衡量单位物理面积内拥有像素值的情况。</p>
-<h2 id="PPI的计算"><a href="#PPI的计算" class="headerlink" title="PPI的计算"></a>PPI的计算</h2><p>已知屏幕分辨率和主对角线的尺寸，以iphone 6为例：</p>
-<p><a href="https://camo.githubusercontent.com/87b9207e9f1bc52b8a2d174f408a21d690d37814/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f313939333433352d623766636565316134316239393766332e706e673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430" target="_blank" rel="noopener"><img src="https://upload-images.jianshu.io/upload_images/3534846-6036f72f4825f7c4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></a> </p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> 斜边尺寸 = V(<span class="number">1920</span>^<span class="number">2</span>+<span class="number">1080</span>^<span class="number">2</span>) V代表开根号 </span><br><span class="line"><span class="keyword">var</span> ppi = 斜边尺寸/<span class="number">5.5</span> </span><br><span class="line">ppi = <span class="number">401</span>ppi</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://camo.githubusercontent.com/9233a97781fccdd468aba79b8944619cc9918b63/68747470733a2f2f7773312e73696e61696d672e636e2f6c617267652f303036744e6252776779316667386a7030653035316a3330737730376f6a73612e6a7067" target="_blank" rel="noopener"><img src="https://upload-images.jianshu.io/upload_images/3534846-f9e103605fbb284b?imageMogr2/auto-orient/strip%7CimageView2/2/w/740" alt=""></a> </p>
-<p><code>ppi</code>越高，每英寸像素点越多，图像越清晰；我们可以类比物体的密度，密度越大，单位体积的质量就越大，<code>ppi</code>越高，单位面积的像素越多。</p>
-<h1 id="视口-viewport"><a href="#视口-viewport" class="headerlink" title="视口(viewport)"></a>视口(viewport)</h1><p>移动设备上有三个<code>viewport</code>：布局视口、视觉视口和理想视口。</p>
-<h2 id="layout-viewport（布局视口）"><a href="#layout-viewport（布局视口）" class="headerlink" title="layout viewport（布局视口）"></a>layout viewport（布局视口）</h2><p><code>layout viewport</code>指的是我们可以进行网页布局区域的大小，以CSS像素做计量单位。移动设备默认会设置一个较大的<code>viewport</code>（如IOS一般默认是<code>980px</code>），<code>layout viewport</code>的宽度是大于浏览器可视区域的宽度的。</p>
-<p><code>layout viewport</code>的宽度可以通过<code>document.documentElement.clientWidth</code>来获取。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.documentElement.clientWidth</span><br><span class="line"><span class="built_in">document</span>.documentElement.clientHeight</span><br></pre></td></tr></table></figure>
-<h2 id="visual-viewport-（视觉视口）"><a href="#visual-viewport-（视觉视口）" class="headerlink" title="visual viewport （视觉视口）"></a>visual viewport （视觉视口）</h2><p><code>visual viewport</code>指的是浏览器可视区域的大小。<br><code>visual viewport</code>的宽度可以通过<code>window.innerWidth</code>来获取。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.innerWidth</span><br><span class="line"><span class="built_in">window</span>.innerHeight</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://camo.githubusercontent.com/ab5ed1c0a848d65856d748771eab199965e7a6d9/68747470733a2f2f7773312e73696e61696d672e636e2f6c617267652f303036744e6337396779316667396c6162703165626a3330737130616a616d6d2e6a7067" target="_blank" rel="noopener"><img src="https://upload-images.jianshu.io/upload_images/3534846-d49df5e97510c3f7?imageMogr2/auto-orient/strip%7CimageView2/2/w/740" alt=""></a> </p>
-<h2 id="ideal-viewport（理想视口）"><a href="#ideal-viewport（理想视口）" class="headerlink" title="ideal viewport（理想视口）"></a>ideal viewport（理想视口）</h2><p><code>ideal viewport</code>是一个能完美适配移动设备的<code>viewport</code>。无论是在何种密度屏幕，何种分辨率下，显示出来的大小都差不多。<code>ideal viewport</code>并没有一个固定的尺寸，不同的设备有不同的<code>ideal viewport</code>。理想视口与设备的宽度一致，例如iphone8的理想视口是<code>375px</code>。</p>
-<p><code>ideal viewport</code>的意义在于，无论在何种分辨率的屏幕下，针对<code>ideal viewport</code>而设计的网站，不需要缩放和横向滚动条都可以完美地呈现给用户。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.screen.width</span><br><span class="line"><span class="built_in">window</span>.screen.Height</span><br></pre></td></tr></table></figure>
-<h2 id="利用meta标签对viewport进行控制"><a href="#利用meta标签对viewport进行控制" class="headerlink" title="利用meta标签对viewport进行控制"></a>利用meta标签对viewport进行控制</h2><p>移动设备默认的<code>viewport</code>是<code>layout viewport</code>，也就是那个比屏幕要宽的<code>viewport</code>，但在进行移动设备网站的开发时，我们需要的是<code>ideal viewport</code>。要得到<code>ideal viewport</code>就需要用到<code>meta</code>标签。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>该<code>meta</code>标签的作用是让当前<code>viewport</code>的宽度等于设备的宽度，同时不允许用户手动缩放。</p>
-<p><code>meta viewport</code>有6个属性(暂且把<code>content</code>中的那些东西称为一个个属性和值)，如下：</p>
-<table>
-<thead>
-<tr>
-<th align="left">属性</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>width</code></td>
-<td align="left">设置<code>layout viewport</code>的宽度，为一个整数，或字符串<code>&quot;device-width&quot;</code></td>
-</tr>
-<tr>
-<td align="left"><code>initial-scale</code></td>
-<td align="left">设置页面的初始缩放值，为一个数字，可以带小数</td>
-</tr>
-<tr>
-<td align="left"><code>minimum-scale</code></td>
-<td align="left">允许用户的最小缩放值，为一个数字，可以带小数</td>
-</tr>
-<tr>
-<td align="left"><code>maximum-scale</code></td>
-<td align="left">允许用户的最大缩放值，为一个数字，可以带小数</td>
-</tr>
-<tr>
-<td align="left"><code>height</code></td>
-<td align="left">设置<code>layout viewport</code>的高度，这个属性很少使用</td>
-</tr>
-<tr>
-<td align="left"><code>user-scalable</code></td>
-<td align="left">是否允许用户进行缩放，值为<code>&quot;no&quot;</code>或<code>&quot;yes&quot;</code></td>
-</tr>
-</tbody></table>
-<p>这些属性可以同时使用，也可以单独使用或混合使用，多个属性同时使用时用逗号隔开就行了。</p>
-<h2 id="把当前的viewport宽度设置为ideal-viewport的宽度"><a href="#把当前的viewport宽度设置为ideal-viewport的宽度" class="headerlink" title="把当前的viewport宽度设置为ideal viewport的宽度"></a>把当前的viewport宽度设置为ideal viewport的宽度</h2><p>要得到<code>ideal viewport</code>就必须把默认的<code>layout viewport</code>的宽度设为移动设备的屏幕宽度。因为<code>meta viewport</code>中的<code>width</code>能控制<code>layout viewport</code>的宽度，所以我们只需要把<code>width</code>设为<code>device-width</code>这个特殊的值就行了。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>通过<code>width=device-width</code>，所有浏览器都能把当前的<code>viewport</code>宽度变成<code>ideal viewport</code>的宽度，但要注意的是，在iphone和ipad上，无论是竖屏还是横屏，宽度都是竖屏时<code>ideal viewport</code>的宽度。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"initial-scale=1"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这句代码也能达到和前一句代码一样的效果，也可以把当前的的<code>viewport</code>变为<code>ideal viewport</code>。</p>
-<p>因为从理论上来讲，这句代码的作用只是不对当前的页面进行缩放，也就是页面本该是多大就是多大。那为什么会有<code>width=device-width</code>的效果呢？</p>
-<p>要想清楚这件事情，首先你得弄明白这个缩放是相对于什么来缩放的，因为这里的缩放值是1，也就是没缩放，但却达到了<code>ideal viewport</code>的效果，所以，那答案就只有一个了，缩放是相对于<code>ideal viewport</code>来进行缩放的，当对<code>ideal viewport</code>进行100%的缩放，也就是缩放值为1的时候，就得到了<code>ideal viewport</code>。</p>
-<p>但如果<code>width</code>和<code>initial-scale=1</code>同时出现，并且还出现了冲突呢？比如：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=400, initial-scale=1"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>width=400</code>表示把当前<code>viewport</code>的宽度设为<code>400px</code>，<code>initial-scale=1</code>则表示把当前<code>viewport</code>的宽度设为<code>ideal viewport</code>的宽度，那么浏览器到底该服从哪个命令呢？当遇到这种情况时，浏览器会取它们两个中较大的那个值。例如，当<code>width=400</code>，<code>ideal viewport</code>的宽度为320时，取的是400；当<code>width=400</code>，<code>ideal viewport</code>的宽度为480时，取的是<code>ideal viewport</code>的宽度。</p>
-<p>最后，总结一下，要把当前的<code>viewport</code>宽度设为<code>ideal viewport</code>的宽度，既可以设置<code>width=device-width</code>，也可以设置<code>initial-scale=1</code>，但这两者各有一个小缺陷，就是iphone、ipad以及IE会横竖屏不分，通通以竖屏的<code>ideal viewport</code>宽度为准。所以，最完美的写法应该是，两者都写上去，这样就<code>initial-scale=1</code>解决了iphone、ipad的毛病，<code>width=device-width</code>则解决了IE的毛病。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/" rel="tag">CSS</a></li></ul>
 
 
     </footer>
