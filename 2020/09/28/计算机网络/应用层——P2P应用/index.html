@@ -69,7 +69,7 @@ var _hmt = _hmt || [];
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">860字</span>
+            <span class="post-count">1.2k字</span>
         </span>
     </span>
 
@@ -78,7 +78,7 @@ var _hmt = _hmt || [];
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3分钟</span>
+            <span class="post-count">4分钟</span>
         </span>
     </span>
 </div>
@@ -120,9 +120,23 @@ var _hmt = _hmt || [];
 <p>Gnutella 与 Napster 最大的区别是：不使用集中式的目录服务器，而是使用洪泛法在大量 Gnutella 用户之间进行查询。</p>
 <p>为了不使查询的通信量过大，Gnutella 设计了一种有限范围的洪泛查询，以减少倾注到互联网的查询流量，但也影响到查询定位的准确性。</p>
 <h2 id="使用-P2P-的比特洪流-BT"><a href="#使用-P2P-的比特洪流-BT" class="headerlink" title="使用 P2P 的比特洪流 BT"></a>使用 P2P 的比特洪流 BT</h2><h1 id="P2P-文件分发的分析"><a href="#P2P-文件分发的分析" class="headerlink" title="P2P 文件分发的分析"></a>P2P 文件分发的分析</h1><p>从互联网传送数据到主机，叫做下载(<code>download</code>)，从主机向互联网传送，则称为上传 (upload) 或上载。</p>
-<p>有 N 台主机从服务器下载一个大文件，其长度为 F bit。假定主机与互联网连接的链路的上传速率和下载速率分别为 ui 和 di ，单位都是 bit/s。</p>
-<h1 id="在-P2P-对等方中搜索对象"><a href="#在-P2P-对等方中搜索对象" class="headerlink" title="在 P2P 对等方中搜索对象"></a>在 P2P 对等方中搜索对象</h1><p>Napster在一个集中式目录服务器中构建的查找数据库虽然很简单，但性能上却有瓶颈。<br>Gnutella是一种采用全分布方法定位内容的P2P文件共享应用程序，它解决了集中式目录服务器所造成的瓶颈问题。然而Gnutella是在非结构化的覆盖网络中采用查询洪泛的方法来进行查找的，因此查找的效率较低。<br>现在广泛使用的索引和查找技术叫做分布式散列表 DHT (Distributed Hash Table)。DHT 也可译为分布式哈希表，它是由大量对等方共同维护的散列表。<br>广泛使用的 Chord 算法是美国麻省理工大学于2001 年提出的。<br>分布式散列表 DHT 利用散列函数，把资源名 K 及其存放的结点 IP 地址 N 都分别映射为资源名标识符 KID 和结点标识符 NID。<br>Chord 把结点按标识符数值从小到大沿顺时针排列成一个环形覆盖网络。</p>
+<p>有 N 台主机从服务器下载一个大文件，其长度为<code>F bit</code>。假定主机与互联网连接的链路的上传速率和下载速率分别为 ui 和 di ，单位都是<code>bit/s</code>。</p>
+<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img9.png" class="">
 
+<h2 id="C-S-方式下分发的最短时间"><a href="#C-S-方式下分发的最短时间" class="headerlink" title="C/S 方式下分发的最短时间"></a>C/S 方式下分发的最短时间</h2><p>从服务器端考虑，所有主机分发完毕的最短时间 Tcs 不可能小于 NF/us ；<br>下载速率最慢的主机的下载速率为 dmin，则 Tcs 不可能小于 F/dmin  。<br>由此可得出所有主机都下载完文件 F 的最少时间是：<br>Tcs=max（ NF/us，F/dmin ）</p>
+<h2 id="P2P-方式下分发的最短时间"><a href="#P2P-方式下分发的最短时间" class="headerlink" title="P2P 方式下分发的最短时间"></a>P2P 方式下分发的最短时间</h2><p>初始服务器文件分发的最少时间不可能小于 F/us ；<br>下载文件分发的最少时间不可能小于 F/dmin ；<br>上载文件分发的最少时间不可能小于 NF/uT ，其中是 uT  是上传速率之和。<br>所有主机都下载完文件 F 的最少时间的下限是：<br>Tp2p &gt;= max（ F/us ， F/dmin， NF/uT  ）</p>
+<h2 id="时间比较"><a href="#时间比较" class="headerlink" title="时间比较"></a>时间比较</h2><p>设所有的对等方的上传速率都是 u，并且 F/u = 1 小时。<br>设服务器的上传速率 us = 10u。<br>当 N = 30 时，<br>P2P方式：最少时间的下限是 0.75 小时 &lt; 1 小时（不管 N 多大）。<br>客户−服务器方式：最少时间是 3 小时。</p>
+<h1 id="在-P2P-对等方中搜索对象"><a href="#在-P2P-对等方中搜索对象" class="headerlink" title="在 P2P 对等方中搜索对象"></a>在 P2P 对等方中搜索对象</h1><p>Napster在一个集中式目录服务器中构建的查找数据库虽然很简单，但性能上却有瓶颈。</p>
+<p>Gnutella是一种采用全分布方法定位内容的P2P文件共享应用程序，它解决了集中式目录服务器所造成的瓶颈问题。然而Gnutella是在非结构化的覆盖网络中采用查询洪泛的方法来进行查找的，因此查找的效率较低。</p>
+<p>现在广泛使用的索引和查找技术叫做分布式散列表 DHT(<code>Distributed Hash Table</code>)。DHT 也可译为分布式哈希表，它是由大量对等方共同维护的散列表。</p>
+<p>分布式散列表 DHT 利用散列函数，把资源名 K 及其存放的结点 IP 地址 N 都分别映射为资源名标识符 KID 和结点标识符 NID。</p>
+<p>Chord 把结点按标识符数值从小到大沿顺时针排列成一个环形覆盖网络。</p>
+<h2 id="基于-DHT-的-Chord-环"><a href="#基于-DHT-的-Chord-环" class="headerlink" title="基于 DHT 的 Chord 环"></a>基于 DHT 的 Chord 环</h2><p>每个资源由 Chord 环上与其标识符值最接近的下一个结点提供服务。</p>
+<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img7.png" class="">
+
+<p>为了加速查找，在 Chord 环上可以增加一些指针表，它又称为路由表或查找器表。</p>
+<p>对于结点<code>N4</code>， 第 1 列第<code>i</code>行计算<code>N4 + 2i – 1</code>，得出后继结点。</p>
+<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img8.png" class="">
       
       <!-- reward -->
       
