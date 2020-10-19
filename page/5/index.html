@@ -80,6 +80,120 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-微服务/如何发布和引用服务" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/"
+    >微服务/如何发布和引用服务</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/" class="article-date">
+  <time datetime="2020-09-07T04:40:31.483Z" itemprop="datePublished">2020-09-07</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>想要构建微服务，首先要解决的问题是，服务提供者如何发布一个服务，服务消费者如何引用这个服务。具体来说，就是这个服务的接口名是什么？调用这个服务需要传递哪些参数？接口的返回值是什么类型？以及一些其他接口描述信息。</p>
+<p>最常见的服务发布和引用的方式有三种：RESTful API、XML 配置、IDL 文件。</p>
+<h1 id="RESTful-API"><a href="#RESTful-API" class="headerlink" title="RESTful API"></a>RESTful API</h1><p>首先来说说 RESTful API 的方式，主要被用作 HTTP 或者 HTTPS 协议的接口定义，即使在非微服务架构体系下，也被广泛采用。</p>
+<p>下面是开源服务化框架Motan发布 RESTful API 的例子，它发布了三个 RESTful 格式的 API，接口声明如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Path</span>(<span class="string">"/rest"</span>)</span><br><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">RestfulService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.APPLICATION_JSON)</span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">getUsers</span><span class="params">(@QueryParam(<span class="string">"uid"</span>)</span> <span class="keyword">int</span> uid)</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path</span>(<span class="string">"/primitive"</span>)</span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.TEXT_PLAIN)</span><br><span class="line">    <span class="function">String <span class="title">testPrimitiveType</span><span class="params">()</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@POST</span></span><br><span class="line">    <span class="meta">@Consumes</span>(MediaType.APPLICATION_FORM_URLENCODED)</span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.APPLICATION_JSON)</span><br><span class="line">    <span class="function">Response <span class="title">add</span><span class="params">(@FormParam(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id, @<span class="title">FormParam</span><span class="params">(<span class="string">"name"</span>)</span> String name)</span>;</span><br></pre></td></tr></table></figure>
+<p>具体的服务实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestfulServerDemo</span> <span class="keyword">implements</span> <span class="title">RestfulService</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">getUsers</span><span class="params">(@CookieParam(<span class="string">"uid"</span>)</span> <span class="keyword">int</span> uid) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Arrays.asList(<span class="keyword">new</span> User(uid, <span class="string">"name"</span> + uid));</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testPrimitiveType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"helloworld!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">add</span><span class="params">(@FormParam(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id, @<span class="title">FormParam</span><span class="params">(<span class="string">"name"</span>)</span> String name) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Response.ok().cookie(<span class="keyword">new</span> NewCookie(<span class="string">"ck"</span>, String.valueOf(id))).entity(<span class="keyword">new</span> User(id, name)).build();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>服务提供者这一端通过部署代码到 Tomcat 中，并配置 Tomcat 中如下的<code>web.xml</code>，就可以通过<code>servlet</code>的方式对外提供 RESTful API。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>com.weibo.api.motan.protocol.restful.support.servlet.RestfulServletContainerListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>resteasy.servlet.mapping.prefix<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/servlet<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span>  <span class="comment">&lt;!-- 此处实际为 servlet-mapping 的 url-pattern，具体配置见 resteasy 文档 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/servlet/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样服务消费者就可以通过 HTTP 协议调用服务了，因为 HTTP 协议本身是一个公开的协议，对于服务消费者来说几乎没有学习成本，所以比较适合用作跨业务平台之间的服务协议。比如你有一个服务，不仅需要在业务部门内部提供服务，还需要向其他业务部门提供服务，甚至开放给外网提供服务，这时候采用 HTTP 协议就比较合适，也省去了沟通服务协议的成本。</p>
+<h1 id="XML-配置"><a href="#XML-配置" class="headerlink" title="XML 配置"></a>XML 配置</h1><p>XML 配置方式的服务发布和引用主要分三个步骤：</p>
+<p>服务提供者定义接口，并实现接口。</p>
+<p>服务提供者进程启动时，通过加载<code>server.xml</code>配置文件将接口暴露出去。</p>
+<p>服务消费者进程启动时，通过加载<code>client.xml</code>配置文件来引入要调用的接口。</p>
+<p>继续以服务化框架 Motan 为例，它还支持以 XML 配置的方式来发布和引用服务。</p>
+<p>首先，服务提供者定义接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FooService</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后服务提供者实现接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FooServiceImpl</span> <span class="keyword">implements</span> <span class="title">FooService</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    System.out.println(name + <span class="string">" invoked rpc service"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello "</span> + name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后服务提供者进程启动时，加载<code>server.xml</code>配置文件，开启 8002 端口监听。</p>
+<p><code>server.xml</code>配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:motan</span>=<span class="string">"http://api.weibo.com/schema/motan"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">   http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!-- service implemention bean --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"serviceImpl"</span> <span class="attr">class</span>=<span class="string">"quickstart.FooServiceImpl"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- exporting service by Motan --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">interface</span>=<span class="string">"quickstart.FooService"</span> <span class="attr">ref</span>=<span class="string">"serviceImpl"</span> <span class="attr">export</span>=<span class="string">"8002"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务提供者加载<code>server.xml</code>的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:motan_server.xml"</span>);</span><br><span class="line">    System.out.println(<span class="string">"server start..."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>服务消费者要想调用服务，就必须在进程启动时，加载配置<code>client.xml</code>，引用接口定义，然后发起调用。</p>
+<p>client.xml 配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:motan</span>=<span class="string">"http://api.weibo.com/schema/motan"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">   http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!-- reference to the remote service --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:referer</span> <span class="attr">id</span>=<span class="string">"remoteService"</span> <span class="attr">interface</span>=<span class="string">"quickstart.FooService"</span> <span class="attr">directUrl</span>=<span class="string">"localhost:8002"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务消费者启动时，加载<code>client.xml</code>的代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ApplicationContext ctx = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:motan_client.xml"</span>);</span><br><span class="line">    FooService service = (FooService) ctx.getBean(<span class="string">"remoteService"</span>);</span><br><span class="line">    System.out.println(service.hello(<span class="string">"motan"</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就这样，通过在服务提供者和服务消费者之间维持一份对等的 XML 配置文件，来保证服务消费者按照服务提供者的约定来进行服务调用。在这种方式下，如果服务提供者变更了接口定义，不仅需要更新服务提供者加载的接口描述文件<code>server.xml</code>，还需要同时更新服务消费者加载的接口描述文件 client.xml。</p>
+<p>一般是私有 RPC 框架会选择 XML 配置这种方式来描述接口，因为私有 RPC 协议的性能要比 HTTP 协议高，所以在对性能要求比较高的场景下，采用 XML 配置的方式比较合适。但这种方式对业务代码侵入性比较高，XML 配置有变更的时候，服务消费者和服务提供者都要更新，所以适合公司内部联系比较紧密的业务之间采用。如果要应用到跨部门之间的业务调用，一旦有 XML 配置变更，需要花费大量精力去协调不同部门做升级工作。在我经历的实际项目里，就遇到过一次底层服务的接口升级，需要所有相关的调用方都升级，为此花费了大量时间去协调沟通不同部门之间的升级工作，最后经历了大半年才最终完成。所以对于 XML 配置方式的服务描述，一旦应用到多个部门之间的接口格式约定，如果有变更，最好是新增接口，不到万不得已不要对原有的接口格式做变更。</p>
+<h1 id="IDL-文件"><a href="#IDL-文件" class="headerlink" title="IDL 文件"></a>IDL 文件</h1><p>IDL 就是接口描述语言（<code>interface description language</code>）的缩写，通过一种中立的方式来描述接口，使得在不同的平台上运行的对象和不同语言编写的程序可以相互通信交流。比如你用 Java 语言实现提供的一个服务，也能被 PHP 语言调用。</p>
+<p>也就是说 IDL 主要是用作跨语言平台的服务之间的调用，有两种最常用的 IDL：一个是 Facebook 开源的Thrift 协议，另一个是 Google 开源的gRPC 协议。无论是 Thrift 协议还是 gRPC 协议，它们的工作原理都是类似的。</p>
+<p>以 gRPC 协议为例，如何使用 IDL 文件方式来描述接口。</p>
+<p>gRPC 协议使用 Protobuf 简称 proto 文件来定义接口名、调用参数以及返回值类型。</p>
+<p>比如文件<code>helloword.proto</code>定义了一个接口<code>SayHello</code>方法，它的请求参数是<code>HelloRequest</code>，它的返回值是<code>HelloReply</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The greeter service definition.</span></span><br><span class="line">service Greeter &#123;</span><br><span class="line">  <span class="comment">// Sends a greeting</span></span><br><span class="line">  <span class="function">rpc <span class="title">SayHello</span> <span class="params">(HelloRequest)</span> <span class="title">returns</span> <span class="params">(HelloReply)</span> </span>&#123;&#125;</span><br><span class="line">  <span class="function">rpc <span class="title">SayHelloAgain</span> <span class="params">(HelloRequest)</span> <span class="title">returns</span> <span class="params">(HelloReply)</span> </span>&#123;&#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The request message containing the user's name.</span></span><br><span class="line">message HelloRequest &#123;</span><br><span class="line">  string name = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The response message containing the greetings</span></span><br><span class="line">message HelloReply &#123;</span><br><span class="line">  string message = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务提供者使用的是 Java 语言，那么利用 protoc 插件即可自动生成 Server 端的 Java 代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">GreeterImpl</span> <span class="keyword">extends</span> <span class="title">GreeterGrpc</span>.<span class="title">GreeterImplBase</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">(HelloRequest req, StreamObserver&lt;HelloReply&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    HelloReply reply = HelloReply.newBuilder().setMessage(<span class="string">"Hello "</span> + req.getName()).build();</span><br><span class="line">    responseObserver.onNext(reply);</span><br><span class="line">    responseObserver.onCompleted();</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHelloAgain</span><span class="params">(HelloRequest req, StreamObserver&lt;HelloReply&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    HelloReply reply = HelloReply.newBuilder().setMessage(<span class="string">"Hello again "</span> + req.getName()).build();</span><br><span class="line">    responseObserver.onNext(reply);</span><br><span class="line">    responseObserver.onCompleted();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务消费者使用的也是 Java 语言，那么利用 protoc 插件即可自动生成 Client 端的 Java 代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">greet</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">  logger.info(<span class="string">"Will try to greet "</span> + name + <span class="string">" ..."</span>);</span><br><span class="line">  HelloRequest request = HelloRequest.newBuilder().setName(name).build();</span><br><span class="line">  HelloReply response;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    response = blockingStub.sayHello(request);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (StatusRuntimeException e) &#123;</span><br><span class="line">    logger.log(Level.WARNING, <span class="string">"RPC failed: &#123;0&#125;"</span>, e.getStatus());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  logger.info(<span class="string">"Greeting: "</span> + response.getMessage());</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    response = blockingStub.sayHelloAgain(request);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (StatusRuntimeException e) &#123;</span><br><span class="line">    logger.log(Level.WARNING, <span class="string">"RPC failed: &#123;0&#125;"</span>, e.getStatus());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  logger.info(<span class="string">"Greeting: "</span> + response.getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务消费者使用的是 PHP 语言，那么利用 protoc 插件即可自动生成 Client 端的 PHP 代码。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$request = <span class="keyword">new</span> Helloworld\HelloRequest();</span><br><span class="line">$request-&gt;setName($name);</span><br><span class="line"><span class="keyword">list</span>($reply, $status) = $client-&gt;SayHello($request)-&gt;wait();</span><br><span class="line">$message = $reply-&gt;getMessage();</span><br><span class="line"><span class="keyword">list</span>($reply, $status) = $client-&gt;SayHelloAgain($request)-&gt;wait();</span><br><span class="line">$message = $reply-&gt;getMessage();</span><br></pre></td></tr></table></figure>
+<p>由此可见，gRPC 协议的服务描述是通过 proto 文件来定义接口的，然后再使用 protoc 来生成不同语言平台的客户端和服务端代码，从而具备跨语言服务调用能力。</p>
+<p>有一点特别需要注意的是，在描述接口定义时，IDL 文件需要对接口返回值进行详细定义。如果接口返回值的字段比较多，并且经常变化时，采用 IDL 文件方式的接口定义就不太合适了。一方面可能会造成 IDL 文件过大难以维护，另一方面只要 IDL 文件中定义的接口返回值有变更，都需要同步所有的服务消费者都更新，管理成本就太高了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>服务描述最常见的三种方式：RESTful API、XML 配置以及 IDL 文件。</p>
+<p>具体采用哪种服务描述方式是根据实际情况决定的，通常情况下，如果只是企业内部之间的服务调用，并且都是 Java 语言的话，选择 XML 配置方式是最简单的。如果企业内部存在多个服务，并且服务采用的是不同语言平台，建议使用 IDL 文件方式进行描述服务。如果还存在对外开放服务调用的情形的话，使用 RESTful API 方式则更加通用。</p>
+<img src="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/img1.png" class="">
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-计算机网络/物理层——宽带接入技术" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1890,230 +2004,13 @@ categories: [SQL]
 
 </article>
     
-    <article id="post-SQL/SQL 索引" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/17/SQL/SQL%20%E7%B4%A2%E5%BC%95/"
-    >SQL/SQL 索引</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/08/17/SQL/SQL%20%E7%B4%A2%E5%BC%95/" class="article-date">
-  <time datetime="2020-08-17T09:57:34.168Z" itemprop="datePublished">2020-08-17</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="索引是万能的吗？"><a href="#索引是万能的吗？" class="headerlink" title="索引是万能的吗？"></a>索引是万能的吗？</h1><p>数据库中的索引，就好比一本书的目录，它可以帮我们快速进行特定值的定位与查找，从而加快数据查询的效率。</p>
-<p>索引就是帮助数据库管理系统高效获取数据的数据结构。</p>
-<p>如果我们不使用索引，就必须从第 1 条记录开始扫描，直到把所有的数据表都扫描完，才能找到想要的数据。既然如此，如果我们想要快速查找数据，就只需要创建更多的索引就好了呢？</p>
-<p>其实索引不是万能的，在有些情况下使用索引反而会让效率变低。</p>
-<p>索引的价值是帮我们从海量数据中找到想要的数据，如果数据量少，那么是否使用索引对结果的影响并不大。</p>
-<p>在数据表中的数据行数比较少的情况下，比如不到 1000 行，是不需要创建索引的。另外，当数据重复度大，比如高于 10% 的时候，也不需要对这个字段使用索引。比如性别这个字段，就不需要对它创建索引。这是为什么呢？如果你想要在 100 万行数据中查找其中的 50 万行（比如性别为男的数据），一旦创建了索引，你需要先访问 50 万次索引，然后再访问 50 万次数据表，这样加起来的开销比不使用索引可能还要大。</p>
-<h2 id="实验-1：数据行数少的情况下，索引效率如何"><a href="#实验-1：数据行数少的情况下，索引效率如何" class="headerlink" title="实验 1：数据行数少的情况下，索引效率如何"></a>实验 1：数据行数少的情况下，索引效率如何</h2><p>比如<a href="https://github.com/wsq01/SQL-repo/blob/master/heros_without_index.sql" target="_blank" rel="noopener">heros_without_index.sql</a>和<a href="https://github.com/wsq01/SQL-repo/blob/master/heros_with_index.sql" target="_blank" rel="noopener">heros_with_index.sql</a>这两个数据表。</p>
-<p>在第一个数据表中，除了自增的<code>id</code>以外没有建立额外的索引。第二张数据表中，对<code>name</code>字段建立了唯一索引。</p>
-<p><code>heros</code>数据表一共有 69 个英雄，数据量很少。当我们对<code>name</code>进行条件查询的时候，我们观察一下创建索引前后的效率。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, hp_max, mp_max <span class="keyword">FROM</span> heros_without_index <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">'刘禅'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果（1 条数据，运行时间 0.072s）：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">name</th>
-<th align="center">hp_max</th>
-<th align="center">mp_max</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">10015</td>
-<td align="center">刘禅</td>
-<td align="center">8581</td>
-<td align="center">1694</td>
-</tr>
-</tbody></table>
-<p>我对<code>name</code>字段建立索引后，再进行查询：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, hp_max, mp_max <span class="keyword">FROM</span> heros_with_index <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">'刘禅'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果（1 条数据，运行时间 0.080s）：</p>
-<table>
-<thead>
-<tr>
-<th align="center">id</th>
-<th align="center">name</th>
-<th align="center">hp_max</th>
-<th align="center">mp_max</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">10015</td>
-<td align="center">刘禅</td>
-<td align="center">8581</td>
-<td align="center">1694</td>
-</tr>
-</tbody></table>
-<p>你能看到运行结果相同，但是创建了<code>name</code>字段索引的效率比没有创建索引时效率更低。在数据量不大的情况下，索引就发挥不出作用了。</p>
-<h2 id="实验-2：性别（男或女）字段真的不应该创建索引吗？"><a href="#实验-2：性别（男或女）字段真的不应该创建索引吗？" class="headerlink" title="实验 2：性别（男或女）字段真的不应该创建索引吗？"></a>实验 2：性别（男或女）字段真的不应该创建索引吗？</h2><p>如果一个字段的取值少，比如性别这个字段，通常是不需要创建索引的。那么有没有特殊的情况呢？</p>
-<p>下面我们来看一个例子，假设有一个女儿国，人口总数为 100 万人，男性只有 10 个人，也就是占总人口的 10 万分之 1。</p>
-<p>女儿国的人口数据表<a href="https://github.com/wsq01/SQL-repo/blob/master/user_gender.sql" target="_blank" rel="noopener">user_gender.sql</a>。其中数据表中的<code>user_gender</code>字段取值为 0 或 1，0 代表女性，1 代表男性。</p>
-<p>如果我们要筛选出这个国家中的男性，可以使用：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_gender = <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>运行结果（10 条数据，运行时间 0.696s）：</p>
-<table>
-<thead>
-<tr>
-<th align="center">user_id</th>
-<th align="center">user_name</th>
-<th align="center">user_gender</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">110000</td>
-<td align="center">student_100000</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">210000</td>
-<td align="center">student_200000</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">…</td>
-<td align="center">…</td>
-<td align="center">…</td>
-</tr>
-<tr>
-<td align="center">101000</td>
-<td align="center">Student_100000</td>
-<td align="center">1</td>
-</tr>
-</tbody></table>
-<p>你能看到在未创建索引的情况下，运行的效率并不高。如果我们针对<code>user_gender</code>字段创建索引：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_gender = <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>同样是 10 条数据，运行结果相同，时间却缩短到了 0.052s，大幅提升了查询的效率。</p>
-<p>其实通过这两个实验你也能看出来，索引的价值是帮你快速定位。如果想要定位的数据有很多，那么索引就失去了它的使用价值，比如通常情况下的性别字段。不过有时候，我们还要考虑这个字段中的数值分布的情况，在实验 2 中，性别字段的数值分布非常特殊，男性的比例非常少。</p>
-<p>我们不仅要看字段中的数值个数，还要根据数值的分布情况来考虑是否需要创建索引。</p>
-<h1 id="索引的种类有哪些？"><a href="#索引的种类有哪些？" class="headerlink" title="索引的种类有哪些？"></a>索引的种类有哪些？</h1><p>虽然使用索引的本质目的是帮我们快速定位想要查找的数据，但实际上，索引有很多种类。</p>
-<p>从功能逻辑上说，索引主要有 4 种，分别是普通索引、唯一索引、主键索引和全文索引。</p>
-<p>普通索引是基础的索引，没有任何约束，主要用于提高查询效率。唯一索引就是在普通索引的基础上增加了数据唯一性的约束，在一张数据表里可以有多个唯一索引。主键索引在唯一索引的基础上增加了不为空的约束，也就是<code>NOT NULL+UNIQUE</code>，一张表里最多只有一个主键索引。全文索引用的不多，MySQL 自带的全文索引只支持英文。我们通常可以采用专门的全文搜索引擎，比如ES(ElasticSearch) 和 Solr。</p>
-<p>其实前三种索引（普通索引、唯一索引和主键索引）都是一类索引，只不过对数据的约束性逐渐提升。在一张数据表中只能有一个主键索引，这是由主键索引的物理实现方式决定的，因为数据存储在文件中只能按照一种顺序进行存储。但可以有多个普通索引或者多个唯一索引。</p>
-<p>按照物理实现方式，索引可以分为 2 种：聚集索引和非聚集索引。我们也把非聚集索引称为二级索引或者辅助索引。</p>
-<p>聚集索引可以按照主键来排序存储数据，这样在查找行的时候非常有效。举个例子，如果是一本汉语字典，我们想要查找“数”这个字，直接在书中找汉语拼音的位置即可，也就是拼音“shu”。这样找到了索引的位置，在它后面就是我们想要找的数据行。</p>
-<p>非聚集索引又是什么呢？</p>
-<p>在数据库系统会有单独的存储空间存放非聚集索引，这些索引项是按照顺序存储的，但索引项指向的内容是随机存储的。也就是说系统会进行两次查找，第一次先找到索引，第二次找到索引对应的位置取出数据行。非聚集索引不会把索引指向的内容像聚集索引一样直接放到索引的后面，而是维护单独的索引表（只维护索引，不维护索引指向的数据），为数据检索提供方便。我们还以汉语字典为例，如果想要查找“数”字，那么按照部首查找的方式，先找到“数”字的偏旁部首，然后这个目录会告诉我们“数”字存放到第多少页，我们再去指定的页码找这个字。</p>
-<p>聚集索引指表中数据行按索引的排序方式进行存储，对查找行很有效。只有当表包含聚集索引时，表内的数据行才会按找索引列的值在磁盘上进行物理排序和存储。每一个表只能有一个聚集索引，因为数据行本身只能按一个顺序存储。</p>
-<p>聚集索引与非聚集索引的原理不同，在使用上也有一些区别：</p>
-<p>聚集索引的叶子节点存储的就是我们的数据记录，非聚集索引的叶子节点存储的是数据位置。非聚集索引不会影响数据表的物理存储顺序。<br>一个表只能有一个聚集索引，因为只能有一种排序存储的方式，但可以有多个非聚集索引，也就是多个索引目录提供数据检索。<br>使用聚集索引的时候，数据的查询效率高，但如果对数据进行插入，删除，更新等操作，效率会比非聚集索引低。</p>
-<h2 id="实验-3：使用聚集索引和非聚集索引的查询效率"><a href="#实验-3：使用聚集索引和非聚集索引的查询效率" class="headerlink" title="实验 3：使用聚集索引和非聚集索引的查询效率"></a>实验 3：使用聚集索引和非聚集索引的查询效率</h2><p>还是针对刚才的<code>user_gender</code>数据表，我们来看下使用聚集索引和非聚集索引的查询效率有什么区别。在<code>user_gender</code>表中，我设置了<code>user_id</code>为主键，也就是聚集索引的字段是<code>user_id</code>。这里我们查询下<code>user_id=90001</code>的用户信息：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span></span><br></pre></td></tr></table></figure>
-<p>运行结果（1 条数据，运行时间 0.043s）：</p>
-<table>
-<thead>
-<tr>
-<th align="center">user_id</th>
-<th align="center">user_name</th>
-<th align="center">user_gender</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">900001</td>
-<td align="center">student_890001</td>
-<td align="center">0</td>
-</tr>
-</tbody></table>
-<p>我们再直接对<code>user_name</code>字段进行条件查询，此时<code>user_name</code>字段没有创建索引：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果：1 条数据，运行时间 0.961s。</p>
-<p>对没有建立索引的字段进行条件查询，查询效率明显降低了。</p>
-<p>然后我们对<code>user_name</code>字段创建普通索引，进行 SQL 查询：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果：1 条数据，运行时间 0.050s。</p>
-<p>通过对这 3 次 SQL 查询结果的对比，我们可以总结出以下两点内容：</p>
-<p>对<code>WHERE</code>子句的字段建立索引，可以大幅提升查询效率。<br>采用聚集索引进行数据查询，比使用非聚集索引的查询效率略高。如果查询次数比较多，还是尽量使用主键索引进行数据查询。<br>除了业务逻辑和物理实现方式，索引还可以按照字段个数进行划分，分成单一索引和联合索引。</p>
-<p>索引列为一列时为单一索引；多个列组合在一起创建的索引叫做联合索引。</p>
-<p>创建联合索引时，我们需要注意创建时的顺序问题，因为联合索引 (<code>x, y, z</code>) 和 (<code>z, y, x</code>) 在使用的时候效率可能会存在差别。</p>
-<p>这里需要说明的是联合索引存在最左匹配原则，也就是按照最左优先的方式进行索引的匹配。比如刚才举例的 (<code>x, y, z</code>)，如果查询条件是<code>WHERE x=1 AND y=2 AND z=3</code>，就可以匹配上联合索引；如果查询条件是<code>WHERE y=2</code>，就无法匹配上联合索引。</p>
-<h2 id="实验-4：联合索引的最左原则"><a href="#实验-4：联合索引的最左原则" class="headerlink" title="实验 4：联合索引的最左原则"></a>实验 4：联合索引的最左原则</h2><p>还是针对<code>user_gender</code>数据表，我们把<code>user_id</code>和<code>user_name</code>字段设置为联合主键，然后看下 SQL 查询效率有什么区别。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span> <span class="keyword">AND</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果（1 条数据，运行时间 0.046s）：</p>
-<table>
-<thead>
-<tr>
-<th align="center">user_id</th>
-<th align="center">user_name</th>
-<th align="center">user_gender</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">900001</td>
-<td align="center">student_890001</td>
-<td align="center">0</td>
-</tr>
-</tbody></table>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_id = <span class="number">900001</span></span><br></pre></td></tr></table></figure>
-<p>运行结果：1 条数据，运行时间 0.046s。</p>
-<p>我们再来看下普通的条件查询是什么样子的：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> user_id, user_name, user_gender <span class="keyword">FROM</span> user_gender <span class="keyword">WHERE</span> user_name = <span class="string">'student_890001'</span></span><br></pre></td></tr></table></figure>
-<p>运行结果：1 条数据，运行时间 0.943s。</p>
-<p>当我们使用了联合索引 (<code>user_id, user_name</code>) 的时候，在<code>WHERE</code>子句中对联合索引中的字段<code>user_id</code>和<code>user_name</code>进行条件查询，或者只对<code>user_id</code>进行查询，效率基本上是一样的。当我们对<code>user_name</code>进行条件查询时，效率就会降低很多，这是因为根据联合索引的最左原则，<code>user_id</code>在<code>user_name</code>的左侧，如果没有使用<code>user_id</code>，而是直接使用<code>user_name</code>进行条件查询，联合索引就会失效。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用索引可以帮助我们从海量的数据中快速定位想要查找的数据，不过索引也存在一些不足，比如占用存储空间、降低数据库写操作的性能等，如果有多个索引还会增加索引选择的时间。当我们使用索引时，需要平衡索引的利（提升查询效率）和弊（维护索引所需的代价）。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/6/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/4/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/6/">下一页</a>
   </nav>
   
 </section>
