@@ -80,154 +80,6 @@ var _hmt = _hmt || [];
     
     
     
-    <article id="post-计算机网络/数据链路层——点对点协议PPP" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/"
-    >数据链路层——点对点协议PPP</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/" class="article-date">
-  <time datetime="2020-09-10T09:21:34.000Z" itemprop="datePublished">2020-09-10</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>数据链路层使用的信道主要有两种：点对点信道和广播信道。</p>
-<p>对于点对点的链路，目前使用得最广泛的数据链路层协议是点对点协议 PPP(<code>Point-to-Point Protocol</code>)。</p>
-<h1 id="PPP-协议的特点"><a href="#PPP-协议的特点" class="headerlink" title="PPP 协议的特点"></a>PPP 协议的特点</h1><p>互联网用户通常都要连接到某个ISP才能接入到互联网。PPP协议就是用户计算机和ISP进行通信时所使用的数据链路层协议。</p>
-<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img1.png" class="">
-
-<h2 id="PPP-协议应满足的需求"><a href="#PPP-协议应满足的需求" class="headerlink" title="PPP 协议应满足的需求"></a>PPP 协议应满足的需求</h2><ul>
-<li>简单 —— 这是首要的要求。</li>
-<li>封装成帧 —— 必须规定特殊的字符作为帧定界符。</li>
-<li>透明性 —— 必须保证数据传输的透明性。</li>
-<li>多种网络层协议 —— 能够在同一条物理链路上同时支持多种网络层协议。</li>
-<li>多种类型链路 —— 能够在多种类型的链路上运行。</li>
-<li>差错检测 —— 能够对接收端收到的帧进行检测，并立即丢弃有差错的帧。</li>
-<li>检测连接状态 —— 能够及时自动检测出链路是否处于正常工作状态。</li>
-<li>最大传送单元 —— 必须对每一种类型的点对点链路设置最大传送单元  MTU 的标准默认值，促进各种实现之间的互操作性。</li>
-<li>网络层地址协商 —— 必须提供一种机制使通信的两个网络层实体能够通过协商知道或能够配置彼此的网络层地址。</li>
-<li>数据压缩协商 —— 必须提供一种方法来协商使用数据压缩算法。</li>
-</ul>
-<p>PPP 协议不需要的功能：纠错、流量控制、序号、多点线路、半双工或单工链路。</p>
-<h2 id="PPP-协议的组成"><a href="#PPP-协议的组成" class="headerlink" title="PPP 协议的组成"></a>PPP 协议的组成</h2><p>PPP 协议有三个组成部分：</p>
-<ul>
-<li>一个将 IP 数据报封装到串行链路的方法。</li>
-<li>链路控制协议 LCP(<code>Link Control Protocol</code>)。用来建立、配置和测试数据链路连接。</li>
-<li>一套网络控制协议 NCP(<code>Network Control Protocol</code>)。</li>
-</ul>
-<h1 id="PPP-协议的帧格式"><a href="#PPP-协议的帧格式" class="headerlink" title="PPP 协议的帧格式"></a>PPP 协议的帧格式</h1><h2 id="各字段的意义"><a href="#各字段的意义" class="headerlink" title="各字段的意义"></a>各字段的意义</h2><p>PPP 帧的首部和尾部分别为 4 个字段和 2 个字段。</p>
-<p>标志字段<code>F = 0x7E</code>。标志字段表示一个帧的开始或结束。标志字段就是 PPP 帧的定界符。连续两帧之间只需要用一个标志字段。如果出现连续两个标志字段，就表示这是一个空帧。</p>
-<p>地址字段 A 只置为<code>0xFF</code>。地址字段实际上并不起作用。</p>
-<p>控制字段 C 通常置为<code>0x03</code>。</p>
-<p>PPP 是面向字节的，所有的 PPP 帧的长度都是整数字节。</p>
-<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img2.png" class="">
-
-<p>透明传输问题：</p>
-<ul>
-<li>当 PPP 用在异步传输时，就使用一种特殊的字符填充法。</li>
-<li>当 PPP 用在同步传输链路时，协议规定采用硬件来完成比特填充。</li>
-</ul>
-<h2 id="字符填充"><a href="#字符填充" class="headerlink" title="字符填充"></a>字符填充</h2><p>当信息字段中出现和标志字段一样的比特（<code>0x7E</code>）组合时，就必须采取一些措施使这种形式上和标志字段一样的比特组合不出现在信息字段中。</p>
-<p>当 PPP 使用异步传输时，它把转义符定义为<code>0x7D</code>，并使用字节填充，填充方法：</p>
-<ul>
-<li>将信息字段中出现的每一个<code>0x7E</code>字节转变成为 2 字节序列 (<code>0x7D, 0x5E</code>)。 </li>
-<li>若信息字段中出现一个<code>0x7D</code>的字节, 则将其转变成为 2 字节序列(<code>0x7D, 0x5D</code>)。</li>
-<li>若信息字段中出现 ASCII 码的控制字符（即数值小于<code>0x20</code>的字符），则在该字符前面要加入一个<code>0x7D</code>字节，同时将该字符的编码加以改变。例如出现<code>0x03</code>，就要把它转变为(<code>0x7D, 0x23</code>)。</li>
-</ul>
-<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img3.png" class="">
-
-<h2 id="零比特填充"><a href="#零比特填充" class="headerlink" title="零比特填充"></a>零比特填充</h2><p>PPP 协议用在 SONET/SDH 链路时，使用同步传输（一连串的比特连续传送）。这时 PPP 协议采用零比特填充方法来实现透明传输。</p>
-<p>零比特填充具体做法：</p>
-<ul>
-<li>在发送端，只要发现有 5 个连续 1，则立即填入一个 0。保证在信息字段中不会出现6个连续1。</li>
-<li>接收端对帧中的比特流进行扫描。每当发现 5 个连续1时，就把这 5 个连续 1 后的一个 0 删除。</li>
-</ul>
-<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img4.png" class="">
-
-<p>PPP 协议之所以不使用序号和确认机制是出于以下的考虑：</p>
-<ul>
-<li>在数据链路层出现差错的概率不大时，使用比较简单的 PPP 协议较为合理。</li>
-<li>在因特网环境下，PPP 的信息字段放入的数据是 IP  数据报。数据链路层的可靠传输并不能够保证网络层的传输也是可靠的。</li>
-<li>帧检验序列 FCS 字段可保证无差错接受。</li>
-</ul>
-<h1 id="PPP-协议的工作状态"><a href="#PPP-协议的工作状态" class="headerlink" title="PPP 协议的工作状态"></a>PPP 协议的工作状态</h1><ul>
-<li>当用户拨号接入 ISP 时，路由器的调制解调器对拨号做出确认，并建立一条物理连接。</li>
-<li>PC 机向路由器发送一系列的 LCP 分组（封装成多个 PPP 帧），以便建立 TCP 连接。</li>
-<li>这些分组及其响应选择一些 PPP 参数，并进行网络层配置，NCP 给新接入的 PC 机分配一个临时的 IP 地址，使 PC 机成为因特网上的一个主机。</li>
-<li>通信完毕时，NCP 释放网络层连接，收回原来分配出去的 IP 地址。接着，LCP 释放数据链路层连接。最后释放的是物理层的连接。</li>
-</ul>
-<p>可见，PPP 协议已不是纯粹的数据链路层的协议，它还包含了物理层和网络层的内容。</p>
-<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img5.png" class="">
-
-<p>PPP 链路的起始状态和终止状态永远是链路静止状态，这时在用户个人电脑和 ISP 的路由器之间并不存在物理层的连接。</p>
-<p>当用户个人电脑通过调制解调器呼叫路由器时，路由器就能检测到调制解调器发出的载波信号。在双方建立的物理层连接后，PPP 就进入链路建立状态，其目的是建立链路层 LCP 连接。</p>
-<p>这时 LCP 开始协商一些配置项，即发送 LCP 的配置请求帧。这是个 PPP 帧，其协议字段置为 LCP 对应的代码，而信息字段包含特定的配置请求。链路的另一端可以发送以下响应中的一种：配置确认帧、配置否认帧、配置拒绝帧。</p>
-<p>协商结束后双方就建立了 LCP 链路，接着就进入鉴别状态。在这一状态，只允许传送 LCP 协议的分组、鉴别协议的分组以及监测链路质量的分组。</p>
-<p>若使用口令鉴别协议 PAP(<code>Password Authentication Protocol</code>)，则需要发起通信的一方发送身份标识符和口令。如果需要更高的安全性，可以使用口令握手鉴别协议 CHAP(<code>Challenge-Handshake Authentication Protocol</code>)。鉴别成功，进入网络层协议状态。鉴别失败，转到链路终止状态。</p>
-<p>在网络层协议状态，PPP 链路的两端的网络控制协议 NCP 根据网络层的不同协议互相交换网络层特定的网络控制分组。这个步骤很重要，因为路由器能同时支持多种网络层协议。总之，PPP 协议两端的网络层可以运行不同的网络层协议，但仍然可使用同一个 PPP 协议进行通信。</p>
-<p>当网络层配置完毕后，链路就进入可进行数据通信的链路打开状态。链路的两个 PPP 端点可以彼此向对方发送分组。两个 PPP 端点还可以发送回送请求 LCP 分组和回送回答 LCP 分组，以检查链路的状态。</p>
-<p>数据传输结束后，可以由链路的一端发出终止请求 LCP 分组请求终止链路连接，在收到对方发来的终止确认 LCP 分组后，转到链路终止状态。如果链路出现故障，也会从链路打开状态转到链路终止状态。当调制解调器的载波停止后，则回到链路静止状态。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
     <article id="post-微服务/如何搭建微服务治理平台" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1387,13 +1239,127 @@ var _hmt = _hmt || [];
 
 </article>
     
+    <article id="post-微服务/如何发布和引用服务" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/"
+    >微服务/如何发布和引用服务</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/" class="article-date">
+  <time datetime="2020-09-07T04:40:31.483Z" itemprop="datePublished">2020-09-07</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>想要构建微服务，首先要解决的问题是，服务提供者如何发布一个服务，服务消费者如何引用这个服务。具体来说，就是这个服务的接口名是什么？调用这个服务需要传递哪些参数？接口的返回值是什么类型？以及一些其他接口描述信息。</p>
+<p>最常见的服务发布和引用的方式有三种：RESTful API、XML 配置、IDL 文件。</p>
+<h1 id="RESTful-API"><a href="#RESTful-API" class="headerlink" title="RESTful API"></a>RESTful API</h1><p>首先来说说 RESTful API 的方式，主要被用作 HTTP 或者 HTTPS 协议的接口定义，即使在非微服务架构体系下，也被广泛采用。</p>
+<p>下面是开源服务化框架Motan发布 RESTful API 的例子，它发布了三个 RESTful 格式的 API，接口声明如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Path</span>(<span class="string">"/rest"</span>)</span><br><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">RestfulService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.APPLICATION_JSON)</span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">getUsers</span><span class="params">(@QueryParam(<span class="string">"uid"</span>)</span> <span class="keyword">int</span> uid)</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path</span>(<span class="string">"/primitive"</span>)</span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.TEXT_PLAIN)</span><br><span class="line">    <span class="function">String <span class="title">testPrimitiveType</span><span class="params">()</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@POST</span></span><br><span class="line">    <span class="meta">@Consumes</span>(MediaType.APPLICATION_FORM_URLENCODED)</span><br><span class="line">    <span class="meta">@Produces</span>(MediaType.APPLICATION_JSON)</span><br><span class="line">    <span class="function">Response <span class="title">add</span><span class="params">(@FormParam(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id, @<span class="title">FormParam</span><span class="params">(<span class="string">"name"</span>)</span> String name)</span>;</span><br></pre></td></tr></table></figure>
+<p>具体的服务实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestfulServerDemo</span> <span class="keyword">implements</span> <span class="title">RestfulService</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">getUsers</span><span class="params">(@CookieParam(<span class="string">"uid"</span>)</span> <span class="keyword">int</span> uid) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Arrays.asList(<span class="keyword">new</span> User(uid, <span class="string">"name"</span> + uid));</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testPrimitiveType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">"helloworld!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">add</span><span class="params">(@FormParam(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id, @<span class="title">FormParam</span><span class="params">(<span class="string">"name"</span>)</span> String name) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Response.ok().cookie(<span class="keyword">new</span> NewCookie(<span class="string">"ck"</span>, String.valueOf(id))).entity(<span class="keyword">new</span> User(id, name)).build();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>服务提供者这一端通过部署代码到 Tomcat 中，并配置 Tomcat 中如下的<code>web.xml</code>，就可以通过<code>servlet</code>的方式对外提供 RESTful API。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>com.weibo.api.motan.protocol.restful.support.servlet.RestfulServletContainerListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>resteasy.servlet.mapping.prefix<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/servlet<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span>  <span class="comment">&lt;!-- 此处实际为 servlet-mapping 的 url-pattern，具体配置见 resteasy 文档 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/servlet/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样服务消费者就可以通过 HTTP 协议调用服务了，因为 HTTP 协议本身是一个公开的协议，对于服务消费者来说几乎没有学习成本，所以比较适合用作跨业务平台之间的服务协议。比如你有一个服务，不仅需要在业务部门内部提供服务，还需要向其他业务部门提供服务，甚至开放给外网提供服务，这时候采用 HTTP 协议就比较合适，也省去了沟通服务协议的成本。</p>
+<h1 id="XML-配置"><a href="#XML-配置" class="headerlink" title="XML 配置"></a>XML 配置</h1><p>XML 配置方式的服务发布和引用主要分三个步骤：</p>
+<p>服务提供者定义接口，并实现接口。</p>
+<p>服务提供者进程启动时，通过加载<code>server.xml</code>配置文件将接口暴露出去。</p>
+<p>服务消费者进程启动时，通过加载<code>client.xml</code>配置文件来引入要调用的接口。</p>
+<p>继续以服务化框架 Motan 为例，它还支持以 XML 配置的方式来发布和引用服务。</p>
+<p>首先，服务提供者定义接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FooService</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String name)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后服务提供者实现接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FooServiceImpl</span> <span class="keyword">implements</span> <span class="title">FooService</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    System.out.println(name + <span class="string">" invoked rpc service"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello "</span> + name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后服务提供者进程启动时，加载<code>server.xml</code>配置文件，开启 8002 端口监听。</p>
+<p><code>server.xml</code>配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xmlns:motan</span>=<span class="string">"http://api.weibo.com/schema/motan"</span></span></span><br><span class="line"><span class="tag"> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">   http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!-- service implemention bean --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"serviceImpl"</span> <span class="attr">class</span>=<span class="string">"quickstart.FooServiceImpl"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- exporting service by Motan --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">interface</span>=<span class="string">"quickstart.FooService"</span> <span class="attr">ref</span>=<span class="string">"serviceImpl"</span> <span class="attr">export</span>=<span class="string">"8002"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务提供者加载<code>server.xml</code>的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:motan_server.xml"</span>);</span><br><span class="line">    System.out.println(<span class="string">"server start..."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>服务消费者要想调用服务，就必须在进程启动时，加载配置<code>client.xml</code>，引用接口定义，然后发起调用。</p>
+<p>client.xml 配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:motan</span>=<span class="string">"http://api.weibo.com/schema/motan"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">   http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">&lt;!-- reference to the remote service --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:referer</span> <span class="attr">id</span>=<span class="string">"remoteService"</span> <span class="attr">interface</span>=<span class="string">"quickstart.FooService"</span> <span class="attr">directUrl</span>=<span class="string">"localhost:8002"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务消费者启动时，加载<code>client.xml</code>的代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ApplicationContext ctx = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"classpath:motan_client.xml"</span>);</span><br><span class="line">    FooService service = (FooService) ctx.getBean(<span class="string">"remoteService"</span>);</span><br><span class="line">    System.out.println(service.hello(<span class="string">"motan"</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就这样，通过在服务提供者和服务消费者之间维持一份对等的 XML 配置文件，来保证服务消费者按照服务提供者的约定来进行服务调用。在这种方式下，如果服务提供者变更了接口定义，不仅需要更新服务提供者加载的接口描述文件<code>server.xml</code>，还需要同时更新服务消费者加载的接口描述文件 client.xml。</p>
+<p>一般是私有 RPC 框架会选择 XML 配置这种方式来描述接口，因为私有 RPC 协议的性能要比 HTTP 协议高，所以在对性能要求比较高的场景下，采用 XML 配置的方式比较合适。但这种方式对业务代码侵入性比较高，XML 配置有变更的时候，服务消费者和服务提供者都要更新，所以适合公司内部联系比较紧密的业务之间采用。如果要应用到跨部门之间的业务调用，一旦有 XML 配置变更，需要花费大量精力去协调不同部门做升级工作。在我经历的实际项目里，就遇到过一次底层服务的接口升级，需要所有相关的调用方都升级，为此花费了大量时间去协调沟通不同部门之间的升级工作，最后经历了大半年才最终完成。所以对于 XML 配置方式的服务描述，一旦应用到多个部门之间的接口格式约定，如果有变更，最好是新增接口，不到万不得已不要对原有的接口格式做变更。</p>
+<h1 id="IDL-文件"><a href="#IDL-文件" class="headerlink" title="IDL 文件"></a>IDL 文件</h1><p>IDL 就是接口描述语言（<code>interface description language</code>）的缩写，通过一种中立的方式来描述接口，使得在不同的平台上运行的对象和不同语言编写的程序可以相互通信交流。比如你用 Java 语言实现提供的一个服务，也能被 PHP 语言调用。</p>
+<p>也就是说 IDL 主要是用作跨语言平台的服务之间的调用，有两种最常用的 IDL：一个是 Facebook 开源的Thrift 协议，另一个是 Google 开源的gRPC 协议。无论是 Thrift 协议还是 gRPC 协议，它们的工作原理都是类似的。</p>
+<p>以 gRPC 协议为例，如何使用 IDL 文件方式来描述接口。</p>
+<p>gRPC 协议使用 Protobuf 简称 proto 文件来定义接口名、调用参数以及返回值类型。</p>
+<p>比如文件<code>helloword.proto</code>定义了一个接口<code>SayHello</code>方法，它的请求参数是<code>HelloRequest</code>，它的返回值是<code>HelloReply</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The greeter service definition.</span></span><br><span class="line">service Greeter &#123;</span><br><span class="line">  <span class="comment">// Sends a greeting</span></span><br><span class="line">  <span class="function">rpc <span class="title">SayHello</span> <span class="params">(HelloRequest)</span> <span class="title">returns</span> <span class="params">(HelloReply)</span> </span>&#123;&#125;</span><br><span class="line">  <span class="function">rpc <span class="title">SayHelloAgain</span> <span class="params">(HelloRequest)</span> <span class="title">returns</span> <span class="params">(HelloReply)</span> </span>&#123;&#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The request message containing the user's name.</span></span><br><span class="line">message HelloRequest &#123;</span><br><span class="line">  string name = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// The response message containing the greetings</span></span><br><span class="line">message HelloReply &#123;</span><br><span class="line">  string message = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务提供者使用的是 Java 语言，那么利用 protoc 插件即可自动生成 Server 端的 Java 代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">GreeterImpl</span> <span class="keyword">extends</span> <span class="title">GreeterGrpc</span>.<span class="title">GreeterImplBase</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">(HelloRequest req, StreamObserver&lt;HelloReply&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    HelloReply reply = HelloReply.newBuilder().setMessage(<span class="string">"Hello "</span> + req.getName()).build();</span><br><span class="line">    responseObserver.onNext(reply);</span><br><span class="line">    responseObserver.onCompleted();</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHelloAgain</span><span class="params">(HelloRequest req, StreamObserver&lt;HelloReply&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    HelloReply reply = HelloReply.newBuilder().setMessage(<span class="string">"Hello again "</span> + req.getName()).build();</span><br><span class="line">    responseObserver.onNext(reply);</span><br><span class="line">    responseObserver.onCompleted();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务消费者使用的也是 Java 语言，那么利用 protoc 插件即可自动生成 Client 端的 Java 代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">greet</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">  logger.info(<span class="string">"Will try to greet "</span> + name + <span class="string">" ..."</span>);</span><br><span class="line">  HelloRequest request = HelloRequest.newBuilder().setName(name).build();</span><br><span class="line">  HelloReply response;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    response = blockingStub.sayHello(request);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (StatusRuntimeException e) &#123;</span><br><span class="line">    logger.log(Level.WARNING, <span class="string">"RPC failed: &#123;0&#125;"</span>, e.getStatus());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  logger.info(<span class="string">"Greeting: "</span> + response.getMessage());</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    response = blockingStub.sayHelloAgain(request);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (StatusRuntimeException e) &#123;</span><br><span class="line">    logger.log(Level.WARNING, <span class="string">"RPC failed: &#123;0&#125;"</span>, e.getStatus());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  logger.info(<span class="string">"Greeting: "</span> + response.getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如服务消费者使用的是 PHP 语言，那么利用 protoc 插件即可自动生成 Client 端的 PHP 代码。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$request = <span class="keyword">new</span> Helloworld\HelloRequest();</span><br><span class="line">$request-&gt;setName($name);</span><br><span class="line"><span class="keyword">list</span>($reply, $status) = $client-&gt;SayHello($request)-&gt;wait();</span><br><span class="line">$message = $reply-&gt;getMessage();</span><br><span class="line"><span class="keyword">list</span>($reply, $status) = $client-&gt;SayHelloAgain($request)-&gt;wait();</span><br><span class="line">$message = $reply-&gt;getMessage();</span><br></pre></td></tr></table></figure>
+<p>由此可见，gRPC 协议的服务描述是通过 proto 文件来定义接口的，然后再使用 protoc 来生成不同语言平台的客户端和服务端代码，从而具备跨语言服务调用能力。</p>
+<p>有一点特别需要注意的是，在描述接口定义时，IDL 文件需要对接口返回值进行详细定义。如果接口返回值的字段比较多，并且经常变化时，采用 IDL 文件方式的接口定义就不太合适了。一方面可能会造成 IDL 文件过大难以维护，另一方面只要 IDL 文件中定义的接口返回值有变更，都需要同步所有的服务消费者都更新，管理成本就太高了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>服务描述最常见的三种方式：RESTful API、XML 配置以及 IDL 文件。</p>
+<p>具体采用哪种服务描述方式是根据实际情况决定的，通常情况下，如果只是企业内部之间的服务调用，并且都是 Java 语言的话，选择 XML 配置方式是最简单的。如果企业内部存在多个服务，并且服务采用的是不同语言平台，建议使用 IDL 文件方式进行描述服务。如果还存在对外开放服务调用的情形的话，使用 RESTful API 方式则更加通用。</p>
+<img src="/2020/09/07/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E6%9C%8D%E5%8A%A1/img1.png" class="">
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/3/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/5/">下一页</a>
   </nav>
   
 </section>
