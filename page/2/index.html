@@ -80,6 +80,418 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-计算机网络/运输层——TCP的流量控制" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/"
+    >运输层——TCP的流量控制</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/" class="article-date">
+  <time datetime="2020-10-15T03:14:12.000Z" itemprop="datePublished">2020-10-15</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="利用滑动窗口实现流量控制"><a href="#利用滑动窗口实现流量控制" class="headerlink" title="利用滑动窗口实现流量控制"></a>利用滑动窗口实现流量控制</h1><p>一般说来，我们总是希望数据传输得更快一些。但如果发送方把数据发送得过快，接收方就可能来不及接收，这就会造成数据的丢失。</p>
+<p>流量控制就是让发送方的发送速率不要太快，既要让接收方来得及接收，也不要使网络发生拥塞。</p>
+<p>利用滑动窗口机制可以很方便地在 TCP 连接上实现流量控制。</p>
+<h2 id="利用可变窗口进行流量控制举例"><a href="#利用可变窗口进行流量控制举例" class="headerlink" title="利用可变窗口进行流量控制举例"></a>利用可变窗口进行流量控制举例</h2><p>A 向 B 发送数据。在连接建立时，B 告诉 A：“我的接收窗口 rwnd = 400（字节）”。</p>
+<img src="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/img1.png" class="">
+
+<p>B 向 A 发送了零窗口的报文段后不久，B 的接收缓存又有了一些存储空间。于是 B 向 A 发送了 rwnd = 400 的报文段。</p>
+<p>但这个报文段在传送过程中丢失了。A 一直等待收到 B 发送的非零窗口的通知，而 B 也一直等待 A 发送的数据。</p>
+<p>如果没有其他措施，这种互相等待的死锁局面将一直延续下去。</p>
+<p>为了解决这个问题， TCP 为每一个连接设有一个持续计时器。</p>
+<p>只要 TCP 连接的一方收到对方的零窗口通知，就启动该持续计时器。</p>
+<p>若持续计时器设置的时间到期，就发送一个零窗口探测报文段（仅携带 1 字节的数据），而对方就在确认这个探测报文段时给出了现在的窗口值。</p>
+<p>若窗口仍然是零，则收到这个报文段的一方就重新设置持续计时器。</p>
+<p>若窗口不是零，则死锁的僵局就可以打破了。 </p>
+<h1 id="必须考虑传输效率"><a href="#必须考虑传输效率" class="headerlink" title="必须考虑传输效率"></a>必须考虑传输效率</h1><p>可以用不同的机制来控制 TCP 报文段的发送时机:</p>
+<ul>
+<li>第一种机制是 TCP 维持一个变量，它等于最大报文段长度 MSS。只要缓存中存放的数据达到 MSS 字节时，就组装成一个 TCP 报文段发送出去。</li>
+<li>第二种机制是由发送方的应用进程指明要求发送报文段，即 TCP 支持的推送操作。</li>
+<li>第三种机制是发送方的一个计时器期限到了，这时就把当前已有的缓存数据装入报文段（但长度不能超过 MSS）发送出去。</li>
+</ul>
+<p>如何控制 TCP 发送报文段的时机仍然是一个较为复杂的问题。</p>
+<h2 id="糊涂窗口综合症"><a href="#糊涂窗口综合症" class="headerlink" title="糊涂窗口综合症"></a>糊涂窗口综合症</h2><p>糊涂窗口综合症：每次仅发送一个字节或很少几个字节的数据时，有效数据传输效率变得很低的现象。</p>
+<img src="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/img2.png" class="">
+
+<h3 id="发送方糊涂窗口综合症"><a href="#发送方糊涂窗口综合症" class="headerlink" title="发送方糊涂窗口综合症"></a>发送方糊涂窗口综合症</h3><p>发送方 TCP 每次接收到一字节的数据后就发送。</p>
+<p>这样，发送一个字节需要形成 41 字节长的 IP 数据报。效率很低。</p>
+<p>解决方法：使用 Nagle 算法。</p>
+<h3 id="Nagle算法"><a href="#Nagle算法" class="headerlink" title="Nagle算法"></a>Nagle算法</h3><p>若发送应用进程把要发送的数据逐个字节地送到 TCP 的发送缓存，则发送方就把第一个数据字节先发送出去，把后面到达的数据字节都缓存起来。</p>
+<p>当发送方收到对第一个数据字符的确认后，再把发送缓存中的所有数据组装成一个报文段发送出去，同时继续对随后到达的数据进行缓存。</p>
+<p>只有在收到对前一个报文段的确认后才继续发送下一个报文段。</p>
+<p>当到达的数据已达到发送窗口大小的一半或已达到报文段的最大长度时，就立即发送一个报文段。</p>
+<h3 id="Nagle算法原理"><a href="#Nagle算法原理" class="headerlink" title="Nagle算法原理"></a>Nagle算法原理</h3><img src="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/img3.png" class="">
+
+<h3 id="接收方糊涂窗口综合症"><a href="#接收方糊涂窗口综合症" class="headerlink" title="接收方糊涂窗口综合症"></a>接收方糊涂窗口综合症</h3><p>当接收方的 TCP 缓冲区已满，接收方会向发送方发送窗口大小为 0 的报文。</p>
+<p>若此时接收方的应用进程以交互方式每次只读取一个字节，于是接收方又发送窗口大小为一个字节的更新报文，发送方应邀发送一个字节的数据（发送的 IP 数据报是 41 字节长），于是接收窗口又满了，如此循环往复。</p>
+<p>原因：接收方应用进程消耗数据太慢，例如：每次只读取一个字节。</p>
+<img src="/2020/10/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/img4.png" class="">
+
+<p>解决方法：让接收方等待一段时间，使得或者接收缓存已有足够空间容纳一个最长的报文段，或者等到接收缓存已有一半空闲的空间。只要出现这两种情况之一，接收方就发出确认报文，并向发送方通知当前的窗口大小。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/运输层——TCP的可靠传输" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/"
+    >运输层——TCP的可靠传输</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/" class="article-date">
+  <time datetime="2020-10-14T08:11:53.000Z" itemprop="datePublished">2020-10-14</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="可靠传输的工作原理"><a href="#可靠传输的工作原理" class="headerlink" title="可靠传输的工作原理"></a>可靠传输的工作原理</h1><p>IP 网络所提供的是不可靠的传输。因此，TCP 必须采用适当的措施才能使得两个运输层之间的通信变得可靠。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img1.png" class="">
+
+<p>理想的传输条件有以下两个特点：</p>
+<ul>
+<li>传输信道不产生差错。</li>
+<li>不管发送方以多快的速度发送数据，接收方总是来得及处理收到的数据。</li>
+</ul>
+<p>在这样的理想传输条件下，不需要采取任何措施就能够实现可靠传输。</p>
+<p>然而实际的网络都不具备以上两个理想条件。必须使用一些可靠传输协议，在不可靠的传输信道实现可靠传输。</p>
+<h2 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h2><p>“停止等待”就是每发送完一个分组就停止发送，等待对方的确认。在收到确认后再发送下一个分组。</p>
+<p>全双工通信的双方既是发送方也是接收方。为了方便，仅考虑 A 发送数据，而 B 接收数据并发送确认。因此 A 叫做发送方，而 B 叫做接收方。</p>
+<h3 id="1-无差错情况"><a href="#1-无差错情况" class="headerlink" title="1.无差错情况"></a>1.无差错情况</h3><img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img2.png" class="">
+
+<p>A 发送分组 M<sub>1</sub>，发完就暂停发送，等待 B 的确认。B 收到了 M<sub>1</sub> 向 A 发送  ACK。A 在收到了对 M<sub>1</sub> 的确认后，就再发送下一个分组 M<sub>2</sub>。</p>
+<h3 id="2-出现差错"><a href="#2-出现差错" class="headerlink" title="2.出现差错"></a>2.出现差错</h3><p>在接收方 B 会出现两种情况：</p>
+<ul>
+<li>B 接收 M<sub>1</sub> 时检测出了差错，就丢弃 M<sub>1</sub>，其他什么也不做（不通知 A 收到有差错的分组）。</li>
+<li>M<sub>1</sub> 在传输过程中丢失了，这时 B 当然什么都不知道，也什么都不做。</li>
+</ul>
+<p>在这两种情况下，B 都不会发送任何信息。但 A 都必须重发分组，直到 B 正确接收为止，这样才能实现可靠通信。</p>
+<p>问题：A如何知道 B 是否正确收到了 M<sub>1</sub> 呢?</p>
+<p>解决方法：超时重传</p>
+<ul>
+<li>A 为每一个已发送的分组都设置了一个超时计时器。</li>
+<li>A 只要在超时计时器到期之前收到了相应的确认，就撤销该超时计时器，继续发送下一个分组 M<sub>2</sub>。</li>
+<li>若A在超时计时器规定时间内没有收到B的确认，就认为分组错误或丢失，就重发该分组。</li>
+</ul>
+<p>问题：若分组正确到达B，但B回送的确认丢失或延迟了，A未收到B的确认，会超时重发。B 可能会收到重复的 M<sub>1</sub>。B如何知道收到了重复的分组，需要丢弃呢?</p>
+<p>解决方法：编号</p>
+<ul>
+<li>A为每一个发送的分组都进行编号。若B收到了编号相同的分组，则认为收到了重复分组，丢弃重复的分组，并回送确认。</li>
+<li>B为发送的确认也进行编号，指示该确认是对哪一个分组的确认。</li>
+<li>A根据确认及其编号，可以确定它是对哪一个分组的确认，避免重发发送。若为重复的确认，则将其丢弃。</li>
+</ul>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img3.png" class="">
+
+<h3 id="3-确认丢失和确认迟到"><a href="#3-确认丢失和确认迟到" class="headerlink" title="3. 确认丢失和确认迟到"></a>3. 确认丢失和确认迟到</h3><h4 id="确认丢失"><a href="#确认丢失" class="headerlink" title="确认丢失"></a>确认丢失</h4><p>若 B 所发送的对 M<sub>1</sub> 的确认丢失了，那么 A 在设定的超时重传时间内不能收到确认，但 A 并无法知道：是自己发送的分组出错、丢失了，或者是 B 发送的确认丢失了。因此 A 在超时计时器到期后就要重传 M<sub>1</sub>。</p>
+<p>假定 B 又收到了重传的分组 M<sub>1</sub>。这时 B 应采取两个行动：</p>
+<ul>
+<li>第一，丢弃这个重复的分组 M<sub>1</sub>，不向上层交付。</li>
+<li>第二，向 A 发送确认。不能认为已经发送过确认就不再发送，因为 A 之所以重传 M<sub>1</sub> 就表示 A 没有收到对 M<sub>1</sub> 的确认。</li>
+</ul>
+<h4 id="确认迟到"><a href="#确认迟到" class="headerlink" title="确认迟到"></a>确认迟到</h4><p>传输过程中没有出现差错，但 B 对分组 M<sub>1</sub> 的确认迟到了。</p>
+<p>A 会收到重复的确认。对重复的确认的处理很简单：收下后就丢弃。</p>
+<p>B 仍然会收到重复的 M<sub>1</sub>，并且同样要丢弃重复的 M<sub>1</sub>，并重传确认分组。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img4.png" class="">
+
+<h3 id="请注意"><a href="#请注意" class="headerlink" title="请注意"></a>请注意</h3><p>在发送完一个分组后，必须暂时保留已发送的分组的副本，以备重发。</p>
+<p>分组和确认分组都必须进行编号。</p>
+<p>超时计时器的重传时间应当比数据在分组传输的平均往返时间更长一些。 </p>
+<p>通常 A 最终总是可以收到对所有发出的分组的确认。如果 A 不断重传分组但总是收不到确认，就说明通信线路太差，不能进行通信。</p>
+<p>使用上述的确认和重传机制，我们就可以在不可靠的传输网络上实现可靠的通信。</p>
+<p>像上述的这种可靠传输协议常称为自动重传请求 ARQ(<code>Automatic Repeat reQuest</code>)。意思是重传的请求是自动进行的，接收方不需要请求发送方重传某个出错的分组。</p>
+<h3 id="4-信道利用率"><a href="#4-信道利用率" class="headerlink" title="4. 信道利用率"></a>4. 信道利用率</h3><p>停止等待协议的优点是简单，缺点是信道利用率太低。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img5.png" class="">
+
+<p>假定 A 发送分组需要的时间是 T<sub>D</sub>。T<sub>D</sub> 等于分组长度除以数据率。分组正确到达 B 后，B 处理分组的时间忽略不计，同时立即发送确认。假定 B 发送确认分组需要时间 T<sub>A</sub>。如果 A 处理确认分组的时间忽略不计，那么 A 在经过时间 T<sub>D</sub> + RTT + T<sub>A</sub> 后就可以再发送下一个分组，这里的 RTT 是往返时间。</p>
+<p>可以看出，当往返时间 RTT 远大于分组发送时间 TD 时，信道的利用率就会非常低。</p>
+<p>若出现重传，则对传送有用的数据信息来说，信道的利用率就还要降低。</p>
+<p>为了提高传输效率，发送方可以不使用低效率的停止等待协议，而是采用流水线传输。</p>
+<p>流水线传输就是发送方可连续发送多个分组，不必每发完一个分组就停顿下来等待对方的确认。这样可使信道上一直有数据不间断地传送。</p>
+<p>由于信道上一直有数据不间断地传送，这种传输方式可获得很高的信道利用率。 </p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img6.png" class="">
+
+<p>停止等待协议要点：</p>
+<ul>
+<li>停止等待。发送方每次只发送一个分组。在收到确认后再发送下一个分组。</li>
+<li>编号。对发送的每个分组和确认都进行编号。</li>
+<li>自动重传请求。发送方为每个发送的分组设置一个超时计时器。若超时计时器超时，发送方会自动重传分组。</li>
+<li>简单，但信道利用率太低。</li>
+</ul>
+<h2 id="连续-ARQ-协议"><a href="#连续-ARQ-协议" class="headerlink" title="连续 ARQ 协议"></a>连续 ARQ 协议</h2><p>基本思想：</p>
+<ul>
+<li>发送方一次可以发出多个分组。</li>
+<li>使用滑动窗口协议控制发送方和接收方所能发送和接收的分组的数量和编号。</li>
+<li>每收到一个确认，发送方就把发送窗口向前滑动一个分组的位置。</li>
+<li>接收方一般采用累积确认的方式。</li>
+<li>采用回退N（Go-Back-N）方法进行重传。</li>
+</ul>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img7.png" class="">
+
+<p>发送方维持的发送窗口，它的意义是：位于发送窗口内的分组都可连续发送出去，而不需要等待对方的确认。这样，信道利用率就提高了。</p>
+<h3 id="累积确认"><a href="#累积确认" class="headerlink" title="累积确认"></a>累积确认</h3><p>接收方一般采用累积确认的方式。即不必对收到的分组逐个发送确认，而是对按序到达的最后一个分组发送确认，这样就表示：到这个分组为止的所有分组都已正确收到了。</p>
+<p>优点：容易实现，即使确认丢失也不必重传。</p>
+<p>缺点：不能向发送方反映出接收方已经正确收到的所有分组的信息。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img9.png" class="">
+
+<h3 id="滑动窗口协议"><a href="#滑动窗口协议" class="headerlink" title="滑动窗口协议"></a>滑动窗口协议</h3><img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img10-1.png" class="">
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img10-2.png" class="">
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img10-3.png" class="">
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img10-4.png" class="">
+
+<h3 id="Go-back-N（回退-N）"><a href="#Go-back-N（回退-N）" class="headerlink" title="Go-back-N（回退 N）"></a>Go-back-N（回退 N）</h3><p>如果发送方发送了前 5 个分组，而中间的第 3 个分组丢失了。这时接收方只能对前两个分组发出确认。发送方无法知道后面三个分组的下落，而只好把后面的三个分组都再重传一次。这就叫做 Go-back-N（回退 N），表示需要再退回来重传已发送过的 N 个分组。</p>
+<p>可见当通信线路质量不好时，连续 ARQ 协议会带来负面的影响。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img10.png" class="">
+
+<h3 id="连续-ARQ-协议与停止等待协议"><a href="#连续-ARQ-协议与停止等待协议" class="headerlink" title="连续 ARQ 协议与停止等待协议"></a>连续 ARQ 协议与停止等待协议</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">连续ARQ协议</th>
+<th align="center">停止等待协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">发送的分组数量</td>
+<td align="center">一次发送多个分组</td>
+<td align="center">一次发送一个分组</td>
+</tr>
+<tr>
+<td align="center">传输控制</td>
+<td align="center">滑动窗口协议</td>
+<td align="center">停等-等待</td>
+</tr>
+<tr>
+<td align="center">确认</td>
+<td align="center">单独确认 + 累积确认</td>
+<td align="center">单独确认</td>
+</tr>
+<tr>
+<td align="center">超时定时器</td>
+<td align="center">每个发送的分组</td>
+<td align="center">每个发送的分组</td>
+</tr>
+<tr>
+<td align="center">编号</td>
+<td align="center">每个发送的分组</td>
+<td align="center">每个发送的分组</td>
+</tr>
+<tr>
+<td align="center">重传</td>
+<td align="center">回退N，多个分组</td>
+<td align="center">一个分组</td>
+</tr>
+</tbody></table>
+<h1 id="TCP-可靠传输的实现"><a href="#TCP-可靠传输的实现" class="headerlink" title="TCP 可靠传输的实现"></a>TCP 可靠传输的实现</h1><h2 id="以字节为单位的滑动窗口"><a href="#以字节为单位的滑动窗口" class="headerlink" title="以字节为单位的滑动窗口"></a>以字节为单位的滑动窗口</h2><p>TCP 使用流水线传输和滑动窗口协议实现高效、可靠的传输。</p>
+<p>TCP 的滑动窗口是以字节为单位的。</p>
+<p>发送方 A 和接收方 B 分别维持一个发送窗口和一个接收窗口。</p>
+<p>发送窗口表示：在没有收到确认的情况下，可以连续把窗口内的数据全部发送出去。</p>
+<p>接收窗口表示：只允许接收落入窗口内的数据。</p>
+<p>根据 B 给出的窗口值，A 构造出自己的发送窗口。</p>
+<p>发送窗口里面的序号表示允许发送的序号。</p>
+<p>显然，窗口越大，发送方就可以在收到对方确认之前连续发送更多的数据，因而可能获得更高的传输效率。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img11.png" class="">
+
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img12.png" class="">
+
+<p>上图中，B 收到了序号为 32 和 33 的数据。这些数据没有按序到达，因为序号 31 的数据没有收到（也许丢失，也许滞留）。因此 B 发送的确认报文段中的确认号仍为 31。</p>
+<p>现在假定 B 收到了序号为 31 的数据，并把序号 31~33 的数据交付主机，然后 B 删除这些数据。接着把窗口向前移动 3 个序号，同时给 A 发送确认，其中窗口值仍为 20，但确认号是 34。这表明 B 已经收到了到序号 33 为止的数据。B 还收到了 序号为 37，38 和 40 的数据，但这些都没有按序到达，只能暂存在接收窗口中。如下图。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img13.png" class="">
+
+<p>A 收到 B 的确认后，就可以把发送窗口向前滑动 3 个序号，但指针 P<sub>2</sub> 不动。可以看出，现在 A 的可用窗口增大了，可发送范围是42~53。如下图。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img14.png" class="">
+
+<p>A 在继续发送完序号 42~53 的数据后，指针 P<sub>2</sub> 向前移动和 P <sub>3</sub> 重合，发送窗口内的序号都已用完，但还没有再收到确认。由于 A 的发送窗口已满，可用窗口已减小到 0，因此必须停止发送。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img15.png" class="">
+
+<p>如果 A 收到确认号落在发送窗口内，那么 A 就可以使发送窗口继续向前滑动，并发送新的数据。</p>
+<h3 id="发送缓存与接收缓存的作用"><a href="#发送缓存与接收缓存的作用" class="headerlink" title="发送缓存与接收缓存的作用"></a>发送缓存与接收缓存的作用</h3><p>发送缓存用来暂时存放：</p>
+<ul>
+<li>发送应用程序传送给发送方 TCP 准备发送的数据；</li>
+<li>TCP 已发送出但尚未收到确认的数据。</li>
+</ul>
+<p>接收缓存用来暂时存放：</p>
+<ul>
+<li>按序到达的、但尚未被接收应用程序读取的数据；</li>
+<li>不按序到达的数据。</li>
+</ul>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img16.png" class="">
+
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img17.png" class="">
+
+<p>需要强调三点：</p>
+<ol>
+<li>A 的发送窗口并不总是和 B 的接收窗口一样大（因为有一定的时间滞后）。</li>
+<li>TCP 标准没有规定对不按序到达的数据应如何处理。通常是先临时存放在接收窗口中，等到字节流中所缺少的字节收到后，再按序交付上层的应用进程。</li>
+<li>TCP 要求接收方必须有累积确认的功能，这样可以减小传输开销。 </li>
+</ol>
+<p>接收方可以在合适的时候发送确认，也可以在自己有数据要发送时把确认信息顺便捎带上。</p>
+<p>但请注意两点：</p>
+<ol>
+<li>接收方不应过分推迟发送确认，否则会导致发送方不必要的重传，这反而浪费了网络的资源。</li>
+<li>捎带确认实际上并不经常发生，因为大多数应用程序很少同时在两个方向上发送数据。</li>
+</ol>
+<h2 id="超时重传时间的选择"><a href="#超时重传时间的选择" class="headerlink" title="超时重传时间的选择"></a>超时重传时间的选择</h2><p>重传机制是 TCP 中最重要和最复杂的问题之一。</p>
+<p>TCP 每发送一个报文段，就对这个报文段设置一次计时器。只要计时器设置的重传时间到但还没有收到确认，就要重传这一报文段。</p>
+<p>重传时间的选择是 TCP 最复杂的问题之一。</p>
+<p>由于 TCP 的下层是一个互联网环境，IP 数据报所选择的路由变化很大。因而运输层的往返时间(RTT)的方差也很大。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img18.png" class="">
+
+<h3 id="TCP-超时重传时间设置"><a href="#TCP-超时重传时间设置" class="headerlink" title="TCP 超时重传时间设置"></a>TCP 超时重传时间设置</h3><p>如果把超时重传时间设置得太短，就会引起很多报文段的不必要的重传，使网络负荷增大。</p>
+<p>但若把超时重传时间设置得过长，则又使网络的空闲时间增大，降低了传输效率。</p>
+<p>TCP 采用了一种自适应算法，它记录一个报文段发出的时间，以及收到相应的确认的时间。这两个时间之差就是报文段的往返时间 RTT。</p>
+<h3 id="加权平均往返时间"><a href="#加权平均往返时间" class="headerlink" title="加权平均往返时间"></a>加权平均往返时间</h3><p>TCP保留了RTT的一个加权平均往返时间RTTS（这又称为平滑的往返时间）。</p>
+<p>第一次测量到 RTT 样本时，RTTS 值就取为所测量到的 RTT 样本值。以后每测量到一个新的 RTT 样本，就按下式重新计算一次 RTT<sub>S</sub>：</p>
+<p>新的RTT<sub>S</sub> = (1 - α) * (旧的RTT<sub>S</sub>) + α * (新的RTT样本)</p>
+<p>式中，<code>0 ≤ α &lt; 1</code>。若<code>α</code>很接近于零，表示 RTT 值更新较慢。若选择<code>α</code>接近于 1，则表示 RTT 值更新较快。</p>
+<p>RFC 6298 推荐的 α 值为 1/8，即 0.125。 </p>
+<h3 id="超时重传时间-RTO"><a href="#超时重传时间-RTO" class="headerlink" title="超时重传时间 RTO"></a>超时重传时间 RTO</h3><p>RTO(<code>Retransmission Time-Out</code>) 应略大于上面得出的加权平均往返时间 RTT<sub>S</sub>。</p>
+<p>RFC 6298 建议使用下式计算 RTO：</p>
+<p>RTO = RTT<sub>S</sub> + 4 * RTT<sub>D</sub>             </p>
+<p>RTT<sub>D</sub> 是 RTT 的偏差的加权平均值。</p>
+<p>RFC 6298 建议这样计算RTT<sub>D</sub>。第一次测量时， RTT<sub>D</sub> 值取为测量到的 RTT 样本值的一半。在以后的测量中，则使用下式计算加权平均的 RTT<sub>D</sub>：</p>
+<p>新的 RTT<sub>D</sub> = (1 - β) * (旧的RTT<sub>D</sub>) + β | RTT<sub>S</sub> - 新的 RTT 样本 |</p>
+<p><code>β</code>是个小于 1 的系数，其推荐值是 1/4，即 0.25。</p>
+<h3 id="往返时间-RTT-的测量相当复杂"><a href="#往返时间-RTT-的测量相当复杂" class="headerlink" title="往返时间 (RTT) 的测量相当复杂"></a>往返时间 (RTT) 的测量相当复杂</h3><p>TCP 报文段 1 没有收到确认。重传（即报文段 2）后，收到了确认报文段 ACK。</p>
+<p>如何判定此确认报文段是对原来的报文段 1 的确认，还是对重传的报文段 2 的确认？ </p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img19.png" class="">
+
+<h3 id="Karn-算法"><a href="#Karn-算法" class="headerlink" title="Karn 算法"></a>Karn 算法</h3><p>在计算平均往返时间 RTT 时，只要报文段重传了，就不采用其往返时间样本。</p>
+<p>这样得出的加权平均平均往返时间 RTTS 和超时重传时间 RTO 就较准确。</p>
+<p>但是，这又引起新的问题。当报文段的时延突然增大了很多时，在原来得出的重传时间内，不会收到确认报文段。于是就重传报文段。但根据 Karn 算法，不考虑重传的报文段的往返时间样本。这样，超时重传时间就无法更新。</p>
+<h3 id="修正的-Karn-算法"><a href="#修正的-Karn-算法" class="headerlink" title="修正的 Karn 算法"></a>修正的 Karn 算法</h3><p>报文段每重传一次，就把 RTO 增大一些：</p>
+<p>新的 RTO = γ * (旧的 RTO)  </p>
+<p>系数<code>γ</code>的典型值是 2。</p>
+<p>当不再发生报文段的重传时，才根据报文段的往返时延更新平均往返时延 RTT 和超时重传时间 RTO 的数值。</p>
+<p>实践证明，这种策略较为合理。 </p>
+<h2 id="选择确认-SACK"><a href="#选择确认-SACK" class="headerlink" title="选择确认 SACK"></a>选择确认 SACK</h2><p>问题：若收到的报文段无差错，只是未按序号，中间还缺少一些序号的数据，那么能否设法只传送缺少的数据而不重传已经正确到达接收方的数据?</p>
+<p>答案是可以的。选择确认 SACK(<code>Selective ACK</code>) 就是一种可行的处理方法。</p>
+<h3 id="接收到的字节流序号不连续"><a href="#接收到的字节流序号不连续" class="headerlink" title="接收到的字节流序号不连续"></a>接收到的字节流序号不连续</h3><p>TCP 的接收方在接收对方发送过来的数据字节流的序号不连续，结果就形成了一些不连续的字节块。</p>
+<img src="/2020/10/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/img20.png" class="">
+
+<p>和前后字节不连续的每一个字节块都有两个边界：边界和右边界。</p>
+<p>第一个字节块的左边界<code>L1 = 1501</code>，但右边界<code>R1 = 3001</code>。左边界指出字节块的第一个字节的序号，但右边界减 1 才是字节块中的最后一个序号。</p>
+<p>第二个字节块的左边界<code>L2 = 3501</code>，而右边界<code>R2 = 4501</code>。 </p>
+<h3 id="RFC-2018-的规定"><a href="#RFC-2018-的规定" class="headerlink" title="RFC 2018 的规定"></a>RFC 2018 的规定</h3><p>如果要使用选择确认，那么在建立 TCP 连接时，就要在 TCP 首部的选项中加上“允许 SACK”的选项，而双方必须都事先商定好。</p>
+<p>如果使用选择确认，那么原来首部中的“确认号字段”的用法仍然不变。只是以后在 TCP 报文段的首部中都增加了 SACK 选项，以便报告收到的不连续的字节块的边界。</p>
+<p>由于首部选项的长度最多只有 40 字节，而指明一个边界就要用掉 4 字节，因此在选项中最多只能指明 4 个字节块的边界信息。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-计算机网络/运输层——TCP和UDP" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1040,103 +1452,6 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-计算机网络/应用层——P2P应用" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/"
-    >计算机网络/应用层——P2P应用</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/" class="article-date">
-  <time datetime="2020-09-28T08:11:05.973Z" itemprop="datePublished">2020-09-28</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>P2P应用就是指具有 P2P 体系结构的网络应用。所谓 P2P 体系结构就是在这样的网络应用中，没有或只有极少数的固定服务器，而绝大多数的交互都是使用对等方式（P2P方式）进行的。</p>
-<p>在 P2P 工作方式下，所有的音频/视频文件都是在普通的互联网用户之间传输。这种工作方式解决了集中式媒体服务器可能出现的瓶颈问题。</p>
-<p>在互联网流量中，P2P 工作方式下的文件分发已占据了最大的份额，比万维网应用所占的比例大得多。</p>
-<h1 id="具有集中目录服务器的-P2P-工作方式"><a href="#具有集中目录服务器的-P2P-工作方式" class="headerlink" title="具有集中目录服务器的 P2P 工作方式"></a>具有集中目录服务器的 P2P 工作方式</h1><p>Napster 最早使用 P2P 技术，提供免费下载 MP3 音乐。Napster 将所有音乐文件的索引信息都集中存放在 Napster 目录服务器中。使用者只要查找目录服务器，就可知道应从何处下载所要的MP3文件。用户要及时向 Napster 的目录服务器报告自己存有的音乐文件。</p>
-<p>Napster 的文件传输是分散的，文件的定位则是集中的。</p>
-<h2 id="Napster-的工作过程"><a href="#Napster-的工作过程" class="headerlink" title="Napster 的工作过程"></a>Napster 的工作过程</h2><img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img1.png" class="">
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img2.png" class="">
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img3.png" class="">
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img4.png" class="">
-
-<p>集中式目录服务器的缺点：可靠性差、会成为性能的瓶颈。</p>
-<h1 id="具有全分布式结构的-P2P-文件共享程序"><a href="#具有全分布式结构的-P2P-文件共享程序" class="headerlink" title="具有全分布式结构的 P2P 文件共享程序"></a>具有全分布式结构的 P2P 文件共享程序</h1><p>Gnutella 是第二代 P2P 文件共享程序，采用全分布方法定位内容的 P2P 文件共享应用程序。</p>
-<p>Gnutella 与 Napster 最大的区别是：不使用集中式的目录服务器，而是使用洪泛法在大量 Gnutella 用户之间进行查询。</p>
-<p>为了不使查询的通信量过大，Gnutella 设计了一种有限范围的洪泛查询，以减少倾注到互联网的查询流量，但也影响到查询定位的准确性。</p>
-<h2 id="使用-P2P-的比特洪流-BT"><a href="#使用-P2P-的比特洪流-BT" class="headerlink" title="使用 P2P 的比特洪流 BT"></a>使用 P2P 的比特洪流 BT</h2><h1 id="P2P-文件分发的分析"><a href="#P2P-文件分发的分析" class="headerlink" title="P2P 文件分发的分析"></a>P2P 文件分发的分析</h1><p>从互联网传送数据到主机，叫做下载(<code>download</code>)，从主机向互联网传送，则称为上传(<code>upload</code>)或上载。</p>
-<p>有 N 台主机从服务器下载一个大文件，其长度为<code>F bit</code>。假定主机与互联网连接的链路的上传速率和下载速率分别为 ui 和 di ，单位都是<code>bit/s</code>。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img9.png" class="">
-
-<h2 id="C-S-方式下分发的最短时间"><a href="#C-S-方式下分发的最短时间" class="headerlink" title="C/S 方式下分发的最短时间"></a>C/S 方式下分发的最短时间</h2><p>从服务器端考虑，所有主机分发完毕的最短时间 Tcs 不可能小于 NF/us ；<br>下载速率最慢的主机的下载速率为 dmin，则 Tcs 不可能小于 F/dmin  。<br>由此可得出所有主机都下载完文件 F 的最少时间是：<br>Tcs=max（ NF/us，F/dmin ）</p>
-<h2 id="P2P-方式下分发的最短时间"><a href="#P2P-方式下分发的最短时间" class="headerlink" title="P2P 方式下分发的最短时间"></a>P2P 方式下分发的最短时间</h2><p>初始服务器文件分发的最少时间不可能小于 F/us ；<br>下载文件分发的最少时间不可能小于 F/dmin ；<br>上载文件分发的最少时间不可能小于 NF/uT ，其中是 uT  是上传速率之和。<br>所有主机都下载完文件 F 的最少时间的下限是：<br>Tp2p &gt;= max（ F/us ， F/dmin， NF/uT  ）</p>
-<h2 id="时间比较"><a href="#时间比较" class="headerlink" title="时间比较"></a>时间比较</h2><p>设所有的对等方的上传速率都是 u，并且 F/u = 1 小时。<br>设服务器的上传速率 us = 10u。<br>当 N = 30 时，<br>P2P方式：最少时间的下限是 0.75 小时 &lt; 1 小时（不管 N 多大）。<br>客户−服务器方式：最少时间是 3 小时。</p>
-<h1 id="在-P2P-对等方中搜索对象"><a href="#在-P2P-对等方中搜索对象" class="headerlink" title="在 P2P 对等方中搜索对象"></a>在 P2P 对等方中搜索对象</h1><p>Napster在一个集中式目录服务器中构建的查找数据库虽然很简单，但性能上却有瓶颈。</p>
-<p>Gnutella是一种采用全分布方法定位内容的P2P文件共享应用程序，它解决了集中式目录服务器所造成的瓶颈问题。然而Gnutella是在非结构化的覆盖网络中采用查询洪泛的方法来进行查找的，因此查找的效率较低。</p>
-<p>现在广泛使用的索引和查找技术叫做分布式散列表 DHT(<code>Distributed Hash Table</code>)。DHT 也可译为分布式哈希表，它是由大量对等方共同维护的散列表。</p>
-<p>分布式散列表 DHT 利用散列函数，把资源名 K 及其存放的结点 IP 地址 N 都分别映射为资源名标识符 KID 和结点标识符 NID。</p>
-<p>Chord 把结点按标识符数值从小到大沿顺时针排列成一个环形覆盖网络。</p>
-<h2 id="基于-DHT-的-Chord-环"><a href="#基于-DHT-的-Chord-环" class="headerlink" title="基于 DHT 的 Chord 环"></a>基于 DHT 的 Chord 环</h2><p>每个资源由 Chord 环上与其标识符值最接近的下一个结点提供服务。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img7.png" class="">
-
-<p>为了加速查找，在 Chord 环上可以增加一些指针表，它又称为路由表或查找器表。</p>
-<p>对于结点<code>N4</code>， 第 1 列第<code>i</code>行计算<code>N4 + 2i – 1</code>，得出后继结点。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94P2P%E5%BA%94%E7%94%A8/img8.png" class="">
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
     <article id="post-计算机网络/网络安全——互联网使用的安全协议" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1588,104 +1903,6 @@ var _hmt = _hmt || [];
 <h3 id="通过总线"><a href="#通过总线" class="headerlink" title="通过总线"></a>通过总线</h3><p>(1) 数据报从输入端口通过共享的总线直接传送到合适的输出端口，而不需要路由选择处理机的干预。<br>(2) 因为每一个要转发的分组都要通过这一条总线，因此路由器的转发带宽就受总线速率的限制。<br>(3) 现代的技术已经可以将总线的带宽提高到每秒吉比特的速率，因此许多的路由器产品都采用这种通过总线的交换方式。</p>
 <h3 id="通过纵横交换结构-crossbar-switch-fabric"><a href="#通过纵横交换结构-crossbar-switch-fabric" class="headerlink" title="通过纵横交换结构(crossbar switch fabric)"></a>通过纵横交换结构(<code>crossbar switch fabric</code>)</h3><p>(1) 这种交换结构常称为互连网络(<code>interconnection network</code>)。<br>(2) 它有 2N 条总线，可以使 N 个输入端口和 N 个输出端口相连接。<br>(3) 当输入端口收到一个分组时，就将它发送到与该输入端口相连的水平总线上。<br>(4) 若通向所要转发的输出端口的垂直总线是空闲的，则在这个结点将垂直总线与水平总线接通，然后将该分组转发到这个输出端口。<br>(5) 但若该垂直总线已被占用（有另一个分组正在转发到同一个输出端口），则后到达的分组就被阻塞，必须在输入端口排队。</p>
 <img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img24.png" class="">
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/网络层——ICMP" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/"
-    >网络层——ICMP</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/" class="article-date">
-  <time datetime="2020-09-25T08:31:56.000Z" itemprop="datePublished">2020-09-25</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>为了更有效地转发 IP 数据报和提高交付成功的机会，在网际层使用了网际控制报文协议 ICMP(<code>Internet Control Message Protocol</code>)。</p>
-<p>ICMP 允许主机或路由器报告差错情况和提供有关异常情况的报告。</p>
-<p>ICMP 是互联网的标准协议。但 ICMP 不是高层协议（看起来好像是高层协议，因为 ICMP 报文是装在 IP 数据报中，作为其中的数据部分），而是 IP 层的协议。</p>
-<p>ICMP 报文作为 IP 层数据报的数据，加上数据报的首部，组成 IP 数据报发送出去。</p>
-<h1 id="ICMP-报文的格式"><a href="#ICMP-报文的格式" class="headerlink" title="ICMP 报文的格式"></a>ICMP 报文的格式</h1><img src="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/img1.png" class="">
-
-<h1 id="ICMP-报文的种类"><a href="#ICMP-报文的种类" class="headerlink" title="ICMP 报文的种类"></a>ICMP 报文的种类</h1><p>ICMP 报文的种类有两种，即 ICMP 差错报告报文和 ICMP 询问报文。</p>
-<p>ICMP 报文的前 4 个字节是统一的格式，共有三个字段：即类型、代码和检验和。接着的 4 个字节的内容与 ICMP 的类型有关。最后面是数据字段，其长度取决于 ICMP 的类型。</p>
-<p>ICMP 差错报告报文共有 4 种：终点不可达 、时间超过、参数问题、改变路由（重定向）。</p>
-<h2 id="ICMP-差错报告报文的数据字段的内容"><a href="#ICMP-差错报告报文的数据字段的内容" class="headerlink" title="ICMP 差错报告报文的数据字段的内容"></a>ICMP 差错报告报文的数据字段的内容</h2><p>所有的 ICMP 差错报告报文中的数据字段都具有同样的格式。把收到的需要进行差错报告的 IP 数据报的首部和数据字段的前8个字节提取出来，作为 ICMP 报文的数据字段。再加上相应的 ICMP 差错报告报文的前8个字节，就构成了 ICMP 差错报告报文。</p>
-<img src="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/img2.png" class="">
-
-<p>提取收到的数据报的数据字段前8个字节是为了得到运输层的端口号（对于 TCP 和 UDP）以及运输层报文的发送序号（对于 TCP）。这些信息对源点通知高层协议是有用的。</p>
-<p>整个 ICMP 报文作为 IP 数据报的数据字段发送给源点。</p>
-<h2 id="不应发送-ICMP-差错报告报文的几种情况"><a href="#不应发送-ICMP-差错报告报文的几种情况" class="headerlink" title="不应发送 ICMP 差错报告报文的几种情况"></a>不应发送 ICMP 差错报告报文的几种情况</h2><ul>
-<li>对 ICMP 差错报告报文不再发送 ICMP 差错报告报文。</li>
-<li>对第一个分片的数据报片的所有后续数据报片都不发送 ICMP 差错报告报文。</li>
-<li>对具有多播地址的数据报都不发送 ICMP 差错报告报文。</li>
-<li>对具有特殊地址（如<code>127.0.0.0</code>或<code>0.0.0.0</code>）的数据报不发送 ICMP 差错报告报文。</li>
-</ul>
-<p>ICMP 询问报文有两种：回送请求和回答报文、时间戳请求和回答报文。</p>
-<p>下面的几种 ICMP 报文不再使用：信息请求与回答报文、掩码地址请求和回答报文、路由器询问和通告报文 、源点抑制报文。</p>
-<h1 id="ICMP-的应用举例"><a href="#ICMP-的应用举例" class="headerlink" title="ICMP 的应用举例"></a>ICMP 的应用举例</h1><p>PING(<code>Packet InterNet Groper</code>) 用来测试两个主机之间的连通性。</p>
-<p>PING 使用了 ICMP 回送请求与回送回答报文。</p>
-<p>PING 是应用层直接使用网络层 ICMP 的例子，它没有通过运输层的 TCP 或UDP。 </p>
-<h1 id="Traceroute-的应用举例"><a href="#Traceroute-的应用举例" class="headerlink" title="Traceroute 的应用举例"></a>Traceroute 的应用举例</h1><p>在 Windows 操作系统中这个命令是<code>tracert</code>。用来跟踪一个分组从源点到终点的路径。它利用 IP 数据报中的 TTL 字段和 ICMP 时间超过差错报告报文实现对从源点到终点的路径的跟踪。</p>
-
       
       <!-- reward -->
       
