@@ -80,6 +80,782 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-SQL/SQL 检索数据" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/05/SQL/SQL%20%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE/"
+    >SQL 检索数据</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/05/SQL/SQL%20%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE/" class="article-date">
+  <time datetime="2020-02-05T07:15:09.000Z" itemprop="datePublished">2020-02-05</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SQL/">SQL</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p><code>SELECT</code>的作用是从一个表或多个表中检索出想要的数据行。</p>
+<h1 id="SELECT-查询的基础语法"><a href="#SELECT-查询的基础语法" class="headerlink" title="SELECT 查询的基础语法"></a>SELECT 查询的基础语法</h1><p><code>SELECT</code>可以帮助我们从一个表或多个表中进行数据查询。我们知道一个数据表是由列（字段名）和行（数据行）组成的，我们要返回满足条件的数据行，就需要在<code>SELECT</code>后面加上我们想要查询的列名，可以是一列，也可以是多个列。如果你不知道所有列名都有什么，也可以检索所有列。</p>
+<p>下面这个王者荣耀英雄数据表里一共有 69 个英雄，23 个属性值（不包括英雄名<code>name</code>）。SQL 文件见<a href="https://github.com/cystanford/sql_heros_data" target="_blank" rel="noopener">Github 地址</a>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+<th align="center">hp_growth</th>
+<th align="center">…</th>
+<th align="center">role_assist</th>
+<th align="center">birthdate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10000</td>
+<td align="center">夏侯淳</td>
+<td align="center">7350</td>
+<td align="center">288.8</td>
+<td align="center"></td>
+<td align="center">战士</td>
+<td align="center">2016-07-19</td>
+</tr>
+<tr>
+<td align="center">10001</td>
+<td align="center">钟无艳</td>
+<td align="center">7000</td>
+<td align="center">275</td>
+<td align="center"></td>
+<td align="center">坦克</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">张飞</td>
+<td align="center">8341</td>
+<td align="center">329</td>
+<td align="center"></td>
+<td align="center">辅助</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10068</td>
+<td align="center">百里守约</td>
+<td align="center">5611</td>
+<td align="center">185</td>
+<td align="center"></td>
+<td align="center">战士</td>
+<td align="center">2017-08-08</td>
+</tr>
+</tbody></table>
+<p>数据表中这 24 个字段（除了<code>id</code>以外），分别代表的含义见下图。</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">name <br> 英雄名称</td>
+<td align="center">hp_max <br> 最大生命</td>
+<td align="center">hp_growth <br> 生命成长</td>
+<td align="center">hp_start <br> 初始生命</td>
+</tr>
+<tr>
+<td align="center">mp_max <br> 最大法力</td>
+<td align="center">mp_growth <br> 法力成长</td>
+<td align="center">mp_start <br> 初始法力</td>
+<td align="center">attack_max <br> 最高物攻</td>
+</tr>
+<tr>
+<td align="center">attack_growth <br> 物攻成长</td>
+<td align="center">attack_start <br> 初始物攻</td>
+<td align="center">defense_max <br> 最大物防</td>
+<td align="center">defense_growth` <br> 物防成长</td>
+</tr>
+<tr>
+<td align="center">defense_start <br> 初始物防</td>
+<td align="center">hp_5s_max <br> 最大没5秒回血</td>
+<td align="center">hp_5s_growth <br> 每5秒回血成长</td>
+<td align="center">hp_5s_start <br> 初始每5秒回血</td>
+</tr>
+<tr>
+<td align="center">mp_5s_max <br> 最大每5秒回蓝</td>
+<td align="center">mp_5s_growth <br> 每5s回蓝成长</td>
+<td align="center">mp_5s_start <br> 初始每5秒回蓝</td>
+<td align="center">attack_range <br> 攻击范围</td>
+</tr>
+<tr>
+<td align="center">attack_speed_max <br> 最大攻速</td>
+<td align="center">role_main <br> 主要定位</td>
+<td align="center">role_assist <br> 次要定位</td>
+<td align="center">birthdate <br> 上线时间</td>
+</tr>
+</tbody></table>
+<h2 id="查询列"><a href="#查询列" class="headerlink" title="查询列"></a>查询列</h2><p>如果我们想要对数据表中的某一列进行检索，在<code>SELECT</code>后面加上这个列的字段名即可。比如我们想要检索数据表中都有哪些英雄。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span> <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<p>你可以看到这样就等于单独输出了<code>name</code>这一列。</p>
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">夏侯淳</td>
+</tr>
+<tr>
+<td align="center">钟无艳</td>
+</tr>
+<tr>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">百里守约</td>
+</tr>
+</tbody></table>
+<p>我们也可以对多个列进行检索，在列名之间用逗号 (,) 分割即可。比如我们想要检索有哪些英雄，他们的最大生命、最大法力、最大物攻和最大物防分别是多少。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max, mp_max, attack_max, defense_max <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<p>这个表中一共有 25 个字段，除了<code>id</code>和英雄名<code>name</code>以外，还存在 23 个属性值，如果我们记不住所有的字段名称，可以使用<code>SELECT *</code>帮我们检索出所有的列：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<p>我们在做数据探索的时候，<code>SELECT *</code>还是很有用的，这样我们就不需要写很长的<code>SELECT</code>语句了。但是在生产环境时要尽量避免使用<code>SELECT *</code>。</p>
+<h2 id="起别名"><a href="#起别名" class="headerlink" title="起别名"></a>起别名</h2><p>我们在使用<code>SELECT</code>查询的时候，还有一些技巧可以使用，比如你可以给列名起别名。我们在进行检索的时候，可以给英雄名、最大生命、最大法力、最大物攻和最大物防等取别名：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span> <span class="keyword">AS</span> n, hp_max <span class="keyword">AS</span> hm, mp_max <span class="keyword">AS</span> mm, attack_max <span class="keyword">AS</span> am, defense_max <span class="keyword">AS</span> dm <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<p>运行结果和上面多列检索的运行结果是一样的，只是将列名改成了<code>n、hm、mm、am</code>和<code>dm</code>。当然这里的列别名只是举例，一般来说起别名的作用是对原有名称进行简化，从而让 SQL 语句看起来更精简。同样我们也可以对表名称起别名，这个在多表连接查询的时候会用到。</p>
+<h2 id="查询常数"><a href="#查询常数" class="headerlink" title="查询常数"></a>查询常数</h2><p><code>SELECT</code>查询还可以对常数进行查询。就是在<code>SELECT</code>查询结果中增加一列固定的常数列。这列的取值是我们指定的，而不是从数据表中动态取出的。你可能会问为什么我们还要对常数进行查询呢？SQL 中的<code>SELECT</code>语法的确提供了这个功能，一般来说我们只从一个表中查询数据，通常不需要增加一个固定的常数列，但如果我们想整合不同的数据源，用常数列作为这个表的标记，就需要查询常数。</p>
+<p>比如说，我们想对<code>heros</code>数据表中的英雄名进行查询，同时增加一列字段<code>platform</code>，这个字段固定值为“王者荣耀”，可以这样写：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="string">'王者荣耀'</span> <span class="keyword">as</span> platform, <span class="keyword">name</span> <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center"><code>plantform</code></th>
+<th align="center"><code>name</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">王者荣耀</td>
+<td align="center">夏侯淳</td>
+</tr>
+<tr>
+<td align="center">王者荣耀</td>
+<td align="center">钟无艳</td>
+</tr>
+<tr>
+<td align="center">王者荣耀</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">王者荣耀</td>
+<td align="center">百里守约</td>
+</tr>
+</tbody></table>
+<p>在这个 SQL 语句中，我们虚构了一个<code>platform</code>字段，并且把它设置为固定值“王者荣耀”。</p>
+<p>需要说明的是，如果常数是个字符串，那么使用单引号（’’）就非常重要了，比如‘王者荣耀’。单引号说明引号中的字符串是个常数，否则 SQL 会把王者荣耀当成列名进行查询，但实际上数据表里没有这个列名，就会引起错误。如果常数是英文字母，比如<code>&#39;WZRY&#39;</code>也需要加引号。如果常数是个数字，就可以直接写数字，不需要单引号，比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="number">123</span> <span class="keyword">as</span> platform, <span class="keyword">name</span> <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<h2 id="去除重复行"><a href="#去除重复行" class="headerlink" title="去除重复行"></a>去除重复行</h2><p>关于单个表的<code>SELECT</code>查询，还有一个非常实用的操作，就是从结果中去掉重复的行。使用的关键字是<code>DISTINCT</code>。比如我们想要看下<code>heros</code>表中关于攻击范围的取值都有哪些：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> attack_range <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<p>这样我们就能直观地看到攻击范围其实只有两个值，那就是近战和远程。</p>
+<table>
+<thead>
+<tr>
+<th align="center"><code>attack_range</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">近战</td>
+</tr>
+<tr>
+<td align="center">远程</td>
+</tr>
+</tbody></table>
+<p>如果我们带上英雄名称，会是怎样呢：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> attack_range, <span class="keyword">name</span> <span class="keyword">FROM</span> heros</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center"><code>attack_range</code></th>
+<th align="center"><code>name</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">近战</td>
+<td align="center">夏侯淳</td>
+</tr>
+<tr>
+<td align="center">近战</td>
+<td align="center">钟无艳</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">远程</td>
+<td align="center">百里守约</td>
+</tr>
+</tbody></table>
+<p>这里有两点需要注意：<br><code>DISTINCT</code>需要放到所有列名的前面，如果写成<code>SELECT name, DISTINCT attack_range FROM heros</code>会报错。<br><code>DISTINCT</code>其实是对后面所有列名的组合进行去重，你能看到最后的结果是 69 条，因为这 69 个英雄名称不同，都有攻击范围（<code>attack_range</code>）这个属性值。如果你想要看都有哪些不同的攻击范围（<code>attack_range</code>），只需要写<code>DISTINCT attack_range</code>即可，后面不需要再加其他的列名了。</p>
+<h1 id="如何排序检索数据"><a href="#如何排序检索数据" class="headerlink" title="如何排序检索数据"></a>如何排序检索数据</h1><p>当我们检索数据的时候，有时候需要按照某种顺序进行结果的返回，比如我们想要查询所有的英雄，按照最大生命从高到底的顺序进行排列，就需要使用<code>ORDER BY</code>子句。使用<code>ORDER BY</code>子句有以下几个点需要掌握：</p>
+<ul>
+<li>排序的列名：<code>ORDER BY</code>后面可以有一个或多个列名，如果是多个列名进行排序，会按照后面第一个列先进行排序，当第一列的值相同的时候，再按照第二列进行排序，以此类推。</li>
+<li>排序的顺序：<code>ORDER BY</code>后面可以注明排序规则，<code>ASC</code>代表递增排序，<code>DESC</code>代表递减排序。如果没有注明排序规则，默认情况下是按照<code>ASC</code>递增排序。我们很容易理解<code>ORDER BY</code>对数值类型字段的排序规则，但如果排序字段类型为文本数据，就需要参考数据库的设置方式了，这样才能判断<code>A</code>是在<code>B</code>之前，还是在<code>B</code>之后。比如使用 MySQL 在创建字段的时候设置为<code>BINARY</code>属性，就代表区分大小写。</li>
+<li>非选择列排序：<code>ORDER BY</code>可以使用非选择列进行排序，所以即使在<code>SELECT</code>后面没有这个列名，你同样可以放到<code>ORDER BY</code>后面进行排序。</li>
+<li><code>ORDER BY</code>的位置：<code>ORDER BY</code>通常位于<code>SELECT</code>语句的最后一条子句，否则会报错。</li>
+</ul>
+<p>在了解了<code>ORDER BY</code>的使用语法之后，我们来看下如何对<code>heros</code>数据表进行排序。</p>
+<p>假设我们想要显示英雄名称及最大生命值，按照最大生命值从高到低的方式进行排序：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">ORDER</span> <span class="keyword">BY</span> hp_max <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center"><code>name</code></th>
+<th align="center"><code>hp_max</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">廉颇</td>
+<td align="center">9328</td>
+</tr>
+<tr>
+<td align="center">白起</td>
+<td align="center">8638</td>
+</tr>
+<tr>
+<td align="center">程咬金</td>
+<td align="center">8611</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">武则天</td>
+<td align="center">5037</td>
+</tr>
+</tbody></table>
+<p>如果想要显示英雄名称及最大生命值，按照第一排序最大法力从低到高，当最大法力值相等的时候则按照第二排序进行，即最大生命值从高到低的方式进行排序：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">ORDER</span> <span class="keyword">BY</span> mp_max, hp_max <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center"><code>name</code></th>
+<th align="center"><code>hp_max</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">程咬金</td>
+<td align="center">8611</td>
+</tr>
+<tr>
+<td align="center">亚瑟</td>
+<td align="center">8050</td>
+</tr>
+<tr>
+<td align="center">曹操</td>
+<td align="center">7473</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">妲己</td>
+<td align="center">5824</td>
+</tr>
+</tbody></table>
+<h1 id="约束返回结果的数量"><a href="#约束返回结果的数量" class="headerlink" title="约束返回结果的数量"></a>约束返回结果的数量</h1><p>另外在查询过程中，我们可以约束返回结果的数量，使用<code>LIMIT</code>关键字。比如我们想返回英雄名称及最大生命值，按照最大生命值从高到低排序，返回 5 条记录即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">ORDER</span> <span class="keyword">BY</span> hp_max <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center"><code>name</code></th>
+<th align="center"><code>hp_max</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">廉颇</td>
+<td align="center">9328</td>
+</tr>
+<tr>
+<td align="center">白起</td>
+<td align="center">8638</td>
+</tr>
+<tr>
+<td align="center">程咬金</td>
+<td align="center">8611</td>
+</tr>
+<tr>
+<td align="center">刘婵</td>
+<td align="center">8581</td>
+</tr>
+<tr>
+<td align="center">牛魔</td>
+<td align="center">8476</td>
+</tr>
+</tbody></table>
+<p>有一点需要注意，约束返回结果的数量，在不同的 DBMS 中使用的关键字可能不同。在 MySQL、PostgreSQL、MariaDB 和 SQLite 中使用<code>LIMIT</code>关键字，而且需要放到<code>SELECT</code>语句的最后面。如果是 SQL Server 和 Access，需要使用<code>TOP</code>关键字，比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> TOP <span class="number">5</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">ORDER</span> <span class="keyword">BY</span> hp_max <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>如果是 DB2，使用<code>FETCH FIRST 5 ROWS ONLY</code>这样的关键字：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">ORDER</span> <span class="keyword">BY</span> hp_max <span class="keyword">DESC</span> <span class="keyword">FETCH</span> <span class="keyword">FIRST</span> <span class="number">5</span> <span class="keyword">ROWS</span> <span class="keyword">ONLY</span></span><br></pre></td></tr></table></figure>
+<p>如果是 Oracle，你需要基于<code>ROWNUM</code>来统计行数：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL：<span class="keyword">SELECT</span> <span class="keyword">name</span>, hp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> <span class="keyword">ROWNUM</span> &lt;=<span class="number">5</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> hp_max <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>需要说明的是，这条语句是先取出来前 5 条数据行，然后再按照<code>hp_max</code>从高到低的顺序进行排序。但这样产生的结果和上述方法的并不一样。可以使用<code>SELECT name, hp_max FROM (SELECT name, hp_max FROM heros ORDER BY hp_max) WHERE ROWNUM &lt;=5</code>得到与上述方法一致的结果。</p>
+<p>约束返回结果的数量可以减少数据表的网络传输量，也可以提升查询效率。如果我们知道返回结果只有 1 条，就可以使用<code>LIMIT 1</code>，告诉<code>SELECT</code>语句只需要返回一条记录即可。这样的好处就是<code>SELECT</code>不需要扫描完整的表，只需要检索到一条符合条件的记录即可返回。</p>
+<h1 id="SELECT-的执行顺序"><a href="#SELECT-的执行顺序" class="headerlink" title="SELECT 的执行顺序"></a>SELECT 的执行顺序</h1><p>查询是<code>RDBMS</code>中最频繁的操作。我们在理解<code>SELECT</code>语法的时候，还需要了解<code>SELECT</code>执行时的底层原理。只有这样，才能让我们对 SQL 有更深刻的认识。</p>
+<p>其中你需要记住<code>SELECT</code>查询时的两个顺序：</p>
+<h2 id="1-关键字的顺序是不能颠倒的："><a href="#1-关键字的顺序是不能颠倒的：" class="headerlink" title="1. 关键字的顺序是不能颠倒的："></a>1. 关键字的顺序是不能颠倒的：</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> ... <span class="keyword">WHERE</span> ... <span class="keyword">GROUP</span> <span class="keyword">BY</span> ... <span class="keyword">HAVING</span> ... <span class="keyword">ORDER</span> <span class="keyword">BY</span> ...</span><br></pre></td></tr></table></figure>
+<h2 id="2-SELECT-语句的执行顺序（在-MySQL-和-Oracle-中，SELECT-执行顺序基本相同）："><a href="#2-SELECT-语句的执行顺序（在-MySQL-和-Oracle-中，SELECT-执行顺序基本相同）：" class="headerlink" title="2.SELECT 语句的执行顺序（在 MySQL 和 Oracle 中，SELECT 执行顺序基本相同）："></a>2.SELECT 语句的执行顺序（在 MySQL 和 Oracle 中，SELECT 执行顺序基本相同）：</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &gt; WHERE &gt; GROUP BY &gt; HAVING &gt; SELECT 的字段 &gt; DISTINCT &gt; ORDER BY &gt; LIMIT</span><br></pre></td></tr></table></figure>
+<p>比如你写了一个 SQL 语句，那么它的关键字顺序和执行顺序是下面这样的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> player_id, player_name, <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">num</span> <span class="comment"># 顺序 5</span></span><br><span class="line"><span class="keyword">FROM</span> player <span class="keyword">JOIN</span> team <span class="keyword">ON</span> player.team_id = team.team_id <span class="comment"># 顺序 1</span></span><br><span class="line"><span class="keyword">WHERE</span> height &gt; <span class="number">1.80</span> <span class="comment"># 顺序 2</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> player.team_id <span class="comment"># 顺序 3</span></span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">num</span> &gt; <span class="number">2</span> <span class="comment"># 顺序 4</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">num</span> <span class="keyword">DESC</span> <span class="comment"># 顺序 6</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">2</span> <span class="comment"># 顺序 7</span></span><br></pre></td></tr></table></figure>
+<p>在<code>SELECT</code>语句执行这些步骤的时候，每个步骤都会产生一个虚拟表，然后将这个虚拟表传入下一个步骤中作为输入。需要注意的是，这些步骤隐含在 SQL 的执行过程中，对于我们来说是不可见的。</p>
+<p>SQL 的执行原理。</p>
+<p>首先，你可以注意到，<code>SELECT</code>是先执行<code>FROM</code>这一步的。在这个阶段，如果是多张表联查，还会经历下面的几个步骤：</p>
+<ol>
+<li>首先先通过<code>CROSS JOIN</code>求笛卡尔积，相当于得到虚拟表<code>vt（virtual table）1-1</code>；</li>
+<li>通过<code>ON</code>进行筛选，在虚拟表<code>vt1-1</code>的基础上进行筛选，得到虚拟表<code>vt1-2</code>；</li>
+<li>添加外部行。如果我们使用的是左连接、右链接或者全连接，就会涉及到外部行，也就是在虚拟表<code>vt1-2</code>的基础上增加外部行，得到虚拟表<code>vt1-3</code>。</li>
+</ol>
+<p>当然如果我们操作的是两张以上的表，还会重复上面的步骤，直到所有表都被处理完为止。这个过程得到是我们的原始数据。</p>
+<p>当我们拿到了查询数据表的原始数据，也就是最终的虚拟表<code>vt1</code>，就可以在此基础上再进行<code>WHERE</code>阶段。在这个阶段中，会根据<code>vt1</code>表的结果进行筛选过滤，得到虚拟表<code>vt2</code>。</p>
+<p>然后进入第三步和第四步，也就是<code>GROUP</code>和<code>HAVING</code>阶段。在这个阶段中，实际上是在虚拟表<code>vt2</code>的基础上进行分组和分组过滤，得到中间的虚拟表<code>vt3</code>和<code>vt4</code>。</p>
+<p>当我们完成了条件筛选部分之后，就可以筛选表中提取的字段，也就是进入到<code>SELECT</code>和<code>DISTINCT</code>阶段。</p>
+<p>首先在<code>SELECT</code>阶段会提取想要的字段，然后在<code>DISTINCT</code>阶段过滤掉重复的行，分别得到中间的虚拟表<code>vt5-1</code>和<code>vt5-2</code>。</p>
+<p>当我们提取了想要的字段数据之后，就可以按照指定的字段进行排序，也就是<code>ORDER BY</code>阶段，得到虚拟表<code>vt6</code>。</p>
+<p>最后在<code>vt6</code>的基础上，取出指定行的记录，也就是<code>LIMIT</code>阶段，得到最终的结果，对应的是虚拟表<code>vt7</code>。</p>
+<p>当然我们在写<code>SELECT</code>语句的时候，不一定存在所有的关键字，相应的阶段就会省略。</p>
+<p>同时因为 SQL 是一门类似英语的结构化查询语言，所以我们在写<code>SELECT</code>语句的时候，还要注意相应的关键字顺序。</p>
+<h1 id="什么情况下用-SELECT-，如何提升-SELECT-查询效率？"><a href="#什么情况下用-SELECT-，如何提升-SELECT-查询效率？" class="headerlink" title="什么情况下用 SELECT *，如何提升 SELECT 查询效率？"></a>什么情况下用 SELECT *，如何提升 SELECT 查询效率？</h1><p>当我们初学<code>SELECT</code>语法的时候，经常会使用<code>SELECT *</code>，因为使用方便。实际上这样也增加了数据库的负担。所以如果我们不需要把所有列都检索出来，还是先指定出所需的列名，因为写清列名，可以减少数据表查询的网络传输量，而且考虑到在实际的工作中，我们往往不需要全部的列名，因此你需要养成良好的习惯，写出所需的列名。</p>
+<p>如果我们只是练习，或者对数据表进行探索，那么是可以使用<code>SELECT *</code>的。它的查询效率和把所有列名都写出来再进行查询的效率相差并不大。这样可以方便你对数据表有个整体的认知。但是在生产环境下，不推荐你直接使用<code>SELECT *</code>进行查询。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-SQL/SQL 使用DDL创建数据库&amp;数据表" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/04/SQL/SQL%20%E4%BD%BF%E7%94%A8DDL%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93&%E6%95%B0%E6%8D%AE%E8%A1%A8/"
+    >SQL 使用DDL创建数据库&amp;数据表</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/04/SQL/SQL%20%E4%BD%BF%E7%94%A8DDL%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93&%E6%95%B0%E6%8D%AE%E8%A1%A8/" class="article-date">
+  <time datetime="2020-02-04T03:22:14.000Z" itemprop="datePublished">2020-02-04</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SQL/">SQL</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>DDL 是 DBMS 的核心组件，也是 SQL 的重要组成部分，DDL 的正确性和稳定性是整个 SQL 运行的重要基础。</p>
+<h1 id="DDL-的基础语法"><a href="#DDL-的基础语法" class="headerlink" title="DDL 的基础语法"></a>DDL 的基础语法</h1><p>DDL 的英文全称是<code>Data Definition Language</code>，中文是数据定义语言。它定义了数据库的结构和数据表的结构。</p>
+<p>在 DDL 中，我们常用的功能是增删改，分别对应的命令是<code>CREATE、DROP</code>和<code>ALTER</code>。需要注意的是，在执行 DDL 的时候，不需要<code>COMMIT</code>，就可以完成执行任务。</p>
+<ol>
+<li>对数据库进行定义<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> nba; // 创建一个名为 nba 的数据库</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> nba; // 删除一个名为 nba 的数据库</span><br></pre></td></tr></table></figure></li>
+<li>对数据表进行定义<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table_name;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="创建表结构"><a href="#创建表结构" class="headerlink" title="创建表结构"></a>创建表结构</h1><p>比如我们想创建一个球员表，表名为<code>player</code>，里面有两个字段，一个是<code>player_id</code>，它是<code>int</code>类型，另一个<code>player_name</code>字段是<code>varchar(255)</code>类型。这两个字段都不为空，且<code>player_id</code>是递增的。</p>
+<p>那么创建的时候就可以写为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> player  (</span><br><span class="line">  player_id <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  player_name <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，语句最后以分号（<code>;</code>）作为结束符，最后一个字段的定义结束后没有逗号。数据类型中<code>int(11)</code>代表整数类型，显示长度为 11 位，括号中的参数 11 代表的是最大有效显示长度，与类型包含的数值范围大小无关。<code>varchar(255)</code>代表的是最大长度为 255 的可变字符串类型。<code>NOT NULL</code>表明整个字段不能是空值，是一种数据约束。<code>AUTO_INCREMENT</code>代表主键自动增长。</p>
+<p>实际上，我们通常很少自己写 DDL 语句，可以使用一些可视化工具来创建和操作数据库和数据表。比如Navicat，它是一个数据库管理和设计工具，跨平台，支持很多种数据库管理软件。</p>
+<p>假如还是针对<code>player</code>这张表，我们想设计以下的字段：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">含义</th>
+<th align="center">类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>player_id</code></td>
+<td align="center">球员ID</td>
+<td align="center"><code>int</code>整数类型，最大显示长度11</td>
+</tr>
+<tr>
+<td align="center"><code>team_id</code></td>
+<td align="center">球队ID</td>
+<td align="center"><code>int</code>整数类型，最大显示长度11</td>
+</tr>
+<tr>
+<td align="center"><code>player_name</code></td>
+<td align="center">球员姓名</td>
+<td align="center"><code>varchar</code>字符串类型，最大长度255</td>
+</tr>
+<tr>
+<td align="center"><code>height</code></td>
+<td align="center">身高</td>
+<td align="center"><code>float</code>浮点类型，一共存储3个有效数字，其中小数点长度为2</td>
+</tr>
+</tbody></table>
+<p>其中<code>player_id</code>是数据表<code>player</code>的主键，且自动增长，也就是<code>player_id</code>会从 1 开始，然后每次加 1。<code>player_id、team_id、player_name</code>这三个字段均不为空，<code>height</code>字段可以为空。</p>
+<p>按照上面的设计需求，我们可以使用 Navicat 软件进行设计，如下所示：</p>
+<img src="/2020/02/04/SQL/SQL%20%E4%BD%BF%E7%94%A8DDL%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93&%E6%95%B0%E6%8D%AE%E8%A1%A8/img1.png" class="">
+
+<p>然后，我们还可以对<code>player_name</code>字段进行索引，索引类型为<code>Unique</code>。使用 Navicat 设置如下：</p>
+<img src="/2020/02/04/SQL/SQL%20%E4%BD%BF%E7%94%A8DDL%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93&%E6%95%B0%E6%8D%AE%E8%A1%A8/img2.png" class="">
+
+<p>这样一张<code>player</code>表就通过可视化工具设计好了。我们可以把这张表导出来，可以看看这张表对应的 SQL 语句是怎样的。方法是在 Navicat 左侧用右键选中<code>player</code>这张表，然后选择“转储 SQL 文件”→“仅结构”，这样就可以看到导出的 SQL 文件了，代码如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`player`</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`player`</span>  (</span><br><span class="line">  <span class="string">`player_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`team_id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`player_name`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`height`</span> <span class="built_in">float</span>(<span class="number">3</span>, <span class="number">2</span>) <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0.00</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`player_id`</span>) <span class="keyword">USING</span> BTREE,</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> <span class="string">`player_name`</span>(<span class="string">`player_name`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">) <span class="keyword">ENGINE</span> = <span class="keyword">InnoDB</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> = utf8 <span class="keyword">COLLATE</span> = utf8_general_ci ROW_FORMAT = Dynamic;</span><br></pre></td></tr></table></figure>
+<p>你能看到整个 SQL 文件中的 DDL 处理，首先先删除<code>player</code>表（如果数据库中存在该表的话），然后再创建<code>player</code>表，里面的数据表和字段都使用了反引号，这是为了避免它们的名称与 MySQL 保留字段相同，对数据表和字段名称都加上了反引号。</p>
+<p>其中<code>player_name</code>字段的字符集是<code>utf8</code>，排序规则是<code>utf8_general_ci</code>，代表对大小写不敏感，如果设置为<code>utf8_bin</code>，代表对大小写敏感，还有许多其他排序规则这里不进行介绍。</p>
+<p>因为<code>player_id</code>设置为了主键，因此在 DDL 中使用<code>PRIMARY KEY</code>进行规定，同时索引方法采用<code>BTREE</code>。</p>
+<p>因为我们对<code>player_name</code>字段进行索引，在设置字段索引时，我们可以设置为<code>UNIQUE INDEX</code>（唯一索引），也可以设置为其他索引方式，比如<code>NORMAL INDEX</code>（普通索引），这里我们采用<code>UNIQUE INDEX</code>。唯一索引和普通索引的区别在于它对字段进行了唯一性的约束。在索引方式上，你可以选择<code>BTREE</code>或者<code>HASH</code>，这里采用了<code>BTREE</code>方法进行索引。</p>
+<p>整个数据表的存储规则采用 InnoDB。InnoDB，它是 MySQL5.5 版本之后默认的存储引擎。同时，我们将字符集设置为<code>utf8</code>，排序规则为<code>utf8_general_ci</code>，行格式为<code>Dynamic</code>，就可以定义数据表的最后约定了：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENGINE = InnoDB CHARACTER <span class="keyword">SET</span> = utf8 <span class="keyword">COLLATE</span> = utf8_general_ci ROW_FORMAT = Dynamic;</span><br></pre></td></tr></table></figure>
+<p>你能看出可视化工具还是非常方便的，它能直接帮我们将数据库的结构定义转化成 SQL 语言，方便数据库和数据表结构的导出和导入。</p>
+<h1 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h1><p>在创建表结构之后，我们还可以对表结构进行修改，虽然直接使用 Navicat 可以保证重新导出的数据表就是最新的，但你也有必要了解，如何使用 DDL 命令来完成表结构的修改。</p>
+<ol>
+<li>添加字段，比如我在数据表中添加一个<code>age</code>字段，类型为<code>int(11)</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> player <span class="keyword">ADD</span> (age <span class="built_in">int</span>(<span class="number">11</span>));</span><br></pre></td></tr></table></figure></li>
+<li>修改字段名，将<code>age</code>字段改成<code>player_age</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> player <span class="keyword">RENAME</span> <span class="keyword">COLUMN</span> age <span class="keyword">to</span> player_age</span><br></pre></td></tr></table></figure></li>
+<li>修改字段的数据类型，将<code>player_age</code>的数据类型设置为<code>float(3,1)</code><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> player <span class="keyword">MODIFY</span> (player_age <span class="built_in">float</span>(<span class="number">3</span>,<span class="number">1</span>));</span><br></pre></td></tr></table></figure></li>
+<li>删除字段, 删除刚才添加的<code>player_age</code>字段<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> player <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> player_age;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="数据表的常见约束"><a href="#数据表的常见约束" class="headerlink" title="数据表的常见约束"></a>数据表的常见约束</h1><p>当我们创建数据表的时候，还会对字段进行约束，约束的目的在于保证 RDBMS 里面数据的准确性和一致性。下面，我们来看下常见的约束有哪些。</p>
+<ul>
+<li>首先是主键约束。<br>主键起的作用是唯一标识一条记录，不能重复，不能为空，即<code>UNIQUE+NOT NULL</code>。一个数据表的主键只能有一个。主键可以是一个字段，也可以由多个字段复合组成。在上面的例子中，我们就把<code>player_id</code>设置为了主键。</li>
+<li>其次还有外键约束。<br>外键确保了表与表之间引用的完整性。一个表中的外键对应另一张表的主键。外键可以是重复的，也可以为空。比如<code>player_id</code>在<code>player</code>表中是主键，如果你想设置一个球员比分表即<code>player_score</code>，就可以在<code>player_score</code>中设置<code>player_id</code>为外键，关联到<code>player</code>表中。</li>
+</ul>
+<p>除了对键进行约束外，还有字段约束。</p>
+<ul>
+<li>唯一性约束。<br>唯一性约束表明了字段在表中的数值是唯一的，即使我们已经有了主键，还可以对其他字段进行唯一性约束。比如我们在<code>player</code>表中给<code>player_name</code>设置唯一性约束，就表明任何两个球员的姓名不能相同。需要注意的是，唯一性约束和普通索引（<code>NORMAL INDEX</code>）之间是有区别的。唯一性约束相当于创建了一个约束和普通索引，目的是保证字段的正确性，而普通索引只是提升数据检索的速度，并不对字段的唯一性进行约束。</li>
+<li><code>NOT NULL</code>约束。<br>对字段定义了<code>NOT NULL</code>，即表明该字段不应为空，必须有取值。</li>
+<li><code>DEFAULT</code>，表明了字段的默认值。如果在插入数据的时候，这个字段没有取值，就设置为默认值。比如我们将身高<code>height</code>字段的取值默认设置为<code>0.00</code>，即<code>DEFAULT 0.00</code>。</li>
+<li><code>CHECK</code>约束，用来检查特定字段取值范围的有效性，<code>CHECK</code>约束的结果不能为<code>FALSE</code>，比如我们可以对身高<code>height</code>的数值进行<code>CHECK</code>约束，必须<code>≥0</code>，且<code>＜3</code>，即<code>CHECK(height&gt;=0 AND height&lt;3)</code>。</li>
+</ul>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-SQL/SQL入门" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/"
+    >SQL入门</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2020-02-03T03:02:21.000Z" itemprop="datePublished">2020-02-03</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SQL/">SQL</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>在整个数字化的世界中，最重要而且最通用的元基础就是数据，而直接与数据打交道的语言就是 SQL 语言。</p>
+<p>我们可以把 SQL 语言按照功能划分成以下的 4 个部分：</p>
+<ul>
+<li>DDL（<code>Data Definition Language</code>），也就是数据定义语言，它用来定义我们的数据库对象，包括数据库、数据表和列。通过使用 DDL，我们可以创建，删除和修改数据库和表结构。</li>
+<li>DML（<code>Data Manipulation Language</code>），数据操作语言，我们用它操作和数据库相关的记录，比如增加、删除、修改数据表中的记录。</li>
+<li>DCL（<code>Data Control Language</code>），数据控制语言，我们用它来定义访问权限和安全级别。</li>
+<li>DQL（<code>Data Query Language</code>），数据查询语言，我们用它查询想要的记录，它是 SQL 语言的重中之重。</li>
+</ul>
+<h1 id="DB、DBS-和-DBMS-的区别是什么"><a href="#DB、DBS-和-DBMS-的区别是什么" class="headerlink" title="DB、DBS 和 DBMS 的区别是什么"></a>DB、DBS 和 DBMS 的区别是什么</h1><p>DBMS（<code>DataBase Management System</code>），数据库管理系统，实际上它可以对多个数据库进行管理，所以你可以理解为 DBMS = 多个数据库（DB） + 管理程序。</p>
+<p>DB（<code>DataBase</code>），也就是数据库。数据库是存储数据的集合，你可以把它理解为多个数据表。</p>
+<p>DBS（<code>DataBase System</code>），数据库系统。它是更大的概念，包括了数据库、数据库管理系统以及数据库管理人员 DBA。</p>
+<p>这里需要注意的是，虽然我们有时候把 Oracle、MySQL 等称之为数据库，但确切讲，它们应该是数据库管理系统，即 DBMS。</p>
+<h2 id="常见DBMS"><a href="#常见DBMS" class="headerlink" title="常见DBMS"></a>常见DBMS</h2><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">DBMS</td>
+<td align="center">数据库模式</td>
+</tr>
+<tr>
+<td align="center">Oracle</td>
+<td align="center">关系型</td>
+</tr>
+<tr>
+<td align="center">MySQL</td>
+<td align="center">关系型</td>
+</tr>
+<tr>
+<td align="center">Microsoft SQL Server</td>
+<td align="center">关系型</td>
+</tr>
+<tr>
+<td align="center">MongoDB</td>
+<td align="center">文档型</td>
+</tr>
+<tr>
+<td align="center">Elasticsearch</td>
+<td align="center">搜索引擎</td>
+</tr>
+<tr>
+<td align="center">Redis</td>
+<td align="center">键值型</td>
+</tr>
+<tr>
+<td align="center">HBase</td>
+<td align="center">列存储</td>
+</tr>
+</tbody></table>
+<p>关系型数据库（RDBMS）就是建立在关系模型基础上的数据库，SQL 就是关系型数据库的查询语言。</p>
+<p>相比于 SQL，NoSQL 泛指非关系型数据库，包括了键值型数据库、文档型数据库、搜索引擎和列存储等，除此以外还包括图形数据库。</p>
+<p>键值型数据库通过<code>Key-Value</code>键值的方式来存储数据，其中<code>Key</code>和<code>Value</code>可以是简单的对象，也可以是复杂的对象。<code>Key</code>作为唯一的标识符，优点是查找速度快，在这方面明显优于关系型数据库，同时缺点也很明显，它无法像关系型数据库一样自由使用条件过滤（比如<code>WHERE</code>），如果你不知道去哪里找数据，就要遍历所有的键，这就会消耗大量的计算。键值型数据库典型的使用场景是作为内容缓存。Redis 是最流行的键值型数据库。</p>
+<p>文档型数据库用来管理文档，在数据库中文档作为处理信息的基本单位，一个文档就相当于一条记录，MongoDB 是最流行的文档型数据库。</p>
+<p>搜索引擎也是数据库检索中的重要应用，常见的全文搜索引擎有 Elasticsearch、Splunk 和 Solr。虽然关系型数据库采用了索引提升检索效率，但是针对全文索引效率却较低。搜索引擎的优势在于采用了全文搜索的技术，核心原理是“倒排索引”。</p>
+<p>列式数据库是相对于行式存储的数据库，Oracle、MySQL、SQL Server 等数据库都是采用的行式存储，而列式数据库是将数据按照列存储到数据库中，这样做的好处是可以大量降低系统的 I/O，适合于分布式文件系统，不足在于功能相对有限。</p>
+<p>图形数据库，利用了图这种数据结构存储了实体（对象）之间的关系。最典型的例子就是社交网络中人与人的关系，数据模型主要是以节点和边（关系）来实现，特点在于能高效地解决复杂的关系问题。</p>
+<h1 id="SQL是如何执行的"><a href="#SQL是如何执行的" class="headerlink" title="SQL是如何执行的"></a>SQL是如何执行的</h1><h2 id="Oracle-中的-SQL-是如何执行的"><a href="#Oracle-中的-SQL-是如何执行的" class="headerlink" title="Oracle 中的 SQL 是如何执行的"></a>Oracle 中的 SQL 是如何执行的</h2><p>SQL 在 Oracle 中的执行过程：</p>
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img1.png" class="">
+
+<p>从上面这张图中可以看出，SQL 语句在 Oracle 中经历了以下的几个步骤。</p>
+<ul>
+<li>语法检查：检查 SQL 拼写是否正确，如果不正确，Oracle 会报语法错误。</li>
+<li>语义检查：检查 SQL 中的访问对象是否存在。比如我们在写 SELECT 语句的时候，列名写错了，系统就会提示错误。语法检查和语义检查的作用是保证 SQL 语句没有错误。</li>
+<li>权限检查：看用户是否具备访问该数据的权限。</li>
+<li>共享池检查：共享池（<code>Shared Pool</code>）是一块内存池，最主要的作用是缓存 SQL 语句和该语句的执行计划。Oracle 通过检查共享池是否存在 SQL 语句的执行计划，来判断进行软解析，还是硬解析。那软解析和硬解析又该怎么理解呢？<br>在共享池中，Oracle 首先对 SQL 语句进行<code>Hash</code>运算，然后根据 Hash 值在库缓存（<code>Library Cache</code>）中查找，如果存在 SQL 语句的执行计划，就直接拿来执行，直接进入“执行器”的环节，这就是软解析。<br>如果没有找到 SQL 语句和执行计划，Oracle 就需要创建解析树进行解析，生成执行计划，进入“优化器”这个步骤，这就是硬解析。</li>
+<li>优化器：优化器中就是要进行硬解析，也就是决定怎么做，比如创建解析树，生成执行计划。</li>
+<li>执行器：当有了解析树和执行计划之后，就知道了 SQL 该怎么被执行，这样就可以在执行器中执行语句了。</li>
+</ul>
+<p>共享池是 Oracle 中的术语，包括了库缓存，数据字典缓冲区等。库缓存区主要缓存 SQL 语句和执行计划。而数据字典缓冲区存储的是 Oracle 中的对象定义，比如表、视图、索引等对象。当对 SQL 语句进行解析的时候，如果需要相关的数据，会从数据字典缓冲区中提取。</p>
+<p>库缓存这一个步骤，决定了 SQL 语句是否需要进行硬解析。为了提升 SQL 的执行效率，我们应该尽量避免硬解析，因为在 SQL 的执行过程中，创建解析树，生成执行计划是很消耗资源的。</p>
+<p>你可能会问，如何避免硬解析，尽量使用软解析呢？在 Oracle 中，绑定变量是它的一大特色。绑定变量就是在 SQL 语句中使用变量，通过不同的变量取值来改变 SQL 的执行结果。这样做的好处是能提升软解析的可能性，不足之处在于可能会导致生成的执行计划不够优化，因此是否需要绑定变量还需要视情况而定。</p>
+<p>举个例子，我们可以使用下面的查询语句：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; select * from player where player_id = 10001;</span><br></pre></td></tr></table></figure>
+<p>你也可以使用绑定变量，如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; select * from player where player_id = :player_id;</span><br></pre></td></tr></table></figure>
+<p>这两个查询语句的效率在 Oracle 中是完全不同的。如果你在查询 player_id = 10001 之后，还会查询 10002、10003 之类的数据，那么每一次查询都会创建一个新的查询解析。而第二种方式使用了绑定变量，那么在第一次查询之后，在共享池中就会存在这类查询的执行计划，也就是软解析。</p>
+<p>因此我们可以通过使用绑定变量来减少硬解析，减少 Oracle 的解析工作量。但是这种方式也有缺点，使用动态 SQL 的方式，因为参数不同，会导致 SQL 的执行效率不同，同时 SQL 优化也会比较困难。</p>
+<h2 id="MySQL-中的-SQL-是如何执行的"><a href="#MySQL-中的-SQL-是如何执行的" class="headerlink" title="MySQL 中的 SQL 是如何执行的"></a>MySQL 中的 SQL 是如何执行的</h2><p>Oracle 中采用了共享池来判断 SQL 语句是否存在缓存和执行计划，通过这一步骤我们可以知道应该采用硬解析还是软解析。那么在 MySQL 中，SQL 是如何被执行的呢？</p>
+<p>首先 MySQL 是典型的 C/S 架构，即 Client/Server 架构，服务器端程序使用的 mysqld。整体的 MySQL 流程如下图所示：</p>
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img2.png" class="">
+
+<p>你能看到 MySQL 由三层组成：</p>
+<ul>
+<li>连接层：客户端和服务器端建立连接，客户端发送 SQL 至服务器端；</li>
+<li>SQL 层：对 SQL 语句进行查询处理；</li>
+<li>存储引擎层：与数据库文件打交道，负责数据的存储和读取。</li>
+</ul>
+<p>其中 SQL 层与数据库文件的存储方式无关，我们来看下 SQL 层的结构：</p>
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img3.jpeg" class="">
+
+<ol>
+<li>查询缓存：Server 如果在查询缓存中发现了这条 SQL 语句，就会直接将结果返回给客户端；如果没有，就进入到解析器阶段。需要说明的是，因为查询缓存往往效率不高，所以在 MySQL8.0 之后就抛弃了这个功能。</li>
+<li>解析器：在解析器中对 SQL 语句进行语法分析、语义分析。</li>
+<li>优化器：在优化器中会确定 SQL 语句的执行路径，比如是根据全表检索，还是根据索引来检索等。</li>
+<li>执行器：在执行之前需要判断该用户是否具备权限，如果具备权限就执行 SQL 查询并返回结果。在 MySQL8.0 以下的版本，如果设置了查询缓存，这时会将查询结果进行缓存。</li>
+</ol>
+<p>你能看到 SQL 语句在 MySQL 中的流程是：SQL 语句→缓存查询→解析器→优化器→执行器。在一部分中，MySQL 和 Oracle 执行 SQL 的原理是一样的。</p>
+<p>与 Oracle 不同的是，MySQL 的存储引擎采用了插件的形式，每个存储引擎都面向一种特定的数据库应用环境。同时开源的 MySQL 还允许开发人员设置自己的存储引擎，下面是一些常见的存储引擎：</p>
+<ul>
+<li>InnoDB 存储引擎：它是 MySQL 5.5 版本之后默认的存储引擎，最大的特点是支持事务、行级锁定、外键约束等。</li>
+<li>MyISAM 存储引擎：在 MySQL 5.5 版本之前是默认的存储引擎，不支持事务，也不支持外键，最大的特点是速度快，占用资源少。</li>
+<li>Memory 存储引擎：使用系统内存作为存储介质，以便得到更快的响应速度。不过如果 mysqld 进程崩溃，则会导致所有的数据丢失，因此我们只有当数据是临时的情况下才使用 Memory 存储引擎。</li>
+<li>NDB 存储引擎：也叫做 NDB Cluster 存储引擎，主要用于 MySQL Cluster 分布式集群环境，类似于 Oracle 的 RAC 集群。</li>
+<li>Archive 存储引擎：它有很好的压缩机制，用于文件归档，在请求写入时会进行压缩，所以也经常用来做仓库。</li>
+</ul>
+<p>需要注意的是，数据库的设计在于表的设计，而在 MySQL 中每个表的设计都可以采用不同的存储引擎，我们可以根据实际的数据处理需要来选择存储引擎，这也是 MySQL 的强大之处。</p>
+<h2 id="数据库管理系统也是一种软件"><a href="#数据库管理系统也是一种软件" class="headerlink" title="数据库管理系统也是一种软件"></a>数据库管理系统也是一种软件</h2><p>我们刚才了解了 SQL 语句在 Oracle 和 MySQL 中的执行流程，实际上完整的 Oracle 和 MySQL 结构图要复杂得多。</p>
+<p>如果你只是简单地把 MySQL 和 Oracle 看成数据库管理系统软件，从外部看难免会觉得“晦涩难懂”，毕竟组织结构太多了。我们在学习的时候，还需要具备抽象的能力，抓取最核心的部分：SQL 的执行原理。因为不同的 DBMS 的 SQL 的执行原理是相通的，只是在不同的软件中，各有各的实现路径。</p>
+<p>既然一条 SQL 语句会经历不同的模块，那我们就来看下，在不同的模块中，SQL 执行所使用的资源（时间）是怎样的。</p>
+<p>首先我们需要看下<code>profiling</code>是否开启，开启它可以让 MySQL 收集在 SQL 执行时所使用的资源情况，命令如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> @@profiling;</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img5.png" class="">
+
+<p><code>profiling=0</code>代表关闭，我们需要把<code>profiling</code>打开，即设置为 1：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> profiling=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>然后我们执行一个 SQL 查询（你可以执行任何一个 SQL 查询）：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from wucai.heros;</span><br></pre></td></tr></table></figure>
+<p>查看当前会话所产生的所有<code>profiles</code>：</p>
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img6.png" class="">
+
+<p>你会发现我们刚才执行了两次查询，<code>Query ID</code>分别为 1 和 2。如果我们想要获取上一次查询的执行时间，可以使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile;</span><br></pre></td></tr></table></figure>
+
+<img src="/2020/02/03/SQL/SQL%E5%85%A5%E9%97%A8/img7.png" class="">
+
+<p>当然你也可以查询指定的<code>Query ID</code>，比如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> profile <span class="keyword">for</span> <span class="keyword">query</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>查询 SQL 的执行时间结果和上面是一样的。</p>
+<p>在 8.0 版本之后，MySQL 不再支持缓存的查询。一旦数据表有更新，缓存都将清空，因此只有数据表是静态的时候，或者数据表很少发生变化时，使用缓存查询才有价值，否则如果数据表经常更新，反而增加了 SQL 的查询时间。</p>
+<p>可以使用<code>select version()</code>来查看 MySQL 的版本情况。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们在使用 SQL 的时候，往往只见树木，不见森林，不会注意到它在各种数据库软件中是如何执行的，今天我们从全貌的角度来理解这个问题。你能看到不同的 RDBMS 之间有相同的地方，也有不同的地方。</p>
+<p>相同的地方在于 Oracle 和 MySQL 都是通过解析器→优化器→执行器这样的流程来执行 SQL 的。</p>
+<p>但 Oracle 和 MySQL 在进行 SQL 的查询上面有软件实现层面的差异。Oracle 提出了共享池的概念，通过共享池来判断是进行软解析，还是硬解析。而在 MySQL 中，8.0 以后的版本不再支持查询缓存，而是直接执行解析器→优化器→执行器的流程，这一点从 MySQL 中的<code>show profile</code>里也能看到。同时 MySQL 的一大特色就是提供了各种存储引擎以供选择，不同的存储引擎有各自的使用场景，我们可以针对每张表选择适合的存储引擎。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-js/深入/浏览器安全——HTTPS" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1081,429 +1857,13 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-js/深入/JS事件循环机制——XMLHttpRequest" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/"
-    >JS事件循环机制——XMLHttpRequest</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/" class="article-date">
-  <time datetime="2019-12-03T02:42:54.000Z" itemprop="datePublished">2019-12-03</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a> / <a class="article-category-link" href="/categories/javascript/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/">JS事件循环机制</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="回调函数-VS-系统调用栈"><a href="#回调函数-VS-系统调用栈" class="headerlink" title="回调函数 VS 系统调用栈"></a>回调函数 VS 系统调用栈</h1><p>那什么是回调函数呢（<code>Callback Function</code>）？</p>
-<p>将一个函数作为参数传递给另外一个函数，那作为参数的这个函数就是回调函数。简化的代码如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'i am do homework'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doWork</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'start do work'</span>)</span><br><span class="line">  cb()</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'end do work'</span>)</span><br><span class="line">&#125;</span><br><span class="line">doWork(callback)</span><br></pre></td></tr></table></figure>
-<p>在上面示例代码中，我们将一个匿名函数赋值给变量<code>callback</code>，同时将<code>callback</code>作为参数传递给了<code>doWork()</code>函数，这时在函数<code>doWork()</code>中<code>callback</code>就是回调函数。</p>
-<p>上面的回调方法有个特点，就是回调函数<code>callback</code>是在主函数<code>doWork</code>返回之前执行的，我们把这个回调过程称为同步回调。</p>
-<p>既然有同步回调，那肯定也有异步回调。下面我们再来看看异步回调的例子：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'i am do homework'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doWork</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'start do work'</span>)</span><br><span class="line">  setTimeout(cb,<span class="number">1000</span>)   </span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'end do work'</span>)</span><br><span class="line">&#125;</span><br><span class="line">doWork(callback)</span><br></pre></td></tr></table></figure>
-<p>在这个例子中，我们使用了<code>setTimeout</code>函数让<code>callback</code>在<code>doWork</code>函数执行结束后，又延时了 1 秒再执行，这次<code>callback</code>并没有在主函数<code>doWork</code>内部被调用，我们把这种回调函数在主函数外部执行的过程称为异步回调。</p>
-<p>现在你应该知道什么是同步回调和异步回调了，那下面我们再深入点，站在消息循环的视角来看看同步回调和异步回调的区别。理解了这些，可以让你从本质上理解什么是回调。</p>
-<p>我们还是先来回顾下页面的事件循环系统，浏览器页面是通过事件循环机制来驱动的，每个渲染进程都有一个消息队列，页面主线程按照顺序来执行消息队列中的事件，如执行 JavaScript 事件、解析 DOM 事件、计算布局事件、用户输入事件等等，如果页面有新的事件产生，那新的事件将会追加到事件队列的尾部。所以可以说是消息队列和主线程循环机制保证了页面有条不紊地运行。</p>
-<p>这里还需要补充一点，那就是当循环系统在执行一个任务的时候，都要为这个任务维护一个系统调用栈。这个系统调用栈类似于 JavaScript 的调用栈，只不过系统调用栈是 Chromium 的开发语言 C++ 来维护的，其完整的调用栈信息你可以通过<code>chrome://tracing/</code>来抓取。当然，你也可以通过<code>Performance</code>来抓取它核心的调用信息，如下图所示：</p>
-<img src="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/img1.png" class="" title="消息循环系统调用栈记录">
-
-<p>这幅图记录了一个 Parse HTML 的任务执行过程，其中黄色的条目表示执行 JavaScript 的过程，其他颜色的条目表示浏览器内部系统的执行过程。</p>
-<p>通过该图你可以看出来，Parse HTML 任务在执行过程中会遇到一系列的子过程，比如在解析页面的过程中遇到了 JavaScript 脚本，那么就暂停解析过程去执行该脚本，等执行完成之后，再恢复解析过程。然后又遇到了样式表，这时候又开始解析样式表……直到整个任务执行完成。</p>
-<p>需要说明的是，整个 Parse HTML 是一个完整的任务，在执行过程中的脚本解析、样式表解析都是该任务的子过程，其下拉的长条就是执行过程中调用栈的信息。</p>
-<p>每个任务在执行过程中都有自己的调用栈，那么同步回调就是在当前主函数的上下文中执行回调函数，这个没有太多可讲的。下面我们主要来看看异步回调过程，异步回调是指回调函数在主函数之外执行，一般有两种方式：</p>
-<ul>
-<li>第一种是把异步函数做成一个任务，添加到信息队列尾部；</li>
-<li>第二种是把异步函数添加到微任务队列中，这样就可以在当前任务的末尾处执行微任务了。</li>
-</ul>
-<h1 id="XMLHttpRequest-运作机制"><a href="#XMLHttpRequest-运作机制" class="headerlink" title="XMLHttpRequest 运作机制"></a>XMLHttpRequest 运作机制</h1><p>理解了什么是同步回调和异步回调，接下来我们就来分析<code>XMLHttpRequest</code>背后的实现机制，具体工作过程你可以参考下图：</p>
-<img src="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/img2.png" class="" title="XMLHttpRequest 工作流程图">
-
-<p>这是<code>XMLHttpRequest</code>的总执行流程图，下面我们就来分析从发起请求到接收数据的完整流程。</p>
-<p>我们先从<code>XMLHttpRequest</code>的用法开始，首先看下面这样一段请求代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetWebData</span>(<span class="params">URL</span>)</span>&#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 1: 新建 XMLHttpRequest 请求对象</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="keyword">let</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 2: 注册相关事件回调处理函数 </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span>(xhr.readyState)&#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">// 请求未初始化</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">" 请求未初始化 "</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>:<span class="comment">//OPENED</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"OPENED"</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">2</span>:<span class="comment">//HEADERS_RECEIVED</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"HEADERS_RECEIVED"</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>:<span class="comment">//LOADING  </span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"LOADING"</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>:<span class="comment">//DONE</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.status == <span class="number">200</span>||<span class="keyword">this</span>.status == <span class="number">304</span>) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">          &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"DONE"</span>)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  xhr.ontimeout = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; <span class="built_in">console</span>.log(<span class="string">'ontimeout'</span>) &#125;</span><br><span class="line">  xhr.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123; <span class="built_in">console</span>.log(<span class="string">'onerror'</span>) &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 3: 打开请求</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  xhr.open(<span class="string">'Get'</span>, URL, <span class="literal">true</span>);<span class="comment">// 创建一个 Get 请求, 采用异步</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 4: 配置参数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  xhr.timeout = <span class="number">3000</span> <span class="comment">// 设置 xhr 请求的超时时间</span></span><br><span class="line">  xhr.responseType = <span class="string">"text"</span> <span class="comment">// 设置响应返回的数据格式</span></span><br><span class="line">  xhr.setRequestHeader(<span class="string">"X_TEST"</span>,<span class="string">"time.geekbang"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 5: 发送请求</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  xhr.send();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面是一段利用了<code>XMLHttpRequest</code>来请求数据的代码，再结合上面的流程图，我们可以分析下这段代码是怎么执行的。</p>
-<p>第一步：创建<code>XMLHttpRequest</code>对象。</p>
-<p>当执行到<code>let xhr = new XMLHttpRequest()</code>后，JavaScript 会创建一个<code>XMLHttpRequest</code>对象<code>xhr</code>，用来执行实际的网络请求操作。</p>
-<p>第二步：为<code>xhr</code>对象注册回调函数。</p>
-<p>因为网络请求比较耗时，所以要注册回调函数，这样后台任务执行完成之后就会通过调用回调函数来告诉其执行结果。</p>
-<p><code>XMLHttpRequest</code>的回调函数主要有下面几种：<br><code>ontimeout</code>，用来监控超时请求，如果后台请求超时了，该函数会被调用；<br><code>onerror</code>，用来监控出错信息，如果后台请求出错了，该函数会被调用；<br><code>onreadystatechange</code>，用来监控后台请求过程中的状态，比如可以监控到 HTTP 头加载完成的消息、HTTP 响应体消息以及数据加载完成的消息等。</p>
-<p>第三步：配置基础的请求信息。</p>
-<p>注册好回调事件之后，接下来就需要配置基础的请求信息了，首先要通过<code>open</code>接口配置一些基础的请求信息，包括请求的地址、请求方法（是 get 还是 post）和请求方式（同步还是异步请求）。</p>
-<p>然后通过<code>xhr</code>内部属性类配置一些其他可选的请求信息，你可以参考文中示例代码，我们通过<code>xhr.timeout = 3000</code>来配置超时时间，也就是说如果请求超过 3000 毫秒还没有响应，那么这次请求就被判断为失败了。</p>
-<p>我们还可以通过<code>xhr.responseType = &quot;text&quot;</code>来配置服务器返回的格式，将服务器返回的数据自动转换为自己想要的格式，如果将<code>responseType</code>的值设置为<code>json</code>，那么系统会自动将服务器返回的数据转换为 JavaScript 对象格式。下面的图表是我列出的一些返回类型的描述：</p>
-<img src="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/img3.png" class="">
-
-<p>假如你还需要添加自己专用的请求头属性，可以通过<code>xhr.setRequestHeader</code>来添加。</p>
-<p>第四步：发起请求。</p>
-<p>一切准备就绪之后，就可以调用xhr.send来发起网络请求了。你可以对照上面那张请求流程图，可以看到：渲染进程会将请求发送给网络进程，然后网络进程负责资源的下载，等网络进程接收到数据之后，就会利用 IPC 来通知渲染进程；渲染进程接收到消息之后，会将 xhr 的回调函数封装成任务并添加到消息队列中，等主线程循环系统执行到该任务的时候，就会根据相关的状态来调用对应的回调函数。</p>
-<p>如果网络请求出错了，就会执行<code>xhr.onerror</code>；<br>如果超时了，就会执行<code>xhr.ontimeout</code>；<br>如果是正常的数据接收，就会执行<code>onreadystatechange</code>来反馈相应的状态。<br>这就是一个完整的<code>XMLHttpRequest</code>请求流程。</p>
-<p><code>XMLHttpRequest</code>使用过程中的“坑”<br>上述过程看似简单，但由于浏览器很多安全策略的限制，所以会导致你在使用过程中踩到非常多的“坑”。</p>
-<p>浏览器安全问题是前端工程师避不开的一道坎，通常在使用过程中遇到的“坑”，很大一部分都是由安全策略引起的，不管你喜不喜欢，它都在这里。本来很完美的一个方案，正是由于加了安全限制，导致使用起来非常麻烦。</p>
-<p>而你要做的就是去正视这各种的安全问题。也就是说要想更加完美地使用<code>XMLHttpRequest</code>，你就要了解浏览器的安全策略。</p>
-<p>下面我们就来看看在使用<code>XMLHttpRequest</code>的过程中所遇到的跨域问题和混合内容问题。</p>
-<ol>
-<li>跨域问题<br>比如在极客邦的官网使用<code>XMLHttpRequest</code>请求极客时间的页面内容，由于极客邦的官网是<code>www.geekbang.org</code>，极客时间的官网是<code>time.geekbang.org</code>，它们不是同一个源，所以就涉及到了跨域（在 A 站点中去访问不同源的 B 站点的内容）。默认情况下，跨域请求是不被允许的，你可以看下面的示例代码：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</span><br><span class="line"><span class="keyword">var</span> url = <span class="string">'https://time.geekbang.org/'</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handler</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(xhr.readyState)&#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">// 请求未初始化</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">" 请求未初始化 "</span>)</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>:<span class="comment">//OPENED</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"OPENED"</span>)</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">2</span>:<span class="comment">//HEADERS_RECEIVED</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"HEADERS_RECEIVED"</span>)</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>:<span class="comment">//LOADING  </span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"LOADING"</span>)</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>:<span class="comment">//DONE</span></span><br><span class="line">      <span class="keyword">if</span>(<span class="keyword">this</span>.status == <span class="number">200</span>||<span class="keyword">this</span>.status == <span class="number">304</span>) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"DONE"</span>)</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">callOtherDomain</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(xhr) &#123;    </span><br><span class="line">    xhr.open(<span class="string">'GET'</span>, url, <span class="literal">true</span>)</span><br><span class="line">    xhr.onreadystatechange = handler</span><br><span class="line">    xhr.send();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">callOtherDomain()</span><br></pre></td></tr></table></figure>
-你可以在控制台测试下。首先通过浏览器打开<code>www.geekbang.org</code>，然后打开控制台，在控制台输入以上示例代码，再执行，会看到请求被 Block 了。控制台的提示信息如下：</li>
-</ol>
-<p><code>Access to XMLHttpRequest at &#39;https://time.geekbang.org/&#39; from origin &#39;https://www.geekbang.org&#39; has been blocked by CORS policy: No &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource.</code><br>因为<code>www.geekbang.org</code>和<code>time.geekbang.com</code>不属于一个域，所以以上访问就属于跨域访问了，这次访问失败就是由于跨域问题导致的。</p>
-<ol start="2">
-<li>HTTPS 混合内容的问题<br>了解完跨域问题后，我们再来看看 HTTPS 的混合内容。HTTPS 混合内容是 HTTPS 页面中包含了不符合 HTTPS 安全要求的内容，比如包含了 HTTP 资源，通过 HTTP 加载的图像、视频、样式表、脚本等，都属于混合内容。</li>
-</ol>
-<p>通常，如果 HTTPS 请求页面中使用混合内容，浏览器会针对 HTTPS 混合内容显示警告，用来向用户表明此 HTTPS 页面包含不安全的资源。比如打开站点<code>https://www.iteye.com/groups</code>，可以通过控制台看到混合内容的警告，参考下图：</p>
-<img src="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/img4.png" class="" title="HTTPS 混合内容警告">
-
-<p>从上图可以看出，通过 HTML 文件加载的混合资源，虽然给出警告，但大部分类型还是能加载的。而使用<code>XMLHttpRequest</code>请求时，浏览器认为这种请求可能是攻击者发起的，会阻止此类危险的请求。比如我通过浏览器打开地址<code>https://www.iteye.com/groups</code>，然后通过控制台，使用<code>XMLHttpRequest</code>来请求<code>http://img-ads.csdn.net/2018/201811150919211586.jpg</code>，这时候请求就会报错，出错信息如下图所示：</p>
-<img src="/2019/12/03/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/img5.png" class="" title="使用 XMLHttpRequest 混合资源失效">
-
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-js/深入/JS事件循环机制——setTimeout" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2019/12/02/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94setTimeout/"
-    >JS事件循环机制——setTimeout</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2019/12/02/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94setTimeout/" class="article-date">
-  <time datetime="2019-12-02T09:15:13.000Z" itemprop="datePublished">2019-12-02</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a> / <a class="article-category-link" href="/categories/javascript/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/">JS事件循环机制</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="浏览器怎么实现-setTimeout"><a href="#浏览器怎么实现-setTimeout" class="headerlink" title="浏览器怎么实现 setTimeout"></a>浏览器怎么实现 setTimeout</h1><p>我们知道渲染进程中所有运行在主线程上的任务都需要先添加到消息队列，然后事件循环系统再按照顺序执行消息队列中的任务。下面我们来看看那些典型的事件：</p>
-<ul>
-<li>当接收到 HTML 文档数据，渲染引擎就会将“解析 DOM”事件添加到消息队列中，</li>
-<li>当用户改变了 Web 页面的窗口大小，渲染引擎就会将“重新布局”的事件添加到消息队列中。</li>
-<li>当触发了 JavaScript 引擎垃圾回收机制，渲染引擎会将“垃圾回收”任务添加到消息队列中。</li>
-<li>同样，如果要执行一段异步 JavaScript 代码，也是需要将执行任务添加到消息队列中。</li>
-</ul>
-<p>以上列举的只是一小部分事件，这些事件被添加到消息队列之后，事件循环系统就会按照消息队列中的顺序来执行事件。</p>
-<p>所以说要执行一段异步任务，需要先将任务添加到消息队列中。不过通过定时器设置回调函数有点特别，它们需要在指定的时间间隔内被调用，但消息队列中的任务是按照顺序执行的，所以为了保证回调函数能在指定时间内执行，你不能将定时器的回调函数直接添加到消息队列中。</p>
-<p>那么该怎么设计才能让定时器设置的回调事件在规定时间内被执行呢？</p>
-<p>在 Chrome 中除了正常使用的消息队列之外，还有另外一个消息队列，这个队列中维护了需要延迟执行的任务列表，包括了定时器和 Chromium 内部一些需要延迟执行的任务。所以当通过 JavaScript 创建一个定时器时，渲染进程会将该定时器的回调任务添加到延迟队列中。</p>
-<p>源码中延迟执行队列的定义如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DelayedIncomingQueue delayed_incoming_queue;</span><br></pre></td></tr></table></figure>
-<p>当通过 JavaScript 调用<code>setTimeout</code>设置回调函数的时候，渲染进程将会创建一个回调任务，包含了回调函数<code>showName</code>、当前发起时间、延迟执行时间，其模拟代码如下所示：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">DelayTask</span> &#123;</span></span><br><span class="line">  int64 id；</span><br><span class="line">  CallBackFunction cbf;</span><br><span class="line">  <span class="keyword">int</span> start_time;</span><br><span class="line">  <span class="keyword">int</span> delay_time;</span><br><span class="line">&#125;;</span><br><span class="line">DelayTask timerTask;</span><br><span class="line">timerTask.cbf = showName;</span><br><span class="line">timerTask.start_time = getCurrentTime(); <span class="comment">// 获取当前时间</span></span><br><span class="line">timerTask.delay_time = <span class="number">200</span>;<span class="comment">// 设置延迟执行时间</span></span><br></pre></td></tr></table></figure>
-<p>创建好回调任务之后，再将该任务添加到延迟执行队列中，代码如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delayed_incoming_queue.push(timerTask)；</span><br></pre></td></tr></table></figure>
-<p>现在通过定时器发起的任务就被保存到延迟队列中了，那接下来我们再来看看消息循环系统是怎么触发延迟队列的。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTimerTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 从 delayed_incoming_queue 中取出已经到期的定时器任务</span></span><br><span class="line">  <span class="comment">// 依次执行这些任务</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">TaskQueue task_queue；</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTask</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">bool</span> keep_running = <span class="literal">true</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainTherad</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="comment">// 执行消息队列中的任务</span></span><br><span class="line">    <span class="built_in">Task</span> task = task_queue.takeTask();</span><br><span class="line">    ProcessTask(task);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 执行延迟队列中的任务</span></span><br><span class="line">    ProcessDelayTask()</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(!keep_running) <span class="comment">// 如果设置了退出标志，那么直接退出线程循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面代码可以看出来，我们添加了一个<code>ProcessDelayTask</code>函数，该函数是专门用来处理延迟执行任务的。这里我们要重点关注它的执行时机，在上段代码中，处理完消息队列中的一个任务之后，就开始执行<code>ProcessDelayTask</code>函数。<code>ProcessDelayTask</code>函数会根据发起时间和延迟时间计算出到期的任务，然后依次执行这些到期的任务。等到期的任务执行完成之后，再继续下一个循环过程。通过这样的方式，一个完整的定时器就实现了。</p>
-<p>设置一个定时器，JavaScript 引擎会返回一个定时器的 ID。那通常情况下，当一个定时器的任务还没有被执行的时候，也是可以取消的，具体方法是调用<code>clearTimeout</code>函数，并传入需要取消的定时器的 ID。如下面代码所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clearTimeout(timer_id)</span><br></pre></td></tr></table></figure>
-<p>其实浏览器内部实现取消定时器的操作也是非常简单的，就是直接从<code>delayed_incoming_queue</code>延迟队列中，通过 ID 查找到对应的任务，然后再将其从队列中删除掉就可以了。</p>
-<h1 id="使用-setTimeout-的一些注意事项"><a href="#使用-setTimeout-的一些注意事项" class="headerlink" title="使用 setTimeout 的一些注意事项"></a>使用 setTimeout 的一些注意事项</h1><h2 id="1-如果当前任务执行时间过久，会影响延迟到期定时器任务的执行"><a href="#1-如果当前任务执行时间过久，会影响延迟到期定时器任务的执行" class="headerlink" title="1. 如果当前任务执行时间过久，会影响延迟到期定时器任务的执行"></a>1. 如果当前任务执行时间过久，会影响延迟到期定时器任务的执行</h2><p>在使用<code>setTimeout</code>的时候，有很多因素会导致回调函数执行比设定的预期值要久，其中一个就是当前任务执行时间过久从而导致定时器设置的任务被延后执行。我们先看下面这段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'bar'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  setTimeout(bar, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5000</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">5</span>+<span class="number">8</span>+<span class="number">8</span>+<span class="number">8</span></span><br><span class="line">    <span class="built_in">console</span>.log(i)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
-<p>这段代码中，在执行<code>foo</code>函数的时候使用<code>setTimeout</code>设置了一个 0 延时的回调任务，设置好回调任务后，<code>foo</code>函数会继续执行 5000 次<code>for</code>循环。</p>
-<p>通过<code>setTimeout</code>设置的回调任务被放入了消息队列中并且等待下一次执行，这里并不是立即执行的；要执行消息队列中的下个任务，需要等待当前的任务执行完成，由于当前这段代码要执行 5000 次的<code>for</code>循环，所以当前这个任务的执行时间会比较久一点。这势必会影响到下个任务的执行时间。</p>
-<p>你也可以打开<code>Performance</code>来看看其执行过程，如下图所示：</p>
-
-
-<p>从图中可以看到，执行<code>foo</code>函数所消耗的时长是 500 毫秒，这也就意味着通过<code>setTimeout</code>设置的任务会被推迟到 500 毫秒以后再去执行，而设置<code>setTimeout</code>的回调延迟时间是 0。</p>
-<h2 id="2-如果-setTimeout-存在嵌套调用，那么系统会设置最短时间间隔为-4-毫秒"><a href="#2-如果-setTimeout-存在嵌套调用，那么系统会设置最短时间间隔为-4-毫秒" class="headerlink" title="2. 如果 setTimeout 存在嵌套调用，那么系统会设置最短时间间隔为 4 毫秒"></a>2. 如果 setTimeout 存在嵌套调用，那么系统会设置最短时间间隔为 4 毫秒</h2><p>也就是说在定时器函数里面嵌套调用定时器，也会延长定时器的执行时间，可以先看下面的这段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params"></span>) </span>&#123; setTimeout(cb, <span class="number">0</span>); &#125;</span><br><span class="line">setTimeout(cb, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p>你还是可以通过<code>Performance</code>来记录下这段代码的执行过程，如下图所示：</p>
-
-
-<p>上图中的竖线就是定时器的函数回调过程，从图中可以看出，前面五次调用的时间间隔比较小，嵌套调用超过五次以上，后面每次的调用最小时间间隔是 4 毫秒。之所以出现这样的情况，是因为在 Chrome 中，定时器被嵌套调用 5 次以上，系统会判断该函数方法被阻塞了，如果定时器的调用时间间隔小于 4 毫秒，那么浏览器会将每次调用的时间间隔设置为 4 毫秒。</p>
-<p>所以，一些实时性较高的需求就不太适合使用<code>setTimeout</code>了，比如你用<code>setTimeout</code>来实现 JavaScript 动画就不是一个很好的主意。</p>
-<h2 id="3-未激活的页面，setTimeout-执行最小间隔是-1000-毫秒"><a href="#3-未激活的页面，setTimeout-执行最小间隔是-1000-毫秒" class="headerlink" title="3. 未激活的页面，setTimeout 执行最小间隔是 1000 毫秒"></a>3. 未激活的页面，setTimeout 执行最小间隔是 1000 毫秒</h2><p>除了前面的 4 毫秒延迟，还有一个很容易被忽略的地方，那就是未被激活的页面中定时器最小值大于 1000 毫秒，也就是说，如果标签不是当前的激活标签，那么定时器最小的时间间隔是 1000 毫秒，目的是为了优化后台页面的加载损耗以及降低耗电量。这一点你在使用定时器的时候要注意。</p>
-<h2 id="4-延时执行时间有最大值"><a href="#4-延时执行时间有最大值" class="headerlink" title="4. 延时执行时间有最大值"></a>4. 延时执行时间有最大值</h2><p>除了要了解定时器的回调函数时间比实际设定值要延后之外，还有一点需要注意下，那就是 Chrome、Safari、Firefox 都是以 32 个<code>bit</code>来存储延时值的，<code>32bit</code>最大只能存放的数字是 2147483647 毫秒，这就意味着，如果<code>setTimeout</code>设置的延迟值大于 2147483647 毫秒（大约 24.8 天）时就会溢出，这导致定时器会被立即执行。你可以运行下面这段代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">" test "</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> timerID = setTimeout(showName,<span class="number">2147483648</span>);<span class="comment">// 会被理解调用执行</span></span><br></pre></td></tr></table></figure>
-<p>运行后可以看到，这段代码是立即被执行的。但如果将延时值修改为小于 2147483647 毫秒的某个值，那么执行时就没有问题了。</p>
-<h2 id="5-使用-setTimeout-设置的回调函数中的-this-不符合直觉"><a href="#5-使用-setTimeout-设置的回调函数中的-this-不符合直觉" class="headerlink" title="5. 使用 setTimeout 设置的回调函数中的 this 不符合直觉"></a>5. 使用 setTimeout 设置的回调函数中的 this 不符合直觉</h2><p>如果被<code>setTimeout</code>推迟执行的回调函数是某个对象的方法，那么该方法中的<code>this</code>关键字将指向全局环境，而不是定义时所在的那个对象。你可以看下面这段代码的执行结果：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name= <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> MyObj = &#123;</span><br><span class="line">  name: <span class="number">2</span>,</span><br><span class="line">  showName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(MyObj.showName, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-<p>这里输出的是 1，因为这段代码在编译的时候，执行上下文中的<code>this</code>会被设置为全局<code>window</code>，如果是严格模式，会被设置为<code>undefined</code>。</p>
-<p>那么该怎么解决这个问题呢？通常可以使用下面这两种方法。</p>
-<p>第一种是将<code>MyObj.showName</code>放在匿名函数中执行，如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 箭头函数</span></span><br><span class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    MyObj.showName()</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br><span class="line"><span class="comment">// 或者 function 函数</span></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  MyObj.showName();</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-<p>第二种是使用<code>bind</code>方法，将<code>showName</code>绑定在<code>MyObj</code>上面，代码如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(MyObj.showName.bind(MyObj), <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>首先，为了支持定时器的实现，浏览器增加了延时队列。<br>其次，由于消息队列排队和一些系统级别的限制，通过<code>setTimeout</code>设置的回调任务并非总是可以实时地被执行，这样就不能满足一些实时性要求较高的需求了。<br>最后，在定时器中使用过程中，还存在一些陷阱，需要你多加注意。</p>
-<p>函数<code>setTimeout</code>在时效性上面有很多先天的不足，所以对于一些时间精度要求比较高的需求，应该有针对性地采取一些其他的方案。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-js/深入/JS事件循环机制——消息队列和事件循环" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/"
-    >JS事件循环机制——消息队列和事件循环</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" class="article-date">
-  <time datetime="2019-12-01T10:02:21.000Z" itemprop="datePublished">2019-12-01</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/javascript/">javascript</a> / <a class="article-category-link" href="/categories/javascript/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/">JS事件循环机制</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>每个渲染进程都有一个主线程，并且主线程非常繁忙，既要处理 DOM，又要计算样式，还要处理布局，同时还需要处理 JavaScript 任务以及各种输入事件。要让这么多不同类型的任务在主线程中有条不紊地执行，这就需要一个系统来统筹调度这些任务，这个统筹调度系统就是消息队列和事件循环系统。</p>
-<h1 id="使用单线程处理安排好的任务"><a href="#使用单线程处理安排好的任务" class="headerlink" title="使用单线程处理安排好的任务"></a>使用单线程处理安排好的任务</h1><p>我们先从最简单的场景讲起，比如有如下一系列的任务：</p>
-<ul>
-<li>任务 1：<code>1+2</code></li>
-<li>任务 2：<code>20/5</code></li>
-<li>任务 3：<code>7*8</code></li>
-<li>任务 4：打印出任务 1、任务 2、任务 3 的运算结果</li>
-</ul>
-<p>现在要在一个线程中去执行这些任务，通常我们会这样编写代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> num1 = <span class="number">1</span> + <span class="number">2</span>; <span class="comment">// 任务 1</span></span><br><span class="line">  <span class="keyword">int</span> num2 = <span class="number">20</span> / <span class="number">5</span>; <span class="comment">// 任务 2</span></span><br><span class="line">  <span class="keyword">int</span> num3 = <span class="number">7</span> * <span class="number">8</span>; <span class="comment">// 任务 3</span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"最终计算的值为:%d,%d,%d"</span>, num, num2, num3)； <span class="comment">// 任务 4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在上面的执行代码中，我们把所有任务代码按照顺序写进主线程里，等线程执行时，这些任务会按照顺序在线程中依次被执行；等所有任务执行完成之后，线程会自动退出。可以参考下图来直观地理解下其执行过程：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img1.png" class="" title="第一版：线程的一次执行">
-
-<h1 id="在线程运行过程中处理新任务"><a href="#在线程运行过程中处理新任务" class="headerlink" title="在线程运行过程中处理新任务"></a>在线程运行过程中处理新任务</h1><p>但并不是所有的任务都是在执行之前统一安排好的，大部分情况下，新的任务是在线程运行过程中产生的。比如在线程执行过程中，又接收到了一个新的任务要求计算<code>10+2</code>，那上面那种方式就无法处理这种情况了。</p>
-<p>要想在线程运行过程中，能接收并执行新的任务，就需要采用事件循环机制。我们可以通过一个<code>for</code>循环语句来监听是否有新的任务，如下面的示例代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GetInput</span></span><br><span class="line"><span class="comment">// 等待用户从键盘输入一个数字，并返回该输入的数字</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetInput</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> input_number = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">" 请输入一个数:"</span>;</span><br><span class="line">  <span class="built_in">cin</span>&gt;&gt;input_number;</span><br><span class="line">  <span class="keyword">return</span> input_number;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 主线程 (Main Thread)</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="keyword">int</span> first_num = GetInput()；</span><br><span class="line">    <span class="keyword">int</span> second_num = GetInput()；</span><br><span class="line">    result_num = first_num + second_num;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">" 最终计算的值为:%d"</span>,result_num)；</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>相较于第一版的线程，这一版的线程做了两点改进。</p>
-<ul>
-<li>第一点引入了循环机制，具体实现方式是在线程语句最后添加了一个<code>for</code>循环语句，线程会一直循环执行。</li>
-<li>第二点是引入了事件，可以在线程运行过程中，等待用户输入的数字，等待过程中线程处于暂停状态，一旦接收到用户输入的信息，那么线程会被激活，然后执行相加运算，最后输出结果。</li>
-</ul>
-<p>通过引入事件循环机制，就可以让该线程“活”起来了，我们每次输入两个数字，都会打印出两数字相加的结果，你可以结合下图来参考下这个改进版的线程：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img2.png" class="" title="第二版：在线程中引入事件循环">
-
-<h1 id="处理其他线程发送过来的任务"><a href="#处理其他线程发送过来的任务" class="headerlink" title="处理其他线程发送过来的任务"></a>处理其他线程发送过来的任务</h1><p>上面我们改进了线程的执行方式，引入了事件循环机制，可以让其在执行过程中接受新的任务。不过在第二版的线程模型中，所有的任务都是来自于线程内部的，如果另外一个线程想让主线程执行一个任务，利用第二版的线程模型是无法做到的。</p>
-<p>那下面我们就来看看其他线程是如何发送消息给渲染主线程的，具体形式你可以参考下图：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img3.png" class="" title="渲染进程线程之间发送任务">
-
-<p>从上图可以看出，渲染主线程会频繁接收到来自于 IO 线程的一些任务，接收到这些任务之后，渲染进程就需要着手处理，比如接收到资源加载完成的消息后，渲染进程就要着手进行 DOM 解析了；接收到鼠标点击的消息后，渲染主线程就要开始执行相应的 JavaScript 脚本来处理该点击事件。</p>
-<p>那么如何设计好一个线程模型，能让其能够接收其他线程发送的消息呢？</p>
-<p>一个通用模式是使用消息队列。</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img4.png" class="">
-
-<p>从图中可以看出，消息队列是一种数据结构，可以存放要执行的任务。它符合队列“先进先出”的特点，也就是说要添加任务的话，添加到队列的尾部；要取出任务的话，从队列头部去取。</p>
-<p>有了队列之后，我们就可以继续改造线程模型了，改造方案如下图所示：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img5.png" class="" title="第三版线程模型：队列 + 循环">
-
-<p>从上图可以看出，我们的改造可以分为下面三个步骤：</p>
-<ul>
-<li>添加一个消息队列；</li>
-<li>IO 线程中产生的新任务添加进消息队列尾部；</li>
-<li>渲染主线程会循环地从消息队列头部中读取任务，执行任务。</li>
-</ul>
-<p>有了这些步骤之后，那么接下来我们就可以按步骤使用代码来实现第三版的线程模型。</p>
-<p>首先，构造一个队列。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskQueue</span> &#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="built_in">Task</span> <span class="title">takeTask</span><span class="params">()</span></span>; <span class="comment">// 取出队列头部的一个任务</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">pushTask</span><span class="params">(<span class="built_in">Task</span> task)</span></span>; <span class="comment">// 添加一个任务到队列尾部</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>接下来，改造主线程，让主线程从队列中读取任务：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TaskQueue task_queue；</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTask</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="built_in">Task</span> task = task_queue.takeTask();</span><br><span class="line">    ProcessTask(task);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在上面的代码中，我们添加了一个消息队列的对象，然后在主线程的<code>for</code>循环代码块中，从消息队列中读取一个任务，然后执行该任务，主线程就这样一直循环往下执行，因此只要消息队列中有任务，主线程就会去执行。</p>
-<p>主线程的代码就这样改造完成了。这样改造后，主线程执行的任务都全部从消息队列中获取。所以如果有其他线程想要发送任务让主线程去执行，只需要将任务添加到该消息队列中就可以了，添加任务的代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Task</span> clickTask;</span><br><span class="line">task_queue.pushTask(clickTask)</span><br></pre></td></tr></table></figure>
-<p>由于是多个线程操作同一个消息队列，所以在添加任务和取出任务时还会加上一个同步锁。</p>
-<h1 id="处理其他进程发送过来的任务"><a href="#处理其他进程发送过来的任务" class="headerlink" title="处理其他进程发送过来的任务"></a>处理其他进程发送过来的任务</h1><p>通过使用消息队列，我们实现了线程之间的消息通信。在 Chrome 中，跨进程之间的任务也是频繁发生的，那么如何处理其他进程发送过来的任务？你可以参考下图：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img6.png" class="" title="跨进程发送消息">
-
-<p>从图中可以看出，渲染进程专门有一个 IO 线程用来接收其他进程传进来的消息，接收到消息之后，会将这些消息组装成任务发送给渲染主线程，后续的步骤就和前面讲解的“处理其他线程发送的任务”一样了。</p>
-<h1 id="消息队列中的任务类型"><a href="#消息队列中的任务类型" class="headerlink" title="消息队列中的任务类型"></a>消息队列中的任务类型</h1><p>现在你知道页面主线程是如何接收外部任务的了，那接下来我们再来看看消息队列中的任务类型有哪些。如输入事件（鼠标滚动、点击、移动）、微任务、文件读写、WebSocket、JavaScript 定时器等等。</p>
-<p>除此之外，消息队列中还包含了很多与页面相关的事件，如 JavaScript 执行、解析 DOM、样式计算、布局计算、CSS 动画等。</p>
-<p>以上这些事件都是在主线程中执行的，所以在编写 Web 应用时，你还需要衡量这些事件所占用的时长，并想办法解决单个任务占用主线程过久的问题。</p>
-<h1 id="如何安全退出"><a href="#如何安全退出" class="headerlink" title="如何安全退出"></a>如何安全退出</h1><p>当页面主线程执行完成之后，又该如何保证页面主线程能够安全退出呢？Chrome 是这样解决的，确定要退出当前页面时，页面主线程会设置一个退出标志的变量，在每次执行完一个任务时，判断是否有设置退出标志。</p>
-<p>如果设置了，那么就直接中断当前的所有任务，退出线程，你可以参考下面代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TaskQueue task_queue；</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ProcessTask</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">bool</span> keep_running = <span class="literal">true</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MainThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="built_in">Task</span> task = task_queue.takeTask();</span><br><span class="line">    ProcessTask(task);</span><br><span class="line">    <span class="keyword">if</span>(!keep_running) <span class="comment">// 如果设置了退出标志，那么直接退出线程循环</span></span><br><span class="line">      <span class="keyword">break</span>; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="页面使用单线程的缺点"><a href="#页面使用单线程的缺点" class="headerlink" title="页面使用单线程的缺点"></a>页面使用单线程的缺点</h1><p>页面线程所有执行的任务都来自于消息队列。消息队列是“先进先出”的属性，也就是说放入队列中的任务，需要等待前面的任务被执行完，才会被执行。鉴于这个属性，就有如下两个问题需要解决。</p>
-<h2 id="第一个问题是如何处理高优先级的任务。"><a href="#第一个问题是如何处理高优先级的任务。" class="headerlink" title="第一个问题是如何处理高优先级的任务。"></a>第一个问题是如何处理高优先级的任务。</h2><p>比如一个典型的场景是监控 DOM 节点的变化情况（节点的插入、修改、删除等动态变化），然后根据这些变化来处理相应的业务逻辑。一个通用的设计的是，利用 JavaScript 设计一套监听接口，当变化发生时，渲染引擎同步调用这些接口，这是一个典型的观察者模式。</p>
-<p>不过这个模式有个问题，因为 DOM 变化非常频繁，如果每次发生变化的时候，都直接调用相应的 JavaScript 接口，那么这个当前的任务执行时间会被拉长，从而导致执行效率的下降。</p>
-<p>如果将这些 DOM 变化做成异步的消息事件，添加到消息队列的尾部，那么又会影响到监控的实时性，因为在添加到消息队列的过程中，可能前面就有很多任务在排队了。</p>
-<p>这也就是说，如果 DOM 发生变化，采用同步通知的方式，会影响当前任务的执行效率；如果采用异步方式，又会影响到监控的实时性。</p>
-<p>那该如何权衡效率和实时性呢？</p>
-<p>针对这种情况，微任务就应用而生了，下面我们来看看微任务是如何权衡效率和实时性的。</p>
-<p>通常我们把消息队列中的任务称为宏任务，每个宏任务中都包含了一个微任务队列，在执行宏任务的过程中，如果 DOM 有变化，那么就会将该变化添加到微任务列表中，这样就不会影响到宏任务的继续执行，因此也就解决了执行效率的问题。</p>
-<p>等宏任务中的主要功能都直接完成之后，这时候，渲染引擎并不着急去执行下一个宏任务，而是执行当前宏任务中的微任务，因为 DOM 变化的事件都保存在这些微任务队列中，这样也就解决了实时性问题。</p>
-<h2 id="第二个是如何解决单个任务执行时长过久的问题。"><a href="#第二个是如何解决单个任务执行时长过久的问题。" class="headerlink" title="第二个是如何解决单个任务执行时长过久的问题。"></a>第二个是如何解决单个任务执行时长过久的问题。</h2><p>因为所有的任务都是在单线程中执行的，所以每次只能执行一个任务，而其他任务就都处于等待状态。如果其中一个任务执行时间过久，那么下一个任务就要等待很长时间。</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img7.png" class="" title="单个任务执行时间过久">
-
-<p>从图中你可以看到，如果在执行动画过程中，其中有个 JavaScript 任务因执行时间过久，占用了动画单帧的时间，这样会给用户制造了卡顿的感觉，这当然是极不好的用户体验。针对这种情况，JavaScript 可以通过回调功能来规避这种问题，也就是让要执行的 JavaScript 任务滞后执行。</p>
-<h1 id="实践：浏览器页面是如何运行的"><a href="#实践：浏览器页面是如何运行的" class="headerlink" title="实践：浏览器页面是如何运行的"></a>实践：浏览器页面是如何运行的</h1><p>你可以打开开发者工具，点击<code>Performance</code>标签，选择左上角的<code>start porfiling and load page</code>来记录整个页面加载过程中的事件执行情况，如下图所示：</p>
-<img src="/2019/12/01/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/img8.png" class="" title="Performance 页面">
-
-<p>从图中可以看出，我们点击展开了<code>Main</code>这个项目，其记录了主线程执行过程中的所有任务。图中灰色的就是一个个任务，每个任务下面还有子任务，其中的 Parse HTML 任务，是把 HTML 解析为 DOM 的任务。值得注意的是，在执行 Parse HTML 的时候，如果遇到 JavaScript 脚本，那么会暂停当前的 HTML 解析而去执行 JavaScript 脚本。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>如果有一些确定好的任务，可以使用一个单线程来按照顺序处理这些任务，这是第一版线程模型。</li>
-<li>要在线程执行过程中接收并处理新的任务，就需要引入循环语句和事件系统，这是第二版线程模型。</li>
-<li>如果要接收其他线程发送过来的任务，就需要引入消息队列，这是第三版线程模型。</li>
-<li>如果其他进程想要发送任务给页面主线程，那么先通过 IPC 把任务发送给渲染进程的 IO 线程，IO 线程再把任务发送给页面主线程。</li>
-<li>消息队列机制并不是太灵活，为了适应效率和实时性，引入了微任务。</li>
-</ul>
-<p>基于消息队列的设计是目前使用最广的消息架构，无论是安卓还是 Chrome 都采用了类似的任务机制。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/8/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/10/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/8/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/10/">下一页</a>
   </nav>
   
 </section>
