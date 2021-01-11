@@ -80,6 +80,849 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-计算机网络/应用层——电子邮件" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/"
+    >应用层——电子邮件</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/" class="article-date">
+  <time datetime="2020-10-22T02:25:51.000Z" itemprop="datePublished">2020-10-22</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="电子邮件概述"><a href="#电子邮件概述" class="headerlink" title="电子邮件概述"></a>电子邮件概述</h1><p>电子邮件(<code>e-mail</code>)：指使用电子设备交换的邮件及其方法。</p>
+<p>优点：使用方便，传递迅速，费用低廉，可以传送多种类型的信息（包括：文字信息，声音和图像等）。</p>
+<h2 id="电子邮件的重要标准"><a href="#电子邮件的重要标准" class="headerlink" title="电子邮件的重要标准"></a>电子邮件的重要标准</h2><ul>
+<li>简单邮件发送协议：SMTP</li>
+<li>互联网文本报文格式</li>
+<li>通用互联网邮件扩充 MIME</li>
+<li>邮件读取协议：POP3 和 IMAP</li>
+</ul>
+<h2 id="电子邮件的组成：三个主要构件"><a href="#电子邮件的组成：三个主要构件" class="headerlink" title="电子邮件的组成：三个主要构件"></a>电子邮件的组成：三个主要构件</h2><img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img1.png" class="">
+
+<h3 id="用户代理-UA-User-Agent"><a href="#用户代理-UA-User-Agent" class="headerlink" title="用户代理 UA (User Agent)"></a>用户代理 UA (User Agent)</h3><p>用户代理 UA 就是用户与电子邮件系统的接口，是电子邮件客户端软件。用户代理向用户提供一个很友好的接口来发送和接收邮件。</p>
+<p>用户代理的功能：撰写、显示、处理和通信。</p>
+<h3 id="邮件服务器-Mail-Server"><a href="#邮件服务器-Mail-Server" class="headerlink" title="邮件服务器 (Mail Server)"></a>邮件服务器 (Mail Server)</h3><p>邮件服务器的功能是发送和接收邮件，同时还要向发信人报告邮件传送的情况（已交付、被拒绝、丢失等）。</p>
+<p>邮件服务器按照客户-服务器方式工作。邮件服务器需要使用发送和读取两个不同的协议：SMTP，POP3。</p>
+<h3 id="邮件发送和读取协议"><a href="#邮件发送和读取协议" class="headerlink" title="邮件发送和读取协议"></a>邮件发送和读取协议</h3><p>简单邮件发送协议 SMTP：用于在用户代理向邮件服务器或邮件服务器之间发送邮件。</p>
+<p>邮局协议 POP3：用于用户代理从邮件服务器读取邮件。</p>
+<p>一个邮件服务器既可以作为客户，也可以作为服务器。</p>
+<p>例如，当邮件服务器 A 向另一个邮件服务器 B 发送邮件时，邮件服务器 A 就作为 SMTP 客户，而 B 是 SMTP 服务器。</p>
+<p>当邮件服务器 A 从另一个邮件服务器 B 接收邮件时，邮件服务器 A 就作为 SMTP 服务器，而 B 是 SMTP 客户。</p>
+<p>SMTP 和 POP3（或IMAP）都是使用TCP连接来传送邮件的，目的是为了可靠地传送邮件。</p>
+<h2 id="发送和接收电子邮件的几个重要步骤"><a href="#发送和接收电子邮件的几个重要步骤" class="headerlink" title="发送和接收电子邮件的几个重要步骤"></a>发送和接收电子邮件的几个重要步骤</h2><ol>
+<li>发件人调用 PC 中的用户代理撰写和编辑要发送的邮件。</li>
+<li>发件人的用户代理把邮件用 SMTP 协议发给发送方邮件服务器。</li>
+<li>SMTP 服务器把邮件临时存放在邮件缓存队列中，等待发送。</li>
+<li>发送方邮件服务器的 SMTP 客户与接收方邮件服务器的 SMTP 服务器建立 TCP 连接，然后就把邮件缓存队列中的邮件依次发送出去。</li>
+<li>运行在接收方邮件服务器中的SMTP服务器进程收到邮件后，把邮件放入收件人的用户邮箱中，等待收件人进行读取。</li>
+<li>收件人在打算收信时，就运行PC机中的用户代理，使用POP3（或 IMAP）协议读取发送给自己的邮件。</li>
+</ol>
+<h2 id="电子邮件的组成"><a href="#电子邮件的组成" class="headerlink" title="电子邮件的组成"></a>电子邮件的组成</h2><p>电子邮件由信封和内容两部分组成。</p>
+<p>电子邮件的传输程序根据邮件信封上的信息来传送邮件。用户在从自己的邮箱中读取邮件时才能见到邮件的内容。</p>
+<p>在邮件的信封上，最重要的就是收件人的地址。 </p>
+<h2 id="电子邮件地址的格式"><a href="#电子邮件地址的格式" class="headerlink" title="电子邮件地址的格式"></a>电子邮件地址的格式</h2><p>TCP/IP 体系的电子邮件系统规定电子邮件地址的格式如下：收件人邮箱名@邮箱所在主机的域名。</p>
+<p>符号“@”表示“在”的意思。</p>
+<p>例如电子邮件地址<code>xiexiren@tsinghua.org.cn</code></p>
+<h1 id="简单邮件传送协议-SMTP"><a href="#简单邮件传送协议-SMTP" class="headerlink" title="简单邮件传送协议 SMTP"></a>简单邮件传送协议 SMTP</h1><p>SMTP 规定了在两个相互通信的 SMTP 进程交换信息的方法。</p>
+<p>SMTP 使用客户–服务器方式。</p>
+<p>SMTP 基于 TCP 实现客户与服务器的通信。</p>
+<p>SMTP 是一个基于文本的 （即 ASCII 码）的协议。</p>
+<p>SMTP 客户与服务器之间采用命令-响应方式进行交互。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img2.png" class="">
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img3.png" class="">
+
+<p>SMTP 规定了 14 条命令和 21 种应答信息。每条命令用几个字母组成，每一种应答信息一般只有一行信息，由一个 3 位数字的代码开始，后面附上很简单的文字说明。</p>
+<h2 id="SMTP通信的三个阶段"><a href="#SMTP通信的三个阶段" class="headerlink" title="SMTP通信的三个阶段"></a>SMTP通信的三个阶段</h2><h3 id="1-连接建立"><a href="#1-连接建立" class="headerlink" title="1. 连接建立"></a>1. 连接建立</h3><p>连接是在发送主机的 SMTP 客户和接收主机的 SMTP 服务器之间建立的。SMTP不使用中间的邮件服务器。   </p>
+<p>发送人的邮件送到发送方邮件服务器的邮件缓存后，SMTP 客户就每隔一定时间对邮件缓存扫描一次。如发现有邮件，就使用 SMTP 的熟知端口号 25 与接收方邮件服务器的 SMTP 服务器建立 TCP 连接。在连接建立后，接收方 SMTP 服务器要发出<code>220 Service Ready</code>。然后 SMTP 客户向 SMTP 服务器发送 HELLO 命令，并附上发送方的主机名。SMTP 服务器若有能力接收邮件，则回答<code>250 OK</code>，表示已准备好接收。若 SMTP 服务器不可用，则回答 <code>421 Service not available</code>。</p>
+<p>如果一定时间内发送不了邮件，邮件服务器会把这个情况通知发件人。</p>
+<h3 id="2-邮件传送"><a href="#2-邮件传送" class="headerlink" title="2. 邮件传送"></a>2. 邮件传送</h3><p>邮件的传送从 MAIL 命令开始，MAIL 命令后面有发件人的地址。若 SMTP 服务器已准备好接收邮件，则回答<code>250 OK</code>。否则，返回一个代码，指出原因。</p>
+<p>下面跟着一个或多个 RCPT(<code>recipient</code>) 命令，取决于把同一个邮件发送给一个或多个收件人。每发送一个 RCPT 命令，都应当有相应的信息从 SMTP 服务器返回，如<code>250 OK</code>，表示指明的邮箱在接收方的系统中，或<code>550 No such user here</code>，不存在此邮箱。</p>
+<p>RCPT 命令的作用就是：先弄清接收方系统是否已做好接收邮件的准备，然后才发送邮件。这样做是为了避免浪费通信资源，不至于发送了很长的邮件以后才知道地址错误。</p>
+<p>再下面就是 DATA 命令，表示要开始传送邮件的内容了。若不能接收邮件，则返回 421（服务器不可用）、500（命令无法识别）等。接着 SMTP 客户就发送邮件内容。发送完毕后，再发送<code>&lt;CRLF&gt;.&lt;CRLF&gt;</code>表示邮件内容结束。实际上在服务器看到的可打印字符只是一个英文的句点。若邮件收到了，则 SMTP 服务器返回信息<code>250 OK</code>或差错代码。</p>
+<h3 id="3-连接释放"><a href="#3-连接释放" class="headerlink" title="3. 连接释放"></a>3. 连接释放</h3><p>邮件发送完毕后，SMTP 客户应发送 QUIT 命令。SMTP 服务器返回的信息是<code>221(服务器关闭)</code>，表示 SMTP 同意释放 TCP 连接。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img4.png" class="">
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img5.png" class="">
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img6.png" class="">
+
+<h2 id="SMTP-缺点"><a href="#SMTP-缺点" class="headerlink" title="SMTP 缺点"></a>SMTP 缺点</h2><ul>
+<li>发送电子邮件不需要经过鉴别。</li>
+<li>SMTP 传送的邮件是明文的，不利于保密。</li>
+<li>在网络上的传输效率不高。SMTP 本来就是为传送的是ASCII 码设计的，在传输非 ASCII 码的长报文时效率不高。</li>
+</ul>
+<h2 id="ESMTP"><a href="#ESMTP" class="headerlink" title="ESMTP"></a>ESMTP</h2><p>为了解决 SMTP 的缺点，对 SMTP 进行了扩充，称为扩充的 SMTP，即 ESMTP。</p>
+<p>新增的功能有：客户端的鉴别、服务器接受二进制报文、服务器接受分块传送的大报文、发送前先检查报文大小、使用安全传输 TLS、使用国际化地址等。</p>
+<h1 id="电子邮件的信息格式"><a href="#电子邮件的信息格式" class="headerlink" title="电子邮件的信息格式"></a>电子邮件的信息格式</h1><p>一个电子邮件分为信封和内容两大部分。</p>
+<p>RFC 5322 只规定了邮件内容中的首部格式，而对邮件的主体部分则让用户自由撰写。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img7.png" class="">
+
+<h2 id="邮件内容的首部"><a href="#邮件内容的首部" class="headerlink" title="邮件内容的首部"></a>邮件内容的首部</h2><p>邮件内容首部的关键字：</p>
+<ul>
+<li><code>To:</code>：后面填入一个或多个收件人的电子邮件地址。</li>
+<li><code>Subject:</code>：邮件的主题。它反映了邮件的主要内容，便于用户查找邮件。</li>
+<li><code>Cc:</code>：抄送，表示应给某某人发送一个邮件副本。</li>
+<li><code>From:</code>和<code>Date:</code>：表示发信人的电子邮件地址和发信日期。</li>
+<li><code>Reply-To:</code>：是对方回信所用的地址。这个地址可以与发件人发信时使用的地址不同。</li>
+</ul>
+<h1 id="邮件读取协议-POP3-和-IMAP"><a href="#邮件读取协议-POP3-和-IMAP" class="headerlink" title="邮件读取协议 POP3 和 IMAP"></a>邮件读取协议 POP3 和 IMAP</h1><p>两个常用的邮件读取协议：</p>
+<ul>
+<li>POP3：邮局协议(<code>Post Office Protocol</code>)第3个版本 </li>
+<li>IMAP：网际报文存取协议(<code>Internet Message Access Protocol</code>)</li>
+</ul>
+<h2 id="POP3-协议"><a href="#POP3-协议" class="headerlink" title="POP3 协议"></a>POP3 协议</h2><p>POP3 使用客户–服务器方式。</p>
+<p>POP3 基于TCP实现客户与服务器的通信。</p>
+<p>POP3 支持用户鉴别。</p>
+<p>POP3 服务器删除被用户读取了的邮件。</p>
+<h2 id="IMAP-协议"><a href="#IMAP-协议" class="headerlink" title="IMAP 协议"></a>IMAP 协议</h2><p>IMAP 使用客户–服务器方式。</p>
+<p>IMAP 基于TCP实现客户与服务器的通信。</p>
+<p>IMAP是一个联机协议。</p>
+<p>IMAP 的特点：</p>
+<ul>
+<li>连接后只下载邮件首部（部分下载）。</li>
+<li>用户直接在 IMAP 服务器上创建和管理文件夹。</li>
+<li>用户可以搜索邮件内容。</li>
+<li>用户可以在不同的地方使用不同的计算机随时上网阅读和处理自己的邮件。</li>
+<li>允许收信人只读取邮件中的某一个部分。</li>
+</ul>
+<p>缺点：要想查阅邮件，必须先联网。</p>
+<h2 id="IMAP-与-POP3-比较"><a href="#IMAP-与-POP3-比较" class="headerlink" title="IMAP 与 POP3 比较"></a>IMAP 与 POP3 比较</h2><img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img8.png" class="">
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img9.png" class="">
+
+<p>邮件读取协议 POP 或 IMAP 与邮件传送协议 SMTP 完全不同。</p>
+<p>发信人的用户代理向源邮件服务器发送邮件，以及源邮件服务器向目的邮件服务器发送邮件，都是使用 SMTP 协议。</p>
+<p>而 POP 协议或 IMAP 协议则是用户从目的邮件服务器上读取邮件所使用的协议。 </p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img10.png" class="">
+
+<h1 id="基于万维网的电子邮件"><a href="#基于万维网的电子邮件" class="headerlink" title="基于万维网的电子邮件"></a>基于万维网的电子邮件</h1><p>用户代理 (UA) 的缺点：</p>
+<ul>
+<li>必须在计算机中安装用户代理软件。</li>
+<li>但可能不能安装或不允许安装。因此，不方便收发邮件。</li>
+</ul>
+<p>万维网电子邮件优点：</p>
+<ul>
+<li>不需要在计算机中再安装用户代理软件。</li>
+<li>计算机能联网，就能非常方便地收发电子邮件。</li>
+<li>电子邮件界面非常友好。</li>
+</ul>
+<h2 id="万维网电子邮件"><a href="#万维网电子邮件" class="headerlink" title="万维网电子邮件"></a>万维网电子邮件</h2><img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img11.png" class="">
+
+<p>发送、接收电子邮件时使用 HTTP 协议。</p>
+<p>两个邮件服务器之间传送邮件时使用 SMTP。</p>
+<h1 id="通用互联网邮件扩充-MIME"><a href="#通用互联网邮件扩充-MIME" class="headerlink" title="通用互联网邮件扩充 MIME"></a>通用互联网邮件扩充 MIME</h1><p>SMTP 有以下缺点：</p>
+<ul>
+<li>SMTP 不能传送可执行文件或其他的二进制对象。</li>
+<li>SMTP 限于传送 7 位的 ASCII 码。许多其他非英语国家的文字（如中文、俄文，甚至带重音符号的法文或德文）就无法传送。</li>
+<li>SMTP 服务器会拒绝超过一定长度的邮件。</li>
+<li>某些 SMTP 的实现并没有完全按照 SMTP 的标准。</li>
+</ul>
+<p>于是在这种情况下提出了通用互联网遇见扩充 MIME。</p>
+<h2 id="1-MIME-概述"><a href="#1-MIME-概述" class="headerlink" title="1.MIME 概述"></a>1.MIME 概述</h2><p>MMIE 并没有改动或修改 SMTP，MIME 的意图是继续使用原来的邮件格式，但增加了邮件主体的结构，并定义了传送非 ASCII 码的编码规则。也就是说 MIME 邮件可在现有的电子邮件程序和协议下传送。</p>
+<p>MIME 和 SMTP 的关系：</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img12.png" class="">
+
+<p>MIME 主要包括三个部分：</p>
+<ul>
+<li>5 个新的邮件首部字段，它们可包含在原有首部中。这些字段提供了有关邮件主体的信息。</li>
+<li>定义了许多邮件内容的格式，对多媒体电子邮件的表示方法进行了标准化。</li>
+<li>定义了传送编码，可对任何内容格式进行转换，而不会被邮件系统改变。</li>
+</ul>
+<p>MIME 增加 5 个新的邮件首部：</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img13.png" class="">
+
+<h2 id="2-内容传送编码-Content-Transfer-Encoding"><a href="#2-内容传送编码-Content-Transfer-Encoding" class="headerlink" title="2.内容传送编码(Content-Transfer-Encoding)"></a>2.内容传送编码(Content-Transfer-Encoding)</h2><img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img14.png" class="">
+
+<p>Quoted-printable 编码适用于所传送的数据中只有少量的非 ASCII 码的情况。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img15.png" class="">
+
+<p>Base64 编码适合任意长度的二进制数据。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img16.png" class="">
+
+<h2 id="3-内容类型"><a href="#3-内容类型" class="headerlink" title="3.  内容类型"></a>3.  内容类型</h2><p>MIME 标准规定<code>Content-Type</code>说明必须含有两个标识符，即内容类型和子类型，中间用“/”分开。</p>
+<p>MIME 标准原先定义了 7 个基本内容类型和 15 种子类型。 </p>
+<p>MIME允许发件人和收件人自己定义专用的内容类型。但为避免可能出现名字冲突，标准要求为专用的内容类型选择的名字要以字符串 X- 开始。</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img17.png" class="">
+
+<p>MIME 举例</p>
+<img src="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6/img18.png" class="">
+
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/应用层——万维网" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/"
+    >应用层——万维网</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/" class="article-date">
+  <time datetime="2020-10-21T02:09:28.000Z" itemprop="datePublished">2020-10-21</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="万维网概述"><a href="#万维网概述" class="headerlink" title="万维网概述"></a>万维网概述</h1><p>万维网 WWW(<code>World Wide Web</code>) 并非某种特殊的计算机网络。万维网是一个大规模的、联机式的信息储藏所。</p>
+<p>万维网用链接的方法能非常方便地从互联网上的一个站点访问另一个站点，从而主动地按需获取丰富的信息。这种访问方式称为“链接”。</p>
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img1.png" class="">
+
+<h2 id="超媒体与超文本"><a href="#超媒体与超文本" class="headerlink" title="超媒体与超文本"></a>超媒体与超文本</h2><p>万维网是分布式超媒体系统，它是超文本系统的扩充。</p>
+<p>所谓超文本是指包含指向其它文档的链接的文本。一个超文本由多个信息源链接成。利用一个链接可使用户找到另一个文档。这些文档可以位于世界上任何一个接在互联网上的超文本系统中。超文本是万维网的基础。</p>
+<p>超媒体与超文本的区别是文档内容不同。超文本文档仅包含文本信息，而超媒体文档还包含其他表示方式的信息，如图形、图像、声音、动画，甚至活动视频图像。</p>
+<h2 id="万维网的工作方式"><a href="#万维网的工作方式" class="headerlink" title="万维网的工作方式"></a>万维网的工作方式</h2><p>万维网以客户-服务器方式工作。</p>
+<p>浏览器就是在用户计算机上的万维网客户程序。万维网文档所驻留的计算机则运行服务器程序，因此这个计算机也称为万维网服务器。</p>
+<p>客户程序向服务器程序发出请求，服务器程序向客户程序送回客户所要的万维网文档。</p>
+<p>在一个客户程序主窗口上显示出的万维网文档称为页面。</p>
+<h2 id="万维网必须解决的问题"><a href="#万维网必须解决的问题" class="headerlink" title="万维网必须解决的问题"></a>万维网必须解决的问题</h2><ol>
+<li>怎样标志分布在整个互联网上的万维网文档？<br>使用统一资源定位符 URL(<code>Uniform Resource Locator</code>) 来标志万维网上的各种文档。<br>使每一个文档在整个互联网的范围内具有唯一的标识符 URL。 </li>
+<li>用何协议实现万维网上各种超链的链接？<br>在万维网客户程序与万维网服务器程序之间进行交互所使用的协议，是超文本传送协议 HTTP(<code>HyperText Transfer Protocol</code>)。<br>HTTP 是一个应用层协议，它使用 TCP 连接进行可靠的传送。 </li>
+<li>怎样使各种万维网文档都能在互联网上的各种计算机上显示出来，同时使用户清楚地知道在什么地方存在着超链？<br>超文本标记语言 HTML(<code>HyperText Markup Language</code>) 使得万维网页面的设计者可以很方便地用一个超链从本页面的某处链接到互联网上的任何一个万维网页面，并且能够在自己的计算机屏幕上将这些页面显示出来。</li>
+<li>怎样使用户能够很方便地找到所需的信息？<br>为了在万维网上方便地查找信息，用户可使用各种的搜索工具（即搜索引擎）。</li>
+</ol>
+<h1 id="统一资源定位符-URL"><a href="#统一资源定位符-URL" class="headerlink" title="统一资源定位符 URL"></a>统一资源定位符 URL</h1><h2 id="1-URL-的格式"><a href="#1-URL-的格式" class="headerlink" title="1. URL 的格式"></a>1. URL 的格式</h2><p>统一资源定位符 URL(<code>Uniform Resource Locator</code>) 是对可以从互联网上得到的资源的位置和访问方法的一种简洁表示。</p>
+<p>URL 给资源的位置提供一种抽象的识别方法，并用这种方法给资源定位。</p>
+<p>只要能够对资源定位，系统就可以对资源进行各种操作，如存取、更新、替换和查找其属性。</p>
+<p>URL 相当于一个文件名在网络范围的扩展。因此 URL 是与互联网相连的机器上的任何可访问对象的一个指针。</p>
+<p>由以冒号隔开的两大部分组成，并且在 URL 中的字符对大写或小写没有要求。URL 的一般形式是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;协议&gt;:&#x2F;&#x2F;&lt;主机&gt;:&lt;端口&gt;&#x2F;&lt;路径&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="超文本传送协议-HTTP"><a href="#超文本传送协议-HTTP" class="headerlink" title="超文本传送协议 HTTP"></a>超文本传送协议 HTTP</h1><h2 id="1-HTTP-的操作过程"><a href="#1-HTTP-的操作过程" class="headerlink" title="1.  HTTP 的操作过程"></a>1.  HTTP 的操作过程</h2><p>为了使超文本的链接能够高效率地完成，需要用 HTTP 协议来传送一切必须的信息。</p>
+<p>从层次的角度看，HTTP 是面向事务的应用层协议，它是万维网上能够可靠地交换文件（包括文本、声音、图像等各种多媒体文件）的重要基础。 </p>
+<h3 id="万维网的工作过程"><a href="#万维网的工作过程" class="headerlink" title="万维网的工作过程"></a>万维网的工作过程</h3><img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img2.png" class="">
+
+<p>每个万维网网点都有一个服务器进程，它不断地监听 TCP 的端口 80，以便发现是否有浏览器向它发出连接建立请求。</p>
+<p>一旦监听到连接建立请求并建立了 TCP 连接之后，浏览器就向万维网服务器发出浏览某个页面的请求，服务器接着就返回所请求的页面作为响应。</p>
+<p>最后，TCP 连接就被释放了。</p>
+<p>在浏览器和服务器之间的请求和响应的交互，必须按照规定的格式和遵循一定的规则。这些格式和规则就是超文本传送协议 HTTP。</p>
+<p>HTTP 规定在 HTTP 客户与 HTTP 服务器之间的每次交互，都由一个 ASCII 码串构成的请求和一个类似的通用互联网扩充，即“类 MIME(<code>MIME-like</code>)”的响应组成。</p>
+<p>HTTP 报文通常都使用 TCP 连接传送。</p>
+<p>用户浏览页面的两种方法：</p>
+<ol>
+<li>在浏览器的地址窗口中键入所要找的页面的 URL。</li>
+<li>在某一个页面中用鼠标点击一个可选部分，这时浏览器会自动在互联网上找到所要链接的页面。</li>
+</ol>
+<h3 id="HTTP-的主要特点"><a href="#HTTP-的主要特点" class="headerlink" title="HTTP 的主要特点"></a>HTTP 的主要特点</h3><p>HTTP 使用了面向连接的 TCP 作为运输层协议，保证了数据的可靠传输。</p>
+<p>HTTP 协议本身也是无连接的，虽然它使用了面向连接的 TCP 向上提供的服务。</p>
+<p>HTTP 是面向事务的客户服务器协议。</p>
+<p>HTTP 1.0 协议是无状态的。</p>
+<h3 id="请求一个万维网文档所需的时间"><a href="#请求一个万维网文档所需的时间" class="headerlink" title="请求一个万维网文档所需的时间"></a>请求一个万维网文档所需的时间</h3><p>用户在点击鼠标链接某个万维网文档时，HTTP 协议首先要和服务器建立 TCP 链接，这需要使用三报文握手。当建立 TCP 连接的三报文握手的前两部分完成后（即经过了一个 RTT 的时间后），万维网客户就把 HTTP 请求报文，作为建立 TCP 连接的三报文握手中的第三个报文的数据发送给万维网服务器。服务器收到 HTTP 请求报文后，就把所请求的文档作为响应报文返回给客户。</p>
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img3.png" class="">
+
+<p>从图中可以看出，请求一个万维网文档所需的时间是该文档的传输时间加上两倍往返时间 RTT（一个 RTT 用于 TCP 连接，一个用于请求和接收万维网文档）。</p>
+<p>HTTP/1.0 主要的缺点就是每请求一个文档就要有两倍 RTT 的开销。另一种开销就是万维网客户和服务器每建立一次新的 TCP 连接都要分配缓存和变量。</p>
+<p>HTTP/1.1 较好的解决了这个问题，它使用了持续连接。</p>
+<h3 id="持续连接"><a href="#持续连接" class="headerlink" title="持续连接"></a>持续连接</h3><p>持续连接就是万维网服务器在发送响应后仍然在一段时间内保持这条连接，使同一个客户（浏览器）和该服务器可以继续在这条连接上传送后续的 HTTP 请求报文和响应报文。</p>
+<p>这并不局限于传送同一个页面上链接的文档，而是只要这些文档都在同一个服务器上就行。</p>
+<p>持续连接的两种工作方式：</p>
+<ul>
+<li>非流水线方式：客户在收到前一个响应后才能发出下一个请求。这比非持续连接的两倍 RTT 的开销节省了建立 TCP 连接所需的一个 RTT 时间。但服务器在发送完一个对象后，其 TCP 连接就处于空闲状态，浪费了服务器资源。</li>
+<li>流水线方式：客户在收到 HTTP 的响应报文之前就能够接着发送新的请求报文。一个接一个的请求报文到达服务器后，服务器就可连续发回响应报文。使用流水线方式时，客户访问所有的对象只需花费一个 RTT时间，使 TCP 连接中的空闲时间减少，提高了下载文档效率。</li>
+</ul>
+<h2 id="2-代理服务器"><a href="#2-代理服务器" class="headerlink" title="2. 代理服务器"></a>2. 代理服务器</h2><p>代理服务器(<code>proxy server</code>)又称为万维网高速缓存，它代表浏览器发出 HTTP 请求。</p>
+<p>万维网高速缓存把最近的一些请求和响应暂存在本地磁盘中。</p>
+<p>当与暂时存放的请求相同的新请求到达时，万维网高速缓存就把暂存的响应发送出去，而不需要按 URL 的地址再去互联网访问该资源。</p>
+<p>代理服务器可在客户端或服务器工作，也可在中间系统工作。</p>
+<p>使用高速缓存可减少访问互联网服务器的时延。</p>
+<h3 id="没有使用高速缓存的情况"><a href="#没有使用高速缓存的情况" class="headerlink" title="没有使用高速缓存的情况"></a>没有使用高速缓存的情况</h3><img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img4.png" class="">
+
+<h3 id="使用高速缓存的情况"><a href="#使用高速缓存的情况" class="headerlink" title="使用高速缓存的情况"></a>使用高速缓存的情况</h3><img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img5.png" class="">
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img6.png" class="">
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img7.png" class="">
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img8.png" class="">
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img9.png" class="">
+
+<p>在使用代理服务器的情况下，由于有相当大一部分通信量局限在校园网内，因此，专线链路上的通信量大大减少，因而减小了访问互联网的时延。</p>
+<h2 id="3-HTTP-的报文结构"><a href="#3-HTTP-的报文结构" class="headerlink" title="3. HTTP 的报文结构"></a>3. HTTP 的报文结构</h2><p>HTTP 有两类报文：</p>
+<ul>
+<li>请求报文——从客户向服务器发送请求报文。</li>
+<li>响应报文——从服务器到客户的回答。</li>
+</ul>
+<p>由于 HTTP 是面向正文的，因此在报文中的每一个字段都是一些 ASCII 码串，因而每个字段的长度都是不确定的。</p>
+<h3 id="HTTP-的报文结构（请求报文）"><a href="#HTTP-的报文结构（请求报文）" class="headerlink" title="HTTP 的报文结构（请求报文）"></a>HTTP 的报文结构（请求报文）</h3><p>报文由三个部分组成，即开始行、首部行和实体主体。</p>
+<p>在请求报文中开始行叫请求行，在响应报文中开始行叫状态行。</p>
+<p>首部行用来说明浏览器、服务器或报文主体的一些信息。首部行可以有好几行，也可以不使用。</p>
+<img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img10.png" class="">
+
+<p>HTTP 请求报文的一些方法：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">OPTION</td>
+<td align="center">请求一些选项的信息</td>
+</tr>
+<tr>
+<td align="center">GET</td>
+<td align="center">请求读取由 URL所标志的信息</td>
+</tr>
+<tr>
+<td align="center">HEAD</td>
+<td align="center">请求读取由 URL所标志的信息的首部</td>
+</tr>
+<tr>
+<td align="center">POST</td>
+<td align="center">给服务器添加信息</td>
+</tr>
+<tr>
+<td align="center">PUT</td>
+<td align="center">在指明的 URL下存储一个文档</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">删除指明的 URL所标志的资源</td>
+</tr>
+<tr>
+<td align="center">TRACE</td>
+<td align="center">用来进行环回测试的请求报文</td>
+</tr>
+<tr>
+<td align="center">CONNECT</td>
+<td align="center">用于代理服务器</td>
+</tr>
+</tbody></table>
+<h3 id="HTTP-的报文结构（响应报文）"><a href="#HTTP-的报文结构（响应报文）" class="headerlink" title="HTTP 的报文结构（响应报文）"></a>HTTP 的报文结构（响应报文）</h3><img src="/2020/10/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94%E4%B8%87%E7%BB%B4%E7%BD%91/img11.png" class="">
+
+<p>状态行包括三项内容，即 HTTP 的版本，状态码，以及解释状态码的简单短语。</p>
+<p>状态码都是三位数字：</p>
+<ul>
+<li>1xx 表示通知信息的，如请求收到了或正在进行处理。</li>
+<li>2xx 表示成功，如接受或知道了。</li>
+<li>3xx 表示重定向，表示要完成请求还必须采取进一步的行动。</li>
+<li>4xx 表示客户的差错，如请求中有错误的语法或不能完成。</li>
+<li>5xx 表示服务器的差错，如服务器失效无法完成请求。</li>
+</ul>
+<h2 id="4-在服务器上存放用户的信息"><a href="#4-在服务器上存放用户的信息" class="headerlink" title="4. 在服务器上存放用户的信息"></a>4. 在服务器上存放用户的信息</h2><p>万维网站点可以使用 Cookie 来跟踪用户。</p>
+<p>Cookie 表示在 HTTP 服务器和客户之间传递的状态信息。</p>
+<p>使用 Cookie 的网站服务器为用户产生一个唯一的识别码。利用此识别码，网站就能够跟踪该用户在该网站的活动。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/应用层——FTP" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94FTP/"
+    >应用层——FTP</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94FTP/" class="article-date">
+  <time datetime="2020-10-20T02:57:33.000Z" itemprop="datePublished">2020-10-20</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="FTP-概述"><a href="#FTP-概述" class="headerlink" title="FTP 概述"></a>FTP 概述</h1><p>文件传送协议 FTP(<code>File Transfer Protocol</code>) 是互联网上使用得最广泛的文件传送协议。</p>
+<p>FTP 提供交互式的访问，允许客户指明文件的类型与格式，并允许文件具有存取权限。</p>
+<p>FTP 屏蔽了各计算机系统的细节，因而适合于在异构网络中任意计算机之间传送文件。</p>
+<p>网络环境中的一项基本应用就是将文件从一台计算机中复制到另一台可能相距很远的计算机中。</p>
+<h1 id="FTP-的基本工作原理"><a href="#FTP-的基本工作原理" class="headerlink" title="FTP 的基本工作原理"></a>FTP 的基本工作原理</h1><p>初看起来，在两个主机之间传送文件是很简单的事情。其实这往往非常困难。原因是众多的计算机厂商研制出的文件系统多达数百种，且差别很大。 </p>
+<p>网络环境下复制文件的复杂性：</p>
+<ul>
+<li>计算机存储数据的格式不同。</li>
+<li>文件的目录结构和文件命名的规定不同。</li>
+<li>对于相同的文件存取功能，操作系统使用的命令不同。</li>
+<li>访问控制方法不同。</li>
+</ul>
+<h2 id="FTP-特点"><a href="#FTP-特点" class="headerlink" title="FTP 特点"></a>FTP 特点</h2><ul>
+<li>文件传送协议 FTP 只提供文件传送的一些基本的服务，它使用 TCP 可靠的运输服务。</li>
+<li>FTP 的主要功能是减少或消除在不同操作系统下处理文件的不兼容性。</li>
+<li>FTP 使用客户服务器方式。一个 FTP 服务器进程可同时为多个客户进程提供服务。FTP 的服务器进程由两大部分组成：一个主进程，负责接受新的请求；另外有若干个从属进程，负责处理单个请求。</li>
+</ul>
+<h2 id="主进程的工作步骤"><a href="#主进程的工作步骤" class="headerlink" title="主进程的工作步骤"></a>主进程的工作步骤</h2><ol>
+<li>打开熟知端口（端口号为 21），使客户进程能够连接上。</li>
+<li>等待客户进程发出连接请求。</li>
+<li>启动从属进程来处理客户进程发来的请求。从属进程对客户进程的请求处理完毕后即终止，但从属进程在运行期间根据需要还可能创建其他一些子进程。</li>
+<li>回到等待状态，继续接受其他客户进程发来的请求。主进程与从属进程的处理是并发地进行。</li>
+</ol>
+<h2 id="两个连接"><a href="#两个连接" class="headerlink" title="两个连接"></a>两个连接</h2><p>服务器端有两个从属进程：控制进程和数据传送进程。客户端主要有控制进程、数据传送进程和用户界面进程。</p>
+<p>在进行文件传输时，FTP 客户和服务器之间要建立两个并行的 TCP 连接：控制连接和数据连接。</p>
+<p>控制连接在整个会话期间一直保持打开，FTP 客户发出的传送请求通过控制连接发送给服务器端的控制进程，但控制连接不用来传送文件。</p>
+<p>实际用于传输文件的是“数据连接”。服务器端的控制进程在接收到 FTP 客户发送来的文件传输请求后就创建“数据传送进程”和“数据连接”，用来连接客户端和服务器端的数据传送进程。</p>
+<p>数据传送进程实际完成文件的传送，在传送完毕后关闭“数据传送连接”并结束运行。</p>
+<h2 id="FTP-使用的两个-TCP-连接"><a href="#FTP-使用的两个-TCP-连接" class="headerlink" title="FTP 使用的两个 TCP 连接"></a>FTP 使用的两个 TCP 连接</h2><img src="/2020/10/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94FTP/img1.png" class="">
+
+<h2 id="两个不同的端口号"><a href="#两个不同的端口号" class="headerlink" title="两个不同的端口号"></a>两个不同的端口号</h2><p>当客户进程向服务器进程发出建立连接请求时，要寻找连接服务器进程的熟知端口(21)，同时还要告诉服务器进程自己的另一个端口号码，用于建立数据传送连接。</p>
+<p>接着，服务器进程用自己传送数据的熟知端口(20)与客户进程所提供的端口号码建立数据传送连接。</p>
+<p>由于 FTP 使用了两个不同的端口号，所以数据连接与控制连接不会发生混乱。</p>
+<p>使用两个不同端口号的好处：</p>
+<ul>
+<li>使协议更加简单和更容易实现。</li>
+<li>在传输文件时还可以利用控制连接（例如，客户发送请求终止传输）。</li>
+</ul>
+<h2 id="NFS-采用另一种思路"><a href="#NFS-采用另一种思路" class="headerlink" title="NFS 采用另一种思路"></a>NFS 采用另一种思路</h2><p>网络文件系统 NFS 允许应用进程打开一个远地文件，并能在该文件的某一个特定的位置上开始读写数据。</p>
+<p>NFS 可使用户只复制一个大文件中的一个很小的片段，而不需要复制整个大文件。</p>
+<p>例如，计算机 A 的 NFS 客户软件，把要添加的数据和在文件后面写数据的请求一起发送到远地的计算机 B 的 NFS 服务器。NFS 服务器更新文件后返回应答信息。</p>
+<p>NFS 在网络上传送的只是少量的修改数据。 </p>
+<h1 id="简单文件传送协议-TFTP"><a href="#简单文件传送协议-TFTP" class="headerlink" title="简单文件传送协议 TFTP"></a>简单文件传送协议 TFTP</h1><p>TFTP(<code>Trivial File Transfer Protocol</code>) 是一个很小且易于实现的文件传送协议。</p>
+<p>TFTP 使用客户服务器方式和使用 UDP 数据报，因此 TFTP 需要有自己的差错改正措施。</p>
+<p>TFTP 只支持文件传输而不支持交互。</p>
+<p>TFTP 没有一个庞大的命令集，没有列目录的功能，也不能对用户进行身份鉴别。 </p>
+<h2 id="TFTP-的主要特点"><a href="#TFTP-的主要特点" class="headerlink" title="TFTP 的主要特点"></a>TFTP 的主要特点</h2><ul>
+<li>每次传送的数据 PDU 中有 512 字节的数据，但最后一次可不足 512 字节。</li>
+<li>数据 PDU 也称为文件块，每个块按序编号，从 1 开始。</li>
+<li>支持 ASCII 码或二进制传送。</li>
+<li>可对文件进行读或写。</li>
+<li>使用很简单的首部。 </li>
+</ul>
+<p>TFTP 的工作很像停止等待协议：</p>
+<ul>
+<li>发送完一个文件块后就等待对方的确认，确认时应指明所确认的块编号。</li>
+<li>发完数据后在规定时间内收不到确认就要重发数据 PDU。</li>
+<li>发送确认 PDU 的一方若在规定时间内收不到下一个文件块，也要重发确认 PDU。这样就可保证文件的传送不致因某一个数据报的丢失而告失败。 </li>
+</ul>
+<p>开始工作时，TFTP 客户进程发送一个读请求 PDU 或写请求 PDU 给 TFTP 服务器进程，其熟知端口号码为 69。</p>
+<p>TFTP 服务器进程要选择一个新的端口和 TFTP 客户进程进行通信。</p>
+<p>若文件长度恰好为 512 字节的整数倍，则在文件传送完毕后，还必须在最后发送一个只含首部而无数据的数据 PDU。</p>
+<p>若文件长度不是 512 字节的整数倍，则最后传送数据 PDU 的数据字段一定不满 512 字节，这正好可作为文件结束的标志。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/应用层——DNS" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/"
+    >应用层——DNS</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/" class="article-date">
+  <time datetime="2020-10-19T03:08:41.000Z" itemprop="datePublished">2020-10-19</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="域名系统概述"><a href="#域名系统概述" class="headerlink" title="域名系统概述"></a>域名系统概述</h1><p>许多应用层软件经常直接使用域名系统 DNS(<code>Domain Name System</code>)，但计算机的用户只是间接而不是直接使用域名系统。</p>
+<p>互联网采用层次结构的命名树作为主机的名字，并使用分布式的域名系统 DNS。</p>
+<p>名字到 IP 地址的解析是由若干个域名服务器程序完成的。域名服务器程序在专设的结点上运行，运行该程序的机器称为域名服务器。 </p>
+<h1 id="互联网的域名结构"><a href="#互联网的域名结构" class="headerlink" title="互联网的域名结构"></a>互联网的域名结构</h1><p>互联网采用了层次树状结构的命名方法。</p>
+<p>任何一个连接在互联网上的主机或路由器，都有一个唯一的层次结构的名字，即域名。</p>
+<p>域名的结构由标号序列组成，各标号之间用点隔开：… . 三级域名 . 二级域名 . 顶级域名</p>
+<p>各标号分别代表不同级别的域名。 </p>
+<p>域名只是个逻辑概念，并不代表计算机所在的物理地点。</p>
+<p>变长的域名和使用有助记忆的字符串，是为了便于人来使用。而 IP 地址是定长的 32 位二进制数字则非常便于机器进行处理。</p>
+<h2 id="顶级域名-TLD-Top-Level-Domain"><a href="#顶级域名-TLD-Top-Level-Domain" class="headerlink" title="顶级域名 TLD(Top Level Domain)"></a>顶级域名 TLD(Top Level Domain)</h2><p>国家顶级域名 nTLD，例如：.cn 表示中国，.us 表示美国，.uk 表示英国，等等。</p>
+<p>通用顶级域名 gTLD，最早的顶级域名是：</p>
+<ul>
+<li>.com（公司和企业）</li>
+<li>.net（网络服务机构</li>
+<li>.org（非赢利性组织）</li>
+<li>.edu（美国专用的教育机构）</li>
+<li>.gov（美国专用的政府部门）</li>
+<li>.mil（美国专用的军事部门）</li>
+<li>.int（国际组织）</li>
+</ul>
+<p>基础结构域名，这种顶级域名只有一个，即 arpa，用于反向域名解析，因此又称为反向域名。 </p>
+<p>新增加了下列的通用顶级域名：</p>
+<ul>
+<li>.aero（航空运输企业）</li>
+<li>.biz（公司和企业）</li>
+<li>.cat（加泰隆人的语言和文化团体）</li>
+<li>.coop（合作团体）</li>
+<li>.info（各种情况）</li>
+<li>.jobs（人力资源管理者）</li>
+<li>.mobi（移动产品与服务的用户和提供者）</li>
+<li>.museum（博物馆）</li>
+<li>.name（个人）</li>
+<li>.pro（有证书的专业人员）</li>
+<li>.travel（旅游业） </li>
+</ul>
+<h2 id="互联网的域名空间"><a href="#互联网的域名空间" class="headerlink" title="互联网的域名空间"></a>互联网的域名空间</h2><p>用域名树来表示互联网的域名系统是最清楚的。</p>
+<img src="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/img1.png" class="">
+
+<h1 id="域名服务器"><a href="#域名服务器" class="headerlink" title="域名服务器"></a>域名服务器</h1><p>具体实现域名系统的是分布在各地的域名服务器。</p>
+<p>一个服务器所负责管辖的（或有权限的）范围叫做区。</p>
+<p>各单位根据具体情况来划分自己管辖范围的区。但在一个区中的所有节点必须是能够连通的。</p>
+<p>每一个区设置相应的权限域名服务器，用来保存该区中的所有主机的域名到 IP 地址的映射。</p>
+<p>DNS 服务器的管辖范围不是以“域”为单位，而是以“区”为单位。 </p>
+<h2 id="区的不同划分方法举例"><a href="#区的不同划分方法举例" class="headerlink" title="区的不同划分方法举例"></a>区的不同划分方法举例</h2><img src="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/img2.png" class="">
+
+<h2 id="树状结构的-DNS-域名服务器"><a href="#树状结构的-DNS-域名服务器" class="headerlink" title="树状结构的 DNS 域名服务器"></a>树状结构的 DNS 域名服务器</h2><img src="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/img3.png" class="">
+
+<h2 id="域名服务器有以下四种类型"><a href="#域名服务器有以下四种类型" class="headerlink" title="域名服务器有以下四种类型"></a>域名服务器有以下四种类型</h2><ul>
+<li>根域名服务器 </li>
+<li>顶级域名服务器 </li>
+<li>权限域名服务器 </li>
+<li>本地域名服务器</li>
+</ul>
+<h3 id="根域名服务器"><a href="#根域名服务器" class="headerlink" title="根域名服务器"></a>根域名服务器</h3><p>根域名服务器是最高层次的域名服务器，也是最重要的域名服务器。所有的根域名服务器都知道所有的顶级域名服务器的域名和 IP 地址。</p>
+<p>不管是哪一个本地域名服务器，若要对互联网上任何一个域名进行解析，只要自己无法解析，就首先求助于根域名服务器。</p>
+<p>在互联网上共有 13 个不同 IP 地址的根域名服务器，它们的名字是用一个英文字母命名，从 a 一直到 m（前 13 个字母）。</p>
+<p>根域名服务器共有 13 套装置，不是 13 个机器。</p>
+<p>这些根域名服务器相应的域名分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a.rootservers.net</span><br><span class="line">b.rootservers.net</span><br><span class="line">… </span><br><span class="line">m.rootservers.net</span><br></pre></td></tr></table></figure>
+<p>根域名服务器并不直接把域名直接转换成 IP 地址。</p>
+<p>在使用迭代查询时，根域名服务器把下一步应当找的顶级域名服务器的 IP 地址告诉本地域名服务器。</p>
+<h3 id="顶级域名服务器"><a href="#顶级域名服务器" class="headerlink" title="顶级域名服务器"></a>顶级域名服务器</h3><p>顶级域名服务器（即 TLD 服务器）负责管理在该顶级域名服务器注册的所有二级域名。</p>
+<p>当收到 DNS 查询请求时，就给出相应的回答（可能是最后的结果，也可能是下一步应当找的域名服务器的 IP 地址）。</p>
+<h3 id="权限域名服务器"><a href="#权限域名服务器" class="headerlink" title="权限域名服务器"></a>权限域名服务器</h3><p>负责一个区的域名服务器。</p>
+<p>当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的 DNS 客户，下一步应当找哪一个权限域名服务器。</p>
+<h3 id="本地域名服务器"><a href="#本地域名服务器" class="headerlink" title="本地域名服务器"></a>本地域名服务器</h3><p>本地域名服务器对域名系统非常重要。</p>
+<p>当一个主机发出 DNS 查询请求时，这个查询请求报文就发送给本地域名服务器。</p>
+<p>每一个互联网服务提供者 ISP，或一个大学，甚至一个大学里的系，都可以拥有一个本地域名服务器，这种域名服务器有时也称为默认域名服务器。</p>
+<h2 id="提高域名服务器的可靠性"><a href="#提高域名服务器的可靠性" class="headerlink" title="提高域名服务器的可靠性"></a>提高域名服务器的可靠性</h2><p>为了提高域名服务器的可靠性，DNS 域名服务器都把数据复制到几个域名服务器来保存，其中的一个是主域名服务器，其他的是辅助域名服务器。</p>
+<p>当主域名服务器出故障时，辅助域名服务器可以保证 DNS 的查询工作不会中断。</p>
+<p>主域名服务器定期把数据复制到辅助域名服务器中，而更改数据只能在主域名服务器中进行。这样就保证了数据的一致性。</p>
+<h2 id="域名的解析过程"><a href="#域名的解析过程" class="headerlink" title="域名的解析过程"></a>域名的解析过程</h2><p>主机向本地域名服务器的查询一般都是采用递归查询。如果主机所询问的本地域名服务器不知道被查询域名的 IP 地址，那么本地域名服务器就以 DNS 客户的身份，向其他根域名服务器继续发出查询请求报文。</p>
+<p>本地域名服务器向根域名服务器的查询通常是采用迭代查询。当根域名服务器收到本地域名服务器的迭代查询请求报文时，要么给出所要查询的 IP 地址，要么告诉本地域名服务器：“你下一步应当向哪一个域名服务器进行查询”。然后让本地域名服务器进行后续的查询。</p>
+<h3 id="本地域名服务器采用迭代查询"><a href="#本地域名服务器采用迭代查询" class="headerlink" title="本地域名服务器采用迭代查询"></a>本地域名服务器采用迭代查询</h3><img src="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/img4.png" class="">
+
+<p>这 8 个步骤总共要使用 8 个 UDP 用户数据报的报文。本地域名服务器经过 3 次迭代查询后，从权限域名服务器得到了主机<code>y.abc.com</code>的 IP 地址，最后把结果返回给主机<code>m.xyz.com</code>。</p>
+<h3 id="本地域名服务器采用递归查询（比较少用）"><a href="#本地域名服务器采用递归查询（比较少用）" class="headerlink" title="本地域名服务器采用递归查询（比较少用）"></a>本地域名服务器采用递归查询（比较少用）</h3><img src="/2020/10/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DNS/img5.png" class="">
+
+<h3 id="名字的高速缓存"><a href="#名字的高速缓存" class="headerlink" title="名字的高速缓存"></a>名字的高速缓存</h3><p>为了提高 DNS 查询效率，每个域名服务器都维护一个高速缓存，存放最近用过的名字以及从何处获得名字映射信息的记录。</p>
+<p>可大大减轻根域名服务器的负荷，使互联网上的 DNS 查询请求和回答报文的数量大为减少。</p>
+<p>为保持高速缓存中的内容正确，域名服务器应为每项内容设置计时器，并处理超过合理时间的项（例如，每个项目只存放两天）。</p>
+<p>当权限域名服务器回答一个查询请求时，在响应中都指明绑定有效存在的时间值。增加此时间值可减少网络开销，而减少此时间值可提高域名转换的准确性。 </p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-计算机网络/运输层——TCP的运输连接管理" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E8%BF%90%E8%BE%93%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/"
+    >运输层——TCP的运输连接管理</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/10/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E8%BF%90%E8%BE%93%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2020-10-17T03:51:33.000Z" itemprop="datePublished">2020-10-17</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>TCP 是面向连接的协议。运输连接是用来传送 TCP 报文的。TCP 运输连接的建立和释放是每一次面向连接的通信中必不可少的过程。</p>
+<p>TCP 连接有三个阶段：连接建立、数据传送、连接释放。</p>
+<p>TCP 连接的管理就是使 TCP 连接的建立和释放都能正常地进行。</p>
+<p>TCP 连接建立过程中要解决的三个问题：</p>
+<ol>
+<li>要使每一方能够确知对方的存在。</li>
+<li>要允许双方协商一些参数（如最大窗口值、是否使用窗口扩大选项和时间戳选项以及服务质量等）。</li>
+<li>能够对运输实体资源（如缓存大小、连接表中的项目等）进行分配。</li>
+</ol>
+<p>TCP 连接的建立采用客户服务器方式。主动发起连接建立的应用进程叫做客户，被动等待建立连接的应用进程叫服务器。</p>
+<h1 id="TCP的连接建立"><a href="#TCP的连接建立" class="headerlink" title="TCP的连接建立"></a>TCP的连接建立</h1><p>TCP 建立连接的过程叫做握手。握手需要在客户和服务器之间交换三个 TCP 报文段。称之为三报文握手。</p>
+<img src="/2020/10/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E8%BF%90%E8%BE%93%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/img1.png" class="" title="用三次握手建立 TCP 连接的各状态">
+
+<p>假定主机 A 运行的是 TCP 客户程序，B 运行 TCP 服务器程序。最初两端的 TCP 进程都处于<code>CLOSED</code>（关闭）状态。图中在主机下面的方框分别是 TCP 进程所处的状态。注意，A 主动打开连接，B 被动打开连接。</p>
+<p>B 的 TCP 服务器进程先创建传输控制块 TCB，准备接受客户进程的连接请求。然后服务器进程就处于<code>LISTEN</code>（收听）状态，等待客户的连接请求。</p>
+<p>A 的 TCP 客户进程也是首先创建传输控制块 TCB，然后向 B 发出连接请求报文段，这时，首部中的同部位<code>SYN = 1</code>，同时选择一个初始序号<code>seq = x</code>。TCP 规定<code>SYN</code>报文段（即<code>SYN = 1</code>的报文段）不能携带数据，但要消耗掉一个序号。这时，TCP 客户进程进入<code>SYN-SENT</code>（同步已发送）状态。</p>
+<p>B 收到连接请求报文段后，如同意建立连接，则向 A 发送确认。在确认报文段中，<code>SYN = 1, ACK = 1</code>，确认号是<code>ack = x + 1</code>，同时也为自己选择一个初始序号<code>seq = y</code>。这个报文段也不能携带数据，但同样要消耗掉一个序号。这时，TCP 服务器进程进入<code>SYN-RCVD</code>（同步收到）状态。</p>
+<p>TCP 客户进程收到 B 的确认后，还要向 B 给出确认。<code>ACK = 1, ack = y + 1</code>，而自己的序号<code>seq = x + 1</code>。TCP 规定，<code>ACK</code>报文段可以携带数据。但如果不携带数据则不消耗序号，在这种情况下，下一个数据报文段的序号仍是<code>seq = x + 1</code>。这时 TCP 连接已经建立，A 进入<code>ESTABLISHED</code>（已建立连接）状态。</p>
+<p>当 B 收到 A 的确认后，也进入<code>ESTABLISHED</code>状态。</p>
+<p>为什么 A 还要发一次确认呢？这主要是为了防止已失效的连接请求报文段突然又传送到了 B，因而产生错误。</p>
+<p>所谓已失效的连接请求报文是这样产生的。考虑一种正常情况，A 发出连接请求，但因连接请求报文丢失而未收到确认。于是 A 再重传一次连接请求。后来收到了确认，建立了连接。数据传输完毕后，就释放了连接。A 共发了两个连接请求报文段。其中第一个丢失，第二个到达 B。没有“已失效的连接请求报文段”。</p>
+<p>现假定出现一种异常情况，即 A 发出的第一个连接请求报文段并没有丢失，而是在某些网络节点长时间滞留了，以致延误到连接释放后的某个时间才到达 B。本来这是一个早已失效的报文段。但 B 收到此失效的连接请求报文段后，就误认为是 A 又发出一次新的连接请求。于是就向 A 发出确认报文段，同意建立连接。假定不采用三次握手，那么只要 B 发出确认，新的连接就建立了。由于现在 A 并没有发出建立连接请求，因此不会理睬 B 的确认，也不会向 B 发送数据。但 B 却以为新的运输连接已经建立了，并一直等待 A 发来数据，B 的许多资源就这样白白浪费了。</p>
+<p>采用三次握手就可以防止上述现象的发生。例如在刚才的情况下，A 不会向 B 的确认发出确认，B 收不到确认就知道 A 并没有要求建立连接。</p>
+<h1 id="TCP的连接释放"><a href="#TCP的连接释放" class="headerlink" title="TCP的连接释放"></a>TCP的连接释放</h1><p>TCP 连接释放过程是四报文握手。</p>
+<img src="/2020/10/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E8%BF%90%E8%BE%93%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/img2.png" class="">
+
+<p>数据传输结束后，通信的双方都可释放连接。现在 A 和 B 都处于<code>ESTABLISHED</code>状态。A 的应用进程先向其 TCP 发出连接释放报文段，并停止再发送数据，主动关闭 TCP 连接。A 把连接释放报文段首部的<code>FIN</code>置1，其序号<code>seq = u</code>，它等于前面已传送过的数据的最后一个字节的序号加1。这时 A 进入<code>FIN-WAIT-1</code>（终止等待1）状态，等待 B 的确认。TCP 规定，<code>FIN</code>报文段即使不携带数据也消耗掉一个序号。</p>
+<p>B 收到连接释放报文段后立即发出确认，确认号是<code>ack = u + 1</code>，而这个报文段自己的序号是<code>v</code>，等于 B 前面已传送过的数据的最后一个字节的序号加1。然后 B 进入<code>CLOSE-WAIT</code>（关闭等待）状态。TCP 服务器进程这时应通知高层应用进程，因而从 A 到 B 这个方向的连接就释放了，这时的 TCP 连接处于半关闭状态，即 A 已经没有数据要发送了，但 B 若发送数据，A 仍要接收。也就是说，从 B 到 A 这个方向的连接并未关闭。这个状态可能会持续一些时间。</p>
+<p>A 收到来自 B 的确认后，就进入<code>FIN-WAIT-2</code>（终止等待2）状态，等待 B 发出的连接释放报文段。</p>
+<p>若 B 已经没有要向 A 发送的数据，其应用进程就通知 TCP 释放连接。这时 B 发出的连接释放报文段必须使<code>FIN = 1</code>。现假定 B 的序号为<code>w</code>（半关闭状态 B 可能又发送了一些数据）。B 还必须重复上次已发送过的确认号<code>ack = u + 1</code>。这时 B 就进入<code>LAST-ACK</code>（最后确认）状态，等待 A 的确认。</p>
+<p>A 在收到 B 的连接释放报文段后，必须对此发出确认。在确认报文段中，<code>ACK = 1, ack = w + 1</code>，而自己的序号是<code>seq = u + 1</code>。然后进入到<code>TIME-WAIT</code>（时间等待）状态。现在 TCP 连接还没有释放掉。必须经过时间等待计时器设置的时间 2MSL 后，A 才进入到<code>CLOSED</code>状态。时间 MSL 叫最长报文段寿命(<code>Maximum Segment Lifetime</code>)。当 A 撤销相应的传输控制块 TCB 后，就结束了这次 TCP 连接。</p>
+<p>B 只要收到了 A 的确认，就进入<code>CLOSED</code>状态。同样，B 在撤销相应的传输控制块 TCB 后，就结束了这次的 TCP 连接。B 结束 TCP 连接的时间要比 A 早。</p>
+<h2 id="A-必须等待-2MSL-的时间"><a href="#A-必须等待-2MSL-的时间" class="headerlink" title="A 必须等待 2MSL 的时间"></a>A 必须等待 2MSL 的时间</h2><p>第一，为了保证 A 发送的最后一个<code>ACK</code>报文段能够到达 B。</p>
+<p>第二，防止 “已失效的连接请求报文段”出现在本连接中。</p>
+<h2 id="保活计时器"><a href="#保活计时器" class="headerlink" title="保活计时器"></a>保活计时器</h2><p>除时间等待计时器外，TCP还设有一个保活计时器(<code>keepalive timer</code>)，用来防止在 TCP 连接出现长时期的空闲。</p>
+<p>设想有这样的情况：客户己主动与服务器建立了 TCP连接。但后来客户端的主机突然出故障。显然，服务器以后就不能再收到客户发来的数据。因此，应当有措施使服务器不要再白白等待下去。这就是使用保活计时器。服务器每收到一次客户的数据，就重新设置保活计时器。</p>
+<p>保活计时器通常设置为2小时。若服务器过了2小时还没有收到客户的信息，它就发送探测报文段。若发送了10个探测报文段（每一个相隔75秒）还没有响应，就假定客户出了故障，因而就终止该连接。 </p>
+<h1 id="TCP的有限状态机"><a href="#TCP的有限状态机" class="headerlink" title="TCP的有限状态机"></a>TCP的有限状态机</h1><img src="/2020/10/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E7%9A%84%E8%BF%90%E8%BE%93%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/img3.png" class="" title="TCP 的有限状态机">
+
+<p>图中每一个方框都是 TCP 可能具有的状态。</p>
+<p>每个方框中的大写英文字符串是 TCP 标准所使用的 TCP 连接状态名。状态之间的箭头表示可能发生的状态变迁。</p>
+<p>箭头旁边的字，表明引起这种变迁的原因，或表明发生状态变迁后又出现什么动作。</p>
+<p>图中有三种不同的箭头：</p>
+<ul>
+<li>粗实线箭头表示对客户进程的正常变迁。</li>
+<li>粗虚线箭头表示对服务器进程的正常变迁。</li>
+<li>另一种细线箭头表示异常变迁。 </li>
+</ul>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-计算机网络/运输层——TCP的流量控制" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -1027,831 +1870,13 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-计算机网络/网络层——VPN和NAT" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/"
-    >网络层——VPN和NAT</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/" class="article-date">
-  <time datetime="2020-10-09T08:51:33.000Z" itemprop="datePublished">2020-10-09</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="虚拟专用网-VPN"><a href="#虚拟专用网-VPN" class="headerlink" title="虚拟专用网 VPN"></a>虚拟专用网 VPN</h1><p>由于 IP 地址的紧缺，一个机构能够申请到的IP地址数往往远小于本机构所拥有的主机数。</p>
-<p>考虑到互联网并不很安全，一个机构内也并不需要把所有的主机接入到外部的互联网。</p>
-<p>假定在一个机构内部的计算机通信也是采用 TCP/IP 协议，那么从原则上讲，对于这些仅在机构内部使用的计算机就可以由本机构自行分配其 IP 地址。</p>
-<h2 id="本地地址与全球地址"><a href="#本地地址与全球地址" class="headerlink" title="本地地址与全球地址"></a>本地地址与全球地址</h2><p>本地地址——仅在机构内部使用的 IP 地址，可以由本机构自行分配，而不需要向互联网的管理机构申请。</p>
-<p>全球地址——全球唯一的 IP 地址，必须向互联网的管理机构申请。 </p>
-<p>在内部使用的本地地址就有可能和互联网中某个 IP 地址重合，这样就会出现地址的二义性问题。</p>
-<p>RFC 1918 指明了一些专用地址。专用地址只能用作本地地址而不能用作全球地址。在互联网中的所有路由器，对目的地址是专用地址的数据报一律不进行转发。</p>
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img1.png" class="">
-
-<p>采用这样的专用 IP 地址的互连网络称为专用互联网或本地互联网，或更简单些，就叫做专用网。</p>
-<p>因为这些专用地址仅在本机构内部使用。专用IP地址也叫做可重用地址(<code>reusable address</code>)。</p>
-<p>利用公用的互联网作为本机构各专用网之间的通信载体，这样的专用网又称为虚拟专用网 VPN(<code>Virtual Private Network</code>)。</p>
-<p>“专用网”是因为这种网络是为本机构的主机用于机构内部的通信，而不是用于和网络外非本机构的主机通信。</p>
-<p>“虚拟”表示“好像是”，但实际上并不是，因为现在并没有真正使用通信专线，而VPN只是在效果上和真正的专用网一样。</p>
-<p>如果专用网不同网点之间的通信必须经过公用的互联网，但又有保密的要求，那么所有通过互联网传送的数据都必须加密。</p>
-<p>一个机构要构建自己的 VPN 就必须为它的每一个场所购买专门的硬件和软件，并进行配置，使每一个场所的 VPN 系统都知道其他场所的地址。</p>
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img2.png" class="">
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img3.png" class="">
-
-<h3 id="内联网-intranet-和外联网-extranet"><a href="#内联网-intranet-和外联网-extranet" class="headerlink" title="内联网 intranet 和外联网 extranet"></a>内联网 intranet 和外联网 extranet</h3><p>它们都是基于 TCP/IP 协议的。</p>
-<p>由部门 A 和 B 的内部网络所构成的虚拟专用网 VPN 又称为内联网(<code>intranet</code>)，表示部门 A 和 B 都是在同一个机构的内部。一个机构和某些外部机构共同建立的虚拟专用网 VPN 又称为外联网(<code>extranet</code>)。 </p>
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img4.png" class="">
-
-<p>远程接入 VPN(<code>remote access VPN</code>) 可以满足外部流动员工访问公司网络的需求。</p>
-<p>在外地工作的员工拨号接入互联网，而驻留在员工 PC 机中的 VPN 软件可在员工的 PC 机和公司的主机之间建立 VPN 隧道，因而外地员工与公司通信的内容是保密的，员工们感到好像就是使用公司内部的本地网络。 </p>
-<h1 id="网络地址转换-NAT"><a href="#网络地址转换-NAT" class="headerlink" title="网络地址转换 NAT"></a>网络地址转换 NAT</h1><p>在专用网上使用专用地址的主机如何与互联网上的主机通信（并不需要加密）？</p>
-<p>再申请一些全球 IP 地址。但这在很多情况下是不容易做到的。目前使用得最多的方法是采用网络地址转换 NAT(<code>Network Address Translation</code>)。</p>
-<p>需要在专用网连接到互联网的路由器上安装 NAT 软件。装有 NAT 软件的路由器叫做 NAT 路由器，它至少有一个有效的外部全球 IP 地址。</p>
-<p>所有使用本地地址的主机在和外界通信时，都要在 NAT 路由器上将其本地地址转换成全球 IP 地址，才能和互联网连接。</p>
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img5.png" class="">
-
-<p>内部主机 A 用本地地址 IPA 和互联网上主机 B 通信所发送的数据报必须经过 NAT 路由器。</p>
-<p>NAT 路由器将数据报的源地址 IPA 转换成全球地址 IPG ，并把转换结果记录到NAT地址转换表中，目的地址 IPB 保持不变，然后发送到互联网。</p>
-<p>NAT 路由器收到主机 B 发回的数据报时，知道数据报中的源地址是 IPB 而目的地址是 IPG。</p>
-<p>根据 NAT 转换表，NAT 路由器将目的地址 IPG 转换为 IPA ，转发给最终的内部主机 A。 </p>
-<p>可以看出，在内部主机与外部主机通信时，在NAT路由器上发生了两次地址转换：</p>
-<ul>
-<li>离开专用网时：替换源地址，将内部地址替换为全球地址；</li>
-<li>进入专用网时：替换目的地址，将全球地址替换为内部地址；</li>
-</ul>
-<img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img6.png" class="">
-
-<p>当 NAT 路由器具有 n 个全球 IP 地址时，专用网内最多可以同时有 n 台主机接入到互联网。这样就可以使专用网内较多数量的主机，轮流使用 NAT 路由器有限数量的全球 IP 地址。</p>
-<p>通过 NAT 路由器的通信必须由专用网内的主机发起。专用网内部的主机不能充当服务器用，因为互联网上的客户无法请求专用网内的服务器提供服务。</p>
-<p>为了更加有效地利用 NAT 路由器上的全球IP地址，现在常用的 NAT 转换表把运输层的端口号也利用上。这样，就可以使多个拥有本地地址的主机，共用一个 NAT 路由器上的全球 IP 地址，因而可以同时和互联网上的不同主机进行通信。</p>
-<p>使用端口号的 NAT 叫做网络地址与端口号转换NAPT(<code>Network Address and Port Translation</code>)，而不使用端口号的 NAT 就叫做传统的 NAT(<code>traditional NAT</code>)。</p>
-<h2 id="NAPT-地址转换表"><a href="#NAPT-地址转换表" class="headerlink" title="NAPT 地址转换表"></a>NAPT 地址转换表</h2><img src="/2020/10/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94VPN%E5%92%8CNAT/img7.png" class="">
-
-<p>NAPT 把专用网内不同的源 IP 地址，都转换为同样的全球 IP 地址。但对源主机所采用的 TCP 端口号（不管相同或不同），则转换为不同的新的端口号。因此，当 NAPT 路由器收到从互联网发来的应答时，就可以从 IP 数据报的数据部分找出运输层的端口号，然后根据不同的目的端口号，从 NAPT 转换表中找到正确的目的主机。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/网络层——IP多播" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/"
-    >网络层——IP多播</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/" class="article-date">
-  <time datetime="2020-09-29T03:27:09.000Z" itemprop="datePublished">2020-09-29</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="IP-多播的基本概念"><a href="#IP-多播的基本概念" class="headerlink" title="IP 多播的基本概念"></a>IP 多播的基本概念</h1><p>IP 多播 (<code>multicast</code>，以前曾译为组播) 目的：更好地支持一对多通信。</p>
-<p>一对多通信：一个源点发送到许多个终点。例如，实时信息的交付（如新闻、股市行情等），软件更新，交互式会议及其他多媒体通信。</p>
-<img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img1.png" class="">
-<img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img2.png" class="">
-
-<p>在互联网上进行多播就叫做 IP 多播。互联网范围的多播要靠路由器来实现。</p>
-<p>能够运行多播协议的路由器称为多播路由器(<code>multicast router</code>)。当然它也可以转发普通的单播IP数据报。</p>
-<h2 id="多播-IP-地址"><a href="#多播-IP-地址" class="headerlink" title="多播 IP 地址"></a>多播 IP 地址</h2><p>IP 多播所传送的分组需要使用多播 IP 地址。</p>
-<p>在多播数据报的目的地址写入的是多播组的标识符。多播组的标识符就是 IP 地址中的 D 类地址（多播地址）。每一个 D 类地址标志一个多播组。</p>
-<p>多播地址只能用于目的地址，不能用于源地址。</p>
-<h2 id="多播数据报"><a href="#多播数据报" class="headerlink" title="多播数据报"></a>多播数据报</h2><p>多播数据报和一般的 IP 数据报的区别就是它使用 D 类 IP 地址作为目的地址，并且首部中的协议字段值是 2，表明使用网际组管理协议 IGMP。</p>
-<p>多播数据报也是“尽最大努力交付”，不保证一定能够交付多播组内的所有成员。</p>
-<p>对多播数据报不产生 ICMP 差错报文。因此，若在 PING 命令后面键入多播地址，将永远不会收到响应。</p>
-<h1 id="在局域网上进行硬件多播"><a href="#在局域网上进行硬件多播" class="headerlink" title="在局域网上进行硬件多播"></a>在局域网上进行硬件多播</h1><p>互联网号码指派管理局 IANA 拥有的以太网地址块的高 24 位为<code>00-00-5E</code>。因此 TCP/IP 协议使用的以太网地址块的范围是从<code>00-00-5E-00-00-00</code>到<code>00-00-5E-FF-FF-FF</code>。</p>
-<p>不难看出，在每一个地址中，只有23位可用作多播。</p>
-<p>D 类 IP 地址可供分配的有 28 位，在这 28 位中的前 5 位不能用来构成以太网硬件地址。</p>
-<p>D 类 IP 地址与以太网多播地址的映射关系：</p>
-<img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img3.png" class="">
-
-<p>由于多播 IP 地址与以太网硬件地址的映射关系不是唯一的，因此收到多播数据报的主机，还要在 IP 层利用软件进行过滤，把不是本主机要接收的数据报丢弃。</p>
-<h1 id="网际组管理协议-IGMP-和多播路由选择协议"><a href="#网际组管理协议-IGMP-和多播路由选择协议" class="headerlink" title="网际组管理协议 IGMP 和多播路由选择协议"></a>网际组管理协议 IGMP 和多播路由选择协议</h1><h2 id="IP-多播需要两种协议"><a href="#IP-多播需要两种协议" class="headerlink" title="IP 多播需要两种协议"></a>IP 多播需要两种协议</h2><p>为了使路由器知道多播组成员的信息，需要利用网际组管理协议 IGMP(<code>Internet Group Management Protocol</code>)。</p>
-<p>连接在局域网上的多播路由器还必须和互联网上的其他多播路由器协同工作，以便把多播数据报用最小代价传送给所有的组成员。这就需要使用多播路由选择协议。 </p>
-<img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img4.png" class="">
-
-<h3 id="IGMP-的使用范围"><a href="#IGMP-的使用范围" class="headerlink" title="IGMP 的使用范围"></a>IGMP 的使用范围</h3><p>IGMP 并非在互联网范围内对所有多播组成员进行管理的协议。</p>
-<p>IGMP 不知道 IP 多播组包含的成员数，也不知道这些成员都分布在哪些网络上。</p>
-<p>IGMP 协议是让连接在本地局域网上的多播路由器知道本局域网上是否有主机（严格讲，是主机上的某个进程）参加或退出了某个多播组。</p>
-<h3 id="多播路由选择协议更为复杂"><a href="#多播路由选择协议更为复杂" class="headerlink" title="多播路由选择协议更为复杂"></a>多播路由选择协议更为复杂</h3><img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img5.png" class="">
-
-<p>多播转发必须动态地适应多播组成员的变化（这时网络拓扑并未发生变化）。请注意，单播路由选择通常是在网络拓扑发生变化时才需要更新路由。</p>
-<p>多播路由器在转发多播数据报时，不能仅仅根据多播数据报中的目的地址，而是还要考虑这个多播数据报从什么地方来和要到什么地方去。</p>
-<p>多播数据报可以由没有加入多播组的主机发出，也可以通过没有组成员接入的网络。 </p>
-<h2 id="网际组管理协议-IGMP"><a href="#网际组管理协议-IGMP" class="headerlink" title="网际组管理协议 IGMP"></a>网际组管理协议 IGMP</h2><p>和 ICMP 相似，IGMP 使用 IP 数据报传递其报文（即 IGMP 报文加上 IP 首部构成 IP 数据报），但它也向 IP 提供服务。因此，我们不把 IGMP 看成是一个单独的协议，而是属于整个网际协议 IP 的一个组成部分。 </p>
-<p>IGMP 工作可分为两个阶段</p>
-<h4 id="第一阶段：加入多播组。"><a href="#第一阶段：加入多播组。" class="headerlink" title="第一阶段：加入多播组。"></a>第一阶段：加入多播组。</h4><p>当某个主机加入新的多播组时，该主机应向多播组的多播地址发送 IGMP 报文，声明自己要成为该组的成员。</p>
-<p>本地的多播路由器收到 IGMP 报文后，将组成员关系转发给互联网上的其他多播路由器。</p>
-<h4 id="第二阶段：探询组成员变化情况。"><a href="#第二阶段：探询组成员变化情况。" class="headerlink" title="第二阶段：探询组成员变化情况。"></a>第二阶段：探询组成员变化情况。</h4><p>因为组成员关系是动态的，因此本地多播路由器要周期性地探询本地局域网上的主机，以便知道这些主机是否还继续是组的成员。</p>
-<p>只要对某个组有一个主机响应，那么多播路由器就认为这个组是活跃的。</p>
-<p>但一个组在经过几次的探询后仍然没有一个主机响应，则不再将该组的成员关系转发给其他的多播路由器。</p>
-<p>在主机和多播路由器之间的所有通信都是使用 IP 多播。</p>
-<p>多播路由器在探询组成员关系时，只需要对所有的组发送一个请求信息的询问报文，而不需要对每一个组发送一个询问报文。默认的询问速率是每 125 秒发送一次。</p>
-<p>当同一个网络上连接有几个多播路由器时，它们能够迅速和有效地选择其中的一个来探询主机的成员关系。 </p>
-<p>在 IGMP 的询问报文中有一个数值 N，它指明一个最长响应时间（默认值为 10 秒）。当收到询问时，主机在 0 到 N 之间随机选择发送响应所需经过的时延。对应于最小时延的响应最先发送。</p>
-<p>同一个组内的每一个主机都要监听响应，只要有本组的其他主机先发送了响应，自己就可以不再发送响应了。</p>
-<h2 id="多播路由选择"><a href="#多播路由选择" class="headerlink" title="多播路由选择"></a>多播路由选择</h2><p>多播路由选择协议尚未标准化。</p>
-<p>一个多播组中的成员是动态变化的，随时会有主机加入或离开这个多播组。</p>
-<p>多播路由选择实际上就是要找出以源主机为根结点的多播转发树。</p>
-<p>在多播转发树上的路由器不会收到重复的多播数据报。</p>
-<p>对不同的多播组对应于不同的多播转发树。</p>
-<p>同一个多播组，对不同的源点也会有不同的多播转发树。</p>
-<p>多播路由选择协议在转发多播数据报时使用三种方法：</p>
-<ul>
-<li>洪泛与剪除</li>
-<li>隧道技术</li>
-<li>基于核心的发现技术</li>
-</ul>
-<h3 id="1-洪泛与剪除"><a href="#1-洪泛与剪除" class="headerlink" title="(1) 洪泛与剪除"></a>(1) 洪泛与剪除</h3><p>这种方法适合于较小的多播组，而所有的组成员接入的局域网也是相邻接的。</p>
-<p>一开始，路由器转发多播数据报使用洪泛的方法（这就是广播）。</p>
-<p>为了避免兜圈子，采用了叫做反向路径广播 RPB(<code>Reverse Path Broadcasting</code>) 的策略。 </p>
-<p>RPB 的要点：<br>路由器收到多播数据报时，先检查它是否是从源点经最短路径传送来的。</p>
-<p>若是，就向所有其他方向转发刚才收到的多播数据报（但进入的方向除外），否则就丢弃而不转发。</p>
-<p>如果存在几条同样长度的最短路径，那么只能选择一条最短路径，选择的准则就是看这几条最短路径中的相邻路由器谁的 IP 地址最小。 </p>
-<p>最后就得出了用来转发多播数据报的多播转发树，以后就按这个多播转发树转发多播数据报。避免了多播数据报的兜圈子，同时每一个路由器也不会接收重复的多播数据报。</p>
-<p>如果在多播转发树上的某个路由器发现它的下游树枝（即叶节点方向）已没有该多播组的成员，就应把它和下游的树枝一起剪除。</p>
-<p>当某个树枝有新增加的组成员时，可以再接入到多播转发树上。</p>
-<img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img6.png" class="">
-
-<h3 id="2-隧道技术-tunneling"><a href="#2-隧道技术-tunneling" class="headerlink" title="(2) 隧道技术 (tunneling)"></a>(2) 隧道技术 (tunneling)</h3><img src="/2020/09/29/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IP%E5%A4%9A%E6%92%AD/img7.png" class="">
-
-<h3 id="3-基于核心的发现技术"><a href="#3-基于核心的发现技术" class="headerlink" title="(3) 基于核心的发现技术"></a>(3) 基于核心的发现技术</h3><p>这种方法对于多播组的大小在较大范围内变化时都适合。</p>
-<p>这种方法是对每一个多播组 G 指定一个核心路由器，给出它的 IP 单播地址。</p>
-<p>核心路由器按照前面讲过的方法创建出对应于多播组 G 的转发树。 </p>
-<h3 id="几种多播路由选择协议"><a href="#几种多播路由选择协议" class="headerlink" title="几种多播路由选择协议"></a>几种多播路由选择协议</h3><p>距离向量多播路由选择协议 DVMRP(<code>Distance Vector Multicast Routing Protocol</code>)<br>基于核心的转发树 CBT(<code>Core Based Tree</code>)<br>开放最短通路优先的多播扩展 MOSPF(<code>Multicast Extensions to OSPF</code>)<br>协议无关多播-稀疏方式 PIM-SM(<code>Protocol Independent Multicast-Sparse Mode</code>)<br>协议无关多播-密集方式 PIM-DM(<code>Protocol Independent Multicast-Dense Mode</code>)</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/网络层——IPv6" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/"
-    >网络层——IPv6</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/" class="article-date">
-  <time datetime="2020-09-28T09:11:25.000Z" itemprop="datePublished">2020-09-28</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>IP 是互联网的核心协议。</p>
-<p>互联网经过几十年的飞速发展，到 2011 年 2 月，IPv4 的 32 位地址已经耗尽。ISP 已经不能再申请到新的 IP 地址块了。我国在 2014 – 2015 年也逐步停止了向新用户和应用分配 IPv4 地址。</p>
-<p>解决 IP 地址耗尽的根本措施就是采用具有更大地址空间的新版本的 IP，即 IPv6。</p>
-<h1 id="IPv6-的基本首部"><a href="#IPv6-的基本首部" class="headerlink" title="IPv6 的基本首部"></a>IPv6 的基本首部</h1><p>IPv6 仍支持无连接的传送，但将协议数据单元 PDU 称为分组。</p>
-<p>所引进的主要变化如下：</p>
-<ul>
-<li>更大的地址空间。IPv6 将地址从 IPv4 的 32 位 增大到了 128 位。 </li>
-<li>扩展的地址层次结构。 </li>
-<li>灵活的首部格式。IPv6 定义了许多可选的扩展首部。</li>
-<li>改进的选项。IPv6 允许数据报包含有选项的控制信息，其选项放在有效载荷中。</li>
-<li>允许协议继续扩充。 </li>
-<li>支持即插即用（即自动配置）。因此 IPv6 不需要使用 DHCP。</li>
-<li>支持资源的预分配。IPv6 支持实时视像等要求，保证一定的带宽和时延的应用。</li>
-</ul>
-<p>IPv6 首部改为 8 字节对齐。首部长度必须是 8 字节的整数倍。原来的 IPv4 首部是 4 字节对齐。</p>
-<h2 id="IPv6-数据报的一般形式"><a href="#IPv6-数据报的一般形式" class="headerlink" title="IPv6 数据报的一般形式"></a>IPv6 数据报的一般形式</h2><p>IPv6 数据报由两大部分组成：</p>
-<ul>
-<li>基本首部</li>
-<li>有效载荷(<code>payload</code>)。有效载荷也称为净负荷。有效载荷允许有零个或多个扩展首部(<code>extension header</code>)，再后面是数据部分。</li>
-</ul>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img1.png" class="">
-
-<h3 id="IPv6-数据报的基本首部"><a href="#IPv6-数据报的基本首部" class="headerlink" title="IPv6 数据报的基本首部"></a>IPv6 数据报的基本首部</h3><p>IPv6 将首部长度变为固定的 40 字节，称为基本首部。</p>
-<p>把首部中不必要的功能取消了，使得 IPv6 首部的字段数减少到只有 8 个。</p>
-<p>IPv6 对首部中的某些字段进行了如下的更改：</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img2.png" class="">
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img3.png" class="">
-
-<ul>
-<li>版本(<code>version</code>)—— 4 位。它指明了协议的版本，对 IPv6 该字段总是 6。</li>
-<li>通信量类(<code>traffic class</code>)—— 8 位。这是为了区分不同的 IPv6 数据报的类别或优先级。目前正在进行不同的通信量类性能的实验。 </li>
-<li>流标号(<code>flow label</code>)—— 20 位。 “流”是互联网络上从特定源点到特定终点的一系列数据报， “流”所经过的路径上的路由器都保证指明的服务质量。所有属于同一个流的数据报都具有同样的流标号。 </li>
-<li>有效载荷长度(<code>payload length</code>)—— 16 位。它指明 IPv6 数据报除基本首部以外的字节数（所有扩展首部都算在有效载荷之内），其最大值是 64 KB。 </li>
-<li>下一个首部(<code>next header</code>)—— 8 位。它相当于 IPv4 的协议字段或可选字段。</li>
-<li>跳数限制(<code>hop limit</code>)—— 8 位。源站在数据报发出时即设定跳数限制。路由器在转发数据报时将跳数限制字段中的值减 1。当跳数限制的值为零时，就要将此数据报丢弃。</li>
-<li>源地址—— 128 位。是数据报的发送站的 IP 地址。</li>
-<li>目的地址—— 128 位。是数据报的接收站的 IP 地址。</li>
-</ul>
-<h3 id="IPv6-的扩展首部"><a href="#IPv6-的扩展首部" class="headerlink" title="IPv6 的扩展首部"></a>IPv6 的扩展首部</h3><p>IPv6 把原来 IPv4 首部中选项的功能都放在扩展首部中，并将扩展首部留给路径两端的源站和目的站的主机来处理。</p>
-<p>数据报途中经过的路由器都不处理这些扩展首部（只有一个首部例外，即逐跳选项扩展首部）。</p>
-<p>这样就大大提高了路由器的处理效率。 </p>
-<p>在 RFC 2460 中定义了六种扩展首部：逐跳选项、路由选择、分片、鉴别、封装安全有效载荷、目的站选项。 </p>
-<h1 id="IPv6-的地址"><a href="#IPv6-的地址" class="headerlink" title="IPv6 的地址"></a>IPv6 的地址</h1><p>IPv6 数据报的目的地址可以是以下三种基本类型地址之一：<br>单播(<code>unicast</code>)：传统的点对点通信。<br>多播 (<code>multicast</code>)：一点对多点的通信。<br>任播 (<code>anycast</code>)：这是 IPv6 增加的一种类型。任播的目的站是一组计算机，但数据报在交付时只交付其中的一个，通常是距离最近的一个。 </p>
-<p>IPv6 将实现 IPv6 的主机和路由器均称为结点。一个结点就可能有多个与链路相连的接口。这样 IPv6 给结点的每一个接口指派一个 IP 地址。一个结点可以有多个单播地址。其中的任何一个地址都可以当作到达该结点的目的地址。即一个结点接口的单播地址可用来唯一地标志该结点。</p>
-<h2 id="冒号十六进制记法"><a href="#冒号十六进制记法" class="headerlink" title="冒号十六进制记法"></a>冒号十六进制记法</h2><p>在 IPv6 中，每个地址占 128 位，地址空间大于 3.4 * 10<sup>38</sup>。可见在想象到的将来，IPv6 地址空间是不可能用完的。</p>
-<p>为了使地址再稍简洁些，IPv6 使用冒号十六进制记法(<code>colon hexadecimal notation</code>, 简写为<code>colon hex</code>)。</p>
-<p>每个 16 位的值用十六进制值表示，各值之间用冒号分隔。例如：<code>68E6:8C64:FFFF:FFFF:0:1180:960A:FFFF</code>。</p>
-<p>在十六进制记法中，允许把数字前面的 0 省略。例如把 0000 中的前三个 0 省略，写成 1 个 0。</p>
-<h3 id="零压缩"><a href="#零压缩" class="headerlink" title="零压缩"></a>零压缩</h3><p>冒号十六进制记法可以允许零压缩(<code>zero compression</code>)，即一连串连续的零可以为一对冒号所取代。</p>
-<p><code>FF05:0:0:0:0:0:0:B3</code>可压缩为：<code>FF05::B3</code>。</p>
-<p>注意：在任一地址中只能使用一次零压缩。</p>
-<h3 id="点分十进制记法的后缀"><a href="#点分十进制记法的后缀" class="headerlink" title="点分十进制记法的后缀"></a>点分十进制记法的后缀</h3><p>冒号十六进制记法可结合使用点分十进制记法的后缀，这种结合在 IPv4 向 IPv6 的转换阶段特别有用。</p>
-<p>例如：<code>0:0:0:0:0:0:128.10.2.1</code>再使用零压缩即可得出：<code>::128.10.2.1</code>。</p>
-<p>CIDR 的斜线表示法仍然可用。</p>
-<p>例如：60 位的前缀<code>12AB00000000CD3</code>可记为：<code>12AB:0000:0000:CD30:0000:0000:0000:0000/60</code>或<code>12AB::CD30:0:0:0:0/60</code>（零压缩）或<code>12AB:0:0:CD30::/60</code>（零压缩）。</p>
-<h3 id="IPv6-地址分类"><a href="#IPv6-地址分类" class="headerlink" title="IPv6 地址分类"></a>IPv6 地址分类</h3><img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img4.png" class="">
-
-<ul>
-<li>未指明地址：这是 16 字节的全 0 地址，可缩写为两个冒号“::”。这个地址只能为还没有配置到一个标准的 IP 地址的主机当作源地址使用。这类地址仅此一个。</li>
-<li>环回地址：即<code>0:0:0:0:0:0:0:1</code>（记为<code>::1</code>）。作用和 IPv4 的环回地址一样。这类地址也是仅此一个。</li>
-<li>多播地址：功能和 IPv4 的一样。这类地址占 IPv6 地址总数的 1/256。</li>
-<li>本地链路单播地址(<code>Link-Local Unicast Address</code>) ：有些单位的网络使用 TCP/IP 协议，但并没有连接到互联网上。连接在这样的网络上的主机都可以使用这种本地地址进行通信，但不能和互联网上的其他主机通信。这类地址占 IPv6 地址总数的 1/1024。</li>
-<li>全球单播地址：IPv6 的这一类单播地址是使用得最多的一类。曾提出过多种方案来进一步划分这 128 位的单播地址。IPv6 单播地址的划分方法非常灵活。</li>
-</ul>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img5.png" class="">
-
-<h1 id="从-IPv4-向-IPv6-过渡"><a href="#从-IPv4-向-IPv6-过渡" class="headerlink" title="从 IPv4 向 IPv6 过渡"></a>从 IPv4 向 IPv6 过渡</h1><p>向 IPv6 过渡只能采用逐步演进的办法，同时，还必须使新安装的 IPv6 系统能够向后兼容：IPv6 系统必须能够接收和转发 IPv4 分组，并且能够为 IPv4 分组选择路由。</p>
-<p>两种向 IPv6 过渡的策略：使用双协议栈、使用隧道技术。</p>
-<h2 id="双协议栈"><a href="#双协议栈" class="headerlink" title="双协议栈"></a>双协议栈</h2><p>双协议栈(<code>dual stack</code>)是指在完全过渡到 IPv6 之前，使一部分主机（或路由器）装有两个协议栈，一个 IPv4 和一个 IPv6。 </p>
-<p>双协议栈的主机（或路由器）记为 IPv6/IPv4，表明它同时具有两种 IP 地址：一个 IPv6 地址和一个 IPv4 地址。</p>
-<p>双协议栈主机在和 IPv6 主机通信时是采用 IPv6 地址，而和 IPv4 主机通信时就采用 IPv4 地址。</p>
-<p>根据 DNS 返回的地址类型可以确定使用 IPv4 地址还是 IPv6 地址。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img6.png" class="">
-
-<h2 id="隧道技术"><a href="#隧道技术" class="headerlink" title="隧道技术"></a>隧道技术</h2><p>在 IPv6 数据报要进入 IPv4 网络时，把 IPv6 数据报封装成为 IPv4 数据报，整个的 IPv6 数据报变成了 IPv4 数据报的数据部分。</p>
-<p>当 IPv4 数据报离开 IPv4 网络中的隧道时，再把数据部分（即原来的 IPv6 数据报）交给主机的 IPv6 协议栈。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img7.png" class="">
-
-<p>要使双协议栈的主机知道 IPv4 数据报里面封装的数据是一个 IPv6 数据报，就必须把 IPv4 首部的协议字段的值设置为41，41表示数据报的数据部分是 IPv6 数据报。</p>
-<h1 id="ICMPv6"><a href="#ICMPv6" class="headerlink" title="ICMPv6"></a>ICMPv6</h1><p>IPv6 也不保证数据报的可靠交付，因为互联网中的路由器可能会丢弃数据报。</p>
-<p>因此 IPv6 也需要使用 ICMP 来反馈一些差错信息。新的版本称为 ICMPv6。</p>
-<p>地址解析协议 ARP 和网际组管理协议 IGMP 协议的功能都已被合并到 ICMPv6 中。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img8.png" class="">
-
-<h2 id="ICMPv6-报文的分类"><a href="#ICMPv6-报文的分类" class="headerlink" title="ICMPv6 报文的分类"></a>ICMPv6 报文的分类</h2><p>ICMPv6 是面向报文的协议，它利用报文来报告差错，获取信息，探测邻站或管理多播通信。</p>
-<p>ICMPv6 还增加了几个定义报文的功能及含义的其他协议。</p>
-<img src="/2020/09/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94IPv6/img9.png" class="">
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/网络层——路由选择协议" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/"
-    >网络层——路由选择协议</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/" class="article-date">
-  <time datetime="2020-09-26T09:11:08.000Z" itemprop="datePublished">2020-09-26</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="有关路由选择协议的几个基本概念"><a href="#有关路由选择协议的几个基本概念" class="headerlink" title="有关路由选择协议的几个基本概念"></a>有关路由选择协议的几个基本概念</h1><h2 id="理想的路由算法"><a href="#理想的路由算法" class="headerlink" title="理想的路由算法"></a>理想的路由算法</h2><p>路由选择协议的核心就是路由算法，即需要何种算法来获得路由表中的各项目。</p>
-<p>一个理想的路由算法有如下特点：</p>
-<ul>
-<li>算法必须是正确的和完整的。 </li>
-<li>算法在计算上应简单。 </li>
-<li>算法应能适应通信量和网络拓扑的变化，这就是说，要有自适应性。 </li>
-<li>算法应具有稳定性。 </li>
-<li>算法应是公平的。 </li>
-<li>算法应是最佳的。</li>
-</ul>
-<h3 id="关于“最佳路由”"><a href="#关于“最佳路由”" class="headerlink" title="关于“最佳路由”"></a>关于“最佳路由”</h3><p>不存在一种绝对的最佳路由算法。所谓“最佳”只能是相对于某一种特定要求下得出的较为合理的选择而已。</p>
-<p>实际的路由选择算法，应尽可能接近于理想的算法。</p>
-<p>路由选择是个非常复杂的问题，它是网络中的所有结点共同协调工作的结果。路由选择的环境往往是不断变化的，而这种变化有时无法事先知道。 </p>
-<h3 id="从路由算法的自适应性考虑"><a href="#从路由算法的自适应性考虑" class="headerlink" title="从路由算法的自适应性考虑"></a>从路由算法的自适应性考虑</h3><p>从路由算法能否随网络的通信量或拓扑自适应的进行调整变化划分有两类：</p>
-<ul>
-<li>静态路由选择策略——即非自适应路由选择，其特点是简单和开销较小，但不能及时适应网络状态的变化。适用于简单的小网络。</li>
-<li>动态路由选择策略——即自适应路由选择，其特点是能较好地适应网络状态的变化，但实现起来较为复杂，开销也比较大。适用于较复杂的大网络。</li>
-</ul>
-<h2 id="分层次的路由选择协议"><a href="#分层次的路由选择协议" class="headerlink" title="分层次的路由选择协议"></a>分层次的路由选择协议</h2><p>互联网采用的路由选择协议主要是自适应的（即动态的）、分布式路由选择协议。</p>
-<p>互联网采用分层次的路由选择协议原因：</p>
-<ol>
-<li>互联网的规模非常大。如果让所有的路由器知道所有的网络应怎样到达，则这种路由表将非常大，处理起来也太花时间。而所有这些路由器之间交换路由信息所需的带宽就会使互联网的通信链路饱和。</li>
-<li>许多单位不愿意外界了解自己单位网络的布局细节和本部门所采用的路由选择协议（这属于本部门内部的事情），但同时还希望连接到互联网上。</li>
-</ol>
-<p>为此，可以把整个互联网划分为许多小的自治系统。</p>
-<h3 id="自治系统-AS-Autonomous-System"><a href="#自治系统-AS-Autonomous-System" class="headerlink" title="自治系统 AS (Autonomous System)"></a>自治系统 AS (Autonomous System)</h3><p>自治系统 AS 的定义：在单一的技术管理下的一组路由器，而这些路由器使用一种 AS 内部的路由选择协议和共同的度量以确定分组在该 AS 内的路由，同时还使用一种 AS 之间的路由选择协议用以确定分组在 AS 之间的路由。</p>
-<p>尽管一个 AS 使用了多种内部路由选择协议和度量，但重要的是一个 AS 对其他 AS 表现出的是一个单一的和一致的路由选择策略。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img1.png" class="">
-
-<h3 id="互联网有两大类路由选择协议："><a href="#互联网有两大类路由选择协议：" class="headerlink" title="互联网有两大类路由选择协议："></a>互联网有两大类路由选择协议：</h3><ul>
-<li>内部网关协议 IGP(<code>Interior Gateway Protocol</code>)，在一个自治系统内部使用的路由选择协议。目前这类路由选择协议使用得最多，如 RIP 和 OSPF 协议。</li>
-<li>外部网关协议 EGP(<code>External Gateway Protocol</code>) ，若源站和目的站处在不同的自治系统中，当数据报传到一个自治系统的边界时，就需要使用一种协议将路由选择信息传递到另一个自治系统中。这样的协议就是外部网关协议 EGP。在外部网关协议中目前使用最多的是 BGP-4。</li>
-</ul>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img2.png" class="">
-
-<p>自治系统之间的路由选择也叫做域间路由选择(<code>interdomain routing</code>)，在自治系统内部的路由选择叫做域内路由选择(<code>intradomain routing</code>) 。</p>
-<p>IGP 和 EGP 是协议类别的名称。但 RFC 在使用 EGP 这个名词时出现了一点混乱，因为最早的一个外部网关协议的协议名字正好也是 EGP。因此在遇到名词 EGP 时，应弄清它是指旧的协议 EGP 还是指外部网关协议 EGP 这个类别。 </p>
-<h3 id="互联网的路由选择协议"><a href="#互联网的路由选择协议" class="headerlink" title="互联网的路由选择协议"></a>互联网的路由选择协议</h3><img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img3.png" class="">
-
-<h1 id="内部网关协议-RIP"><a href="#内部网关协议-RIP" class="headerlink" title="内部网关协议 RIP"></a>内部网关协议 RIP</h1><h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p>路由信息协议 RIP(<code>Routing Information Protocol</code>) 是内部网关协议 IGP 中最先得到广泛使用的协议。</p>
-<p>RIP 是一种分布式的、基于距离向量的路由选择协议。</p>
-<p>RIP 协议要求网络中的每一个路由器都要维护从它自己到其他每一个目的网络的距离记录。</p>
-<p>RIP 距离定义：从一路由器到直接连接的网络的距离定义为1；从一路由器到非直接连接的网络的距离定义为所经过的路由器数加1；</p>
-<p>RIP 认为一个好的路由就是它通过的路由器的数目少，即“距离短”。</p>
-<p>RIP 允许一条路径最多只能包含 15 个路由器。因此，“距离”的最大值为 16 时即相当于不可达。可见 RIP 只适用于小型互联网。</p>
-<p>RIP 不能在两个网络之间同时使用多条路由。RIP 选择一个具有最少路由器的路由（即最短路由），哪怕还存在另一条高速(低时延)但路由器较多的路由。 </p>
-<h3 id="RIP-协议的三个特点："><a href="#RIP-协议的三个特点：" class="headerlink" title="RIP 协议的三个特点："></a>RIP 协议的三个特点：</h3><ul>
-<li>仅和相邻路由器交换信息。 </li>
-<li>交换的信息是当前本路由器所知道的全部信息，即自己的路由表。 </li>
-<li>按固定的时间间隔交换路由信息，例如，每隔 30 秒。当网络拓扑发生变化时，路由器也及时向相邻路由器通告拓扑变化后的路由信息。</li>
-</ul>
-<h3 id="路由表的建立"><a href="#路由表的建立" class="headerlink" title="路由表的建立"></a>路由表的建立</h3><p>路由器在刚刚开始工作时，只知道到直接连接的网络的距离（此距离定义为 1）。它的路由表是空的。</p>
-<p>以后，每一个路由器也只和数目非常有限的相邻路由器交换并更新路由信息。</p>
-<p>经过若干次更新后，所有的路由器最终都会知道到达本自治系统中任何一个网络的最短距离和下一跳路由器的地址。</p>
-<p>RIP 协议的收敛过程较快。“收敛”就是在自治系统中所有的结点都得到正确的路由选择信息的过程。</p>
-<h2 id="距离向量算法"><a href="#距离向量算法" class="headerlink" title="距离向量算法"></a>距离向量算法</h2><p>路由器收到相邻路由器（其地址为 X）的一个 RIP 报文：</p>
-<ol>
-<li>先修改此 RIP 报文中的所有项目：把“下一跳”字段中的地址都改为 X，并把所有的“距离”字段的值加 1。</li>
-<li>对修改后的 RIP 报文中的每一个项目，重复以下步骤：<ul>
-<li>若项目中的目的网络不在路由表中，则把该项目加到路由表中。</li>
-<li>否则，若下一跳字段给出的路由器地址是同样的，则把收到的项目替换原路由表中的项目。</li>
-<li>否则，若收到项目中的距离小于路由表中的距离，则进行更新，</li>
-<li>否则，什么也不做。</li>
-</ul>
-</li>
-<li>若 3 分钟还没有收到相邻路由器的更新路由表，则把此相邻路由器记为不可达路由器，即将距离置为 16（表示不可达）。</li>
-<li>返回。</li>
-</ol>
-<p>距离向量算法的基础就是<code>Bellman-Ford</code>算法（或<code>Ford-Fulkerson</code>算法）。这种算法的要点是这样的：设X是结点 A 到 B 的最短路径上的一个结点。若把路径 A→B 拆成两段路径 A→X 和 X→B，则每一段路径 A→X 和 X→B 也都分别是结点 A 到 X 和结点 X 到 B 的最短路径。</p>
-<p>RIP 协议让互联网中的所有路由器都和自己的相邻路由器不断交换路由信息，并不断更新其路由表，使得从每一个路由器到每一个目的网络的路由都是最短的（即跳数最少）。</p>
-<p>虽然所有的路由器最终都拥有了整个自治系统的全局路由信息，但由于每一个路由器的位置不同，它们的路由表当然也应当是不同的。</p>
-<p>已知路由器 R6 有表 a 所示的路由表。现在收到相邻路由器 R4 发来的路由更新信息。试更新路由器 R6 的路由表。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img4.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img5.png" class="">
-
-<h2 id="RIP2-协议的报文格式"><a href="#RIP2-协议的报文格式" class="headerlink" title="RIP2 协议的报文格式"></a>RIP2 协议的报文格式</h2><img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img6.png" class="">
-
-<p>RIP2 报文由首部和路由部分组成。</p>
-<p>RIP2 报文中的路由部分由若干个路由信息组成。每个路由信息需要用 20 个字节。地址族标识符（又称为地址类别）字段用来标志所使用的地址协议。</p>
-<p>路由标记填入自治系统的号码，这是考虑使 RIP 有可能收到本自治系统以外的路由选择信息。</p>
-<p>再后面指出某个网络地址、该网络的子网掩码、下一跳路由器地址以及到此网络的距离。 </p>
-<p>一个 RIP 报文最多可包括 25 个路由，因而 RIP 报文的最大长度是 4+20 x25=504 字节。如超过，必须再用一个 RIP 报文来传送。</p>
-<p>RIP2 具有简单的鉴别功能。</p>
-<p>若使用鉴别功能，则将原来写入第一个路由信息（20 个字节）的位置用作鉴别。</p>
-<p>在鉴别数据之后才写入路由信息，但这时最多只能再放入 24 个路由信息。</p>
-<p>RIP 协议特点：好消息传播得快，坏消息传播得慢。</p>
-<p>RIP 存在的一个问题：当网络出现故障时，要经过比较长的时间 (例如数分钟) 才能将此信息传送到所有的路由器。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img7.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img8.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img9.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img10.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img11.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img12.png" class="">
-
-<h3 id="RIP-协议的优缺点"><a href="#RIP-协议的优缺点" class="headerlink" title="RIP 协议的优缺点"></a>RIP 协议的优缺点</h3><p>优点：实现简单，开销较小。<br>缺点：</p>
-<ul>
-<li>RIP 限制了网络的规模，它能使用的最大距离为 15（16 表示不可达）。</li>
-<li>路由器之间交换的路由信息是路由器中的完整路由表，因而随着网络规模的扩大，开销也就增加。 </li>
-<li>“坏消息传播得慢”，使更新过程的收敛时间过长。</li>
-</ul>
-<h1 id="内部网关协议-OSPF"><a href="#内部网关协议-OSPF" class="headerlink" title="内部网关协议 OSPF"></a>内部网关协议 OSPF</h1><p>开放最短路径优先 OSPF(<code>Open Shortest Path First</code>)是为克服 RIP 的缺点开发出来的。OSPF 的原理很简单，但实现起来却较复杂。</p>
-<p>“开放”表明 OSPF 协议不是受某一家厂商控制，而是公开发表的。</p>
-<p>“最短路径优先”是因为使用了 Dijkstra 提出的最短路径算法 SPF。</p>
-<p>采用分布式的链路状态协议(<code>link state protocol</code>)。 </p>
-<p>注意：OSPF 只是一个协议的名字，它并不表示其他的路由选择协议不是“最短路径优先”。</p>
-<h2 id="三个要点"><a href="#三个要点" class="headerlink" title="三个要点"></a>三个要点</h2><p>向本自治系统中所有路由器发送信息，这里使用的方法是洪泛法。</p>
-<p>发送的信息就是与本路由器相邻的所有路由器的链路状态，但这只是路由器所知道的部分信息。</p>
-<p>“链路状态”就是说明本路由器都和哪些路由器相邻，以及该链路的“度量”。 </p>
-<p>只有当链路状态发生变化时，路由器才用洪泛法向所有路由器发送此信息。</p>
-<h2 id="链路状态数据库-link-state-database"><a href="#链路状态数据库-link-state-database" class="headerlink" title="链路状态数据库 (link-state database)"></a>链路状态数据库 (link-state database)</h2><p>由于各路由器之间频繁地交换链路状态信息，因此所有的路由器最终都能建立一个链路状态数据库。</p>
-<p>这个数据库实际上就是全网的拓扑结构图，它在全网范围内是一致的（这称为链路状态数据库的同步）。</p>
-<p>OSPF 的链路状态数据库能较快地进行更新，使各个路由器能及时更新其路由表。</p>
-<p>OSPF 的更新过程收敛得快是其重要优点。</p>
-<h2 id="OSPF-的区域-area"><a href="#OSPF-的区域-area" class="headerlink" title="OSPF 的区域 (area)"></a>OSPF 的区域 (area)</h2><p>为了使 OSPF 能够用于规模很大的网络，OSPF 将一个自治系统再划分为若干个更小的范围，叫做区域。</p>
-<p>每一个区域都有一个 32 位的区域标识符（用点分十进制表示）。</p>
-<p>区域也不能太大，在一个区域内的路由器最好不超过 200 个。 </p>
-<h2 id="划分区域"><a href="#划分区域" class="headerlink" title="划分区域"></a>划分区域</h2><p>OSPF 划分为两种不同的区域</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img13.png" class="">
-
-<p>划分区域的好处就是将利用洪泛法交换链路状态信息的范围局限于每一个区域而不是整个的自治系统，这就减少了整个网络上的通信量。</p>
-<p>在一个区域内部的路由器只知道本区域的完整网络拓扑，而不知道其他区域的网络拓扑的情况。</p>
-<p>OSPF 使用层次结构的区域划分。在上层的区域叫做主干区域。</p>
-<p>主干区域的标识符规定为<code>0.0.0.0</code>。主干区域的作用是用来连通其他在下层的区域。</p>
-<p>OSPF 不用 UDP 而是直接用 IP 数据报传送。</p>
-<p>OSPF 构成的数据报很短。这样做可减少路由信息的通信量。</p>
-<p>数据报很短的另一好处是可以不必将长的数据报分片传送。</p>
-<p>但分片传送的数据报只要丢失一个，就无法组装成原来的数据报，而整个数据报就必须重传。</p>
-<p>OSPF 对不同的链路可根据 IP 分组的不同服务类型 TOS 而设置成不同的代价。因此，OSPF 对于不同类型的业务可计算出不同的路由。</p>
-<p>如果到同一个目的网络有多条相同代价的路径，那么可以将通信量分配给这几条路径。这叫做多路径间的负载平衡。</p>
-<p>所有在 OSPF 路由器之间交换的分组都具有鉴别的功能。</p>
-<p>支持可变长度的子网划分和无分类编址 CIDR。</p>
-<p>每一个链路状态都带上一个 32 位的序号，序号越大状态就越新。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img14.png" class="">
-
-<h2 id="OSPF-的五种分组类型"><a href="#OSPF-的五种分组类型" class="headerlink" title="OSPF 的五种分组类型"></a>OSPF 的五种分组类型</h2><p>类型1，问候 (<code>Hello</code>) 分组。<br>类型2，数据库描述(<code>Database Description</code>)分组。<br>类型3，链路状态请求(<code>Link State Request</code>)分组。<br>类型4，链路状态更新(<code>Link State Update</code>)分组，用洪泛法对全网更新链路状态。<br>类型5，链路状态确认(<code>Link State Acknowledgment</code>)分组。</p>
-<h3 id="OSPF-的基本操作"><a href="#OSPF-的基本操作" class="headerlink" title="OSPF 的基本操作"></a>OSPF 的基本操作</h3><img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img15.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img16.png" class="">
-
-<p>OSPF 还规定每隔一段时间，如 30 分钟，要刷新一次数据库中的链路状态。</p>
-<p>由于一个路由器的链路状态只涉及到与相邻路由器的连通状态，因而与整个互联网的规模并无直接关系。因此当互联网规模很大时，OSPF  协议要比距离向量协议 RIP 好得多。</p>
-<p>OSPF 没有“坏消息传播得慢”的问题，据统计，其响应网络变化的时间小于 100 ms。 </p>
-<p>多点接入的局域网采用了指定的路由器(<code>designated router</code>)的方法，使广播的信息量大大减少。</p>
-<p>指定的路由器代表该局域网上所有的链路向连接到该网络上的各路由器发送状态信息。 </p>
-<h1 id="外部网关协议-BGP"><a href="#外部网关协议-BGP" class="headerlink" title="外部网关协议 BGP"></a>外部网关协议 BGP</h1><p>BGP 是不同自治系统的路由器之间交换路由信息的协议。 </p>
-<p>BGP 较新版本是BGP-4（BGP 第 4 个版本）。可以将 BGP-4 简写为 BGP。 </p>
-<p>互联网的规模太大，使得自治系统之间路由选择非常困难。对于自治系统之间的路由选择，要寻找最佳路由是很不现实的。</p>
-<p>当一条路径通过几个不同 AS 时，要想对这样的路径计算出有意义的代价是不太可能的。</p>
-<p>比较合理的做法是在 AS 之间交换“可达性”信息。</p>
-<p>自治系统之间的路由选择必须考虑有关策略。</p>
-<p>因此，边界网关协议 BGP 只能是力求寻找一条能够到达目的网络且比较好的路由（不能兜圈子），而并非要寻找一条最佳路由。</p>
-<p>每一个自治系统的管理员要选择至少一个路由器作为该自治系统的“ BGP 发言人” (<code>BGP speaker</code>) 。</p>
-<p>一般说来，两个 BGP 发言人都是通过一个共享网络连接在一起的，而 BGP 发言人往往就是 BGP 边界路由器，但也可以不是 BGP 边界路由器。 </p>
-<p>一个 BGP 发言人与其他自治系统中的 BGP 发言人要交换路由信息，就要先建立 TCP 连接，然后在此连接上交换 BGP 报文以建立 BGP 会话，利用 BGP 会话交换路由信息。</p>
-<p>使用 TCP 连接能提供可靠的服务，也简化了路由选择协议。</p>
-<p>使用 TCP 连接交换路由信息的两个 BGP 发言人，彼此成为对方的邻站(<code>neighbor</code>)或对等站(<code>peer</code>)。</p>
-<p>BGP 发言人和自治系统 AS 的关系</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img17.png" class="">
-
-<p>BGP 所交换的网络可达性的信息就是要到达某个网络所要经过的一系列 AS。</p>
-<p>当 BGP 发言人互相交换了网络可达性的信息后，各 BGP 发言人就根据所采用的策略从收到的路由信息中找出到达各 AS 的较好路由。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img18.png" class="">
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img19.png" class="">
-
-<p>自治系统 AS2 的 BGP 发言人通知主干网 AS1 的 BGP 发言人：“要到达网络 N1、 N2、N3 和 N4 可经过 AS2。” </p>
-<p>主干网还可发出通知：“要到达网络 N5、N6 和 N7 可沿路径（AS1, AS3）。” </p>
-<h2 id="BGP-协议的特点"><a href="#BGP-协议的特点" class="headerlink" title="BGP 协议的特点"></a>BGP 协议的特点</h2><p>BGP 协议交换路由信息的结点数量级是自治系统数的量级，这要比这些自治系统中的网络数少很多。</p>
-<p>每一个自治系统中 BGP 发言人（或边界路由器）的数目是很少的。这样就使得自治系统之间的路由选择不致过分复杂。</p>
-<p>BGP 支持 CIDR，因此 BGP 的路由表也就应当包括目的网络前缀、下一跳路由器，以及到达该目的网络所要经过的各个自治系统序列。</p>
-<p>在 BGP 刚刚运行时，BGP 的邻站是交换整个的 BGP 路由表。但以后只需要在发生变化时更新有变化的部分。这样做对节省网络带宽和减少路由器的处理开销都有好处。</p>
-<p>BGP-4 共使用四种报文</p>
-<ul>
-<li>打开 (OPEN) 报文，用来与相邻的另一个BGP发言人建立关系。</li>
-<li>更新 (UPDATE) 报文，用来发送某一路由的信息，以及列出要撤消的多条路由。</li>
-<li>保活 (KEEPALIVE) 报文，用来确认打开报文和周期性地证实邻站关系。</li>
-<li>通知 (NOTIFICATION) 报文，用来发送检测到的差错。</li>
-</ul>
-<p>BGP 报文具有通用首部</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img20.png" class="">
-
-<h1 id="路由器的构成"><a href="#路由器的构成" class="headerlink" title="路由器的构成"></a>路由器的构成</h1><p>路由器是一种典型的网络层设备。</p>
-<p>路由器是互联网中的关键设备。</p>
-<p>路由器的主要作用是：</p>
-<ul>
-<li>连通不同的网络。</li>
-<li>选择信息传送的线路。选择通畅快捷的近路，能大大提高通信速度，减轻网络系统通信负荷，节约网络系统资源，提高网络系统畅通率，从而让网络系统发挥出更大的效益来。</li>
-</ul>
-<h2 id="路由器的结构"><a href="#路由器的结构" class="headerlink" title="路由器的结构"></a>路由器的结构</h2><p>路由器是一种具有多个输入端口和多个输出端口的专用计算机，其任务是转发分组。也就是说，将路由器某个输入端口收到的分组，按照分组要去的目的地（即目的网络），把该分组从路由器的某个合适的输出端口转发给下一跳路由器。</p>
-<p>下一跳路由器也按照这种方法处理分组，直到该分组到达终点为止。</p>
-<p>路由器的转发分组正是网络层的主要工作。</p>
-<h3 id="典型的路由器的结构"><a href="#典型的路由器的结构" class="headerlink" title="典型的路由器的结构"></a>典型的路由器的结构</h3><img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img21.png" class="">
-
-<p>整个的路由器结构可划分为两大部分：路由选择部分、分组转发部分。</p>
-<p>路由选择部分也叫做控制部分，其核心构件是路由选择处理机。</p>
-<p>路由选择处理机的任务是根据所选定的路由选择协议构造出路由表，同时经常或定期地和相邻路由器交换路由信息而不断地更新和维护路由表。</p>
-<p>分组转发部分由三部分组成：</p>
-<ul>
-<li>交换结构 (<code>switching fabric</code>)：又称为交换组织，其作用是根据转发表 (<code>forwarding table</code>) 对分组进行处理。</li>
-<li>一组输入端口</li>
-<li>一组输出端口</li>
-</ul>
-<p>（请注意：这里的端口就是硬件接口）</p>
-<p>“转发”(<code>forwarding</code>) 就是路由器根据转发表将用户的 IP 数据报从合适的端口转发出去。</p>
-<p>“路由选择”则是按照分布式算法，根据从各相邻路由器得到的关于网络拓扑的变化情况，动态地改变所选择的路由。</p>
-<p>路由表是根据路由选择算法得出的。而转发表是从路由表得出的。</p>
-<p>在讨论路由选择的原理时，往往不去区分转发表和路由表的区别。</p>
-<h3 id="输入端口对线路上收到的分组的处理"><a href="#输入端口对线路上收到的分组的处理" class="headerlink" title="输入端口对线路上收到的分组的处理"></a>输入端口对线路上收到的分组的处理</h3><p>路由器的输入端口里面装有物理层、数据链路层和网络层的处理模块。</p>
-<p>数据链路层剥去帧首部和尾部后，将分组送到网络层的队列中排队等待处理。这会产生一定的时延。 </p>
-<p>输入端口中的查找和转发功能在路由器的交换功能中是最重要的。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img22.png" class="">
-
-<p>输出端口里面装有物理层、数据链路层和网络层的处理模块。</p>
-<p>输出端口从交换结构接收分组，然后把它们发送到路由器外面的线路上。</p>
-<p>在网络层的处理模块中设有一个缓冲区（队列）。当交换结构传送过来的分组的速率超过输出链路的发送速率时，来不及发送的分组就必须暂时存放在这个队列中。</p>
-<p>数据链路层处理模块将分组加上链路层的首部和尾部，交给物理层后发送到外部线路。 </p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img23.png" class="">
-
-<h3 id="分组丢弃"><a href="#分组丢弃" class="headerlink" title="分组丢弃"></a>分组丢弃</h3><p>若路由器处理分组的速率赶不上分组进入队列的速率，则队列的存储空间最终必定减少到零，这就使后面再进入队列的分组由于没有存储空间而只能被丢弃。<br>路由器中的输入或输出队列产生溢出是造成分组丢失的重要原因。</p>
-<h2 id="交换结构"><a href="#交换结构" class="headerlink" title="交换结构"></a>交换结构</h2><p>交换结构是路由器的关键构件。</p>
-<p>正是这个交换结构把分组从一个输入端口转移到某个合适的输出端口。</p>
-<p>实现交换有多种方法。常用交换方法有三种：通过存储器、通过总线、通过纵横交换结构。</p>
-<h3 id="通过存储器"><a href="#通过存储器" class="headerlink" title="通过存储器"></a>通过存储器</h3><p>(1) 当路由器的某个输入端口收到一个分组时，就用中断方式通知路由选择处理机。然后分组就从输入端口复制到存储器中。<br>(2) 路由器处理机从分组首部提取目的地址，查找路由表，再将分组复制到合适的输出端口的缓存中。<br>(3) 若存储器的带宽（读或写）为每秒 M 个分组，那么路由器的交换速率（即分组从输入端口传送到输出端口的速率）一定小于 M/2。</p>
-<h3 id="通过总线"><a href="#通过总线" class="headerlink" title="通过总线"></a>通过总线</h3><p>(1) 数据报从输入端口通过共享的总线直接传送到合适的输出端口，而不需要路由选择处理机的干预。<br>(2) 因为每一个要转发的分组都要通过这一条总线，因此路由器的转发带宽就受总线速率的限制。<br>(3) 现代的技术已经可以将总线的带宽提高到每秒吉比特的速率，因此许多的路由器产品都采用这种通过总线的交换方式。</p>
-<h3 id="通过纵横交换结构-crossbar-switch-fabric"><a href="#通过纵横交换结构-crossbar-switch-fabric" class="headerlink" title="通过纵横交换结构(crossbar switch fabric)"></a>通过纵横交换结构(<code>crossbar switch fabric</code>)</h3><p>(1) 这种交换结构常称为互连网络(<code>interconnection network</code>)。<br>(2) 它有 2N 条总线，可以使 N 个输入端口和 N 个输出端口相连接。<br>(3) 当输入端口收到一个分组时，就将它发送到与该输入端口相连的水平总线上。<br>(4) 若通向所要转发的输出端口的垂直总线是空闲的，则在这个结点将垂直总线与水平总线接通，然后将该分组转发到这个输出端口。<br>(5) 但若该垂直总线已被占用（有另一个分组正在转发到同一个输出端口），则后到达的分组就被阻塞，必须在输入端口排队。</p>
-<img src="/2020/09/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE/img24.png" class="">
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-计算机网络/网络层——ICMP" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/"
-    >网络层——ICMP</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/" class="article-date">
-  <time datetime="2020-09-25T08:31:56.000Z" itemprop="datePublished">2020-09-25</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>为了更有效地转发 IP 数据报和提高交付成功的机会，在网际层使用了网际控制报文协议 ICMP(<code>Internet Control Message Protocol</code>)。</p>
-<p>ICMP 允许主机或路由器报告差错情况和提供有关异常情况的报告。</p>
-<p>ICMP 是互联网的标准协议。但 ICMP 不是高层协议（看起来好像是高层协议，因为 ICMP 报文是装在 IP 数据报中，作为其中的数据部分），而是 IP 层的协议。</p>
-<p>ICMP 报文作为 IP 层数据报的数据，加上数据报的首部，组成 IP 数据报发送出去。</p>
-<h1 id="ICMP-报文的格式"><a href="#ICMP-报文的格式" class="headerlink" title="ICMP 报文的格式"></a>ICMP 报文的格式</h1><img src="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/img1.png" class="">
-
-<h1 id="ICMP-报文的种类"><a href="#ICMP-报文的种类" class="headerlink" title="ICMP 报文的种类"></a>ICMP 报文的种类</h1><p>ICMP 报文的种类有两种，即 ICMP 差错报告报文和 ICMP 询问报文。</p>
-<p>ICMP 报文的前 4 个字节是统一的格式，共有三个字段：即类型、代码和检验和。接着的 4 个字节的内容与 ICMP 的类型有关。最后面是数据字段，其长度取决于 ICMP 的类型。</p>
-<p>ICMP 差错报告报文共有 4 种：终点不可达 、时间超过、参数问题、改变路由（重定向）。</p>
-<h2 id="ICMP-差错报告报文的数据字段的内容"><a href="#ICMP-差错报告报文的数据字段的内容" class="headerlink" title="ICMP 差错报告报文的数据字段的内容"></a>ICMP 差错报告报文的数据字段的内容</h2><p>所有的 ICMP 差错报告报文中的数据字段都具有同样的格式。把收到的需要进行差错报告的 IP 数据报的首部和数据字段的前8个字节提取出来，作为 ICMP 报文的数据字段。再加上相应的 ICMP 差错报告报文的前8个字节，就构成了 ICMP 差错报告报文。</p>
-<img src="/2020/09/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E5%B1%82%E2%80%94%E2%80%94ICMP/img2.png" class="">
-
-<p>提取收到的数据报的数据字段前8个字节是为了得到运输层的端口号（对于 TCP 和 UDP）以及运输层报文的发送序号（对于 TCP）。这些信息对源点通知高层协议是有用的。</p>
-<p>整个 ICMP 报文作为 IP 数据报的数据字段发送给源点。</p>
-<h2 id="不应发送-ICMP-差错报告报文的几种情况"><a href="#不应发送-ICMP-差错报告报文的几种情况" class="headerlink" title="不应发送 ICMP 差错报告报文的几种情况"></a>不应发送 ICMP 差错报告报文的几种情况</h2><ul>
-<li>对 ICMP 差错报告报文不再发送 ICMP 差错报告报文。</li>
-<li>对第一个分片的数据报片的所有后续数据报片都不发送 ICMP 差错报告报文。</li>
-<li>对具有多播地址的数据报都不发送 ICMP 差错报告报文。</li>
-<li>对具有特殊地址（如<code>127.0.0.0</code>或<code>0.0.0.0</code>）的数据报不发送 ICMP 差错报告报文。</li>
-</ul>
-<p>ICMP 询问报文有两种：回送请求和回答报文、时间戳请求和回答报文。</p>
-<p>下面的几种 ICMP 报文不再使用：信息请求与回答报文、掩码地址请求和回答报文、路由器询问和通告报文 、源点抑制报文。</p>
-<h1 id="ICMP-的应用举例"><a href="#ICMP-的应用举例" class="headerlink" title="ICMP 的应用举例"></a>ICMP 的应用举例</h1><p>PING(<code>Packet InterNet Groper</code>) 用来测试两个主机之间的连通性。</p>
-<p>PING 使用了 ICMP 回送请求与回送回答报文。</p>
-<p>PING 是应用层直接使用网络层 ICMP 的例子，它没有通过运输层的 TCP 或UDP。 </p>
-<h1 id="Traceroute-的应用举例"><a href="#Traceroute-的应用举例" class="headerlink" title="Traceroute 的应用举例"></a>Traceroute 的应用举例</h1><p>在 Windows 操作系统中这个命令是<code>tracert</code>。用来跟踪一个分组从源点到终点的路径。它利用 IP 数据报中的 TTL 字段和 ICMP 时间超过差错报告报文实现对从源点到终点的路径的跟踪。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/">下一页</a>
   </nav>
   
 </section>
@@ -1862,7 +1887,7 @@ var _hmt = _hmt || [];
     <ul class="list-inline">
       <li>
         &copy;
-        2017-2020
+        2017-2021
         WSQ
       </li>
       <li>
