@@ -80,6 +80,583 @@ var _hmt = _hmt || [];
     
     
     
+    <article id="post-MySQL/MySQL字符集" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/23/MySQL/MySQL%E5%AD%97%E7%AC%A6%E9%9B%86/"
+    >MySQL/MySQL字符集</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/23/MySQL/MySQL%E5%AD%97%E7%AC%A6%E9%9B%86/" class="article-date">
+  <time datetime="2021-03-23T06:48:39.180Z" itemprop="datePublished">2021-03-23</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>从本质上来说，计算机只能识别二进制代码，因此，不论是计算机程序还是其处理的数据，最终都必须转换成二进制码，计算机才能认识。为了使计算机不仅能做科学计算，也能处理文字信息，人们想出了给每个文字符号编码以便于计算机识别处理的办法，这就是计算机字符集的由来。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-MySQL/7" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/22/MySQL/7/"
+    >MySQL/7</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/22/MySQL/7/" class="article-date">
+  <time datetime="2021-03-22T07:38:49.072Z" itemprop="datePublished">2021-03-22</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="全球化和本地化"><a href="#全球化和本地化" class="headerlink" title="全球化和本地化"></a>全球化和本地化</h1><h2 id="字符集和校对顺序"><a href="#字符集和校对顺序" class="headerlink" title="字符集和校对顺序"></a>字符集和校对顺序</h2><p>数据库表被用来存储和检索数据。不同的语言和字符集需要以不同的方式存储和检索。因此，MySQL需要适应不同的字符集（不同的字母和字符），适应不同的排序和检索数据的方法。</p>
+<p>在讨论多种语言和字符集时，将会遇到以下重要术语：</p>
+<ul>
+<li>字符集为字母和符号的集合；</li>
+<li>编码为某个字符集成员的内部表示；</li>
+<li>校对为规定字符如何比较的指令。</li>
+</ul>
+<p>MySQL支持众多的字符集。为查看所支持的字符集完整列表，使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span>;</span><br></pre></td></tr></table></figure>
+<p>这条语句显示所有可用的字符集以及每个字符集的描述和默认校对。</p>
+<p>为了查看所支持校对的完整列表，使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">COLLATION</span>;</span><br></pre></td></tr></table></figure>
+<p>此语句显示所有可用的校对，以及它们适用的字符集。可以看到有的字符集具有不止一种校对。例如，<code>latin1</code>对不同的欧洲语言有几种校对，而且许多校对出现两次，一次区分大小写（由<code>_cs</code>表示），一次不区分大小写（由<code>_ci</code>表示）。通常系统管理在安装时定义一个默认的字符集和校对。此外，也可以在创建数据库时，指定默认的字符集和校对。为了确定所用的字符集和校对，可以使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'character%'</span>;</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'collation%'</span>;</span><br></pre></td></tr></table></figure>
+<p>实际上，字符集很少是服务器范围（甚至数据库范围）的设置。不同的表，甚至不同的列都可能需要不同的字符集，而且两者都可以在创建表时指定。</p>
+<p>为了给表指定字符集和校对，可使用带子句的<code>CREATE TABLE</code>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mytable(</span><br><span class="line">  column1 <span class="built_in">int</span>,</span><br><span class="line">  column2 <span class="built_in">varchar</span>(<span class="number">10</span>)</span><br><span class="line">) <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci;</span><br></pre></td></tr></table></figure>
+<p>此语句创建一个包含两列的表，并且指定一个字符集和一个校对顺序。</p>
+<p>这个例子中指定了<code>CHARACTER SET</code>和<code>COLLATE</code>两者。一般，MySQL 如下确定使用什么样的字符集和校对。</p>
+<ul>
+<li>如果指定<code>CHARACTER SET</code>和<code>COLLATE</code>两者，则使用这些值。</li>
+<li>如果只指定<code>CHARACTER SET</code>，则使用此字符集及其默认的校对。</li>
+<li>如果既不指定<code>CHARACTER SET</code>，也不指定<code>COLLATE</code>，则使用数据库默认。</li>
+</ul>
+<p>除了能指定字符集和校对的表范围外，MySQL 还允许对每个列设置它们，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mytable(</span><br><span class="line">  column1 <span class="built_in">int</span>,</span><br><span class="line">  column2 <span class="built_in">varchar</span>(<span class="number">10</span>)</span><br><span class="line">  column3 <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci</span><br><span class="line">) <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci;</span><br></pre></td></tr></table></figure>
+<p>校对在对用<code>ORDER BY</code>子句检索出来的数据排序时起重要的作用。如果你需要用与创建表时不同的校对顺序排序特定的<code>SELECT</code>语句，可以在<code>SELECT</code>语句自身中进行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> customers</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> lastname, firstname <span class="keyword">COLLATE</span> latin1_general_ci;</span><br></pre></td></tr></table></figure>
+<p>此<code>SELECT</code>使用<code>COLLATE</code>指定一个备用的校对顺序（在这个例子中，为区分大小写的校对）。这显然将会影响到结果排序的次序。</p>
+<p>除了这里看到的在<code>ORDER BY</code>子 句中使用以外，<code>COLLATE</code>还可以用于<code>GROUP BY、HAVING</code>、聚集函数、别名等。</p>
+<p>如果绝对需要，串可以在字符集之间进行转换。为此，使用<code>Cast()</code>或<code>Convert()</code>函数。</p>
+<h1 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h1><p>分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。</p>
+<h2 id="创建分组"><a href="#创建分组" class="headerlink" title="创建分组"></a>创建分组</h2><p>分组是在<code>SELECT</code>语句的<code>GROUP BY</code>子句中建立的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods <span class="keyword">FROM</span> products <span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id;</span><br></pre></td></tr></table></figure>
+<p>上面的<code>SELECT</code>语句指定了两个列，<code>vend_id</code>包含产品供应商的 ID，<code>num_prods</code>为计算字段（用<code>COUNT(*)</code>函数建立）。<code>GROUP BY</code>子句指示 MySQL 按<code>vend_id</code>排序并分组数据。这导致对每个<code>vend_id</code>而不是整个表计算<code>num_prods</code>一次。</p>
+<p>因为使用了<code>GROUP BY</code>，就不必指定要计算和估值的每个组了。系统会自动完成。<code>GROUP BY</code>子句指示 MySQL 分组数据，然后对每个组而不是整个结果集进行聚集。</p>
+<p>在具体使用<code>GROUP BY</code>子句前，需要知道一些重要的规定。</p>
+<ul>
+<li><code>GROUP BY</code>子句可以包含任意数目的列。这使得能对分组进行嵌套，为数据分组提供更细致的控制。</li>
+<li>如果在<code>GROUP BY</code>子句中嵌套了分组，数据将在最后规定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算（所以不能从个别的列取回数据）。</li>
+<li><code>GROUP BY</code>子句中列出的每个列都必须是检索列或有效的表达式（但不能是聚集函数）。如果在<code>SELECT</code>中使用表达式，则必须在<code>GROUP BY</code>子句中指定相同的表达式。不能使用别名。</li>
+<li>除聚集计算语句外，<code>SELECT</code>语句中的每个列都必须在<code>GROUP BY</code>子句中给出。</li>
+<li>如果分组列中具有<code>NULL</code>值，则<code>NULL</code>将作为一个分组返回。如果列中有多行<code>NULL</code>值，它们将分为一组。</li>
+<li><code>GROUP BY</code>子句必须出现在<code>WHERE</code>子句之后，<code>ORDER BY</code>子句之前。</li>
+</ul>
+<p>使用<code>WITH ROLLUP</code>关键字，可以得到每个分组以及每个分组汇总级别（针对每个分组）的值，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods <span class="keyword">FROM</span> products <span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id <span class="keyword">WITH</span> <span class="keyword">ROLLUP</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="过滤分组"><a href="#过滤分组" class="headerlink" title="过滤分组"></a>过滤分组</h2><p>除了能用<code>GROUP BY</code>分组数据外，MySQL还允许过滤分组，规定包括哪些分组，排除哪些分组。例如，可能想要列出至少有两个订单的所有顾客。为得出这种数据，必须基于完整的分组而不是个别的行进行过滤。</p>
+<p>我们已经看到了<code>WHERE</code>子句的作用。但是，在这个例子中<code>WHERE</code>不能完成任务，因为<code>WHERE</code>过滤指定的是行而不是分组。事实上，<code>WHERE</code>没有分组的概念。</p>
+<p>MySQL 为此目的提供了另外的子句，那就是<code>HAVING</code>子句。<code>HAVING</code>非常类似于<code>WHERE</code>。事实上，目前为止所有类型的<code>WHERE</code>子句都可以用<code>HAVING</code>来替代。唯一的差别是<code>WHERE</code>过滤行，而<code>HAVING</code>过滤分组。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> orders <span class="keyword">FROM</span> orders <span class="keyword">GROUP</span> <span class="keyword">BY</span> cust_id <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(*) &gt;= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>这条<code>SELECT</code>语句的前3行类似于上面的语句。最后一行增加了<code>HAVING</code>子句，它过滤<code>COUNT(*) &gt;=2</code>（两个以上的订单）的那些分组。<br>正如所见，这里<code>WHERE</code>子句不起作用，因为过滤是基于分组聚集值而不是特定行值的。</p>
+<p>这里有另一种理解方法，<code>WHERE</code>在数据分组前进行过滤，<code>HAVING</code>在数据分组后进行过滤。这是一个重要的区别，<code>WHERE</code>排除的行不包括在分组中。这可能会改变计算值，从而影响<code>HAVING</code>子句中基于这些值过滤掉的分组。</p>
+<p>假如想进一步过滤上面的语句，使它返回过去 12 个月内具有两个以上订单的顾客。为达到这一点，可增加一条<code>WHERE</code>子句，过滤出过去 12 个月内下过的订单。然后再增加<code>HAVING</code>子句过滤出具有两个以上订单的分组。</p>
+<p>下面的例子，它列出具有 2 个（含）以上、价格为 10（含）以上的产品的供应商：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_price &gt;= <span class="number">10</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id</span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(*) &gt;= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="分组和排序"><a href="#分组和排序" class="headerlink" title="分组和排序"></a>分组和排序</h2><p>虽然<code>GROUP BY</code>和<code>ORDER BY</code>经常完成相同的工作，但它们是非常不同的。</p>
+<table>
+<thead>
+<tr>
+<th align="center">ORDER BY</th>
+<th align="center">GROUP BY</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">排序产生的输出</td>
+<td align="center">分组行。但输出可能不是分组的顺序</td>
+</tr>
+<tr>
+<td align="center">任意列都可以使用（甚至非选择的列也可以使用）</td>
+<td align="center">只可能使用选择列或表达式列，而且必须使用每个选择列表达式</td>
+</tr>
+<tr>
+<td align="center">不一定需要</td>
+<td align="center">如果与聚集函数一起使用列（或表达式），则必须使用</td>
+</tr>
+</tbody></table>
+<p>第一项差别极为重要。我们经常发现用<code>GROUP BY</code>分组的数据确实是以分组顺序输出的。但情况并不总是这样，它并不是 SQL 规范所要求的。此外，用户也可能会要求以不同于分组的顺序排序。仅因为你以某种方式分组数据（获得特定的分组聚集值），并不表示你需要以相同的方式排序输出。应该提供明确的<code>ORDER BY</code>子句，即使其效果等同于<code>GROUP BY</code>子句也是如此。</p>
+<p>一般在使用<code>GROUP BY</code>子句时，应该也给出<code>ORDER BY</code>子句。这是保证数据正确排序的唯一方法。千万不要仅依赖<code>GROUP BY</code>排序数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> order_num, <span class="keyword">SUM</span>(quantity * item_price) <span class="keyword">AS</span> ordertotal</span><br><span class="line"><span class="keyword">FROM</span> orderitems</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> order_num</span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">SUM</span>(quantity * item_price) &gt;= <span class="number">50</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ordertotal</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，<code>GROUP BY</code>子句用来按订单号（<code>order_num</code>列）分组数据，以便<code>SUM(*)</code>函数能够返回总计订单价格。<code>HAVING</code>子句过滤数据，使得只返回总计订单价格大于等于 50 的订单。最后，用<code>ORDER BY</code>子句排序输出。</p>
+<h2 id="SELECT子句顺序"><a href="#SELECT子句顺序" class="headerlink" title="SELECT子句顺序"></a>SELECT子句顺序</h2><p>在<code>SELECT</code>语句中使用时必须遵循的次序：<br>| 子句 | 说明 | 是否必须使用 |<br>| :–: | :–: | :–: |<br>| SELECT | 要返回的列或表达式 | 是 |<br>| FROM | 从中检索数据的表 | 仅在从表选择数据时使用 |<br>| WHERE | 行级过滤 | 否 |<br>| GROUP BY | 分组说明 | 仅在按组计算聚集时使用 |<br>| HAVING | 组级过滤 | 否 |<br>| ORDER BY | 输出排序顺序 | 否 |<br>| LIMIT | 要检索的行数 | 否 |</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-MySQL/6" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/19/MySQL/6/"
+    >MySQL/6</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/19/MySQL/6/" class="article-date">
+  <time datetime="2021-03-19T03:29:38.934Z" itemprop="datePublished">2021-03-19</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="使用视图"><a href="#使用视图" class="headerlink" title="使用视图"></a>使用视图</h1><p>视图是虚拟的表。与包含数据的表不一样，视图只包含使用时动态<br>检索数据的查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> customers, orders, orderitems</span><br><span class="line"><span class="keyword">WHERE</span> customers.cust_id = orders.cust_id</span><br><span class="line">  <span class="keyword">AND</span> orderitems.order_num = orders.order_num</span><br><span class="line">  <span class="keyword">AND</span> prod_id = <span class="string">'TNT2'</span>;</span><br></pre></td></tr></table></figure>
+<p>此查询用来检索订购了某个特定产品的客户。任何需要这个数据的<br>人都必须理解相关表的结构，并且知道如何创建查询和对表进行联结。<br>为了检索其他产品（或多个产品）的相同数据，必须修改最后的WHERE子<br>句。<br>现在，假如可以把整个查询包装成一个名为productcustomers的虚<br>拟表，则可以如下轻松地检索出相同的数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> productcustomers</span><br><span class="line"><span class="keyword">WHERE</span> prod_id = <span class="string">'TNT2'</span>;</span><br></pre></td></tr></table></figure>
+<p>这就是视图的作用。productcustomers是一个视图，作为视图，它<br>不包含表中应该有的任何列或数据，它包含的是一个SQL查询（与上面用<br>以正确联结表的相同的查询）。</p>
+<h2 id="为什么使用视图"><a href="#为什么使用视图" class="headerlink" title="为什么使用视图"></a>为什么使用视图</h2><p>下面是视图的一些常见应用。<br> 重用SQL语句。<br> 简化复杂的SQL操作。在编写查询后，可以方便地重用它而不必<br>知道它的基本查询细节。<br> 使用表的组成部分而不是整个表。<br> 保护数据。可以给用户授予表的特定部分的访问权限而不是整个<br>表的访问权限。<br> 更改数据格式和表示。视图可返回与底层表的表示和格式不同的<br>数据。</p>
+<p>在视图创建之后，可以用与表基本相同的方式利用它们。可以对视图执行SELECT操作，过滤和排序数据，将视图联结到其他视图或表，甚至能添加和更新数据。</p>
+<p>重要的是知道视图仅仅是用来查看存储在别处的数据的一种设施。视图本身不包含数据，因此它们返回的数据是从其他表中检索出来的。在添加或更改这些表中的数据时，视图将返回改变过的数据。</p>
+<p>因为视图不包含数据，所以每次使用视图时，都<br>必须处理查询执行时所需的任一个检索。如果你用多个联结<br>和过滤创建了复杂的视图或者嵌套了视图，可能会发现性能<br>下降得很厉害。因此，在部署使用了大量视图的应用前，应<br>该进行测试。</p>
+<h2 id="视图的规则和限制"><a href="#视图的规则和限制" class="headerlink" title="视图的规则和限制"></a>视图的规则和限制</h2><p>下面是关于视图创建和使用的一些最常见的规则和限制。<br> 与表一样，视图必须唯一命名（不能给视图取与别的视图或表相<br>同的名字）。  对于可以创建的视图数目没有限制。<br> 为了创建视图，必须具有足够的访问权限。这些限制通常由数据<br>库管理人员授予。<br> 视图可以嵌套，即可以利用从其他视图中检索数据的查询来构造<br>一个视图。<br> ORDER BY可以用在视图中，但如果从该视图检索数据SELECT中也<br>含有ORDER BY，那么该视图中的ORDER BY将被覆盖。<br> 视图不能索引，也不能有关联的触发器或默认值。<br> 视图可以和表一起使用。例如，编写一条联结表和视图的SELECT<br>语句。</p>
+<h2 id="使用视图-1"><a href="#使用视图-1" class="headerlink" title="使用视图"></a>使用视图</h2><p>在理解什么是视图（以及管理它们的规则及约束）后，我们来看一<br>下视图的创建。<br> 视图用CREATE VIEW语句来创建。<br> 使用SHOW CREATE VIEW viewname；来查看创建视图的语句。<br> 用DROP删除视图，其语法为DROP VIEW viewname;。  更新视图时，可以先用DROP再用CREATE，也可以直接用CREATE OR<br>REPLACE VIEW。如果要更新的视图不存在，则第2条更新语句会创<br>建一个视图；如果要更新的视图存在，则第2条更新语句会替换原<br>有视图。</p>
+<h4 id="利用视图简化复杂的联结"><a href="#利用视图简化复杂的联结" class="headerlink" title="利用视图简化复杂的联结"></a>利用视图简化复杂的联结</h4><p>视图的最常见的应用之一是隐藏复杂的SQL，这通常都会涉及联结。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> productcustomers <span class="keyword">AS</span> </span><br><span class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> customers, orders, orderitems</span><br><span class="line"><span class="keyword">WHERE</span> customers.cust_id = orders.cust_id</span><br><span class="line">  <span class="keyword">AND</span> orderitems.order_num = orders.order_num</span><br></pre></td></tr></table></figure>
+<p>这条语句创建一个名为productcustomers的视图，它联结三个<br>表，以返回已订购了任意产品的所有客户的列表。如果执行<br>SELECT * FROM productcustomers，将列出订购了任意产品的客户。</p>
+<p>为检索订购了产品TNT2的客户，可如下进行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> productcustomers</span><br><span class="line"><span class="keyword">WHERE</span> prod_id = <span class="string">'TNT2'</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="用视图重新格式化检索出的数据"><a href="#用视图重新格式化检索出的数据" class="headerlink" title="用视图重新格式化检索出的数据"></a>用视图重新格式化检索出的数据</h4><p>如上所述，视图的另一常见用途是重新格式化检索出的数据。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-MySQL/5" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/18/MySQL/5/"
+    >MySQL/5</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/18/MySQL/5/" class="article-date">
+  <time datetime="2021-03-18T06:47:54.049Z" itemprop="datePublished">2021-03-18</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="安全管理"><a href="#安全管理" class="headerlink" title="安全管理"></a>安全管理</h1><h2 id="访问控制"><a href="#访问控制" class="headerlink" title="访问控制"></a>访问控制</h2><p>MySQL服务器的安全基础是：用户应该对他们需要的数据具有适当<br>的访问权，既不能多也不能少。换句话说，用户不能对过多的数据具有<br>过多的访问权。即你需要给用户<br>提供他们所需的访问权，且仅提供他们所需的访问权。这就是所谓的访<br>问控制，管理访问控制需要创建和管理用户账号。</p>
+<h2 id="管理用户"><a href="#管理用户" class="headerlink" title="管理用户"></a>管理用户</h2><p>MySQL用户账号和信息存储在名为mysql的MySQL数据库中。一般<br>不需要直接访问mysql数据库和表（你稍后会明白这一点），但有时需要<br>直接访问。需要直接访问它的时机之一是在需要获得所有用户账号列表<br>时。为此，可使用以下代码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> mysql;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span> <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="创建用户账号"><a href="#创建用户账号" class="headerlink" title="创建用户账号"></a>创建用户账号</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> ben <span class="keyword">IDENTIFIED</span>  <span class="keyword">BY</span> <span class="string">'123456'</span>;</span><br></pre></td></tr></table></figure>
+<p>CREATE USER创建一个新用户账号。在创建用户账号时不一定需要口令，不过这个例子用<code>IDENTIFIED BY &#39;123456&#39;</code>给出了一个口令。</p>
+<p>IDENTIFIED BY指定的口令为纯文本，MySQL 将在保存到user表之前对其进行加密。为了作为散列值指定口令，使用IDENTIFIED BY PASSWORD。</p>
+<p>GRANT语句也可以创建用户账号，但一般来说CREATE USER是最清楚和最简单的句子。此外，也可以通过直接插入行到user表来增加用户，不过为安全起见，一般不建议这样做。</p>
+<p>为重新命名一个用户账号，使用RENAME USER语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RENAME</span> <span class="keyword">USER</span> ben <span class="keyword">TO</span> bforta;</span><br></pre></td></tr></table></figure>
+<h4 id="删除用户账号"><a href="#删除用户账号" class="headerlink" title="删除用户账号"></a>删除用户账号</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> bforta;</span><br></pre></td></tr></table></figure>
+<h4 id="设置访问权限"><a href="#设置访问权限" class="headerlink" title="设置访问权限"></a>设置访问权限</h4><p>在创建用户账号后，必须接着分配访问权限。新创建的用户账号没有访问权限。它们能登录 MySQL，但不能看到数据，不能执行任何数据库操作。为看到赋予用户账号的权限，使用SHOW GRANTS FOR。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">GRANT</span> <span class="keyword">FOR</span> bforta;</span><br></pre></td></tr></table></figure>
+<p>用户定义为user@host。MySQL的权限用用户名和主机名结合定义。如果不指定主机名，则使用默认的主机名%（授予用户访问权限而不管主机名）。</p>
+<p>为设置权限，使用GRANT语句。GRANT要求你至少给出以下信息：<br> 要授予的权限；<br> 被授予访问权限的数据库或表；<br> 用户名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span> crashcourse.* <span class="keyword">To</span> bforta;</span><br></pre></td></tr></table></figure>
+<p>此GRANT允许用户在crashcourse.*（crashcourse数据库的所有表）上使用SELECT。通过只授予SELECT访问权限，用户bforta对crashcourse数据库中的所有数据具有只读访问权限。</p>
+<p>GRANT的反操作为REVOKE，用它来撤销特定的权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span> crashcourse.* <span class="keyword">To</span> bforta;</span><br></pre></td></tr></table></figure>
+<p>这条REVOKE语句取消刚赋予用户bforta的SELECT访问权限。被撤销的访问权限必须存在，否则会出错。</p>
+<p>GRANT和REVOKE可在几个层次上控制访问权限：<br> 整个服务器，使用GRANT ALL和REVOKE ALL；<br> 整个数据库，使用ON database.*；<br> 特定的表，使用ON database.table；<br> 特定的列；<br> 特定的存储过程。</p>
+<p>可通过列出各权限并用逗号分隔，将多条GRANT语句串在一起，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">SELECT</span>, <span class="keyword">INSERT</span> <span class="keyword">ON</span> crashcourse.* <span class="keyword">To</span> bforta;</span><br></pre></td></tr></table></figure>
+<h4 id="更改口令"><a href="#更改口令" class="headerlink" title="更改口令"></a>更改口令</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> bforta = <span class="keyword">Password</span>(<span class="string">'123456'</span>);</span><br></pre></td></tr></table></figure>
+<p>SET PASSWORD更新用户口令。新口令必须传递到Password()函<br>数进行加密。</p>
+<p>SET PASSWORD还可以用来设置你自己的口令：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> = <span class="keyword">Password</span>(<span class="string">'123456'</span>);</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-MySQL/管理事务处理" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/18/MySQL/%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/"
+    >MySQL/管理事务处理</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/18/MySQL/%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2021-03-18T03:35:15.258Z" itemprop="datePublished">2021-03-18</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="事务处理"><a href="#事务处理" class="headerlink" title="事务处理"></a>事务处理</h1><p>MySQL 支持几种基本的数据库引擎。并非所有引擎都支持明确的事务处理管理。MyISAM 和 InnoDB 是两种最常使用的引擎。前者不支持明确的事务处理管理，而后者支持。如果你的应用中需要事务处理功能，则一定要使用正确的引擎类型。</p>
+<p>事务处理（<code>transaction processing</code>）可以用来维护数据库的完整性，它保证成批的 MySQL 操作要么完全执行，要么完全不执行。</p>
+<p><code>orders</code>表就是一个很好的例子。订单存储在<code>orders</code>和<code>orderitems</code>两个表中：<code>orders</code>存储实际的订单，而<code>orderitems</code>存储订购的各项物品。这两个表使用称为主键的唯一 ID 互相关联。这两个表又与包含客户和产品信息的其他表相关联。</p>
+<p>给系统添加订单的过程如下。</p>
+<ol>
+<li>检查数据库中是否存在相应的客户（从<code>customers</code>表查询），如果不存在，添加他/她。</li>
+<li>检索客户的 ID。</li>
+<li>添加一行到<code>orders</code>表，把它与客户 ID 关联。</li>
+<li>检索<code>orders</code>表中赋予的新订单 ID。</li>
+<li>对于订购的每个物品在<code>orderitems</code>表中添加一行，通过检索出来的 ID 把它与<code>orders</code>表关联（以及通过产品 ID 与<code>products</code>表关联）。</li>
+</ol>
+<p>现在，假如由于某种数据库故障（如超出磁盘空间、安全限制、表锁等）阻止了这个过程的完成。</p>
+<p>如果故障发生在添加了客户之后，<code>orders</code>表添加之前，不会有什么问题。某些客户没有订单是完全合法的。在重新执行此过程时，所插入的客户记录将被检索和使用。可以有效地从出故障的地方开始执行此过程。但是，如果故障发生在<code>orders</code>行添加之后，<code>orderitems</code>行添加之前，怎么办呢？现在，数据库中有一个空订单。更糟的是，如果系统在添加<code>orderitems</code>行之中出现故障。结果是数据库中存在不完整的订单，而且你还不知道。</p>
+<p>如何解决这种问题？这里就需要使用事务处理了。事务处理是一种机制，用来管理必须成批执行的 MySQL 操作，以保证数据库不包含不完整的操作结果。利用事务处理，可以保证一组操作不会中途停止，它们或者作为整体执行，或者完全不执行（除非明确指示）。如果没有错误发生，整组语句提交给（写到）数据库表。如果发生错误，则进行回退（撤销）以恢复数据库到某个已知且安全的状态。</p>
+<p>因此，请看相同的例子，这次我们说明过程如何工作。</p>
+<ol>
+<li>检查数据库中是否存在相应的客户，如果不存在，添加他/她。</li>
+<li>提交客户信息。</li>
+<li>检索客户的 ID。</li>
+<li>添加一行到<code>orders</code>表。</li>
+<li>如果在添加行到<code>orders</code>表时出现故障，回退。</li>
+<li>检索<code>orders</code>表中赋予的新订单 ID。</li>
+<li>对于订购的每项物品，添加新行到<code>orderitems</code>表。</li>
+<li>如果在添加新行到<code>orderitems</code>时出现故障，回退所有添加的<code>orderitems</code>行和<code>orders</code>行。</li>
+<li>提交订单信息。</li>
+</ol>
+<p>关于事务处理需要知道的几个术语：</p>
+<ul>
+<li>事务（<code>transaction</code>）指一组 SQL 语句；</li>
+<li>回退（<code>rollback</code>）指撤销指定 SQL 语句的过程；</li>
+<li>提交（<code>commit</code>）指将未存储的 SQL 语句结果写入数据库表；</li>
+<li>保留点（<code>savepoint</code>）指事务处理中设置的临时占位符，你可以对它发布回退（与回退整个事务处理不同）。</li>
+</ul>
+<h1 id="控制事务处理"><a href="#控制事务处理" class="headerlink" title="控制事务处理"></a>控制事务处理</h1><p>管理事务处理的关键在于将SQL语句组分解为逻辑块，并明确规定数据何时应该回退，何时不应该回退。MySQL 使用下面的语句来标识事务的开始：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">START TRANSACTION</span><br></pre></td></tr></table></figure>
+<h2 id="使用ROLLBACK"><a href="#使用ROLLBACK" class="headerlink" title="使用ROLLBACK"></a>使用ROLLBACK</h2><p>MySQL 的<code>ROLLBACK</code>命令用来回退（撤销）MySQL 语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ordertotals;</span><br><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> ordertotals;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ordertotals;</span><br><span class="line"><span class="keyword">ROLLBACK</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ordertotals;</span><br></pre></td></tr></table></figure>
+<p>这个例子从显示<code>ordertotals</code>表的内容开始。首先执行一条<code>SELECT</code>以显示该表不为空。然后开始一个事务处理，用一条<code>DELETE</code>语句删除<code>ordertotals</code>中的所有行。另一条<code>SELECT</code>语句验证<code>ordertotals</code>确实为空。这时用一条<code>ROLLBACK</code>语句回退<code>START TRANSACTION</code>之后的所有语句，最后一条<code>SELECT</code>语句显示该表不为空。显然，<code>ROLLBACK</code>只能在一个事务处理内使用（在执行一条<code>STARTTRANSACTION</code>命令之后）。</p>
+<p>事务处理用来管理<code>INSERT、UPDATE</code>和<code>DELETE</code>语句。你不能回退<code>SELECT</code>语句。（这样做也没有什么意义。）你不能回退<code>CREATE</code>或<code>DROP</code>操作。事务处理块中可以使用这两条语句，但如果你执行回退，它们不会被撤销。</p>
+<h2 id="使用COMMIT"><a href="#使用COMMIT" class="headerlink" title="使用COMMIT"></a>使用COMMIT</h2><p>一般的 MySQL 语句都是直接针对数据库表执行和编写的。这就是所谓的隐含提交，即提交（写或保存）操作是自动进行的。但是，在事务处理块中，提交不会隐含地进行。为进行明确的提交，使用<code>COMMIT</code>语句，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> orderitems <span class="keyword">WHERE</span> order_num = <span class="number">20010</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> orders <span class="keyword">WHERE</span> order_num = <span class="number">20010</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，从系统中完全删除订单 20010。因为涉及更新两个数据库表<code>orders</code>和<code>orderItems</code>，所以使用事务处理块来保证订单不被部分删除。最后的<code>COMMIT</code>语句仅在不出错时写出更改。如果第一条<code>DELETE</code>起作用，但第二条失败，则<code>DELETE</code>不会提交（实际上，它是被自动撤销的）。</p>
+<p>当<code>COMMIT</code>或<code>ROLLBACK</code>语句执行后，事务会自动关闭（将来的更改会隐含提交）。</p>
+<h2 id="使用保留点"><a href="#使用保留点" class="headerlink" title="使用保留点"></a>使用保留点</h2><p>简单的<code>ROLLBACK</code>和<code>COMMIT</code>语句就可以写入或撤销整个事务处理。但是，只是对简单的事务处理才能这样做，更复杂的事务处理可能需要部分提交或回退。</p>
+<p>例如，前面描述的添加订单的过程为一个事务处理。如果发生错误，只需要返回到添加<code>orders</code>行之前即可，不需要回退到<code>customers</code>表（如果存在的话）。</p>
+<p>为了支持回退部分事务处理，必须能在事务处理块中合适的位置放置占位符。这样，如果需要回退，可以回退到某个占位符。这些占位符称为保留点。为了创建占位符，可如下使用<code>SAVEPOINT</code>语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SAVEPOINT</span> delete1;</span><br></pre></td></tr></table></figure>
+<p>每个保留点都取标识它的唯一名字，以便在回退时，MySQL 知道要回退到何处。为了回退到本例给出的保留点，可如下进行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ROLLBACK</span> <span class="keyword">TO</span> delete1;</span><br></pre></td></tr></table></figure>
+<p>可以在 MySQL 代码中设置任意多的保留点，越多越好。因为保留点越多，你就越能按自己的意愿灵活地进行回退。</p>
+<p>保留点在事务处理完成（执行一条<code>ROLLBACK</code>或<code>COMMIT</code>）后自动释放。也可以用<code>RELEASE SAVEPOINT</code>明确地释放保留点。</p>
+<h2 id="更改默认的提交行为"><a href="#更改默认的提交行为" class="headerlink" title="更改默认的提交行为"></a>更改默认的提交行为</h2><p>默认的 MySQL 行为是自动提交所有更改。换句话说，任何时候你执行一条 MySQL 语句，该语句实际上都是针对表执行的，而且所做的更改立即生效。为指示 MySQL 不自动提交更改，需要使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> autocommit=<span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p><code>autocommit</code>标志决定是否自动提交更改，不管有没有<code>COMMIT</code>语句。设置<code>autocommit</code>为 0（假）指示 MySQL 不自动提交更改（直到<code>autocommit</code>被设置为真为止）。</p>
+<p><code>autocommit</code>标志是针对每个连接而不是服务器的。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-java/IDEA插件" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/01/20/java/IDEA%E6%8F%92%E4%BB%B6/"
+    >java/IDEA插件</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/01/20/java/IDEA%E6%8F%92%E4%BB%B6/" class="article-date">
+  <time datetime="2021-01-20T07:29:11.714Z" itemprop="datePublished">2021-01-20</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>Maven Helper<br>Free Mybatis plugin</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-java/IDEA快捷键" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -505,111 +1082,6 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-MySQL/1" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/16/MySQL/1/"
-    >MySQL/1</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/16/MySQL/1/" class="article-date">
-  <time datetime="2020-12-16T02:09:33.492Z" itemprop="datePublished">2020-12-16</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="下载安装MySQL教辅"><a href="#下载安装MySQL教辅" class="headerlink" title="下载安装MySQL教辅"></a>下载安装MySQL教辅</h1><p>下载地址：<code>https://dev.mysql.com/downloads/installer/</code>。</p>
-<img src="/2020/12/16/MySQL/1/img1.png" class="">
-
-<p>选择对应的操作系统版本，点击 Download 后进入下图界面，选择直接下载即可。</p>
-<img src="/2020/12/16/MySQL/1/img2.png" class="">
-
-<p>下载完成后，直接双击进行安装。双击后进入下图界面，选择默认版本进行安装。</p>
-<img src="/2020/12/16/MySQL/1/img4.png" class="">
-
-<p>进入安装前环境检查，选择 Execute。</p>
-<img src="/2020/12/16/MySQL/1/img5.png" class="">
-
-<p>之后点击 Next，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img6.png" class="">
-
-<p>点击 Execute，系统会自动检测需要的软件是否进行了安装，如果没有安装的话，将会自动安装，我们只需要选择同意并安装就可以了。</p>
-<p>安装完之后，点击 Next、Next，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img7.png" class="">
-
-<p>默认选项之后点击 Next，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img8.png" class="">
-
-<p>点击 Next，设置数据库 root 用户密码之后 Next，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img9.png" class="">
-
-<p>选择默认设置，点击 Next 之后，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img10.png" class="">
-
-<p>点击 Execute，选择 Finish，点击 Next，进入下图界面。。</p>
-<img src="/2020/12/16/MySQL/1/img12.png" class="">
-
-<p>点击 Finish 进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img13.png" class="">
-
-<p>点击 Next 进入下图界面，输入 root 用户口令，点击 check 测试一下是否连接成功，之后点击 Next，进入下图界面。</p>
-<img src="/2020/12/16/MySQL/1/img14.png" class="">
-
-<p>点击 Execute 之后点击 Finish，完成安装。</p>
-<p>安装完成后，在开始菜单打开 MySQL 8.0 Command Line Client，输入用户口令，进入命令行，输入 status，出现下图内容说明安装成功。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
     <article id="post-java/Maven/Maven的安装和配置" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -689,648 +1161,13 @@ var _hmt = _hmt || [];
 
 </article>
     
-    <article id="post-密码技术/单向散列函数" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0/"
-    >单向散列函数</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0/" class="article-date">
-  <time datetime="2020-12-15T02:46:22.000Z" itemprop="datePublished">2020-12-15</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/">密码技术</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="什么是单向散列函数"><a href="#什么是单向散列函数" class="headerlink" title="什么是单向散列函数"></a>什么是单向散列函数</h1><p>单向散列函数有一个输入和一个输出。输入称为消息(<code>message</code>)，输出称为散列值(<code>hash value</code>)。</p>
-<p>单向散列函数可以根据消息的内容计算出散列值，散列值可以被用来检查消息的完整性。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0/img1.png" class="">
-
-<p>这里的消息也可以是图像文件或声音文件。无论任何消息，单向散列函数都会将它作为单纯的比特序列来处理，即根据比特序列计算出散列值。</p>
-<p>散列值的长度和消息的长度无关。无论消息是 1 比特还是 100MB，单向散列函数都会计算出固定长度的散列值。</p>
-<p>SHA-256 单向散列函数计算出的散列值的长度永远是 256比特（32字节）。</p>
-<p>单向散列函数的性质：</p>
-<ul>
-<li>根据任意长度的消息计算出固定长度的散列值</li>
-<li>能够快速计算出散列值</li>
-<li>消息不同散列值也不同</li>
-<li>具备单向性：无法通过散列值反算出消息</li>
-</ul>
-<h1 id="单向散列函数的实际应用"><a href="#单向散列函数的实际应用" class="headerlink" title="单向散列函数的实际应用"></a>单向散列函数的实际应用</h1><ul>
-<li>检测软件是否被篡改<br>很多软件都会把通过单向散列函数计算出的散列值公布在自己的网站上。用户在下载到软件之后，可以自行计算散列值，然后与官网上的散列值进行对比。通过散列值，用户可以确认自己下载的文件与软件作者所提供的文件是否一致。</li>
-</ul>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0/img2.png" class="">
-
-<ul>
-<li>基于口令的加密<br>单向散列函数也被用于基于口令的加密(<code>Password Based Encryption, PBE</code>)。PBE 的原理是将口令和盐（<code>salt</code>，通过伪随机数生成器产生的随机值）混合后计算其散列值，然后将这个散列值用作加密的密钥。通过这样的方法能够防御针对口令的字典攻击。</li>
-<li>消息认证码：使用单向散列函数可以构造消息认证码。消息认证码是将发送者和接收者之间的共享密钥和消息进行混合后计算出的散列值。</li>
-<li>数字签名</li>
-<li>伪随机数生成器</li>
-<li>一次性口令</li>
-</ul>
-<h1 id="单向散列函数的具体例子"><a href="#单向散列函数的具体例子" class="headerlink" title="单向散列函数的具体例子"></a>单向散列函数的具体例子</h1><h2 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h2><p>MD5 是 Rivest 设计的单向散列函数，能够产生 128 比特的散列值。MD5 的强抗碰撞性已经被攻破，现在已经能够产生具备相同散列值的两条不同消息，因此它不再安全。</p>
-<p>MD 是消息摘要(Message Digest)的缩写。</p>
-<h2 id="SHA-1、SHA-256、SHA-384、SHA-512"><a href="#SHA-1、SHA-256、SHA-384、SHA-512" class="headerlink" title="SHA-1、SHA-256、SHA-384、SHA-512"></a>SHA-1、SHA-256、SHA-384、SHA-512</h2><p>SHA-1 是一种能够产生 160 比特的散列值的单向散列函数。1993 年被作为美国联邦信息处理标准规格发布的是 SHA。1995 年发布的修订版称为 SHA-1。SHA-1 除了用于保持兼容的目的外，其他情况不推荐使用。</p>
-<p>SHA-256、SHA-384、SHA-512 的散列值长度分别为 256 比特、384 比特和512 比特。这些单向散列函数合起来统称 SHA-2。</p>
-<p>SHA-1 的强抗碰撞性已被攻破，SHA-2 还尚未被攻破。</p>
-<h2 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h2><p>RIPEMD-160 是一种能够产生 160 比特的散列值的单向散列函数。RIPEMD-160 是 欧盟 RIPE 项目所设计的 RIPEMD 单向散列函数的修订版。这一系列还包括 RIPEMD-128、RIPEMD-256、RIPEMD-320等。</p>
-<p>RIPEMD的强抗碰撞性已被攻破，RIPEMD-160 尚未被攻破。比特币中使用的就是 RIPEMD-160。</p>
-<h2 id="SHA-3"><a href="#SHA-3" class="headerlink" title="SHA-3"></a>SHA-3</h2><p>用于取代 SHA-1 的 SHA-3 采用公开竞争的方式标准化，一个名叫 Keccak 的算法最终成为了 SHA-3。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/" rel="tag">密码技术</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-密码技术/密钥" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/"
-    >密码技术/密钥</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/" class="article-date">
-  <time datetime="2020-12-15T02:02:10.520Z" itemprop="datePublished">2020-12-15</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="什么是密钥"><a href="#什么是密钥" class="headerlink" title="什么是密钥"></a>什么是密钥</h1><p>在使用对称密码、公钥密码、消息认证码、数字签名等密码技术都需要一个称为密钥的巨大数字。然而，数字本身的大小并不重要，重要的是密钥空间的大小，也就是可能出现的密钥的总数量，因为密钥空间越大，进行暴力破解就越困难。密钥空间的大小由密钥长度决定。</p>
-<h2 id="DES-的密钥"><a href="#DES-的密钥" class="headerlink" title="DES 的密钥"></a>DES 的密钥</h2><p>对称密码 DES 的密钥的实质长度为 56 比特(7字节)。一个 DES 密钥可表示为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 二进制</span><br><span class="line">01010001 11101100 01001011 00010010 00111101 01000010 00000011</span><br><span class="line">&#x2F;&#x2F; 十六进制</span><br><span class="line">51 EC 4B 12 3D 42 03</span><br><span class="line">&#x2F;&#x2F; 十进制</span><br><span class="line">2305928028626269955</span><br></pre></td></tr></table></figure>
-<h2 id="3DES-的密钥"><a href="#3DES-的密钥" class="headerlink" title="3DES 的密钥"></a>3DES 的密钥</h2><p>在对称密码三重 DES 中，包括使用两个 DES 密钥的 DES-EDE2 和使用三个 DES密钥的 DES-EDE3 两种方式。</p>
-<p>DES-EDE2 的密钥的实质长度为 112 比特(14字节)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">51 EC 4B 12 3D 42 03 30 04 D8 98 95 93 3F</span><br></pre></td></tr></table></figure>
-<p>DES-EDE3 的密钥的实质长度为 168 比特(21字节)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">51 EC 4B 12 3D 42 03 30 04 D8 98 95 93 3F 24 9F 61 2A 2F D9 96</span><br></pre></td></tr></table></figure>
-<h2 id="AES-的密钥"><a href="#AES-的密钥" class="headerlink" title="AES 的密钥"></a>AES 的密钥</h2><p>对称密码 AES 的密钥长度可以从 128、192和256比特中进行选择，当密钥长度为 256 比特时，其长度如下面这个数字：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">51 EC 4B 12 3D 42 03 30 04 D8 98 95 93 3F 24 9F 61 2A 2F D9 96 B9 42 DC FD A0 AE F4 5D 60 51 F1</span><br></pre></td></tr></table></figure>
-<h1 id="各种不同的密钥"><a href="#各种不同的密钥" class="headerlink" title="各种不同的密钥"></a>各种不同的密钥</h1><h2 id="对称密码的密钥与公钥密码的密钥"><a href="#对称密码的密钥与公钥密码的密钥" class="headerlink" title="对称密码的密钥与公钥密码的密钥"></a>对称密码的密钥与公钥密码的密钥</h2><p>对称密码中，加密和解密使用同一个密钥，密钥必须对发送者和接收者以外的人保密，否则第三方就能解密密文了。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img1.png" class="">
-
-<p>公钥密码中，加密和解密使用的是不同的密钥，用于加密的密钥称为公钥，用于解密的密钥称为私钥。公钥和私钥之间具有深刻的数学关系，因此也称为密钥对。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img2.png" class="">
-
-<h2 id="消息认证码的密钥与数字签名的密钥"><a href="#消息认证码的密钥与数字签名的密钥" class="headerlink" title="消息认证码的密钥与数字签名的密钥"></a>消息认证码的密钥与数字签名的密钥</h2><p>消息认证码中，发送者和接收者使用共享的密钥来进行认证。消息认证码只能由持有合法密钥的人计算出来。将消息认证码附加在通信报文后面，就可以识别通信内容是否被篡改或伪装。消息认证码的密钥必须对发送者和接收者之外的人保密，否则就会产生篡改和伪装的风险。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img3.png" class="">
-
-<p>数字签名中，签名的生成和验证使用不同的密钥。只有持有私钥的本人才能够生成签名，验证签名使用的是公钥，任何人都能够验证签名。</p>
-<h2 id="用于确保机密性的密钥与用于认证的密钥"><a href="#用于确保机密性的密钥与用于认证的密钥" class="headerlink" title="用于确保机密性的密钥与用于认证的密钥"></a>用于确保机密性的密钥与用于认证的密钥</h2><p>对称密码和公钥密码的密钥都是用于确保机密性的密钥，如果不知道用于解密的合法密钥，就无法得知明文的内容。</p>
-<p>消息认证码和数字签名所使用的密钥，则是用于认证的密钥。如果不知道合法的密钥，就无法篡改数据，也无法伪装本人的身份。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img4.png" class="">
-
-<h2 id="会话密钥与主密钥"><a href="#会话密钥与主密钥" class="headerlink" title="会话密钥与主密钥"></a>会话密钥与主密钥</h2><p>当我们访问以<code>https://</code>开头的网页时，浏览器和服务器之间会进行基于 SSL/TLS 的加密通信。在这样的通信中所使用的密钥是仅限于本次通信的一次性密钥，下次通信时就不能使用了。像这样每次通信只能使用一次的密钥为会话密钥(<code>session key</code>)。</p>
-<p>由于会话密钥只在本次通信中有效，万一窃听者获取了本次通信的会话密钥，也只能破译本次通信的内容，下次通信中会使用新的密钥，因此其他通信的机密性不会受到破坏。</p>
-<p>相对于每次通信都更换的会话密钥，一直被重复使用的密钥称为主密钥。</p>
-<h2 id="用于加密内容的密钥与用于加密密钥的密钥"><a href="#用于加密内容的密钥与用于加密密钥的密钥" class="headerlink" title="用于加密内容的密钥与用于加密密钥的密钥"></a>用于加密内容的密钥与用于加密密钥的密钥</h2><p>一般来说，加密的对象是用户直接使用的信息，这种情况下所使用的密钥称为CEK(Contents Encrypting Key，内容加密密钥)；用于加密密钥的密钥则称为KEK(Key Encrypting Key，密钥加密密钥)。</p>
-<img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img5.png" class="">
-
-<p>在很多情况下，会话密钥都是被作为 CEK 使用的，而主密钥则是被作为 KEK 使用的。</p>
-<h1 id="密钥的管理"><a href="#密钥的管理" class="headerlink" title="密钥的管理"></a>密钥的管理</h1><h2 id="生成密钥"><a href="#生成密钥" class="headerlink" title="生成密钥"></a>生成密钥</h2><h2 id="配送密钥"><a href="#配送密钥" class="headerlink" title="配送密钥"></a>配送密钥</h2><h2 id="更新密钥"><a href="#更新密钥" class="headerlink" title="更新密钥"></a>更新密钥</h2><h2 id="保存密钥"><a href="#保存密钥" class="headerlink" title="保存密钥"></a>保存密钥</h2><h2 id="作废密钥"><a href="#作废密钥" class="headerlink" title="作废密钥"></a>作废密钥</h2><h1 id="Diffie-Hellman-密钥交换"><a href="#Diffie-Hellman-密钥交换" class="headerlink" title="Diffie-Hellman 密钥交换"></a>Diffie-Hellman 密钥交换</h1><h1 id="基于口令的密码（PBE）"><a href="#基于口令的密码（PBE）" class="headerlink" title="基于口令的密码（PBE）"></a>基于口令的密码（PBE）</h1><p>基于口令的密码(Password Based Encryption，PBE)就是一种根据口令生成密钥并用该密钥进行加密的方法。其中加密和解密使用同一个密钥。</p>
-<h2 id="PBE-加密"><a href="#PBE-加密" class="headerlink" title="PBE 加密"></a>PBE 加密</h2><img src="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%86%E9%92%A5/img6.png" class="">
-
-<p>PBE 加密包括 3 个步骤：</p>
-<ol>
-<li>生成 KEK</li>
-<li>生成会话密钥并加密</li>
-<li>加密消息</li>
-</ol>
-<h3 id="1-生成-KEK"><a href="#1-生成-KEK" class="headerlink" title="1.生成 KEK"></a>1.生成 KEK</h3><p>首先，伪随机数生成器会生成一个被称为盐的随机数。将盐和口令一起输入单向散列函数，得到的散列值就是用来加密密钥的密钥(KEK)。</p>
-<h3 id="2-生成会话秘钥并加密"><a href="#2-生成会话秘钥并加密" class="headerlink" title="2.生成会话秘钥并加密"></a>2.生成会话秘钥并加密</h3><p>使用伪随机数生成器生成会话密钥，会话密钥是用来加密消息的密钥(CEK)。</p>
-<p>会话密钥需要用步骤 1 中生成的 KEK 进行加密，并和盐一起保存在安全的地方。会话密钥加密后，KEK 就会被丢弃，因为 KEK 没有必要保存下来，只要通过盐和口令就可以重建 KEK。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-密码技术/分组密码的模式" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/"
-    >分组密码的模式</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/" class="article-date">
-  <time datetime="2020-12-14T08:57:13.000Z" itemprop="datePublished">2020-12-14</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/">密码技术</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>AES 和 DES 都属于分组密码，它们只能加密固定长度的明文，如果要加密任意长度的明文，就需要对分组密码进行迭代，而分组密码的迭代方法就称为分组密码的模式。</p>
-<p>分组密码有很多种模式，如果模式的选择不恰当，就无法充分保证机密性。</p>
-<h1 id="分组密码的模式"><a href="#分组密码的模式" class="headerlink" title="分组密码的模式"></a>分组密码的模式</h1><h2 id="分组密码与流密码"><a href="#分组密码与流密码" class="headerlink" title="分组密码与流密码"></a>分组密码与流密码</h2><p>密码算法可以分为分组密码和流密码两种。</p>
-<p>分组密码时每次只能处理特定长度的一块数据的一类密码算法。这里的一块就称为分组。此外，一个分组的比特数就称为分组长度。</p>
-<p>例如 DES 和 3DES 的分组长度都是 64 比特，这些密码算法一次只能加密 64 比特的明文，并生成 64 比特的密文。</p>
-<p>AES 的分组长度为 128 比特，因此 AES 一次可加密 128 比特的明文，并生成 128 比特的密文。</p>
-<p>流密码是对数据流进行连续处理的一类密码算法。流密码中一般以 1 比特、8 比特或 32 比特等为单位进行加密和解密。</p>
-<p>分组密码处理完一个分组就结束了，因此不需要通过内部状态来记录加密的进度。流密码是对一串数据流进行连续处理，因此需要保持内部状态。</p>
-<h2 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h2><p>分组密码算法只能加密固定长度的分组，但我们需要加密的明文长度可能会超过分组密码的分组长度，这时就需要对分组密码算法进行迭代，以便将一段很长的明文全部加密。而迭代的方法就称为分组密码的模式。</p>
-<p>分组密码的主要模式有5种：</p>
-<ul>
-<li>ECB 模式：<code>Electronic CodeBook mode</code>（电子密码本模式）</li>
-<li>CBC 模式：<code>Cipher Block Chaining mode</code>（密码分组链接模式）</li>
-<li>CFB 模式：<code>Cipher FeedBack mode</code>（密文反馈模式）</li>
-<li>OFB 模式：<code>Output FeedBack mode</code>（输出反馈模式）</li>
-<li>CTR 模式：<code>CounTeR mode</code>（计数器模式）</li>
-</ul>
-<h2 id="明文分组和密文分组"><a href="#明文分组和密文分组" class="headerlink" title="明文分组和密文分组"></a>明文分组和密文分组</h2><p>明文分组是指分组密码算法中作为加密对象的明文。明文分组的长度与分组密码算法的分组长度是相等的。</p>
-<p>密文分组是指使用分组密码算法将明文分组加密之后所生成的密文。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img1.png" class="">
-
-<h1 id="ECB-模式"><a href="#ECB-模式" class="headerlink" title="ECB 模式"></a>ECB 模式</h1><p>ECB 模式由于存在弱点因此通常不会被使用。</p>
-<p>在 ECB 模式中，将明文分组加密之后的结果将直接成为密文分组。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img2.png" class="" title="ECB 模式">
-
-<p>使用 ECB 模式加密时，相同的明文分组会被转换为相同的密文分组，也就是说，我们可以将其理解为是一个巨大的“明文分组-&gt;密文分组”的对应表，因此 ECB 模式也称为电子密码本模式。</p>
-<p>当最后一个明文分组的内容小于分组长度时，需要用一些特定的数据进行填充(<code>padding</code>)。</p>
-<h2 id="ECB-模式的特点"><a href="#ECB-模式的特点" class="headerlink" title="ECB 模式的特点"></a>ECB 模式的特点</h2><p>ECB 模式中，明文分组和密文分组是一一对应的关系，因此，如果明文中存在多个相同的明文分组，则这些明文分组最终都将被转换为相同的密文分组。这样一来，只要观察下密文，就可以知道明文中存在怎样的重复组合，并可以以此为线索来破译密码，因此 ECB 模式是不安全的。</p>
-<h1 id="CBC-模式"><a href="#CBC-模式" class="headerlink" title="CBC 模式"></a>CBC 模式</h1><p>在 CBC 模式中，首先将明文分组与前一个密文分组进行 XOR 运算，然后再进行加密。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img3.png" class="" title="CBC 模式">
-
-<p>如果将一个分组的加密过程分离出来，我们就可以很容易的比较出 ECB 模式和 CBC 模式的区别：ECB 模式只进行了加密，CBC 模式在加密之前进行了一次 XOR。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img4.png" class="" title="ECB 模式 和 CBC 模式比较">
-
-<h2 id="初始化向量"><a href="#初始化向量" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>当加密第一个明文分组时，由于不存在“前一个密文分组”，因此需要事先准备一个长度为一个分组的比特序列来代替“前一个密文分组”，这个比特序列称为初始化向量(<code>Initialization Vector</code>)，通常缩写为<code>IV</code>。</p>
-<p>一般来说，每次加密时都会随机产生一个不同的比特序列来作为初始化向量。</p>
-<h2 id="CBC模式的特点"><a href="#CBC模式的特点" class="headerlink" title="CBC模式的特点"></a>CBC模式的特点</h2><p>明文分组在加密之前一定会与“前一个密文分组”进行 XOR 运算，因此，即便明文分组 1 和 2 的值是相等的，密文分组 1 和 2 的值也不一定是相等的。这样一来，ECB 模式的缺陷在 CBC 模式中就不存在了。</p>
-<p>在 CBC 模式的加密过程中，无法单独对一个中间的明文分组进行加密。例如，如果要生成密文分组 3，则至少需要凑齐明文分组 1、2、3.</p>
-<p>在 CBC 模式的解密过程中，现在假设 CBC 模式加密的密文分组中有一个分组损坏了，在这种情况下，只要密文分组的长度没有发生变化，则解密时最多只会有两个分组受到数据损坏的影响。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img7.png" class="">
-
-<p>假设 CBC 模式的密文分组中有一些比特缺失了，那么即便只是缺失了 1 比特，也会导致密文分组的长度发生变化，此后的分组发生错位，这样一来，缺失比特的位置之后的密文分组也就全部无法解密了。</p>
-<h2 id="对CBC模式的攻击"><a href="#对CBC模式的攻击" class="headerlink" title="对CBC模式的攻击"></a>对CBC模式的攻击</h2><p>假如主动攻击者的目的是通过修改密文来操纵解密后的明文。如果攻击者能够对初始化向量中的任意比特进行反转（即将 1 变为 0，0 变为 1），则明文分组（解密后得到的明文分组）中相应的比特也会被反转。这是因为在 CBC 模式的解密过程中，第一个明文分组会和初始化向量进行 XOR 运算。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img8.png" class="">
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img9.png" class="">
-
-<p>这样，攻击者就可以对初始化向量进行攻击。</p>
-<h2 id="填充提示攻击"><a href="#填充提示攻击" class="headerlink" title="填充提示攻击"></a>填充提示攻击</h2><p>填充提示攻击是一种利用分组密码中的填充部分来进行攻击的方法。在分组密码中，当明文长度不为分组长度的整数倍时，需要在最后一个分组中填充一些数据使其凑满一个分组长度。在填充提示攻击中，攻击者会反复发送一段密文，每次发送时都对填充的数据进行少许改变。由于接收者（服务器）在无法正确解密时会返回一个错误信息，攻击者通过这一错误消息就可以获得一部分与明文相关的信息。这一攻击方式并不仅限于 CBC 模式，而是适用于所有需要进行分组填充的模式。</p>
-<h2 id="对初始化向量（IV）攻击"><a href="#对初始化向量（IV）攻击" class="headerlink" title="对初始化向量（IV）攻击"></a>对初始化向量（IV）攻击</h2><p>初始化向量<code>IV</code>必须使用不可预测的随机数</p>
-<h2 id="CBC-模式的应用实例"><a href="#CBC-模式的应用实例" class="headerlink" title="CBC 模式的应用实例"></a>CBC 模式的应用实例</h2><p>SSL/TLS 就是使用 CBC 模式来确保通信的机密性的，如使用 CBC 模式三重 DES 的 3DES_EDE_CBC 以及 CBC 模式 256 比特 AES 的 AES_256_CBC等。</p>
-<h1 id="CFB-模式"><a href="#CFB-模式" class="headerlink" title="CFB 模式"></a>CFB 模式</h1><p>在 CFB 模式中，前一个密文分组会被送回到密码算法的输入端。所谓反馈，指的就是返回输入端的意思。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img10.png" class="">
-
-<p>在 ECB 模式和 CBC 模式中，明文分组都是通过密码算法进行加密的，然而，在 CFB 模式中，明文分组并没有通过密码算法来直接进行加密。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img11.png" class="" title="CBC 模式与 CFB 模式的对比">
-
-<h2 id="初始化向量-1"><a href="#初始化向量-1" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>在生成第一个密文分组时，由于不存在前一个输出的数据，因此需要使用初始化向量来代替，这一点和 CBC 模式是相同的。一般来说，我们需要在每次加密时生成一个不同的随机比特序列用作初始化向量。</p>
-<h2 id="CFB-模式与流密码"><a href="#CFB-模式与流密码" class="headerlink" title="CFB 模式与流密码"></a>CFB 模式与流密码</h2><p>CFB 模式的结构与一次性密码本是非常相似的。一次性密码本是通过将明文与随机比特序列进行 XOR 运算来生成密文的。而 CFB 模式则是通过将明文分组与密码算法的输出进行 XOR 运算来生成密文分组的。在通过 XOR 来进行加密这一点上，两者是非常相似的。</p>
-<p>在 CFB 模式中，密码算法的输出相当于一次性密码本中的随机比特序列。由于密码算法的输出是通过计算得到的，并不是真正的随机数，因此 CFB 模式不可能像一次性密码本那样具备理论上不可破译的性质。</p>
-<p>CFB 模式中由密码算法所生成的比特序列称为密钥流。在 CFB 模式中，密码算法就相当于用来生成密钥流的伪随机数生成器，而初始化向量就相当于伪随机数生成器的种子。</p>
-<p>在 CFB 模式中，明文数据可以被逐比特加密，因此我们可以将 CFB 模式看做是一种使用分组密码来实现流密码的方式。</p>
-<h2 id="对-CFB-模式的攻击"><a href="#对-CFB-模式的攻击" class="headerlink" title="对 CFB 模式的攻击"></a>对 CFB 模式的攻击</h2><p>对 CFB 模式可以实施重放攻击。</p>
-<p>有一天，发送者向接收者发送了一条消息，这条消息由 4 个密文分组组成。主动攻击者将该消息中的后 3 个密文分组保存了下来。转天，发送者又向接收者发送了内容不同的 4 个密文分组（假设发送者使用了相同的密钥）。攻击者用昨天保存下来的 3 个密文分组将今天发送的后 3 个密文分组进行了替换。</p>
-<p>于是，当接收者解密时，4 个分组中就只有第一个可以解密成正确的明文分组，第二个会出错，而第三个和第四个则变成了被攻击者替换的内容。攻击者没有破解密码就成功的将以前的电文混入了新电文中。而第二个分组出错到底是通信错误还是被人攻击造成的，接收者是无法做出判断的。要做出这样的判断，需要使用消息认证码。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img12.png" class="" title="对 CFB 进行重放攻击">
-
-<h1 id="OFB-模式"><a href="#OFB-模式" class="headerlink" title="OFB 模式"></a>OFB 模式</h1><p>在 OFB 模式中，密码算法的输出会反馈到密码算法的输入中。</p>
-<p>OFB 模式并不是通过密码算法对明文直接进行加密的，而是通过将明文分组和密码算法的输出进行 XOR 来产生密文分组的。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img13.png" class="">
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img14.png" class="">
-
-<h2 id="初始化向量-2"><a href="#初始化向量-2" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>和 CBC 模式、CFB 模式一样，OFB 模式也需要使用初始化向量(IV)。需要在每次加密时生成一个不同的随机比特序列用作初始化向量。</p>
-<h2 id="CFB-模式与-OFB-模式对比"><a href="#CFB-模式与-OFB-模式对比" class="headerlink" title="CFB 模式与 OFB 模式对比"></a>CFB 模式与 OFB 模式对比</h2><p>OFB 模式和 CFB 模式的区别仅仅在于密码算法的输入。</p>
-<p>CFB 模式中，密码算法的输入是前一个密文分组，也就是将密文分组反馈到密码算法中，因此有了密文反馈模式这个名字。</p>
-<p>OFB 模式中，密码算法的输入是密码算法的前一个输出，也就是将输出反馈给密码算法，因此有了输出反馈模式这个名字。</p>
-<p>如果将一个分组抽出来对 CFB 模式和 OFB 模式进行一个对比，就可以很容易看出它们之间的差异。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img15.png" class="">
-
-<p>由于 CFB 模式中是对密文分组进行反馈的，因此必须从第一个明文分组开始按顺序进行加密，也就是说无法跳过明文分组 1 而先对明文分组 2 进行加密。</p>
-<p>相对的，在 OFB 模式中，XOR 所需要的比特序列（密钥流）可以事先通过密码算法生成，和明文分组无关。只要提前准备好所需的密钥流，则在实际从明文生成密文的过程中，就完全不需要动用密码算法了，只要将明文与密文流进行 XOR 就可以了。和 AES 等密码算法相比，XOR 运算的速度非常快。这就意味着只要提前准备好密钥流就可以快速完成加密。换个角度看，生成密钥流的操作和进行 XOR 运算的操作是可以并行的。</p>
-<h1 id="CTR-模式"><a href="#CTR-模式" class="headerlink" title="CTR 模式"></a>CTR 模式</h1><p>CTR 模式是一种通过将逐次累加的计数器进行加密来生成密钥流的流密码。</p>
-<p>CTR 模式中，每个分组对应一个逐次累加的计数器，并通过对计数器进行加密来生成密钥流。也就是说，最终的密文分组是通过将计数器加密得到的比特序列与明文分组进行 XOR 得到的。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img5.png" class="">
-
-<h2 id="计数器的生成方法"><a href="#计数器的生成方法" class="headerlink" title="计数器的生成方法"></a>计数器的生成方法</h2><p>每次加密都会生成一个不同的值(<code>nonce</code>)来作为计数器的初始值。当分组长度为 128 比特（16字节）时，计数器初始值可能是像下面这样的形式。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img6.png" class="">
-
-<p>其中前 8 个字节为<code>nonce</code>，这个值在每次加密时必须都是不同的。后 8 个字节为分组序号，这个部分是会逐次累加的。</p>
-<p>在加密的过程中，计数器的值会产生如下变化。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 01 &#x2F;&#x2F; 明文分组1的计数器（初始值）</span><br><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 02 &#x2F;&#x2F; 明文分组2的计数器</span><br><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 03 &#x2F;&#x2F; 明文分组3的计数器</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>由于计数器的值每次都不同，因此每个分组中将计数器进行加密所得到的密钥流也是不同的。也就是说，这种方法就是用分组密码来模拟生成随机的比特序列。</p>
-<h2 id="OFB-模式与-CTR-模式的对比"><a href="#OFB-模式与-CTR-模式的对比" class="headerlink" title="OFB 模式与 CTR 模式的对比"></a>OFB 模式与 CTR 模式的对比</h2><p>CTR 模式和 OFB 模式一样，都属于流密码。如果我们将单个分组的加密过程拿出来，那么 OFB 模式和 CTR 模式之间的差异还是很容易理解的。OFB 模式是将加密的输出反馈到输入，而 CTR 模式则是将计数器的值用作输入。</p>
-<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img16.png" class="">
-
-<h2 id="CTR-模式的特点"><a href="#CTR-模式的特点" class="headerlink" title="CTR 模式的特点"></a>CTR 模式的特点</h2><p>CTR 模式的加密和解密使用了完全相同的结构，因此在程序实现上比较容易。</p>
-<p>此外，CTR 模式中可以以任意顺序对分组进行加密和解密，因此在加密和解密时需要用到的计数器的值可以由<code>nonce</code>和分组序号直接计算出来。这一性质是 OFB 模式所不具备的。</p>
-<p>能够以任意顺序处理分组，就意味着能够实现并行计算。在支持并行计算的系统中，CTR 模式的速度非常快。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/" rel="tag">密码技术</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-密码技术/对称密码" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/"
-    >对称密码</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/" class="article-date">
-  <time datetime="2020-12-10T03:25:51.000Z" itemprop="datePublished">2020-12-10</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/">密码技术</a>
-  </div>
-
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>计算机的操作对象是由 0 和 1 排列而成的比特序列。无论是文字、图像、声音、视频还是程序，在计算机中都是用比特序列来表示的。执行加密操作的程序，就是将表示明文的比特序列转换为表示密文的比特序列。</p>
-<p>将现实世界中的东西映射为比特序列的操作称为编码(<code>encoding</code>)。例如<code>midnight</code>这个单词，我们可以对其中的每一个字母逐一进行编码，这种编码规则叫 ASCII。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">m  -&gt;  01101101</span><br><span class="line">i  -&gt;  01101001</span><br><span class="line">d  -&gt;  01100100</span><br><span class="line">n  -&gt;  01101110</span><br><span class="line">i  -&gt;  01101001</span><br><span class="line">g  -&gt;  01100111</span><br><span class="line">h  -&gt;  01101000</span><br><span class="line">t  -&gt;  01110100</span><br></pre></td></tr></table></figure>
-<h2 id="XOR"><a href="#XOR" class="headerlink" title="XOR"></a>XOR</h2><p>XOR(<code>exclusive or</code>)异或运算。</p>
-<h3 id="1个比特的XOR"><a href="#1个比特的XOR" class="headerlink" title="1个比特的XOR"></a>1个比特的XOR</h3><p>1个比特的XOR运算规则如下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0 XOR 0 &#x3D; 0</span><br><span class="line">0 XOR 1 &#x3D; 1</span><br><span class="line">1 XOR 0 &#x3D; 1</span><br><span class="line">1 XOR 1 &#x3D; 0</span><br></pre></td></tr></table></figure>
-<p>可以将 0 理解为偶数，1理解为奇数，就可以将 XOR 和加法运算等同起来。</p>
-<p>由于 XOR 和加法运算很相似，因此一般用 + 和 O 组合而成的符号 ⊕ 来表示 XOR。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0 ⊕ 0 &#x3D; 0</span><br><span class="line">0 ⊕ 1 &#x3D; 1</span><br><span class="line">1 ⊕ 0 &#x3D; 1</span><br><span class="line">1 ⊕ 1 &#x3D; 0</span><br></pre></td></tr></table></figure>
-<p>规律：两个相同的数进行 XOR 运算的结果一定为 0。</p>
-<h3 id="比特序列的-XOR"><a href="#比特序列的-XOR" class="headerlink" title="比特序列的 XOR"></a>比特序列的 XOR</h3><p>长比特序列之间的 XOR 运算只需对其中每个相对应的比特进行 XOR 运算就可以了。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img1.png" class="">
-
-<p>由于两个相同的数进行 XOR 运算的结果一定为 0，因此如果将 A ⊕ B 的结果再与 B 进行 XOR 运算，则结果会变回 A。也就是说，两个公式中的 B 会相互抵消。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img2.png" class="">
-
-<p>上面的计算和加密、解密的步骤非常相似。</p>
-<ul>
-<li>将明文 A 用密钥 B 进行加密，得到密文 A ⊕ B</li>
-<li>将密文 A ⊕ B 用密钥 B 进行解密，得到明文 A</li>
-</ul>
-<h2 id="一次性密码本"><a href="#一次性密码本" class="headerlink" title="一次性密码本"></a>一次性密码本</h2><p>只要通过暴力破解法对密钥空间进行遍历，无论什么密文总有一天也能够被破译。一次性密码本是个例外，即便使用暴力破解法遍历整个密钥空间，一次性密码本也绝对无法被破译。</p>
-<h3 id="一次性密码本的加密"><a href="#一次性密码本的加密" class="headerlink" title="一次性密码本的加密"></a>一次性密码本的加密</h3><p>一次性密码本的原理是将明文与一串随机的比特序列进行 XOR 运算。</p>
-<p>下面将明文<code>midnight</code>这个字符串通过 ASCII 进行编码并产生一串比特序列。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m         i         d         n         i         g         h         t</span><br><span class="line">01101101  01101001  01100100  01101110  01101001  01100111  01101000  01110100</span><br></pre></td></tr></table></figure>
-<p>明文被编码为一串 64 比特的比特序列。</p>
-<p>然后再来产生一个和明文长度相同的 64 比特的随机比特序列，这个序列就是 XOR 加密的密钥。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01101011  11111010  01001000  11011000  01100101  11010101  10101111  00011100</span><br></pre></td></tr></table></figure>
-<p>将明文与密钥的比特序列进行 XOR 运算，并得到一串新的比特序列，这次运算的结果就是一次性密码本的密文。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img3.png" class="">
-
-<p>这样产生的比特序列如果要显示在计算机上，看上去就像乱码一样，因此密文通常不会被还原成字符，而是被作为二进制数据来处理。</p>
-<h3 id="一次性密码本的解密"><a href="#一次性密码本的解密" class="headerlink" title="一次性密码本的解密"></a>一次性密码本的解密</h3><p>解密就是加密的反向运算。也就是说，用密文和密钥进行 XOR 运算就可以得到明文。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img4.png" class="">
-
-<h3 id="一次性密码本是无法破译的"><a href="#一次性密码本是无法破译的" class="headerlink" title="一次性密码本是无法破译的"></a>一次性密码本是无法破译的</h3><p>这里说的无法破译并不是指在现实的时间内难以破译，而是指即使拥有一种运算能力无穷大的计算机，可以在一瞬间遍历任意大小的密钥空间，也依然无法破译。</p>
-<p>我们假设对一次性密码本的密文尝试进行暴力破解，那么总有一天我们会尝试到和加密时相同的密钥，也就能解除明文<code>midnight</code>，这时毋庸置疑的事实。然而，即使我们能解密出<code>midnight</code>这个字符串，我们也无法判断它是否是正确的明文。</p>
-<p>这是因为在对一次性密码本尝试解密的过程中，所有的 64 比特的排列组合都会出现，这其中既会包含像<code>aaaaaaaa</code>、<code>abcdefg</code>、<code>ZZZZZZZZ</code>这样的规则字符串，也会包含<code>midnight</code>、<code>onenight</code>、<code>mistress</code>等英文单词，还会包含<code>%Ta_AjvX</code>、<code>ER#f6</code>等看不懂的组合。由于明文中所有可能的排列组合都会出现，因此我们无法判断其中哪一个才是正确的明文。</p>
-<p>所谓暴力破解，就是按顺序将所有的密钥都尝试一遍，并判断所得到的是不是正确的明文的方法。</p>
-<p>在一次性密码本中，由于我们无法判断得到的是不是正确的明文，因此一次性密码本是无法破译的。</p>
-<h3 id="一次性密码本为什么没有被使用"><a href="#一次性密码本为什么没有被使用" class="headerlink" title="一次性密码本为什么没有被使用"></a>一次性密码本为什么没有被使用</h3><h4 id="密钥的配送"><a href="#密钥的配送" class="headerlink" title="密钥的配送"></a>密钥的配送</h4><p>接收者收到了发送者发来的密文，接收者要想进行解密，就必须使用和发送者进行加密时相同的密钥，因此发送者必须将密钥也发给接收者，且该密钥的长度和密文是相等的。但这样就产生了一个矛盾：如果能有一种方法将密钥安全的发出去，那么岂不是也可以用同样的方法来安全的发送明文吗？</p>
-<h4 id="密钥的保存"><a href="#密钥的保存" class="headerlink" title="密钥的保存"></a>密钥的保存</h4><p>为了保护明文，就需要保护和明文一样长的密钥。密钥不能丢弃或删除，因为没有密钥就无法解密，丢弃密钥就等于丢弃明文。也就是说，我们只是将保护明文这一命题替换成了保护和明文一样长的密钥而已，问题没有得到实质性的解决。</p>
-<h4 id="密钥的重用"><a href="#密钥的重用" class="headerlink" title="密钥的重用"></a>密钥的重用</h4><p>在一次性密码本中绝对不能重用过去用过的随机比特序列，因为作为密钥的比特序列一旦泄露，过去所有的机密通信内容将全部被解密。</p>
-<h4 id="密钥的同步"><a href="#密钥的同步" class="headerlink" title="密钥的同步"></a>密钥的同步</h4><p>当明文很长时，一次性密码本的密钥也会跟着变长。而且在通信过程中，发送者和接收者的密钥比特序列不允许有任何错位，否则错位的比特后的所有信息都将无法解密。</p>
-<h4 id="密钥的生成"><a href="#密钥的生成" class="headerlink" title="密钥的生成"></a>密钥的生成</h4><p>在一次性密码本中，需要生成大量的随机数。这里的随机数必须是无重现性的真正随机数。出于这个原因，能够真正使用一次性密码本的，只有那些机密性重过一切，且可以花费大量财力和人力来生成并配送密钥的场合。</p>
-<p>综上所述，一次性密码本是一种几乎没有实用价值的密码。</p>
-<h1 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h1><p>随着计算机的进步，现在 DES 已经能够被暴力破解，因此除了用它来解密以前的密文外，不应该再使用 DES 了。</p>
-<h2 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h2><p>DES 是一种将 64 比特的明文加密成 64 比特的密文的对称密码算法，它的密钥长度是 56 比特。尽管从规格上来说，DES 的密钥长度是 64 比特，但由于每隔 7 比特会设置一个用于错误检查的比特，因此实质上其密钥长度是 56 比特。</p>
-<p>DES 是以 64 比特的明文（比特序列）为一个单位来进行加密的，这个 64 比特的单位称为分组。一般来说，以分组为单位进行处理的密码算法称为分组密码(<code>block cipher</code>)，DES 就是分组密码的一种。</p>
-<p>DES 每次只能加密 64 比特的数据，如果要加密的明文比较长，就需要对 DES 加密进行迭代，而迭代的具体方式就称为模式。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img9.png" class="" title="DES 的加密与解密">
-
-<h2 id="DES-的结构（Feistel-网络）"><a href="#DES-的结构（Feistel-网络）" class="headerlink" title="DES 的结构（Feistel 网络）"></a>DES 的结构（Feistel 网络）</h2><p>DES 的基本结构是由 Horst Feistel 设计的，因此也称为 Feistel 网络、Feistel 结构。</p>
-<p>在 Feistel 网络中，加密的各个步骤称为轮，整个加密过程就是进行若干次轮的循环。</p>
-<p>下图是 Feistel 网络中一轮的计算流程。DES 是一种 16 轮循环的 Feistel 网络。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img10.png" class="" title="Feistel 网络中的一轮">
-
-<p>上图中，子密钥指的是本轮加密所使用的密钥。在 Feistel 网络中，每一轮都需要使用一个不同的子密钥。</p>
-<p>轮函数的作用是根据右侧和子密钥生成对左侧进行加密的比特序列，它是密码系统的核心。将轮函数的输出与左侧进行 XOR 运算，其结果是加密后的左侧。也就是说，我们用 XOR 将轮函数的输出与左侧进行了合并。而输入的右侧则会直接成为输出的右侧。</p>
-<p>一轮的具体计算步骤：</p>
-<ol>
-<li>将输入的数据等分为左右两部分</li>
-<li>将输入的右侧直接发送到输出的右侧</li>
-<li>将输入的右侧发送到轮函数</li>
-<li>轮函数根据右侧数据和子密钥，计算出一串看上去是随机的比特序列</li>
-<li>将上一步得到的比特序列与左侧数据进行 XOR 运算，并将结果作为加密后的左侧</li>
-</ol>
-<p>但是这样一来右侧根本没有被加密，因此我们需要用不同的子密钥对一轮的处理重复若干次，并在每两轮处理之间将左侧和右侧的数据对调。</p>
-<p>下图展示了一个 3 轮的 Feistel 网络，3 轮加密计算需要进行两次左右对调。对调只在两轮之间进行，最后一轮结束之后不需要对调。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img11.png" class="" title="Feistel 网络的加密(3轮)">
-
-<p>将一轮加密的输出结果用相同的子密钥重新运行一次，无论轮函数的具体算法是什么，都能将密文正确的还原为明文。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img12.png" class="">
-
-<p>有多个轮的情况下也是一样。也就是说，Feistel 网络的解密操作只要按照相反的顺序来使用子密钥就可以完成了，而 Feistel 网络本身的结构，在加密和解密时都是完全相同的。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img13.png" class="" title="Feistel 网络的解密(3轮)">
-
-<p>Feistel 网络的性质：</p>
-<ul>
-<li>Feistel 网络的轮数可以任意增加。无论进行多少轮的加密计算，都不会发生无法解密的情况。</li>
-<li>加密时无论使用任何函数作为轮函数都可以正确解密。轮函数可以无需考虑解密的问题，可以被设计的任意复杂。</li>
-<li>加密和解密可以用完全相同的结构来实现，因此用于实现 DES 算法的硬件设备的设计也变容易了。</li>
-</ul>
-<p>综上所述，无论是任意轮数，任何轮函数，Feistel 网络都可以用相同的结构实现加密和解密，且加密的结果必定能够正确解密。</p>
-<h1 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h1><p>现在 DES 可以被暴力破解，因此我们需要一种用来替代 DES 的分组密码，三重 DES 就是出于这个目的被开发出来的。</p>
-<p>三重 DES 是将 DES 重复 3 次所得到的一种密码算法，缩写为 3DES。</p>
-<h2 id="三重-DES-的加密"><a href="#三重-DES-的加密" class="headerlink" title="三重 DES 的加密"></a>三重 DES 的加密</h2><p>下图是 3DES 的加密机制。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img14.png" class="" title="3DES 的加密">
-
-<h1 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h1><p>AES(<code>Advanced Encryption Standard</code>) 是取代其前任标准（DES）而成为新标准的一种对称密码算法。</p>
-<h2 id="Rijndael"><a href="#Rijndael" class="headerlink" title="Rijndael"></a>Rijndael</h2><p>Rijndael 是由密码学家 Joan Daemen 和 Vincent Rijmen 设计的分组密码算法，于 2000 年被选为新一代的标准密码算法——AES。</p>
-<p>Rijndael 的分组长度和密钥长度可以分别以 32 比特为单位在 128 比特到 256 比特的范围内进行选择。不过在 AES 的规格中，分组长度固定为 128 比特，密钥长度只有 128、192 和 256 比特三种。</p>
-<h2 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h2><p>和 DES 一样，Rijndael 算法也是由多个轮构成的，其中每一轮分为<code>SubBytes</code>、<code>ShiftRows</code>、<code>MixColumns</code>和<code>AddRoundKey</code>共 4 个步骤。DES 使用 Feistel 网络作为其基本结构，而 Rijndael 没有使用 Feistel 网络，而是使用了 SPN 结构。</p>
-<p>Rijndael 的输入分组为 128 比特，也就是 16字节。首先，需要逐个字节的对 16 字节的输入数据<code>SubBytes</code>处理。所谓<code>SubBytes</code>，就是以每个字节（0~255 的任意值）的值为索引，从一张拥有 256 个值的替换表中查找出对应值的处理。也就是说，要将一个 1 字节的值替换成另一个 1 字节的值。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img5.png" class="">
-
-<p><code>SubBytes</code>之后需要进行<code>ShiftRows</code>处理，这一步是将以 4 字节为单位的行按照一定的规则向左平移，且每一行平移的字节数是不同的。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img6.png" class="">
-
-<p><code>ShiftRows</code>之后需要进行<code>MixColumns</code>处理。这一步是对一个 4 字节的值进行比特运算，将其变为另外一个 4 字节值。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img7.png" class="" title="混合列">
-
-<p>最后，需要将<code>MixColumns</code>的输出与轮密钥进行 XOR，即进行<code>AddRoundKey</code>处理。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img8.png" class="" title="与轮密钥进行 XOR">
-
-<p>到这里，Rijndael 的一轮就结束了。实际上，在 Rijndael 中需要重复进行 10~14轮计算。</p>
-<p>通过上面的结构可以发现输入的所有比特在一轮中都会被加密。和每一轮都只加密一半输入的比特的 Feistel 网络相比，这种方式的优势在于加密所需要的的轮数更少。此外，<code>SubBytes、ShifRows</code>和<code>MixColumns</code>可以分别以字节、行和列为单位进行并行计算。</p>
-<p>在 Rijndael 的加密过程中，每一轮所进行的处理为：<code>SubBytes -&gt; ShifRows -&gt; MixColumns -&gt; AddRoundKey</code>。</p>
-<p>在解密时，则是按照相反的顺序来进行的，即<code>AddRoundKey -&gt; InvMixColumns -&gt; InvShifRows -&gt; InvSubBytes</code>。其中，<code>AddRoundKey</code>是与轮密钥进行 XOR 运算，因此这一步在加密和解密时是完全相同的，剩下的步骤中名字前面都带有<code>Inv</code>，表示与原始步骤相对应的逆运算。</p>
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img15.png" class="" title="InvMixColumns">
-
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img16.png" class="" title="InvShifRows">
-
-<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img17.png" class="" title="InvSubBytes">
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/" rel="tag">密码技术</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-密码技术/DES" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/12/09/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/DES/"
-    >密码技术/DES</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/12/09/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/DES/" class="article-date">
-  <time datetime="2020-12-09T07:14:28.749Z" itemprop="datePublished">2020-12-09</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="什么是-DES"><a href="#什么是-DES" class="headerlink" title="什么是 DES"></a>什么是 DES</h1>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL/7 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-MySQL/7" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL/7
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/22/MySQL/7/" class="article-date">
+  <time datetime="2021-03-22T07:38:49.072Z" itemprop="datePublished">2021-03-22</time>
+</a>
+      
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.4k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="全球化和本地化"><a href="#全球化和本地化" class="headerlink" title="全球化和本地化"></a>全球化和本地化</h1><h2 id="字符集和校对顺序"><a href="#字符集和校对顺序" class="headerlink" title="字符集和校对顺序"></a>字符集和校对顺序</h2><p>数据库表被用来存储和检索数据。不同的语言和字符集需要以不同的方式存储和检索。因此，MySQL需要适应不同的字符集（不同的字母和字符），适应不同的排序和检索数据的方法。</p>
+<p>在讨论多种语言和字符集时，将会遇到以下重要术语：</p>
+<ul>
+<li>字符集为字母和符号的集合；</li>
+<li>编码为某个字符集成员的内部表示；</li>
+<li>校对为规定字符如何比较的指令。</li>
+</ul>
+<p>MySQL支持众多的字符集。为查看所支持的字符集完整列表，使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span>;</span><br></pre></td></tr></table></figure>
+<p>这条语句显示所有可用的字符集以及每个字符集的描述和默认校对。</p>
+<p>为了查看所支持校对的完整列表，使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">COLLATION</span>;</span><br></pre></td></tr></table></figure>
+<p>此语句显示所有可用的校对，以及它们适用的字符集。可以看到有的字符集具有不止一种校对。例如，<code>latin1</code>对不同的欧洲语言有几种校对，而且许多校对出现两次，一次区分大小写（由<code>_cs</code>表示），一次不区分大小写（由<code>_ci</code>表示）。通常系统管理在安装时定义一个默认的字符集和校对。此外，也可以在创建数据库时，指定默认的字符集和校对。为了确定所用的字符集和校对，可以使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'character%'</span>;</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'collation%'</span>;</span><br></pre></td></tr></table></figure>
+<p>实际上，字符集很少是服务器范围（甚至数据库范围）的设置。不同的表，甚至不同的列都可能需要不同的字符集，而且两者都可以在创建表时指定。</p>
+<p>为了给表指定字符集和校对，可使用带子句的<code>CREATE TABLE</code>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mytable(</span><br><span class="line">  column1 <span class="built_in">int</span>,</span><br><span class="line">  column2 <span class="built_in">varchar</span>(<span class="number">10</span>)</span><br><span class="line">) <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci;</span><br></pre></td></tr></table></figure>
+<p>此语句创建一个包含两列的表，并且指定一个字符集和一个校对顺序。</p>
+<p>这个例子中指定了<code>CHARACTER SET</code>和<code>COLLATE</code>两者。一般，MySQL 如下确定使用什么样的字符集和校对。</p>
+<ul>
+<li>如果指定<code>CHARACTER SET</code>和<code>COLLATE</code>两者，则使用这些值。</li>
+<li>如果只指定<code>CHARACTER SET</code>，则使用此字符集及其默认的校对。</li>
+<li>如果既不指定<code>CHARACTER SET</code>，也不指定<code>COLLATE</code>，则使用数据库默认。</li>
+</ul>
+<p>除了能指定字符集和校对的表范围外，MySQL 还允许对每个列设置它们，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mytable(</span><br><span class="line">  column1 <span class="built_in">int</span>,</span><br><span class="line">  column2 <span class="built_in">varchar</span>(<span class="number">10</span>)</span><br><span class="line">  column3 <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci</span><br><span class="line">) <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> hebrew <span class="keyword">COLLATE</span> hebrew_general_ci;</span><br></pre></td></tr></table></figure>
+<p>校对在对用<code>ORDER BY</code>子句检索出来的数据排序时起重要的作用。如果你需要用与创建表时不同的校对顺序排序特定的<code>SELECT</code>语句，可以在<code>SELECT</code>语句自身中进行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> customers</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> lastname, firstname <span class="keyword">COLLATE</span> latin1_general_ci;</span><br></pre></td></tr></table></figure>
+<p>此<code>SELECT</code>使用<code>COLLATE</code>指定一个备用的校对顺序（在这个例子中，为区分大小写的校对）。这显然将会影响到结果排序的次序。</p>
+<p>除了这里看到的在<code>ORDER BY</code>子 句中使用以外，<code>COLLATE</code>还可以用于<code>GROUP BY、HAVING</code>、聚集函数、别名等。</p>
+<p>如果绝对需要，串可以在字符集之间进行转换。为此，使用<code>Cast()</code>或<code>Convert()</code>函数。</p>
+<h1 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h1><p>分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。</p>
+<h2 id="创建分组"><a href="#创建分组" class="headerlink" title="创建分组"></a>创建分组</h2><p>分组是在<code>SELECT</code>语句的<code>GROUP BY</code>子句中建立的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods <span class="keyword">FROM</span> products <span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id;</span><br></pre></td></tr></table></figure>
+<p>上面的<code>SELECT</code>语句指定了两个列，<code>vend_id</code>包含产品供应商的 ID，<code>num_prods</code>为计算字段（用<code>COUNT(*)</code>函数建立）。<code>GROUP BY</code>子句指示 MySQL 按<code>vend_id</code>排序并分组数据。这导致对每个<code>vend_id</code>而不是整个表计算<code>num_prods</code>一次。</p>
+<p>因为使用了<code>GROUP BY</code>，就不必指定要计算和估值的每个组了。系统会自动完成。<code>GROUP BY</code>子句指示 MySQL 分组数据，然后对每个组而不是整个结果集进行聚集。</p>
+<p>在具体使用<code>GROUP BY</code>子句前，需要知道一些重要的规定。</p>
+<ul>
+<li><code>GROUP BY</code>子句可以包含任意数目的列。这使得能对分组进行嵌套，为数据分组提供更细致的控制。</li>
+<li>如果在<code>GROUP BY</code>子句中嵌套了分组，数据将在最后规定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算（所以不能从个别的列取回数据）。</li>
+<li><code>GROUP BY</code>子句中列出的每个列都必须是检索列或有效的表达式（但不能是聚集函数）。如果在<code>SELECT</code>中使用表达式，则必须在<code>GROUP BY</code>子句中指定相同的表达式。不能使用别名。</li>
+<li>除聚集计算语句外，<code>SELECT</code>语句中的每个列都必须在<code>GROUP BY</code>子句中给出。</li>
+<li>如果分组列中具有<code>NULL</code>值，则<code>NULL</code>将作为一个分组返回。如果列中有多行<code>NULL</code>值，它们将分为一组。</li>
+<li><code>GROUP BY</code>子句必须出现在<code>WHERE</code>子句之后，<code>ORDER BY</code>子句之前。</li>
+</ul>
+<p>使用<code>WITH ROLLUP</code>关键字，可以得到每个分组以及每个分组汇总级别（针对每个分组）的值，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods <span class="keyword">FROM</span> products <span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id <span class="keyword">WITH</span> <span class="keyword">ROLLUP</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="过滤分组"><a href="#过滤分组" class="headerlink" title="过滤分组"></a>过滤分组</h2><p>除了能用<code>GROUP BY</code>分组数据外，MySQL还允许过滤分组，规定包括哪些分组，排除哪些分组。例如，可能想要列出至少有两个订单的所有顾客。为得出这种数据，必须基于完整的分组而不是个别的行进行过滤。</p>
+<p>我们已经看到了<code>WHERE</code>子句的作用。但是，在这个例子中<code>WHERE</code>不能完成任务，因为<code>WHERE</code>过滤指定的是行而不是分组。事实上，<code>WHERE</code>没有分组的概念。</p>
+<p>MySQL 为此目的提供了另外的子句，那就是<code>HAVING</code>子句。<code>HAVING</code>非常类似于<code>WHERE</code>。事实上，目前为止所有类型的<code>WHERE</code>子句都可以用<code>HAVING</code>来替代。唯一的差别是<code>WHERE</code>过滤行，而<code>HAVING</code>过滤分组。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> orders <span class="keyword">FROM</span> orders <span class="keyword">GROUP</span> <span class="keyword">BY</span> cust_id <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(*) &gt;= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>这条<code>SELECT</code>语句的前3行类似于上面的语句。最后一行增加了<code>HAVING</code>子句，它过滤<code>COUNT(*) &gt;=2</code>（两个以上的订单）的那些分组。<br>正如所见，这里<code>WHERE</code>子句不起作用，因为过滤是基于分组聚集值而不是特定行值的。</p>
+<p>这里有另一种理解方法，<code>WHERE</code>在数据分组前进行过滤，<code>HAVING</code>在数据分组后进行过滤。这是一个重要的区别，<code>WHERE</code>排除的行不包括在分组中。这可能会改变计算值，从而影响<code>HAVING</code>子句中基于这些值过滤掉的分组。</p>
+<p>假如想进一步过滤上面的语句，使它返回过去 12 个月内具有两个以上订单的顾客。为达到这一点，可增加一条<code>WHERE</code>子句，过滤出过去 12 个月内下过的订单。然后再增加<code>HAVING</code>子句过滤出具有两个以上订单的分组。</p>
+<p>下面的例子，它列出具有 2 个（含）以上、价格为 10（含）以上的产品的供应商：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> num_prods</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_price &gt;= <span class="number">10</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id</span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(*) &gt;= <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="分组和排序"><a href="#分组和排序" class="headerlink" title="分组和排序"></a>分组和排序</h2><p>虽然<code>GROUP BY</code>和<code>ORDER BY</code>经常完成相同的工作，但它们是非常不同的。</p>
+<table>
+<thead>
+<tr>
+<th align="center">ORDER BY</th>
+<th align="center">GROUP BY</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">排序产生的输出</td>
+<td align="center">分组行。但输出可能不是分组的顺序</td>
+</tr>
+<tr>
+<td align="center">任意列都可以使用（甚至非选择的列也可以使用）</td>
+<td align="center">只可能使用选择列或表达式列，而且必须使用每个选择列表达式</td>
+</tr>
+<tr>
+<td align="center">不一定需要</td>
+<td align="center">如果与聚集函数一起使用列（或表达式），则必须使用</td>
+</tr>
+</tbody></table>
+<p>第一项差别极为重要。我们经常发现用<code>GROUP BY</code>分组的数据确实是以分组顺序输出的。但情况并不总是这样，它并不是 SQL 规范所要求的。此外，用户也可能会要求以不同于分组的顺序排序。仅因为你以某种方式分组数据（获得特定的分组聚集值），并不表示你需要以相同的方式排序输出。应该提供明确的<code>ORDER BY</code>子句，即使其效果等同于<code>GROUP BY</code>子句也是如此。</p>
+<p>一般在使用<code>GROUP BY</code>子句时，应该也给出<code>ORDER BY</code>子句。这是保证数据正确排序的唯一方法。千万不要仅依赖<code>GROUP BY</code>排序数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> order_num, <span class="keyword">SUM</span>(quantity * item_price) <span class="keyword">AS</span> ordertotal</span><br><span class="line"><span class="keyword">FROM</span> orderitems</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> order_num</span><br><span class="line"><span class="keyword">HAVING</span> <span class="keyword">SUM</span>(quantity * item_price) &gt;= <span class="number">50</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ordertotal</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，<code>GROUP BY</code>子句用来按订单号（<code>order_num</code>列）分组数据，以便<code>SUM(*)</code>函数能够返回总计订单价格。<code>HAVING</code>子句过滤数据，使得只返回总计订单价格大于等于 50 的订单。最后，用<code>ORDER BY</code>子句排序输出。</p>
+<h2 id="SELECT子句顺序"><a href="#SELECT子句顺序" class="headerlink" title="SELECT子句顺序"></a>SELECT子句顺序</h2><p>在<code>SELECT</code>语句中使用时必须遵循的次序：<br>| 子句 | 说明 | 是否必须使用 |<br>| :–: | :–: | :–: |<br>| SELECT | 要返回的列或表达式 | 是 |<br>| FROM | 从中检索数据的表 | 仅在从表选择数据时使用 |<br>| WHERE | 行级过滤 | 否 |<br>| GROUP BY | 分组说明 | 仅在按组计算聚集时使用 |<br>| HAVING | 组级过滤 | 否 |<br>| ORDER BY | 输出排序顺序 | 否 |<br>| LIMIT | 要检索的行数 | 否 |</p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/03/22/MySQL/7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/03/23/MySQL/MySQL%E5%AD%97%E7%AC%A6%E9%9B%86/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL/MySQL字符集
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/19/MySQL/6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL/6</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2021
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>
