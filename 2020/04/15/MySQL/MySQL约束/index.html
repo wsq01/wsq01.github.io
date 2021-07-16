@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL约束 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-MySQL/MySQL约束" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL约束
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/15/MySQL/MySQL%E7%BA%A6%E6%9D%9F/" class="article-date">
+  <time datetime="2020-04-15T10:21:53.000Z" itemprop="datePublished">2020-04-15</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">25分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>在 MySQL 中，约束是指对表中数据的一种约束，能够帮助数据库管理员更好地管理数据库，并且能够确保数据库中数据的正确性和有效性。</p>
+<p>在 MySQL 中，主要支持以下 6 种约束：</p>
+<ol>
+<li>主键约束<br>在设计数据表时，一般情况下，都会要求表中设置一个主键。主键是表的一个特殊字段，该字段能唯一标识该表中的每条信息。</li>
+<li>外键约束<br>外键约束经常和主键约束一起使用，用来确保数据的一致性。</li>
+<li>唯一约束<br>唯一约束与主键约束有一个相似的地方，就是它们都能够确保列的唯一性。与主键约束不同的是，唯一约束在一个表中可以有多个，并且设置唯一约束的列是允许有空值的，虽然只能有一个空值。</li>
+<li>检查约束<br>检查约束是用来检查数据表中，字段值是否有效的一个手段。</li>
+<li>非空约束<br>非空约束用来约束表中的字段不能为空。</li>
+<li>默认值约束<br>默认值约束用来约束当数据表中某个字段不输入值时，自动为其添加一个已经设置好的值。<br>默认值约束通常用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。</li>
+</ol>
+<p>以上 6 种约束中，一个数据表中只能有一个主键约束，其它约束可以有多个。</p>
+<h1 id="主键约束"><a href="#主键约束" class="headerlink" title="主键约束"></a>主键约束</h1><p>主键分为单字段主键和多字段联合主键。</p>
+<p>使用主键应注意以下几点：</p>
+<ul>
+<li>每个表只能定义一个主键。</li>
+<li>主键值必须唯一标识表中的每一行，且不能为<code>NULL</code>，即表中不可能存在有相同主键值的两行数据。这是唯一性原则。</li>
+<li>一个字段名只能在联合主键字段表中出现一次。</li>
+<li>联合主键不能包含不必要的多余字段。当把联合主键的某一字段删除后，如果剩下的字段构成的主键仍然满足唯一性原则，那么这个联合主键是不正确的。这是最小化原则。</li>
+</ul>
+<h2 id="在创建表时设置主键约束"><a href="#在创建表时设置主键约束" class="headerlink" title="在创建表时设置主键约束"></a>在创建表时设置主键约束</h2><p>在创建数据表时设置主键约束，既可以为表中的一个字段设置主键，也可以为表中多个字段设置联合主键。但是不论使用哪种方法，在一个表中主键只能有一个。</p>
+<h3 id="设置单字段主键"><a href="#设置单字段主键" class="headerlink" title="设置单字段主键"></a>设置单字段主键</h3><p>在<code>CREATE TABLE</code>语句中，通过<code>PRIMARY KEY</code>关键字来指定主键。</p>
+<p>在定义字段的同时指定主键，语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;字段名&gt; &lt;数据类型&gt; PRIMARY KEY [默认值]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp3</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(25),</span><br><span class="line">    -&gt; deptId INT(11),</span><br><span class="line">    -&gt; salary FLOAT</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line">mysql&gt; DESC tb_emp3;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name   | varchar(25) | YES  |     | NULL    |       |</span><br><span class="line">| deptId | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<p>或者是在定义完所有字段之后指定主键，语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[CONSTRAINT &lt;约束名&gt;] PRIMARY KEY [字段名]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp4</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11),</span><br><span class="line">    -&gt; name VARCHAR(25),</span><br><span class="line">    -&gt; deptId INT(11),</span><br><span class="line">    -&gt; salary FLOAT,</span><br><span class="line">    -&gt; PRIMARY KEY(id)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line">mysql&gt; DESC tb_emp4;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name   | varchar(25) | YES  |     | NULL    |       |</span><br><span class="line">| deptId | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<h3 id="在创建表时设置联合主键"><a href="#在创建表时设置联合主键" class="headerlink" title="在创建表时设置联合主键"></a>在创建表时设置联合主键</h3><p>所谓的联合主键，就是这个主键是由一张表中多个字段组成的。</p>
+<p>比如，设置学生选课数据表时，如果用学生编号做主键，那么一个学生就只能选择一门课程。如果用课程编号做主键，那么一门课程只能有一个学生来选。显然，这两种情况都是不符合实际情况的。</p>
+<p>实际上设计学生选课表，要限定的是一个学生只能选择同一课程一次。因此，学生编号和课程编号可以放在一起共同作为主键，这也就是联合主键了。</p>
+<p>主键由多个字段联合组成，语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PRIMARY KEY [字段1，字段2，…,字段n]</span><br></pre></td></tr></table></figure>
+<p>注意：当主键是由多个字段组成时，不能直接在字段名后面声明主键约束。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp5</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; name VARCHAR(25),</span><br><span class="line">    -&gt; deptId INT(11),</span><br><span class="line">    -&gt; salary FLOAT,</span><br><span class="line">    -&gt; PRIMARY KEY(name,deptId)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line">mysql&gt; DESC tb_emp5;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| name   | varchar(25) | NO   | PRI | NULL    |       |</span><br><span class="line">| deptId | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="在修改表时添加主键约束"><a href="#在修改表时添加主键约束" class="headerlink" title="在修改表时添加主键约束"></a>在修改表时添加主键约束</h2><p>主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。但是需要注意的是，设置成主键约束的字段中不允许有空值。</p>
+<p>在修改数据表时添加主键约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt; ADD PRIMARY KEY(&lt;字段名&gt;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; DESC tb_emp2;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(11)     | NO   |     | NULL    |       |</span><br><span class="line">| name   | varchar(30) | YES  |     | NULL    |       |</span><br><span class="line">| deptId | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">4 rows in set (0.14 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; ALTER TABLE tb_emp2 ADD PRIMARY KEY(id);</span><br><span class="line">Query OK, 0 rows affected (0.94 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line">mysql&gt; DESC tb_emp2;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name   | varchar(30) | YES  |     | NULL    |       |</span><br><span class="line">| deptId | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">4 rows in set (0.12 sec)</span><br></pre></td></tr></table></figure>
+<p>通常情况下，当在修改表时要设置表中某个字段的主键约束时，要确保设置成主键约束的字段中值不能够有重复的，并且要保证是非空的。否则，无法设置主键约束。</p>
+<h2 id="删除主键约束"><a href="#删除主键约束" class="headerlink" title="删除主键约束"></a>删除主键约束</h2><p>当一个表中不需要主键约束时，就需要从表中将其删除。</p>
+<p>删除主键约束的语法格式如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt; DROP PRIMARY KEY;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_emp2 DROP PRIMARY KEY;</span><br><span class="line">Query OK, 0 rows affected (0.94 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
+<p>由于主键约束在一个表中只能有一个，因此不需要指定主键名就可以删除一个表中的主键约束。</p>
+<h1 id="主键自增长"><a href="#主键自增长" class="headerlink" title="主键自增长"></a>主键自增长</h1><p>在 MySQL 中，当主键定义为自增长后，这个主键的值就不再需要用户输入数据了，而由数据库系统根据定义自动赋值。每增加一条记录，主键会自动以相同的步长进行增长。</p>
+<p>通过给字段添加<code>AUTO_INCREMENT</code>属性来实现主键自增长。语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字段名 数据类型 AUTO_INCREMENT</span><br></pre></td></tr></table></figure>
+<ul>
+<li>默认情况下，<code>AUTO_INCREMENT</code>的初始值是 1，每新增一条记录，字段值自动加 1。</li>
+<li>一个表中只能有一个字段使用<code>AUTO_INCREMENT</code>约束，且该字段必须有唯一索引，以避免序号重复（即为主键或主键的一部分）。</li>
+<li><code>AUTO_INCREMENT</code>约束的字段必须具备<code>NOT NULL</code>属性。</li>
+<li><code>AUTO_INCREMENT</code>约束的字段只能是整数类型（<code>TINYINT、SMALLINT、INT、BIGINT</code>等）。</li>
+<li><code>AUTO_INCREMENT</code>约束字段的最大值受该字段的数据类型约束，如果达到上限，<code>AUTO_INCREMENT</code>就会失效。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_student(</span><br><span class="line">    -&gt; id INT(4) PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">    -&gt; name VARCHAR(25) NOT NULL</span><br><span class="line">    -&gt; );</span><br></pre></td></tr></table></figure>
+<p>上述语句执行成功后，会创建名为<code>tb_student</code>的数据表。其中，<code>id</code>为主键，每插入一条新记录，<code>id</code>的值就会在前一条记录的基础上自动加 1。<code>name</code>为非空字段，该字段的值不能为空值（<code>NULL</code>）。</p>
+<p>加上<code>AUTO_INCREMENT</code>约束条件后，字段中的每个值都是自动增加的。因此，这个字段不可能出现相同的值。通常情况下，<code>AUTO_INCREMENT</code>都是作为<code>id</code>字段的约束条件，并且将<code>id</code>字段作为表的主键。</p>
+<h2 id="指定自增字段初始值"><a href="#指定自增字段初始值" class="headerlink" title="指定自增字段初始值"></a>指定自增字段初始值</h2><p>如果第一条记录设置了该字段的初始值，那么新增加的记录就从这个初始值开始自增。例如，如果表中插入的第一条记录的<code>id</code>值设置为 5，那么再插入记录时，<code>id</code>值就会从 5 开始往上增加。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_student2 (</span><br><span class="line">    -&gt; id INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">    -&gt; name VARCHAR(20) NOT NULL,</span><br><span class="line">    -&gt; PRIMARY KEY(ID)</span><br><span class="line">    -&gt; )AUTO_INCREMENT&#x3D;100;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; INSERT INTO tb_student2 (name)VALUES(&#39;Java&#39;);</span><br><span class="line">Query OK, 1 row affected (0.07 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM tb_student2;</span><br><span class="line">+-----+------+</span><br><span class="line">| id  | name |</span><br><span class="line">+-----+------+</span><br><span class="line">| 100 | Java |</span><br><span class="line">+-----+------+</span><br></pre></td></tr></table></figure>
+<p>由结果可以看出，<code>id</code>值从 100 开始自动增长。</p>
+<h2 id="自增字段值不连续"><a href="#自增字段值不连续" class="headerlink" title="自增字段值不连续"></a>自增字段值不连续</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_student3(</span><br><span class="line">    -&gt; id INT PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">    -&gt; name VARCHAR(20) UNIQUE KEY,</span><br><span class="line">    -&gt; age INT DEFAULT NULL</span><br><span class="line">    -&gt; );</span><br></pre></td></tr></table></figure>
+<p>向<code>tb_student3</code>表中插入数据，SQL 语句如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO tb_student3 VALUES(1,1,1);</span><br></pre></td></tr></table></figure>
+<p>此时，表<code>tb_student3</code>中已经有了<code>（1,1,1）</code>这条记录，这时再执行一条插入数据命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; INSERT INTO tb_student3 VALUES(null,1,1);</span><br><span class="line">ERROR 1062 (23000): Duplicate entry &#39;1&#39; for key &#39;name&#39;</span><br></pre></td></tr></table></figure>
+<p>由于表中已经存在<code>name=1</code>的记录，所以报<code>Duplicate key error</code>（唯一键冲突）。在这之后，再插入新的数据时，自增<code>id</code>就是 3，这样就出现了自增字段值不连续的情况。</p>
+<h1 id="外键约束"><a href="#外键约束" class="headerlink" title="外键约束"></a>外键约束</h1><p>MySQL 外键约束（<code>FOREIGN KEY</code>）是表的一个特殊字段，经常与主键约束一起使用。对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表（父表），外键所在的表就是从表（子表）。</p>
+<p>外键用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。比如，一个水果摊，只有苹果、桃子、李子、西瓜等 4 种水果，那么，你来到水果摊要买水果就只能选择苹果、桃子、李子和西瓜，其它的水果都是不能购买的。</p>
+<p>主表删除某条记录时，从表中与之对应的记录也必须有相应的改变。一个表可以有一个或多个外键，外键可以为空值，若不为空值，则每一个外键的值必须等于主表中主键的某个值。</p>
+<p>定义外键时，需要遵守下列规则：</p>
+<ul>
+<li>主表必须已经存在于数据库中，或者是当前正在创建的表。如果是后一种情况，则主表与从表是同一个表，这样的表称为自参照表，这种结构称为自参照完整性。</li>
+<li>必须为主表定义主键。</li>
+<li>主键不能包含空值，但允许在外键中出现空值。也就是说，只要外键的每个非空值出现在指定的主键中，这个外键的内容就是正确的。</li>
+<li>在主表的表名后面指定列名或列名的组合。这个列或列的组合必须是主表的主键或候选键。</li>
+<li>外键中列的数目必须和主表的主键中列的数目相同。</li>
+<li>外键中列的数据类型必须和主表主键中对应列的数据类型相同。</li>
+</ul>
+<h2 id="在创建表时设置外键约束"><a href="#在创建表时设置外键约束" class="headerlink" title="在创建表时设置外键约束"></a>在创建表时设置外键约束</h2><p>在<code>CREATE TABLE</code>语句中，通过<code>FOREIGN KEY</code>关键字来指定外键，具体的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[CONSTRAINT &lt;外键名&gt;] FOREIGN KEY 字段名 [，字段名2，…]</span><br><span class="line">REFERENCES &lt;主表名&gt; 主键列1 [，主键列2，…]</span><br></pre></td></tr></table></figure>
+<p>为了展现表与表之间的外键关系，在<code>test_db</code>数据库中创建一个部门表<code>tb_dept1</code>，表结构如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名称</th>
+<th align="center">数据类型</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">id</td>
+<td align="center">INT(11)</td>
+<td align="center">部门编号</td>
+</tr>
+<tr>
+<td align="center">name</td>
+<td align="center">VARCHAR(22)</td>
+<td align="center">部门名称</td>
+</tr>
+<tr>
+<td align="center">location</td>
+<td align="center">VARCHAR(22)</td>
+<td align="center">部门位置</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_dept1</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(22) NOT NULL,</span><br><span class="line">    -&gt; location VARCHAR(50)</span><br><span class="line">    -&gt; );</span><br></pre></td></tr></table></figure>
+<p>创建数据表<code>tb_emp6</code>，并在表<code>tb_emp6</code>上创建外键约束，让它的键<code>deptId</code>作为外键关联到表<code>tb_dept1</code>的主键<code>id</code>，SQL 语句和运行结果如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp6</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(25),</span><br><span class="line">    -&gt; deptId INT(11),</span><br><span class="line">    -&gt; salary FLOAT,</span><br><span class="line">    -&gt; CONSTRAINT fk_emp_dept1</span><br><span class="line">    -&gt; FOREIGN KEY(deptId) REFERENCES tb_dept1(id)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_emp6;</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name   | varchar(25) | YES  |     | NULL    |       |</span><br><span class="line">| deptId | int(11)     | YES  | MUL | NULL    |       |</span><br><span class="line">| salary | float       | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<p>以上语句执行成功之后，在表<code>tb_emp6</code>上添加了名称为<code>fk_emp_dept1</code>的外键约束，外键名称为<code>deptId</code>，其依赖于表<code>tb_dept1</code>的主键<code>id</code>。</p>
+<blockquote>
+<p>注意：从表的外键关联的必须是主表的主键，且主键和外键的数据类型必须一致。例如，两者都是<code>INT</code>类型，或者都是<code>CHAR</code>类型。如果不满足这样的要求，在创建从表时，就会出现<code>ERROR 1005(HY000): Can&#39;t create table</code>错误。</p>
+</blockquote>
+<h2 id="在修改表时添加外键约束"><a href="#在修改表时添加外键约束" class="headerlink" title="在修改表时添加外键约束"></a>在修改表时添加外键约束</h2><p>外键约束也可以在修改表时添加，但是添加外键约束的前提是：从表中外键列中的数据必须与主表中主键列中的数据一致或者是没有数据。</p>
+<p>在修改数据表时添加外键约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt; ADD CONSTRAINT &lt;外键名&gt;</span><br><span class="line">FOREIGN KEY(&lt;列名&gt;) REFERENCES &lt;主表名&gt; (&lt;列名&gt;);</span><br></pre></td></tr></table></figure>
+<p>修改数据表<code>tb_emp2</code>，将字段<code>deptId</code>设置为外键，与数据表<code>tb_dept1</code>的主键<code>id</code>进行关联，SQL 语句和运行结果如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_emp2</span><br><span class="line">    -&gt; ADD CONSTRAINT fk_tb_dept1</span><br><span class="line">    -&gt; FOREIGN KEY(deptId)</span><br><span class="line">    -&gt; REFERENCES tb_dept1(id);</span><br><span class="line">Query OK, 0 rows affected (1.38 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW CREATE TABLE tb_emp2\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: tb_emp2</span><br><span class="line">Create Table: CREATE TABLE &#96;tb_emp2&#96; (</span><br><span class="line">  &#96;id&#96; int(11) NOT NULL,</span><br><span class="line">  &#96;name&#96; varchar(30) DEFAULT NULL,</span><br><span class="line">  &#96;deptId&#96; int(11) DEFAULT NULL,</span><br><span class="line">  &#96;salary&#96; float DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;fk_tb_dept1&#96; (&#96;deptId&#96;),</span><br><span class="line">  CONSTRAINT &#96;fk_tb_dept1&#96; FOREIGN KEY (&#96;deptId&#96;) REFERENCES &#96;tb_dept1&#96; (&#96;id&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;gb2312</span><br><span class="line">1 row in set (0.12 sec)</span><br></pre></td></tr></table></figure>
+<p>注意：在为已经创建好的数据表添加外键约束时，要确保添加外键约束的列的值全部来源于主键列，并且外键列不能为空。</p>
+<h2 id="删除外键约束"><a href="#删除外键约束" class="headerlink" title="删除外键约束"></a>删除外键约束</h2><p>当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系。</p>
+<p>删除外键约束的语法格式如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;表名&gt; DROP FOREIGN KEY &lt;外键约束名&gt;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_emp2 DROP FOREIGN KEY fk_tb_dept1;</span><br><span class="line">Query OK, 0 rows affected (0.19 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW CREATE TABLE tb_emp2\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: tb_emp2</span><br><span class="line">Create Table: CREATE TABLE &#96;tb_emp2&#96; (</span><br><span class="line">  &#96;id&#96; int(11) NOT NULL,</span><br><span class="line">  &#96;name&#96; varchar(30) DEFAULT NULL,</span><br><span class="line">  &#96;deptId&#96; int(11) DEFAULT NULL,</span><br><span class="line">  &#96;salary&#96; float DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;fk_tb_dept1&#96; (&#96;deptId&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;gb2312</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>tb_emp2</code>中已经不存在<code>FOREIGN KEY</code>，原有的名称为<code>fk_emp_dept</code>的外键约束删除成功。</p>
+<h1 id="唯一约束"><a href="#唯一约束" class="headerlink" title="唯一约束"></a>唯一约束</h1><p>MySQL 唯一约束（<code>Unique Key</code>）是指所有记录中字段的值不能重复出现。例如，为<code>id</code>字段加上唯一性约束后，每条记录的<code>id</code>值都是唯一的，不能出现重复的情况。</p>
+<p>唯一约束与主键约束相似的是它们都可以确保列的唯一性。不同的是，唯一约束在一个表中可有多个，并且设置唯一约束的列允许有空值，但是只能有一个空值。而主键约束在一个表中只能有一个，且不允许有空值。比如，在用户信息表中，为了避免表中用户名重名，可以把用户名设置为唯一约束。</p>
+<h2 id="在创建表时设置唯一约束"><a href="#在创建表时设置唯一约束" class="headerlink" title="在创建表时设置唯一约束"></a>在创建表时设置唯一约束</h2><p>唯一约束可以在创建表时直接设置，通常设置在除了主键以外的其它列上。</p>
+<p>在定义完列之后直接使用<code>UNIQUE</code>关键字指定唯一约束，语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;字段名&gt; &lt;数据类型&gt; UNIQUE</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_dept2</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(22) UNIQUE,</span><br><span class="line">    -&gt; location VARCHAR(50)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept2;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name     | varchar(40) | YES  | UNI | NULL    |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="在修改表时添加唯一约束"><a href="#在修改表时添加唯一约束" class="headerlink" title="在修改表时添加唯一约束"></a>在修改表时添加唯一约束</h2><p>在修改表时添加唯一约束的语法格式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt; ADD CONSTRAINT &lt;唯一约束名&gt; UNIQUE(&lt;列名&gt;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept1 ADD CONSTRAINT unique_name UNIQUE(name);</span><br><span class="line">Query OK, 0 rows affected (0.63 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept1;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name     | varchar(22) | NO   | UNI | NULL    |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="删除唯一约束"><a href="#删除唯一约束" class="headerlink" title="删除唯一约束"></a>删除唯一约束</h2><p>在 MySQL 中删除唯一约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;表名&gt; DROP INDEX &lt;唯一约束名&gt;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept1 DROP INDEX unique_name;</span><br><span class="line">Query OK, 0 rows affected (0.20 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept1;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name     | varchar(22) | NO   |     | NULL    |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">3 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h1 id="检查约束"><a href="#检查约束" class="headerlink" title="检查约束"></a>检查约束</h1><p>MySQL 检查约束（<code>CHECK</code>）是用来检查数据表中字段值有效性的一种手段，可以通过<code>CREATE TABLE</code>或<code>ALTER TABLE</code>语句实现。设置检查约束时要根据实际情况进行设置，这样能够减少无效数据的输入。</p>
+<h2 id="选取设置检查约束的字段"><a href="#选取设置检查约束的字段" class="headerlink" title="选取设置检查约束的字段"></a>选取设置检查约束的字段</h2><p>检查约束使用<code>CHECK</code>关键字，具体的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHECK &lt;表达式&gt;</span><br></pre></td></tr></table></figure>
+<p>其中，“表达式”指的就是 SQL 表达式，用于指定需要检查的限定条件。</p>
+<p>若将<code>CHECK</code>约束子句置于表中某个列的定义之后，则这种约束也称为基于列的<code>CHECK</code>约束。</p>
+<p>在更新表数据的时候，系统会检查更新后的数据行是否满足<code>CHECK</code>约束中的限定条件。MySQL 可以使用简单的表达式来实现<code>CHECK</code>约束，也允许使用复杂的表达式作为限定条件，例如在限定条件中加入子查询。</p>
+<blockquote>
+<p>注意：若将 CHECK 约束子句置于所有列的定义以及主键约束和外键定义之后，则这种约束也称为基于表的 CHECK 约束。该约束可以同时对表中多个列设置限定条件。</p>
+</blockquote>
+<h2 id="在创建表时设置检查约束"><a href="#在创建表时设置检查约束" class="headerlink" title="在创建表时设置检查约束"></a>在创建表时设置检查约束</h2><p>一般情况下，如果系统的表结构已经设计完成，那么在创建表时就可以为字段设置检查约束了。</p>
+<p>创建表时设置检查约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHECK(&lt;检查约束&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp7</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(25),</span><br><span class="line">    -&gt; deptId INT(11),</span><br><span class="line">    -&gt; salary FLOAT,</span><br><span class="line">    -&gt; CHECK(salary&gt;0 AND salary&lt;100),</span><br><span class="line">    -&gt; FOREIGN KEY(deptId) REFERENCES tb_dept1(id)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br></pre></td></tr></table></figure>
+<h2 id="在修改表时添加检查约束"><a href="#在修改表时添加检查约束" class="headerlink" title="在修改表时添加检查约束"></a>在修改表时添加检查约束</h2><p>如果一个表创建完成，可以通过修改表的方式为表添加检查约束。</p>
+<p>修改表时设置检查约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE tb_emp7 ADD CONSTRAINT &lt;检查约束名&gt; CHECK(&lt;检查约束&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_emp7</span><br><span class="line">    -&gt; ADD CONSTRAINT check_id</span><br><span class="line">    -&gt; CHECK(id&gt;0);</span><br><span class="line">Query OK, 0 rows affected (0.19 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
+<h2 id="删除检查约束"><a href="#删除检查约束" class="headerlink" title="删除检查约束"></a>删除检查约束</h2><p>修改表时删除检查约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt; DROP CONSTRAINT &lt;检查约束名&gt;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_emp7 DROP CONSTRAINT check_id;</span><br><span class="line">Query OK, 0 rows affected (0.19 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br></pre></td></tr></table></figure>
+<h1 id="默认值约束"><a href="#默认值约束" class="headerlink" title="默认值约束"></a>默认值约束</h1><p>默认值约束用来指定某列的默认值。在表中插入一条新记录时，如果没有为某个字段赋值，系统就会自动为这个字段插入默认值。</p>
+<p>默认值约束通常用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。</p>
+<h2 id="在创建表时设置默认值约束"><a href="#在创建表时设置默认值约束" class="headerlink" title="在创建表时设置默认值约束"></a>在创建表时设置默认值约束</h2><p>创建表时可以使用<code>DEFAULT</code>关键字设置默认值约束，具体的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;字段名&gt; &lt;数据类型&gt; DEFAULT &lt;默认值&gt;;</span><br></pre></td></tr></table></figure>
+<p>其中，“默认值”为该字段设置的默认值，如果是字符类型的，要用单引号括起来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_dept3</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(22),</span><br><span class="line">    -&gt; location VARCHAR(50) DEFAULT &#39;Beijing&#39;</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept3;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name     | varchar(22) | YES  |     | NULL    |       |</span><br><span class="line">| location | varchar(50) | YES  |     | Beijing |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<p>以上语句执行成功之后，表<code>tb_dept3</code>上的字段<code>location</code>拥有了一个默认值<code>Beijing</code>，新插入的记录如果没有指定部门位置，则默认都为<code>Beijing</code>。</p>
+<p>注意：在创建表时为列添加默认值，可以一次为多个列添加默认值，需要注意不同列的数据类型。</p>
+<h2 id="在修改表时添加默认值约束"><a href="#在修改表时添加默认值约束" class="headerlink" title="在修改表时添加默认值约束"></a>在修改表时添加默认值约束</h2><p>修改表时添加默认值约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt;</span><br><span class="line">CHANGE COLUMN &lt;字段名&gt; &lt;数据类型&gt; DEFAULT &lt;默认值&gt;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept3</span><br><span class="line">    -&gt; CHANGE COLUMN location</span><br><span class="line">    -&gt; location VARCHAR(50) DEFAULT &#39;Shanghai&#39;;</span><br><span class="line">Query OK, 0 rows affected (0.15 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept3;</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default  | Extra |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL     |       |</span><br><span class="line">| name     | varchar(22) | YES  |     | NULL     |       |</span><br><span class="line">| location | varchar(50) | YES  |     | Shanghai |       |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="删除默认值约束"><a href="#删除默认值约束" class="headerlink" title="删除默认值约束"></a>删除默认值约束</h2><p>当一个表中的列不需要设置默认值时，就需要从表中将其删除。</p>
+<p>修改表时删除默认值约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt;</span><br><span class="line">CHANGE COLUMN &lt;字段名&gt; &lt;字段名&gt; &lt;数据类型&gt; DEFAULT NULL;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept3</span><br><span class="line">    -&gt; CHANGE COLUMN location</span><br><span class="line">    -&gt; location VARCHAR(50) DEFAULT NULL;</span><br><span class="line">Query OK, 0 rows affected (0.15 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept3;</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default  | Extra |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL     |       |</span><br><span class="line">| name     | varchar(22) | YES  |     | NULL     |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL     |       |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br></pre></td></tr></table></figure>
+<h1 id="非空约束"><a href="#非空约束" class="headerlink" title="非空约束"></a>非空约束</h1><p>MySQL 非空约束（<code>NOT NULL</code>）指字段的值不能为空。对于使用了非空约束的字段，如果用户在添加数据时没有指定值，数据库系统就会报错。可以通过<code>CREATE TABLE</code>或<code>ALTER TABLE</code>语句实现。在表中某个列的定义后加上关键字<code>NOT NULL</code>作为限定词，来约束该列的取值不能为空。</p>
+<h2 id="在创建表时设置非空约束"><a href="#在创建表时设置非空约束" class="headerlink" title="在创建表时设置非空约束"></a>在创建表时设置非空约束</h2><p>创建表时可以使用<code>NOT NULL</code>关键字设置非空约束，具体的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;字段名&gt; &lt;数据类型&gt; NOT NULL;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_dept4</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(22) NOT NULL,</span><br><span class="line">    -&gt; location VARCHAR(50)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept3;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL    |       |</span><br><span class="line">| name     | varchar(22) | NO   |     | NULL    |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="在修改表时添加非空约束"><a href="#在修改表时添加非空约束" class="headerlink" title="在修改表时添加非空约束"></a>在修改表时添加非空约束</h2><p>如果在创建表时忘记了为字段设置非空约束，也可以通过修改表进行非空约束的添加。</p>
+<p>修改表时设置非空约束的语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt;</span><br><span class="line">CHANGE COLUMN &lt;字段名&gt;</span><br><span class="line">&lt;字段名&gt; &lt;数据类型&gt; NOT NULL;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept4</span><br><span class="line">    -&gt; CHANGE COLUMN location</span><br><span class="line">    -&gt; location VARCHAR(50) NOT NULL;</span><br><span class="line">Query OK, 0 rows affected (0.15 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept4;</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default  | Extra |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL     |       |</span><br><span class="line">| name     | varchar(22) | NO   |     | NULL     |       |</span><br><span class="line">| location | varchar(50) | NO   |     | NULL     |       |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br></pre></td></tr></table></figure>
+<h2 id="删除非空约束"><a href="#删除非空约束" class="headerlink" title="删除非空约束"></a>删除非空约束</h2><p>修改表时删除非空约束的语法规则如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE &lt;数据表名&gt;</span><br><span class="line">CHANGE COLUMN &lt;字段名&gt; &lt;字段名&gt; &lt;数据类型&gt; NULL;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER TABLE tb_dept4</span><br><span class="line">    -&gt; CHANGE COLUMN location</span><br><span class="line">    -&gt; location VARCHAR(50) NULL;</span><br><span class="line">Query OK, 0 rows affected (0.15 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; DESC tb_dept4;</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default  | Extra |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br><span class="line">| id       | int(11)     | NO   | PRI | NULL     |       |</span><br><span class="line">| name     | varchar(22) | NO   |     | NULL     |       |</span><br><span class="line">| location | varchar(50) | YES  |     | NULL     |       |</span><br><span class="line">+----------+-------------+------+-----+----------+-------+</span><br></pre></td></tr></table></figure>
+<h1 id="查看表中的约束"><a href="#查看表中的约束" class="headerlink" title="查看表中的约束"></a>查看表中的约束</h1><p>在 MySQL 中可以使用<code>SHOW CREATE TABLE</code>语句来查看表中的约束。</p>
+<p>查看数据表中的约束语法格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW CREATE TABLE &lt;数据表名&gt;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE tb_emp8</span><br><span class="line">    -&gt; (</span><br><span class="line">    -&gt; id INT(11) PRIMARY KEY,</span><br><span class="line">    -&gt; name VARCHAR(22) UNIQUE,</span><br><span class="line">    -&gt; deptId INT(11) NOT NULL,</span><br><span class="line">    -&gt; salary FLOAT DEFAULT 0,</span><br><span class="line">    -&gt; CHECK(salary&gt;0),</span><br><span class="line">    -&gt; FOREIGN KEY(deptId) REFERENCES tb_dept1(id)</span><br><span class="line">    -&gt; );</span><br><span class="line">Query OK, 0 rows affected (0.37 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW CREATE TABLE tb_emp8 \G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">       Table: tb_emp8</span><br><span class="line">Create Table: CREATE TABLE &#96;tb_emp8&#96; (</span><br><span class="line">  &#96;id&#96; int(11) NOT NULL,</span><br><span class="line">  &#96;name&#96; varchar(22) DEFAULT NULL,</span><br><span class="line">  &#96;deptId&#96; int(11) NOT NULL,</span><br><span class="line">  &#96;salary&#96; float DEFAULT &#39;0&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  UNIQUE KEY &#96;name&#96; (&#96;name&#96;),</span><br><span class="line">  KEY &#96;deptId&#96; (&#96;deptId&#96;),</span><br><span class="line">  CONSTRAINT &#96;tb_emp8_ibfk_1&#96; FOREIGN KEY (&#96;deptId&#96;) REFERENCES &#96;tb_dept1&#96; (&#96;id&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;gb2312</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/15/MySQL/MySQL%E7%BA%A6%E6%9D%9F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/19/MySQL/MySQL%E5%B8%B8%E7%94%A8%E8%BF%90%E7%AE%97%E7%AC%A6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL运算符
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/14/vue/vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B7%B1%E5%85%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">vue生命周期深入</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2021
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>

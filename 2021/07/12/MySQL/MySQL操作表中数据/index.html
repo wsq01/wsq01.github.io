@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL/MySQL操作表中数据 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-MySQL/MySQL操作表中数据" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL/MySQL操作表中数据
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/12/MySQL/MySQL%E6%93%8D%E4%BD%9C%E8%A1%A8%E4%B8%AD%E6%95%B0%E6%8D%AE/" class="article-date">
+  <time datetime="2021-07-12T08:14:40.577Z" itemprop="datePublished">2021-07-12</time>
+</a>
+      
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.8k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="INSERT：插入数据"><a href="#INSERT：插入数据" class="headerlink" title="INSERT：插入数据"></a>INSERT：插入数据</h1><p>数据库与表创建成功以后，需要向数据库的表中插入数据。在 MySQL 中可以使用 INSERT 语句向数据库已有的表中插入一行或者多行元组数据。<br>基本语法<br>INSERT 语句有两种语法形式，分别是 INSERT…VALUES 语句和 INSERT…SET 语句。</p>
+<p>1) INSERT…VALUES语句<br>INSERT VALUES 的语法格式为：<br>INSERT INTO &lt;表名&gt; [ &lt;列名1&gt; [ , … &lt;列名n&gt;] ]<br>VALUES (值1) [… , (值n) ];</p>
+<p>语法说明如下。<br>&lt;表名&gt;：指定被操作的表名。<br>&lt;列名&gt;：指定需要插入数据的列名。若向表中的所有列插入数据，则全部的列名均可以省略，直接采用 INSERT&lt;表名&gt;VALUES(…) 即可。<br>VALUES 或 VALUE 子句：该子句包含要插入的数据清单。数据清单中数据的顺序要和列的顺序相对应。<br>2) INSERT…SET语句<br>语法格式为：<br>INSERT INTO &lt;表名&gt;<br>SET &lt;列名1&gt; = &lt;值1&gt;,<br>        &lt;列名2&gt; = &lt;值2&gt;,<br>        …</p>
+<p>此语句用于直接给表中的某些列指定对应的列值，即要插入的数据的列名在 SET 子句中指定，col_name 为指定的列名，等号后面为指定的数据，而对于未指定的列，列值会指定为该列的默认值。</p>
+<p>由 INSERT 语句的两种形式可以看出：<br>使用 INSERT…VALUES 语句可以向表中插入一行数据，也可以插入多行数据；<br>使用 INSERT…SET 语句可以指定插入行中每列的值，也可以指定部分列的值；<br>INSERT…SELECT 语句向表中插入其他表的数据。<br>采用 INSERT…SET 语句可以向表中插入部分列的值，这种方式更为灵活；<br>INSERT…VALUES 语句可以一次插入多条数据。</p>
+<p>在 MySQL 中，用单条 INSERT 语句处理多个插入要比使用多条 INSERT 语句更快。</p>
+<p>当使用单条 INSERT 语句插入多行数据的时候，只需要将每行数据用圆括号括起来即可。<br>向表中的全部字段添加值<br>在 test_db 数据库中创建一个课程信息表 tb_courses，包含课程编号 course_id、课程名称 course_name、课程学分 course_grade 和课程备注 course_info，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; CREATE TABLE tb_courses<br>    -&gt; (<br>    -&gt; course_id INT NOT NULL AUTO_INCREMENT,<br>    -&gt; course_name CHAR(40) NOT NULL,<br>    -&gt; course_grade FLOAT NOT NULL,<br>    -&gt; course_info CHAR(100) NULL,<br>    -&gt; PRIMARY KEY(course_id)<br>    -&gt; );<br>Query OK, 0 rows affected (0.00 sec)<br>向表中所有字段插入值的方法有两种：一种是指定所有字段名；另一种是完全不指定字段名。</p>
+<p>【实例 1】在 tb_courses 表中插入一条新记录，course_id 值为 1，course_name 值为“Network”，course_grade 值为 3，info 值为“Computer Network”。</p>
+<p>在执行插入操作之前，查看 tb_courses 表的SQL语句和执行结果如下所示。<br>mysql&gt; SELECT * FROM tb_courses;<br>Empty set (0.00 sec)<br>查询结果显示当前表内容为空，没有数据，接下来执行插入数据的操作，输入的 SQL 语句和执行过程如下所示。<br>mysql&gt; INSERT INTO tb_courses<br>    -&gt; (course_id,course_name,course_grade,course_info)<br>    -&gt; VALUES(1,’Network’,3,’Computer Network’);<br>Query OK, 1 rows affected (0.08 sec)<br>mysql&gt; SELECT * FROM tb_courses;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>+———–+————-+————–+——————+<br>1 row in set (0.00 sec)<br>可以看到插入记录成功。在插入数据时，指定了 tb_courses 表的所有字段，因此将为每一个字段插入新的值。</p>
+<p>INSERT 语句后面的列名称顺序可以不是 tb_courses 表定义时的顺序，即插入数据时，不需要按照表定义的顺序插入，只要保证值的顺序与列字段的顺序相同就可以。</p>
+<p>【实例 2】在 tb_courses 表中插入一条新记录，course_id 值为 2，course_name 值为“Database”，course_grade 值为 3，info值为“MySQL”。输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; INSERT INTO tb_courses<br>    -&gt; (course_name,course_info,course_id,course_grade)<br>    -&gt; VALUES(‘Database’,’MySQL’,2,3);<br>Query OK, 1 rows affected (0.08 sec)<br>mysql&gt; SELECT * FROM tb_courses;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>|         2 | Database    |            3 | MySQL            |<br>+———–+————-+————–+——————+<br>2 rows in set (0.00 sec)<br>使用 INSERT 插入数据时，允许列名称列表 column_list 为空，此时值列表中需要为表的每一个字段指定值，并且值的顺序必须和数据表中字段定义时的顺序相同。</p>
+<p>【实例 3】在 tb_courses 表中插入一条新记录，course_id 值为 3，course_name 值为“Java”，course_grade 值为 4，info 值为“Jave EE”。输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; INSERT INTO tb_courses<br>    -&gt; VLAUES(3,’Java’,4,’Java EE’);<br>Query OK, 1 rows affected (0.08 sec)<br>mysql&gt; SELECT * FROM tb_courses;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>|         2 | Database    |            3 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>+———–+————-+————–+——————+<br>3 rows in set (0.00 sec)<br>INSERT 语句中没有指定插入列表，只有一个值列表。在这种情况下，值列表为每一个字段列指定插入的值，并且这些值的顺序必须和 tb_courses 表中字段定义的顺序相同。<br>注意：虽然使用 INSERT 插入数据时可以忽略插入数据的列名称，若值不包含列名称，则 VALUES 关键字后面的值不仅要求完整，而且顺序必须和表定义时列的顺序相同。如果表的结构被修改，对列进行增加、删除或者位置改变操作，这些操作将使得用这种方式插入数据时的顺序也同时改变。如果指定列名称，就不会受到表结构改变的影响。</p>
+<p>向表中指定字段添加值<br>为表的指定字段插入数据，是在 INSERT 语句中只向部分字段中插入值，而其他字段的值为表定义时的默认值。</p>
+<p>【实例 4】在 tb_courses 表中插入一条新记录，course_name 值为“System”，course_grade 值为 3，course_info 值为“Operating System”，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; INSERT INTO tb_courses<br>    -&gt; (course_name,course_grade,course_info)<br>    -&gt; VALUES(‘System’,3,’Operation System’);<br>Query OK, 1 rows affected (0.08 sec)<br>mysql&gt; SELECT * FROM tb_courses;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>|         2 | Database    |            3 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>|         4 | System      |            3 | Operating System |<br>+———–+————-+————–+——————+<br>4 rows in set (0.00 sec)<br>可以看到插入记录成功。如查询结果显示，这里的 course_id 字段自动添加了一个整数值 4。这时的 course_id 字段为表的主键，不能为空，系统自动为该字段插入自增的序列值。在插入记录时，如果某些字段没有指定插入值，MySQL 将插入该字段定义时的默认值。<br>使用 INSERT INTO…FROM 语句复制表数据<br>INSERT INTO…SELECT…FROM 语句用于快速地从一个或多个表中取出数据，并将这些数据作为行数据插入另一个表中。</p>
+<p>SELECT 子句返回的是一个查询到的结果集，INSERT 语句将这个结果集插入指定表中，结果集中的每行数据的字段数、字段的数据类型都必须与被操作的表完全一致。</p>
+<p>在数据库 test_db 中创建一个与 tb_courses 表结构相同的数据表 tb_courses_new，创建表的 SQL 语句和执行过程如下所示。<br>mysql&gt; CREATE TABLE tb_courses_new<br>    -&gt; (<br>    -&gt; course_id INT NOT NULL AUTO_INCREMENT,<br>    -&gt; course_name CHAR(40) NOT NULL,<br>    -&gt; course_grade FLOAT NOT NULL,<br>    -&gt; course_info CHAR(100) NULL,<br>    -&gt; PRIMARY KEY(course_id)<br>    -&gt; );<br>Query OK, 0 rows affected (0.00 sec)<br>mysql&gt; SELECT * FROM tb_courses_new;<br>Empty set (0.00 sec)<br>【实例 5】从 tb_courses 表中查询所有的记录，并将其插入 tb_courses_new 表中。输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; INSERT INTO tb_courses_new<br>    -&gt; (course_id,course_name,course_grade,course_info)<br>    -&gt; SELECT course_id,course_name,course_grade,course_info<br>    -&gt; FROM tb_courses;<br>Query OK, 4 rows affected (0.17 sec)<br>Records: 4  Duplicates: 0  Warnings: 0<br>mysql&gt; SELECT * FROM tb_courses_new;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>|         2 | Database    |            3 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>|         4 | System      |            3 | Operating System |<br>+———–+————-+————–+——————+<br>4 rows in set (0.00 sec)</p>
+<h1 id="UPDATE：修改数据"><a href="#UPDATE：修改数据" class="headerlink" title="UPDATE：修改数据"></a>UPDATE：修改数据</h1><p>在 MySQL 中，可以使用 UPDATE 语句来修改、更新一个或多个表的数据。<br>UPDATE 语句的基本语法<br>使用 UPDATE 语句修改单个表，语法格式为：<br>UPDATE &lt;表名&gt; SET 字段 1=值 1 [,字段 2=值 2… ] [WHERE 子句 ]<br>[ORDER BY 子句] [LIMIT 子句]</p>
+<p>语法说明如下：<br>&lt;表名&gt;：用于指定要更新的表名称。<br>SET 子句：用于指定表中要修改的列名及其列值。其中，每个指定的列值可以是表达式，也可以是该列对应的默认值。如果指定的是默认值，可用关键字 DEFAULT 表示列值。<br>WHERE 子句：可选项。用于限定表中要修改的行。若不指定，则修改表中所有的行。<br>ORDER BY 子句：可选项。用于限定表中的行被修改的次序。<br>LIMIT 子句：可选项。用于限定被修改的行数。<br>注意：修改一行数据的多个列值时，SET 子句的每个值用逗号分开即可。</p>
+<p>修改表中的数据<br>【实例 1】在 tb_courses_new 表中，更新所有行的 course_grade 字段值为 4，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; UPDATE tb_courses_new<br>    -&gt; SET course_grade=4;<br>Query OK, 3 rows affected (0.11 sec)<br>Rows matched: 4  Changed: 3  Warnings: 0<br>mysql&gt; SELECT * FROM tb_courses_new;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            4 | Computer Network |<br>|         2 | Database    |            4 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>|         4 | System      |            4 | Operating System |<br>+———–+————-+————–+——————+<br>4 rows in set (0.00 sec)<br>根据条件修改表中的数据<br>【实例 2】在 tb_courses 表中，更新 course_id 值为 2 的记录，将 course_grade 字段值改为 3.5，将 course_name 字段值改为“DB”，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; UPDATE tb_courses_new<br>    -&gt; SET course_name=’DB’,course_grade=3.5<br>    -&gt; WHERE course_id=2;<br>Query OK, 1 row affected (0.13 sec)<br>Rows matched: 1  Changed: 1  Warnings: 0<br>mysql&gt; SELECT * FROM tb_courses_new;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            4 | Computer Network |<br>|         2 | DB          |          3.5 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>|         4 | System      |            4 | Operating System |<br>+———–+————-+————–+——————+<br>4 rows in set (0.00 sec)<br>注意：保证 UPDATE 以 WHERE 子句结束，通过 WHERE 子句指定被更新的记录所需要满足的条件，如果忽略 WHERE 子句，MySQL 将更新表中所有的行。</p>
+<h1 id="DELETE：删除数据"><a href="#DELETE：删除数据" class="headerlink" title="DELETE：删除数据"></a>DELETE：删除数据</h1><p>在 MySQL 中，可以使用 DELETE 语句来删除表的一行或者多行数据。<br>删除单个表中的数据<br>使用 DELETE 语句从单个表中删除数据，语法格式为：<br>DELETE FROM &lt;表名&gt; [WHERE 子句] [ORDER BY 子句] [LIMIT 子句]</p>
+<p>语法说明如下：<br>&lt;表名&gt;：指定要删除数据的表名。<br>ORDER BY 子句：可选项。表示删除时，表中各行将按照子句中指定的顺序进行删除。<br>WHERE 子句：可选项。表示为删除操作限定删除条件，若省略该子句，则代表删除该表中的所有行。<br>LIMIT 子句：可选项。用于告知服务器在控制命令被返回到客户端前被删除行的最大值。</p>
+<p>注意：在不使用 WHERE 条件的时候，将删除所有数据。<br>删除表中的全部数据<br>【实例 1】删除 tb_courses_new 表中的全部数据，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; DELETE FROM tb_courses_new;<br>Query OK, 3 rows affected (0.12 sec)<br>mysql&gt; SELECT * FROM tb_courses_new;<br>Empty set (0.00 sec)<br>根据条件删除表中的数据<br>【实例 2】在 tb_courses_new 表中，删除 course_id 为 4 的记录，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; DELETE FROM tb_courses<br>    -&gt; WHERE course_id=4;<br>Query OK, 1 row affected (0.00 sec)<br>mysql&gt; SELECT * FROM tb_courses;<br>+———–+————-+————–+——————+<br>| course_id | course_name | course_grade | course_info      |<br>+———–+————-+————–+——————+<br>|         1 | Network     |            3 | Computer Network |<br>|         2 | Database    |            3 | MySQL            |<br>|         3 | Java        |            4 | Java EE          |<br>+———–+————-+————–+——————+<br>3 rows in set (0.00 sec)<br>由运行结果可以看出，course_id 为 4 的记录已经被删除。</p>
+<h1 id="TRUNCATE：清空表记录"><a href="#TRUNCATE：清空表记录" class="headerlink" title="TRUNCATE：清空表记录"></a>TRUNCATE：清空表记录</h1>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/07/12/MySQL/MySQL%E6%93%8D%E4%BD%9C%E8%A1%A8%E4%B8%AD%E6%95%B0%E6%8D%AE/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/07/12/MySQL/MySQL%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL/MySQL用户管理
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/07/07/java/MyBatis/MyBatis%E4%B8%8ESpring%E6%95%B4%E5%90%88/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">java/MyBatis/MyBatis与Spring整合</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2021
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>

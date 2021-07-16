@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL常用函数汇总 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-MySQL/MySQL常用函数汇总" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL常用函数汇总
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/21/MySQL/MySQL%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%B1%87%E6%80%BB/" class="article-date">
+  <time datetime="2020-04-21T08:41:23.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">7.4k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">30分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="函数简介"><a href="#函数简介" class="headerlink" title="函数简介"></a>函数简介</h1><p>MySQL 函数是 MySQL 数据库提供的内部函数，这些内部函数可以帮助用户更加方便地处理表中的数据。函数就像预定的公式一样存放在数据库里，每个用户都可以调用已经存在的函数来完成某些功能。</p>
+<p>提示：函数就是输入值然后得到相应的输出结果，输入值称为参数（parameter），输出值称为返回值。</p>
+<p>函数可以很方便的地实现业务逻辑的重用，并且 MySQL 数据库允许用户自己创建函数，以适应实际的业务操作。正确使用函数会让读者在编写 SQL 语句时起到事半功倍的效果。</p>
+<p>MySQL 函数用来对数据表中的数据进行相应的处理，以便得到用户希望得到的数据，使 MySQL 数据库的功能更加强大。</p>
+<p>下面将简单介绍 MySQL 中包含的几类函数，以及这几类函数的使用范围和作用。</p>
+<p>MySQL 函数包括数学函数、字符串函数、日期和时间函数、条件判断函数、系统信息函数和加密函数等。这些函数不仅能帮助用户做很多事情，比如字符串的处理、数值的运算、日期的运算等，还可以帮助开发人员编写出简单快捷的 SQL 语句。</p>
+<p>SELECT、INSERT、UPDATE 和 DELETE 语句及其子句（例如 WHERE、ORDER BY、HAVING 等）中都可以使用 MySQL 函数。例如，数据表中的某个数据是负数，现在需要将这个数据显示为整数，这时就可以在 SELECT 语句中使用绝对值函数。</p>
+<p>下面介绍这几类函数的使用范围。<br>数学函数主要用于处理数字。这类函数包括绝对值函数、正弦函数、余弦函数和获得随机数的函数等。<br>字符串函数主要用于处理字符串。其中包括字符串连接函数、字符串比较函数、将字符串的字母都变成小写或大写字母的函数和获取子串的函数等。<br>日期和时间函数主要用于处理日期和时间。其中包括获取当前时间的函数、获取当前日期的函数、返回年份的函数和返回日期的函数等。<br>条件判断函数主要用于在 SQL 语句中控制条件选择。其中包括 IF 语句、CASE 语句和 WHERE 语句等。<br>系统信息函数主要用于获取 MySQL 数据库的系统信息。其中包括获取数据库名的函数、获取当前用户的函数和获取数据库版本的函数等。<br>加密函数主要用于对字符串进行加密解密。其中包括字符串加密函数和字符串解密函数等。<br>其他函数主要包括格式化函数和锁函数等。</p>
+<h1 id="数值型函数"><a href="#数值型函数" class="headerlink" title="数值型函数"></a>数值型函数</h1><h2 id="ABS函数：求绝对值"><a href="#ABS函数：求绝对值" class="headerlink" title="ABS函数：求绝对值"></a>ABS函数：求绝对值</h2><p>在 MySQL 中绝对值函数 ABS(x) 返回 x 的绝对值。正数的绝对值是其本身，负数的绝对值为其相反数，0 的绝对值是 0。</p>
+<p>【实例】求 5、-2.4、-24 和 0 的绝对值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT ABS(5),ABS(-2.4),ABS(-24),ABS(0);<br>+——–+———–+———-+——–+<br>| ABS(5) | ABS(-2.4) | ABS(-24) | ABS(0) |<br>+——–+———–+———-+——–+<br>|      5 |       2.4 |       24 |      0 |<br>+——–+———–+———-+——–+<br>1 row in set (0.10 sec)<br>由运行结果可知，5 的绝对值为 5，-2.4 的绝对值为 2.4，-24 的绝对值为 24，0 的绝对值是 0。</p>
+<h2 id="SQRT函数：求二次方根"><a href="#SQRT函数：求二次方根" class="headerlink" title="SQRT函数：求二次方根"></a>SQRT函数：求二次方根</h2><p>在 MySQL 中平方根函数 SQRT(x) 返回非负数 x 的二次方根。负数没有平方根，返回结果为 NULL。</p>
+<p>【实例 1】求 25、120 和 -9 的二次平方根，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT SQRT(25),SQRT(120),SQRT(-9);<br>+———-+——————–+———-+<br>| SQRT(25) | SQRT(120)          | SQRT(-9) |<br>+———-+——————–+———-+<br>|        5 | 10.954451150103322 |     NULL |<br>+———-+——————–+———-+<br>1 row in set (0.06 sec)<br>由运行结果可知，5 的平方等于 25，因此 25 的平方根为 5；120 的平方根为 10.954451150103322；而负数没有平方根，因此 -9 返回的结果为 NULL。</p>
+<p>也可以使用 SQRT 函数，计算出记录的平方根。</p>
+<p>【实例 2】 假设数据表 tb_people 有以下这些数据：<br>mysql&gt; SELECT * FROM tb_people;<br>+——+——+————+——————–+<br>| id   | name | work_date  | daily_typing_pages |<br>+——+——+————+——————–+<br>|  1   | John | 2007-01-24 |        250         |<br>|  2   | Ram  | 2007-05-27 |        220         |<br>|  3   | Jack | 2007-05-06 |        170         |<br>|  3   | Jack | 2007-04-06 |        100         |<br>|  4   | Jill | 2007-04-06 |        220         |<br>|  5   | Zara | 2007-06-06 |        300         |<br>|  5   | Zara | 2007-02-06 |        350         |<br>+——+——+————+——————–+<br>7 rows in set (0.00 sec)<br>根据上面的表格，要计算所有的 dialy_typing_pages 的平方根，输入 SQL 语句执行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT name, SQRT(daily_typing_pages)</span><br><span class="line">  -&gt; FROM tb_people;</span><br><span class="line">+------+--------------------------+</span><br><span class="line">| name | SQRT(daily_typing_pages) |</span><br><span class="line">+------+--------------------------+</span><br><span class="line">| John |        15.811388         |</span><br><span class="line">| Ram  |        14.832397         |</span><br><span class="line">| Jack |        13.038405         |</span><br><span class="line">| Jack |        10.000000         |</span><br><span class="line">| Jill |        14.832397         |</span><br><span class="line">| Zara |        17.320508         |</span><br><span class="line">| Zara |        18.708287         |</span><br><span class="line">+------+--------------------------+</span><br><span class="line">7 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h2 id="MOD函数：求余数"><a href="#MOD函数：求余数" class="headerlink" title="MOD函数：求余数"></a>MOD函数：求余数</h2><p>在 MySQL 中求余函数 MOD(x,y) 返回 x 被 y 除后的余数，MOD() 对于带有小数部分的数值也起作用，它返回除法运算后的余数。</p>
+<p>【实例】对 MOD(63,8)、MOD(120,10)、MOD(15.5,3) 进行求余运算，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT MOD(63,8),MOD(120,10),MOD(15.5,3);<br>+———–+————-+————-+<br>| MOD(63,8) | MOD(120,10) | MOD(15.5,3) |<br>+———–+————-+————-+<br>|         7 |           0 |         0.5 |<br>+———–+————-+————-+<br>1 row in set (0.03 sec)<br>由运行结果可知，63 除以 8 余数是 7，120 除以 10 余数是 0，15.5 除以 3 余数是 0.5</p>
+<h2 id="CEIL和CELING函数：向上取整"><a href="#CEIL和CELING函数：向上取整" class="headerlink" title="CEIL和CELING函数：向上取整"></a>CEIL和CELING函数：向上取整</h2><p>在 MySQL 中取整函数 CEIL(x) 和 CEILING(x) 的意义相同，返回不小于 x 的最小整数值，返回值转化为一个 BIGINT。</p>
+<p>【实例】使用 CEILING 函数返回最小整数，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT CEIL(-2.5),CEILING(2.5);<br>+————+————–+<br>| CEIL(-2.5) | CEILING(2.5) |<br>+————+————–+<br>|         -2 |            3 |<br>+————+————–+<br>1 row in set (0.00 sec)<br>由执行结果可知，-2.5 为负数，不小于 -2.5 的最小整数为 -2，因此返回值为 -2；不小于 2.5 的最小整数为 3，因此返回值为 3。</p>
+<h2 id="FLOOR函数：向下取整"><a href="#FLOOR函数：向下取整" class="headerlink" title="FLOOR函数：向下取整"></a>FLOOR函数：向下取整</h2><p>MySQL FLOOR(x) 函数返回小于 x 的最大整数值。</p>
+<p>【实例】求 小于 5，5.66，-4，-4.66 的最大整数<br>mysql&gt; SELECT FLOOR(5),FLOOR(5.66),FLOOR(-4),FLOOR(-4.66);<br>+———-+————-+———–+————–+<br>| FLOOR(5) | FLOOR(5.66) | FLOOR(-4) | FLOOR(-4.66) |<br>+———-+————-+———–+————–+<br>|        5 |           5 |        -4 |           -5 |<br>+———-+————-+———–+————–+<br>1 row in set (0.00 sec)<br>由运行结果可知，小于 5，5.66，-4，-4.66 的最大整数依次是 5，5，-4，-5。</p>
+<h2 id="RAND函数：生成随机数"><a href="#RAND函数：生成随机数" class="headerlink" title="RAND函数：生成随机数"></a>RAND函数：生成随机数</h2><p>MySQL RAND() 函数被调用时，可以产生一个在 0 和 1 之间的随机数。<br>mysql&gt;  SELECT RAND(), RAND(), RAND();<br>+——————+—————–+——————+<br>| RAND()           | RAND()          | RAND()           |<br>+——————+—————–+——————+<br>| 0.45464584925645 | 0.1824410643265 | 0.54826780459682 |<br>+——————+—————–+——————+<br>1 row in set (0.00 sec)<br>由运行结果可知，每次调用 RAND() 函数，都会随机生成一个 0~1 之间的随机数 。</p>
+<p>当使用整数作为参数调用时，RAND() 使用该值作为随机数的种子发生器。每次种子使用给定值生成，RAND() 将产生一个可重复的系列数字：<br>mysql&gt; SELECT RAND(1),RAND(),RAND(1);<br>+———————+——————–+———————+<br>| RAND(1)             | RAND()             | RAND(1)             |<br>+———————+——————–+———————+<br>| 0.40540353712197724 | 0.7901452330780637 | 0.40540353712197724 |<br>+———————+——————–+———————+<br>1 row in set (0.00 sec)<br>由运行结果可知，当向 RAND() 函数中传入一个整数作为参数是，RAND() 函数产生的随机数可以重复。</p>
+<h2 id="SIGN函数：返回参数的符号"><a href="#SIGN函数：返回参数的符号" class="headerlink" title="SIGN函数：返回参数的符号"></a>SIGN函数：返回参数的符号</h2><p>在 MySQL 中符号函数 SIGN(x) 返回参数的符号，x 的值为负、零和正时返回结果依次为 -1、0 和 1。</p>
+<p>【实例】使用 SIGN 函数返回参数的符号，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT SIGN(-6),SIGN(0),SIGN(34);<br>+———-+———+———-+<br>| SIGN(-6) | SIGN(0) | SIGN(34) |<br>+———-+———+———-+<br>|       -1 |       0 |        1 |<br>+———-+———+———-+<br>1 row in set (0.00 sec)<br>由执行结果可知，SIGN(-6) 返回 -1，SIGN(0) 返回 0，SIGN(34) 返回 1。</p>
+<h2 id="POW和POWER函数：求次方"><a href="#POW和POWER函数：求次方" class="headerlink" title="POW和POWER函数：求次方"></a>POW和POWER函数：求次方</h2><p>MySQL POW(x,y) 函数和 POWER(x,y) 函数用于计算 x 的 y 次方。</p>
+<p>【实例】使用 POW(x,y) 和 POWER(x,y) 函数对参数 x 进行 y 次方的求值。输入 SQL 语句和执行结果如下。<br>mysql&gt; SELECT POW(5,-2),POW(10,3),POW(100,0),POWER(4,3),POWER(6,-3);<br>+———–+———–+————+————+———————-+<br>| POW(5,-2) | POW(10,3) | POW(100,0) | POWER(4,3) | POWER(6,-3)          |<br>+———–+———–+————+————+———————-+<br>|      0.04 |      1000 |          1 |         64 | 0.004629629629629629 |<br>+———–+———–+————+————+———————-+<br>1 row in set (0.00 sec)</p>
+<h2 id="SIN函数：求正弦值"><a href="#SIN函数：求正弦值" class="headerlink" title="SIN函数：求正弦值"></a>SIN函数：求正弦值</h2><p>MySQL 中正弦函数 SIN(x) 返回 x 的正弦值，其中 x 为弧度值。</p>
+<p>【实例】使用 SIN 函数计算正弦值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT SIN(1),SIN(0.5<em>PI());<br>+——————–+—————+<br>| SIN(1)             | SIN(0.5</em>PI()) |<br>+——————–+—————+<br>| 0.8414709848078965 |             1 |<br>+——————–+—————+<br>1 row in set (0.15 sec)<br>提示：PI() 函数返回圆周率（3.141593）</p>
+<h2 id="ASIN函数：求反正弦值"><a href="#ASIN函数：求反正弦值" class="headerlink" title="ASIN函数：求反正弦值"></a>ASIN函数：求反正弦值</h2><p>MySQL 中反正弦函数 ASIN(x) 返回 x 的反正弦值，若 x 不在 -1 到 1 的范围之内，则返回 NULL。</p>
+<p>【实例】使用 ASIN 函数计算反正弦值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT ASIN(0.8414709848078965),ASIN(2);<br>+————————–+———+<br>| ASIN(0.8414709848078965) | ASIN(2) |<br>+————————–+———+<br>|                        1 |    NULL |<br>+————————–+———+<br>1 row in set (0.03 sec)<br>由结果可以看到，函数 ASIN 和 SIN 互为反函数，ASIN(2) 中的参数 2 超出了正弦值的范围，因此返回 NULL。</p>
+<h2 id="COS函数：求余弦值"><a href="#COS函数：求余弦值" class="headerlink" title="COS函数：求余弦值"></a>COS函数：求余弦值</h2><p>MySQL 中余弦函数 COS(x) 返回 x 的余弦值，x 为弧度值。</p>
+<p>【实例】使用 COS 函数计算余弦值，输入的 SQL 语句和执行结果如下所示<br>mysql&gt; SELECT COS(1),COS(0),COS(PI());<br>+——————–+——–+———–+<br>| COS(1)             | COS(0) | COS(PI()) |<br>+——————–+——–+———–+<br>| 0.5403023058681398 |      1 |        -1 |<br>+——————–+——–+———–+<br>1 row in set (0.03 sec)<br>由结果可以看到，COS(0) 的值为 1，COS(PI()) 的值为 -1，COS(1) 的值为 0.5403023058681398。</p>
+<h2 id="ACOS函数：求反余弦值"><a href="#ACOS函数：求反余弦值" class="headerlink" title="ACOS函数：求反余弦值"></a>ACOS函数：求反余弦值</h2><p>MySQL 中反余弦函数 ACOS(x) 。x 值的范围必须在 -1 和 1 之间，否则返回 NULL。</p>
+<p>【实例】使用 ACOS 函数计算反余弦值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT ACOS(2),ACOS(1),ACOS(-1);<br>+———+———+——————-+<br>| ACOS(2) | ACOS(1) | ACOS(-1)          |<br>+———+———+——————-+<br>|    NULL |       0 | 3.141592653589793 |<br>+———+———+——————-+<br>1 row in set (0.01 sec)<br>由结果可以看到，函数 ACOS 和 COS 互为反函数。</p>
+<h2 id="TAN函数：求正切值"><a href="#TAN函数：求正切值" class="headerlink" title="TAN函数：求正切值"></a>TAN函数：求正切值</h2><p>MySQL 中正切函数 TAN(x) 返回 x 的正切值，x 为给定的弧度值。</p>
+<p>【实例】使用 TAN 函数计算正切值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT TAN(1),TAN(0);<br>+——————–+——–+<br>| TAN(1)             | TAN(0) |<br>+——————–+——–+<br>| 1.5574077246549023 |      0 |<br>+——————–+——–+<br>1 row in set (0.03 sec)<br>由运行结果可知，TAN(1) 的值为 1.5574077246549023，TAN(0) 的值为 0。 </p>
+<h2 id="ATAN函数：求反正切值"><a href="#ATAN函数：求反正切值" class="headerlink" title="ATAN函数：求反正切值"></a>ATAN函数：求反正切值</h2><p>MySQL 中反正切 ATAN(x) 返回 x 的反正切值，正切为 x 的值。</p>
+<p>【实例】使用 ATAN 函数计算反正切值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT ATAN(1.5574077246549023),ATAN(0);<br>+————————–+———+<br>| ATAN(1.5574077246549023) | ATAN(0) |<br>+————————–+———+<br>|                        1 |       0 |<br>+————————–+———+<br>1 row in set (0.05 sec)<br>由结果可以看到，函数 ATAN 和 TAN 互为反函数。</p>
+<h2 id="COT函数：求余切值"><a href="#COT函数：求余切值" class="headerlink" title="COT函数：求余切值"></a>COT函数：求余切值</h2><p>MySQL 余切函数 COT(x) 返回 x 的余切值，x 是给定的弧度值。</p>
+<p>【实例】使用 COT 函数计算余切值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT COT(1);<br>+——————–+<br>| COT(1)             |<br>+——————–+<br>| 0.6420926159343306 |<br>+——————–+<br>1 row in set (0.00 sec)<br>由运行结果可知，COT(1) 的值为 0.6420926159343306。 </p>
+<h1 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h1><h2 id="LENGTH函数：获取字符串长度"><a href="#LENGTH函数：获取字符串长度" class="headerlink" title="LENGTH函数：获取字符串长度"></a>LENGTH函数：获取字符串长度</h2><p>MySQL LENGTH(str) 函数的返回值为字符串的字节长度，使用 uft8（UNICODE 的一种变长字符编码，又称万国码）编码字符集时，一个汉字是 3 个字节，一个数字或字母是一个字节。</p>
+<p>【实例】使用 LENGTH 函数计算字符串长度，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT LENGTH(‘name’),LENGTH(‘数据库’);<br>+—————-+———————+<br>|LENGTH(‘name’)  | LENGTH(‘数据库’)    |<br>+—————-+———————+<br>|              4 |                   9 |<br>+—————-+———————+<br>1 row in set (0.04 sec)<br>由运行结果可以看到，一个汉字是 3 个字节，“数据库”字符串占 9 个字节。英文字符的个数和所占的字节相同，一个字符占 1 个字节。</p>
+<h2 id="CONCAT函数：字符串拼接"><a href="#CONCAT函数：字符串拼接" class="headerlink" title="CONCAT函数：字符串拼接"></a>CONCAT函数：字符串拼接</h2><p>MySQL 中的 CONCAT(sl，s2，…) 函数返回结果为连接参数产生的字符串，或许有一个或多个参数。</p>
+<p>若有任何一个参数为 NULL，则返回值为 NULL。若所有参数均为非二进制字符串，则结果为非二进制字符串。若自变量中含有任一二进制字符串，则结果为一个二进制字符串。</p>
+<p>【实例】使用 CONCAT 函数连接字符串，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT CONCAT(‘MySQL’,’5.7’),CONCAT(‘MySQL’,NULL);<br>+———————–+———————-+<br>| CONCAT(‘MySQL’,’5.7’) | CONCAT(‘MySQL’,NULL) |<br>+———————–+———————-+<br>| MySQL5.7              | NULL                 |<br>+———————–+———————-+<br>1 row in set (0.03 sec)<br>由运行结果可知，CONCAT(‘MySQL’，’5.7’) 返回两个字符串连接后的字符串；CONCAT(‘MySQL’，NULL) 中有一个参数为 NULL，因此返回结果为 NULL。</p>
+<h2 id="INSERT函数：替换字符串"><a href="#INSERT函数：替换字符串" class="headerlink" title="INSERT函数：替换字符串"></a>INSERT函数：替换字符串</h2><p>MySQL 中替换字符串函数 INSERT(s1，x，len，s2) 返回字符串 s1，子字符串起始于 x 位置，并且用 len 个字符长的字符串代替 s2。</p>
+<p>若 x 超过字符串长度，则返回值为原始字符串。假如 len 的长度大于其他字符串的长度，则从位置 x 开始替换。若任何一个参数为 NULL，则返回值为 NULL。</p>
+<p>【实例】使用 INSERT 函数进行字符串替换操作，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT INSERT(‘Football’,2,4,’Play’) AS col1,<br>    -&gt; INSERT(‘Football’,-1,4,’Play’) AS col2,<br>    -&gt; INSERT(‘Football’,3,20,’Play’) AS col3;<br>+———-+———-+——–+<br>| col1     | col2     | col3   |<br>+———-+———-+——–+<br>| FPlayall | Football | FoPlay |<br>+———-+———-+——–+<br>1 row in set (0.04 sec)<br>由执行结果可知：<br>第一个函数 INSERT(‘Football’，2，4，’Play’) 将“Football”从第 2 个字符开始长度为 4 的字符串替换为 Play，结果为“FPlayall”；<br>第二个函数 (‘Football’，-1，4，’Play’) 中的起始位置 -1 超出了字符串长度，直接返回原字符串；<br>第三个函数 INSERT(‘Football’，3，20，’Play’) 替换长度超出了原字符串长度，则从第 3 个字符开始，截取后面所有的字符，并替换为指定字符 Play，结果为“FoPlay”。</p>
+<h2 id="LOWER函数：将字母转换成小写"><a href="#LOWER函数：将字母转换成小写" class="headerlink" title="LOWER函数：将字母转换成小写"></a>LOWER函数：将字母转换成小写</h2><p>MySQL 中字母小写转换函数 LOWER(str) 可以将字符串 str 中的字母字符全部转换成小写。</p>
+<p>【实例】使用 LOWER 函数将字符串中所有的字母字符转换为小写，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT LOWER(‘BLUE’),LOWER(‘Blue’);<br>+—————+—————+<br>| LOWER(‘BLUE’) | LOWER(‘Blue’) |<br>+—————+—————+<br>| blue          | blue          |<br>+—————+—————+<br>1 row in set (0.03 sec)<br>由结果可以看到，原来所有字母为大写的，全部转换为小写，如“BLUE”，转换之后为“blue”；大小写字母混合的字符串，小写不变，大写字母转换为小写字母，如“Blue”，转换之后为“bule”。</p>
+<h2 id="UPPER函数：将字母转换成大写"><a href="#UPPER函数：将字母转换成大写" class="headerlink" title="UPPER函数：将字母转换成大写"></a>UPPER函数：将字母转换成大写</h2><p>MySQL 中字母大写转换函数 UPPER(str) 可以将字符串 str 中的字母字符全部转换成大写。</p>
+<p>【实例】使用 UPPER 函数将字符串中所有的字母字符转换为大写，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT UPPER(‘green’),UPPER(‘Green’);<br>+—————-+—————-+<br>| UPPER(‘green’) | UPPER(‘Green’) |<br>+—————-+—————-+<br>| GREEN          | GREEN          |<br>+—————-+—————-+<br>1 row in set (0.03 sec)<br>由结果可以看到，原来所有字母字符为小写的，全部转换为大写，如“green”，转换之后为“GREEN”；大小写字母混合的字符串，大写不变，小写字母转换为大写字母，如“Green”，转换之后为“GREEN”。</p>
+<h2 id="LEFT函数：从左侧截取字符串"><a href="#LEFT函数：从左侧截取字符串" class="headerlink" title="LEFT函数：从左侧截取字符串"></a>LEFT函数：从左侧截取字符串</h2><p>MySQL 中的 LEFT(s，n) 函数返回字符串 s 最左边的 n 个字符。</p>
+<p>【实例】使用 LEFT 函数返回字符串中左边的字符，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT LEFT(‘MySQL’,2);<br>+—————–+<br>| LEFT(‘MySQL’,2) |<br>+—————–+<br>| My              |<br>+—————–+<br>1 row in set (0.04 sec)<br>由运行结果可知，返回字符串“MySQL”左边开始的长度为 2 的子字符串，结果为“My”。</p>
+<h2 id="RIGHT函数：从右侧截取字符串"><a href="#RIGHT函数：从右侧截取字符串" class="headerlink" title="RIGHT函数：从右侧截取字符串"></a>RIGHT函数：从右侧截取字符串</h2><p>MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。</p>
+<p>【实例】使用 RIGHT 函数返回字符串中右边的字符，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT RIGHT(‘MySQL’,3);<br>+——————+<br>| RIGHT(‘MySQL’,3) |<br>+——————+<br>| SQL              |<br>+——————+<br>1 row in set (0.00 sec)<br>由执行结果可知，函数返回字符串“MySQL”右边开始的长度为3的子字符串，结果为“SQL”。</p>
+<h2 id="TRIM函数：删除空格"><a href="#TRIM函数：删除空格" class="headerlink" title="TRIM函数：删除空格"></a>TRIM函数：删除空格</h2><p>MySQL 中删除空格函数 TRIM(s) 删除字符串 s 两侧的空格。</p>
+<p>【实例】SELECT CONCAT(‘[‘，TRIM(‘mobile’)，’]’)；输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT ‘[   mobile   ]’,CONCAT(‘[‘,TRIM(‘   mobile   ‘),’]’);<br>+—————-+————————————–+<br>| [   mobile   ] | CONCAT(‘[‘,TRIM(‘   mobile   ‘),’]’) |<br>+—————-+————————————–+<br>| [   mobile   ] | [mobile]                             |<br>+—————-+————————————–+<br>1 row in set (0.07 sec)<br>由执行结果可知，函数执行之后字符串“mobile”两边的空格被删除，结果为“mobile”。</p>
+<h2 id="REPLACE函数：字符串替换"><a href="#REPLACE函数：字符串替换" class="headerlink" title="REPLACE函数：字符串替换"></a>REPLACE函数：字符串替换</h2><p>MySQL 中替换函数 REPLACE(s，s1，s2) 使用字符串 s2 替换字符串 s 中所有的字符串 s1。</p>
+<p>【实例】使用 REPLACE 函数进行字符串替换操作，输入的 SQL 语句和执行过程如下所示。<br>mysql&gt; SELECT REPLACE(‘aaa.mysql.com’,’a’,’w’);<br>+———————————-+<br>| REPLACE(‘aaa.mysql.com’,’a’,’w’) |<br>+———————————-+<br>| <a href="http://www.mysql.com" target="_blank" rel="noopener">www.mysql.com</a>                    |<br>+———————————-+<br>1 row in set (0.00 sec)<br>由运行结果可以看出，使用 REPLACE(‘aaa.mysql.com’，’a’，’w’) 将“aaa.mysql.com”字符串的“a”字符替换为“w”字符，结果为“<a href="http://www.mysql.com”。" target="_blank" rel="noopener">www.mysql.com”。</a></p>
+<h2 id="SUBSTRING函数：截取字符串"><a href="#SUBSTRING函数：截取字符串" class="headerlink" title="SUBSTRING函数：截取字符串"></a>SUBSTRING函数：截取字符串</h2><p>MySQL 中获取子串函数 SUBSTRING(s，n，len) 带有 len 参数的格式，从字符串 s 返回一个长度同 len 字符相同的子字符串，起始于位置 n。</p>
+<p>也可能对 n 使用一个负值。假若这样，则子字符串的位置起始于字符串结尾的第 n 个字符，即倒数第 n 个字符，而不是字符串的开头位置。</p>
+<p>【实例】使用 SUBSTRING 函数获取指定位置处的子字符串，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT SUBSTRING(‘computer’,3) AS col1,<br>    -&gt; SUBSTRING(‘computer’,3,4) AS col2,<br>    -&gt; SUBSTRING(‘computer’,-3) AS col3,<br>    -&gt; SUBSTRING(‘computer’,-5,3) AS col4;<br>+——–+——+——+——+<br>| col1   | col2 | col3 | col4 |<br>+——–+——+——+——+<br>| mputer | mput | ter  | put  |<br>+——–+——+——+——+<br>1 row in set (0.00 sec)<br>SUBSTRING(‘computer’，3) 返回从第 3 个位置开始到字符串结尾的子字符串，结果为“mputer”；SUBSTRING(‘computer’，3，4) 返回从第 3 个位置开始长度为 4 的子字符串，结果为“mput”；</p>
+<p>SUBSTRING(computer，-3) 返回从倒数第 3 个位置到字符串结尾的子字符串，结果为“ter”；SUBSTRING(computer，-5，3) 返回从倒数第 5 个位置开始长度为 3 的子字符串，结果为“put”。</p>
+<h2 id="REVERSE函数：反转字符串"><a href="#REVERSE函数：反转字符串" class="headerlink" title="REVERSE函数：反转字符串"></a>REVERSE函数：反转字符串</h2><p>MySQL 中字符串逆序函数 REVERSE(s) 可以将字符串 s 反转，返回的字符串的顺序和 s 字符串的顺序相反。</p>
+<p>【实例】使用 REVERSE 函数反转字符串，输入的 SQL 语句和执行过程如下所示。<br>mysql&gt; SELECT REVERSE(‘hello’);<br>+——————+<br>| REVERSE(‘hello’) |<br>+——————+<br>| olleh            |<br>+——————+<br>1 row in set (0.00 sec)<br>由运行结果可以看出，字符串“hello”经过 REVERSE 函数处理之后所有字符顺序被反转，结果为“olleh”。</p>
+<h1 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h1><h2 id="MAX函数：查询指定列的最大值"><a href="#MAX函数：查询指定列的最大值" class="headerlink" title="MAX函数：查询指定列的最大值"></a>MAX函数：查询指定列的最大值</h2><p>MySQL MAX() 函数是用来返回指定列中的最大值。</p>
+<p>为了方便理解，首先创建一个学生成绩表 tb_students_score，学生成绩表的数据内容如下所示。<br>mysql&gt; use test_db;<br>Database changed<br>mysql&gt; SELECT * FROM tb_students_score;<br>+————–+—————+<br>| student_name | student_score |<br>+————–+—————+<br>| Dany         |            90 |<br>| Green        |            99 |<br>| Henry        |            95 |<br>| Jane         |            98 |<br>| Jim          |            88 |<br>| John         |            94 |<br>| Lily         |           100 |<br>| Susan        |            96 |<br>| Thomas       |            93 |<br>| Tom          |            89 |<br>+————–+—————+<br>10 rows in set (0.13 sec)<br>【实例 1】在 tb_students_score 表中查找最高的成绩，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT MAX(student_score)<br>    -&gt; AS max_score<br>    -&gt; FROM tb_students_score;<br>+———–+<br>| max_score |<br>+———–+<br>|       100 |<br>+———–+<br>1 row in set (0.06 sec)<br>由运行结果可以看到，MAX() 函数查询出 student_score 字段的最大值为 100。</p>
+<p>MAX() 函数不仅适用于查找数值类型，也可应用于字符类型。</p>
+<p>【实例 2】在 tb_students_score 表中查找 student_name 的最大值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT MAX(student_name)<br>    -&gt; AS max_name<br>    -&gt; FROM tb_students_score;<br>+———-+<br>| max_name |<br>+———-+<br>| Tom      |<br>+———-+<br>1 row in set (0.03 sec)<br>由运行结果可以看到，MAX() 函数可以对字母进行大小判断，并返回最大的字符或者字符串值。<br>注意：MAX() 函数还可以返回任意列中的最大值，包括返回字符类型的最大值。在对字符类型的数据进行比较时，按照字符的 ASCII 码值大小进行比较，从 a～z，a 的 ASCII 码最小，z 的最大。在比较时，先比较第一个字符，如果相等，继续比较下一个字符，一直到两个字符不相等或者字符结束为止。例如，b 与 t 比较时，t 为最大值；bcd 与 bca 比较时，bcd 为最大值。</p>
+<h2 id="MIN函数：查询指定列的最小值"><a href="#MIN函数：查询指定列的最小值" class="headerlink" title="MIN函数：查询指定列的最小值"></a>MIN函数：查询指定列的最小值</h2><p>MySQL MIN() 函数是用来返回查询列中的最小值。</p>
+<p>为了便于理解，需要用到在上一节讲 MAX() 函数时创建的数据表 tb_students_score。</p>
+<p>【实例】在 tb_students_score 表中查找最低的成绩，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT MIN(student_score)<br>    -&gt; AS min_score<br>    -&gt; FROM tb_students_score;<br>+———–+<br>| min_score |<br>+———–+<br>|        88 |<br>+———–+<br>1 row in set (0.00 sec)<br>由结果可以看到，MIN() 函数查询出 student_score 字段的最小值为 88。<br>提示：MIN() 函数与 MAX() 函数类似，不仅适用于查找数值类型，也可应用于字符类型。</p>
+<h2 id="COUNT函数：统计查询结果的行数"><a href="#COUNT函数：统计查询结果的行数" class="headerlink" title="COUNT函数：统计查询结果的行数"></a>COUNT函数：统计查询结果的行数</h2><p>MySQL COUNT() 函数统计数据表中包含的记录行的总数，或者根据查询结果返回列中包含的数据行数，使用方法有以下两种：<br>COUNT(*) 计算表中总的行数，无论某列有数值或者为空值。<br>COUNT（字段名）计算指定列下总的行数，计算时将忽略空值的行。</p>
+<p>这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。</p>
+<p>【实例】查询 tb_students_score 表中总的行数，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT COUNT(student_name)<br>    -&gt; AS students_number<br>    -&gt; FROM tb_students_score;<br>+—————–+<br>| students_number |<br>+—————–+<br>|              10 |<br>+—————–+<br>1 row in set (0.03 sec)<br>由查询结果可以看到，COUNT(<em>) 返回 tb_students_score 表中记录的总行数，无论值是什么。返回的总数的名称为 students_number。<br>提示：在计算总数的时候对待 NULL 值的方式是，指定列的值为空的行被 COUNT() 函数忽略，但若不指定列，而在 COUNT() 函数中使用星号“</em>”，则所有记录都不忽略。</p>
+<h2 id="SUM函数：求和"><a href="#SUM函数：求和" class="headerlink" title="SUM函数：求和"></a>SUM函数：求和</h2><p>MySQL SUM() 是一个求总和的函数，返回指定列值的总和。</p>
+<p>SUM() 函数是如何工作的？<br>如果在没有返回匹配行 SELECT 语句中使用 SUM 函数，则 SUM 函数返回 NULL，而不是 0。<br>DISTINCT 运算符允许计算集合中的不同值。<br>SUM 函数忽略计算中的 NULL 值。</p>
+<p>这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。</p>
+<p>【实例】在 tb_students_score 表中计算学生成绩的总分，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT SUM(student_score)<br>    -&gt; AS score_sum<br>    -&gt; FROM tb_students_score;<br>+———–+<br>| score_sum |<br>+———–+<br>|       942 |<br>+———–+<br>1 row in set (0.00 sec)<br>由查询结果可以看到，SUM() 函数返回学生的所有成绩之和为 942。<br>提示：SUM() 函数在计算时，忽略列值为 NULL 的行。</p>
+<h2 id="AVG函数：求平均值"><a href="#AVG函数：求平均值" class="headerlink" title="AVG函数：求平均值"></a>AVG函数：求平均值</h2><p>MySQL AVG() 函数通过计算返回的行数和每一行数据的和，求得指定列数据的平均值。</p>
+<p>这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。</p>
+<p>【实例】在 tb_students_score 表中，查询所有学生成绩的平均值，输入的 SQL 语句和执行结果如下所示。<br>mysql&gt; SELECT AVG(student_score)<br>    -&gt; AS score_avg<br>    -&gt; FROM tb_students_score;<br>+———–+<br>| score_avg |<br>+———–+<br>|   94.2000 |<br>+———–+<br>1 row in set (0.03 sec)<br>提示：使用 AVG() 函数时，参数为要计算的列名称，若要得到多个列的平均值，则需要在每一列都使用 AVG() 函数。</p>
+<h1 id="流程控制函数"><a href="#流程控制函数" class="headerlink" title="流程控制函数"></a>流程控制函数</h1><h2 id="IF函数：判断"><a href="#IF函数：判断" class="headerlink" title="IF函数：判断"></a>IF函数：判断</h2><p>MySQL IF 语句允许您根据表达式的某个条件或值结果来执行一组 SQL 语句。</p>
+<p>要在 MySQL 中形成一个表达式，可以结合文字，变量，运算符，甚至函数来组合。表达式可以返回 TRUE,FALSE 或 NULL，这三个值之一。</p>
+<p>语法结构如下：<br>IF(expr,v1,v2)</p>
+<p>其中：表达式 expr 得到不同的结果，当 expr 为真是返回 v1 的值，否则返回 v2.</p>
+<p>【实例】使用 IF(expr,v1,v2) 函数根据 expr 表达式结果返回相应值，输入 SQL 语句和执行结果如下。<br>mysql&gt; SELECT IF(1&lt;2,1,0) c1,IF(1&gt;5,’√’,’×’) c2,IF(STRCMP(‘abc’,’ab’),’yes’,’no’) c3;<br>+—-+—-+—–+<br>| c1 | c2 | c3  |<br>+—-+—-+—–+<br>|  1 | × | yes |<br>+—-+—-+—–+<br>1 row in set, 2 warnings (0.00 sec)<br>由执行结果可以看出，在 c1 中，表达式 1&lt;2 所得的结果是 TRUE，则返回结果为 v1，即数值 1；在 c2 中，表达式 1&gt;5 所得的结果是 FALSE，则返回结果为 v2，即字符串 ‘×’；在 c3 中，先用 STRCMP(s1,s2) 函数比较两个字符串的大小，字符串 ‘abc’ 和 ‘ab’ 比较结果的返回值为 1，也就是表达式 expr 的返回结果不等于 0 且不等于 NULL，则返回值为 v1，即字符串 ‘yes’。</p>
+<h2 id="IFNULL函数：判断是否为空"><a href="#IFNULL函数：判断是否为空" class="headerlink" title="IFNULL函数：判断是否为空"></a>IFNULL函数：判断是否为空</h2><p>MySQL IFNULL 函数是 MySQL 控制流函数之一，它接受两个参数，如果不是 NULL，则返回第一个参数。 否则，IFNULL 函数返回第二个参数。两个参数可以是文字值或表达式。</p>
+<p>函数的语法：<br>IFNULL(v1,v2);</p>
+<p>其中：如果 v1 不为 NULL，则 IFNULL 函数返回 v1; 否则返回 v2 的结果。</p>
+<p>【实例】使用 IFNULL(v1,v2) 函数根据 v1 的取值返回相应值。输入 SQL 语句和执行结果如下。<br>mysql&gt; SELECT IFNULL(5,8),IFNULL(NULL,’OK’),IFNULL(SQRT(-8),’FALSE’),SQRT(-8);<br>+————-+——————-+————————–+———-+<br>| IFNULL(5,8) | IFNULL(NULL,’OK’) | IFNULL(SQRT(-8),’FALSE’) | SQRT(-8) |<br>+————-+——————-+————————–+———-+<br>|           5 | OK                | FALSE                    |     NULL |<br>+————-+——————-+————————–+———-+<br>1 row in set (0.00 sec)<br>由执行结果可以看出，IFNULL(v1,v2) 函数中的参数 v1=5、v2=8，都不为空，即 v1=5 不为空，返回 v1 的值为 5；当 v1=NULL 时，返回 v2 的值，即字符串 ‘OK’；当 v1=SQRT(-8) 时，SQRT(-8) 函数的返回值为NULL，即 v1=NULL，所以返回 v2 为字符串 ‘false’。</p>
+<h2 id="CASE函数：搜索语句"><a href="#CASE函数：搜索语句" class="headerlink" title="CASE函数：搜索语句"></a>CASE函数：搜索语句</h2><p>除了 IF 函数，MySQL 还提供了一个替代的条件语句 CASE。 MySQL CASE 语句使代码更加可读和高效。</p>
+<p>CASE 语句有两种形式：简单的和可搜索 CASE 语句。<br>简单的 CASE 语句<br>简单的 CASE 语句就是指使用简单 CASE 语句来检查表达式的值与一组唯一值的匹配。</p>
+<p>简单的 CASE 语句的语法：<br>CASE  &lt;表达式&gt;<br>   WHEN &lt;值1&gt; THEN &lt;操作&gt;<br>   WHEN &lt;值2&gt; THEN &lt;操作&gt;<br>   …<br>   ELSE &lt;操作&gt;<br>END CASE;<br>其中：&lt;表达式&gt; 可以是任何有效的表达式。我们将 &lt;表达式&gt; 的值与每个 WHEN 子句中的值进行比较，例如 &lt;值1&gt;，&lt;值2&gt; 等。如果 &lt;表达式&gt; 和 &lt;值n&gt; 的值相等，则执行相应的 WHEN 分支中的命令 &lt;操作&gt;。如果 WHEN 子句中的 &lt;值n&gt; 没有与 &lt;表达式&gt; 的值匹配，则 ELSE 子句中的命令将被执行。ELSE 子句是可选的。 如果省略 ELSE 子句，并且找不到匹配项，MySQL 将引发错误。<br>【实例 1】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下<br>mysql&gt; SELECT CASE WEEKDAY(NOW()) WHEN 0 THEN ‘星期一’ WHEN 1 THEN ‘星期二’ WHEN<br>2 THEN ‘星期三’ WHEN 3 THEN ‘星期四’ WHEN 4 THEN ‘星期五’ WHEN 5 THEN ‘星期六’<br>ELSE ‘星期天’ END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());<br>+———+———————+—————-+—————-+<br>| COLUMN1 | NOW()               | WEEKDAY(NOW()) | DAYNAME(NOW()) |<br>+———+———————+—————-+—————-+<br>| 星期四  | 2019-02-28 13:45:43 |              3 | Thursday       |<br>+———+———————+—————-+—————-+<br>1 row in set, 7 warnings (0.00 sec)<br>由执行结果可以看出，NOW() 函数得到当前系统时间是 2019 年 2 月 28 日，DAYNAME(NOW()) 得到当天是 ‘Thursday ‘，WEEKDAY(NOW()) 函数返回当前时间的工作日索引是 3，即对应的是星期四。<br>可搜索的 CASE 语句<br>简单 CASE 语句仅允许将表达式的值与一组不同的值进行匹配。 为了执行更复杂的匹配，如范围，则可以使用可搜索 CASE 语句。 可搜索 CASE 语句等同于 IF 语句，但是它的构造更加可读。<br>可搜索CASE语句的语法：<br>CASE<br>    WHEN &lt;条件1&gt; THEN &lt;命令&gt;<br>    WHEN &lt;条件2&gt; THEN &lt;命令&gt;<br>    …<br>    ELSE commands<br>END CASE;<br>MySQL 分别计算 WHEN 子句中的每个条件，直到找到一个值为 TRUE 的条件，然后执行 THEN 子句中的相应 &lt;命令&gt;。如果没有一个条件为 TRUE，则执行 ELSE 子句中的 &lt;命令&gt;。如果不指定 ELSE 子句，并且没有一个条件为 TRUE，MySQL 将发出错误消息。MySQL 不允许在 THEN 或 ELSE 子句中使用空的命令。 如果您不想处理 ELSE 子句中的逻辑，同时又要防止 MySQL 引发错误，则可以在 ELSE 子句中放置一个空的 BEGIN END 块。</p>
+<p>【实例 2】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下<br>mysql&gt; SELECT CASE WHEN WEEKDAY(NOW())=0 THEN ‘星期一’ WHEN WEEKDAY(NOW())=1 THE<br>N ‘星期二’  WHEN WEEKDAY(NOW())=2 THEN ‘星期三’ WHEN WEEKDAY(NOW())=3 THEN ‘星期<br>四’ WHEN WEEKDAY(NOW())=4 THEN ‘星期五’ WHEN WEEKDAY(NOW())=5 THEN ‘星期六’ WHEN<br>WEEKDAY(NOW())=6 THEN ‘星期天’ END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW(<br>));<br>+———+———————+—————-+—————-+<br>| COLUMN1 | NOW()               | WEEKDAY(NOW()) | DAYNAME(NOW()) |<br>+———+———————+—————-+—————-+<br>| 星期四  | 2019-02-28 14:08:00 |              3 | Thursday       |<br>+———+———————+—————-+—————-+<br>1 row in set, 7 warnings (0.00 sec)<br>此例跟上例的返回结果一样，只是使用了 CASE 函数的不同写法，WHEN 后面为表达式，当表达式的返回结果为 TRUE 时取 THEN 后面的值，如果都不是，则返回 ELSE 后面的值。</p>
+
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/04/21/MySQL/MySQL%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%B1%87%E6%80%BB/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/24/MySQL/MySQL%E6%9F%A5%E8%AF%A2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL查询
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/19/MySQL/MySQL%E5%B8%B8%E7%94%A8%E8%BF%90%E7%AE%97%E7%AC%A6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL运算符</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2021
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>

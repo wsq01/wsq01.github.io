@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL/MySQL存储过程 |  学海无涯
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="学海无涯" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-MySQL/MySQL存储过程" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL/MySQL存储过程
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/14/MySQL/MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2021-07-14T06:58:51.468Z" itemprop="datePublished">2021-07-14</time>
+</a>
+      
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.1k字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">15分钟</span>
+        </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="存储过程是什么？"><a href="#存储过程是什么？" class="headerlink" title="存储过程是什么？"></a>存储过程是什么？</h1><p>我们前面所学习的 MySQL 语句都是针对一个表或几个表的单条 SQL 语句，但是在数据库的实际操作中，经常会有需要多条 SQL 语句处理多个表才能完成的操作。</p>
+<p>例如，为了确认学生能否毕业，需要同时查询学生档案表、成绩表和综合表，此时就需要使用多条 SQL 语句来针对这几个数据表完成处理要求。</p>
+<p>存储过程是一组为了完成特定功能的 SQL 语句集合。使用存储过程的目的是将常用或复杂的工作预先用 SQL 语句写好并用一个指定名称存储起来，这个过程经编译和优化后存储在数据库服务器中，因此称为存储过程。当以后需要数据库提供与已定义好的存储过程的功能相同的服务时，只需调用“CALL存储过程名字”即可自动完成。</p>
+<p>常用操作数据库的 SQL 语句在执行的时候需要先编译，然后执行。存储过程则采用另一种方式来执行 SQL 语句。</p>
+<p>一个存储过程是一个可编程的函数，它在数据库中创建并保存，一般由 SQL 语句和一些特殊的控制结构组成。当希望在不同的应用程序或平台上执行相同的特定功能时，存储过程尤为合适。</p>
+<p>MySQL 5.0 版本以前并不支持存储过程，这使 MySQL 在应用上大打折扣。MySQL 从 5.0 版本开始支持存储过程，既提高了数据库的处理速度，同时也提高了数据库编程的灵活性</p>
+<p>存储过程是数据库中的一个重要功能，存储过程可以用来转换数据、数据迁移、制作报表，它类似于编程语言，一次执行成功，就可以随时被调用，完成指定的功能操作。</p>
+<p>使用存储过程不仅可以提高数据库的访问效率，同时也可以提高数据库使用的安全性。</p>
+<p>对于调用者来说，存储过程封装了 SQL 语句，调用者无需考虑逻辑功能的具体实现过程。只是简单调用即可，它可以被 Java 和 C# 等编程语言调用。</p>
+<p>编写存储过程对开发者要求稍微高一些，但这并不影响存储过程的普遍使用，因为存储过程有如下优点：</p>
+<p>1) 封装性<br>通常完成一个逻辑功能需要多条 SQL 语句，而且各个语句之间很可能传递参数，所以，编写逻辑功能相对来说稍微复杂些，而存储过程可以把这些 SQL 语句包含到一个独立的单元中，使外界看不到复杂的 SQL 语句，只需要简单调用即可达到目的。并且数据库专业人员可以随时对存储过程进行修改，而不会影响到调用它的应用程序源代码。<br>2) 可增强 SQL 语句的功能和灵活性<br>存储过程可以用流程控制语句编写，有很强的灵活性，可以完成复杂的判断和较复杂的运算。<br>3) 可减少网络流量<br>由于存储过程是在服务器端运行的，且执行速度快，因此当客户计算机上调用该存储过程时，网络中传送的只是该调用语句，从而可降低网络负载。<br>4) 高性能<br>当存储过程被成功编译后，就存储在数据库服务器里了，以后客户端可以直接调用，这样所有的 SQL 语句将从服务器执行，从而提高性能。但需要说明的是，存储过程不是越多越好，过多的使用存储过程反而影响系统性能。<br>5) 提高数据库的安全性和数据的完整性<br>存储过程提高安全性的一个方案就是把它作为中间组件，存储过程里可以对某些表做相关操作，然后存储过程作为接口提供给外部程序。这样，外部程序无法直接操作数据库表，只能通过存储过程来操作对应的表，因此在一定程度上，安全性是可以得到提高的。<br>6) 使数据独立<br>数据的独立可以达到解耦的效果，也就是说，程序可以调用存储过程，来替代执行多条的 SQL 语句。这种情况下，存储过程把数据同用户隔离开来，优点就是当数据表的结构改变时，调用表不用修改程序，只需要数据库管理者重新编写存储过程即可。</p>
+<h1 id="创建存储过程"><a href="#创建存储过程" class="headerlink" title="创建存储过程"></a>创建存储过程</h1><p>MySQL 存储过程是一些 SQL 语句的集合，比如有时候我们可能需要一大串的 SQL 语句，或者说在编写 SQL 语句的过程中需要设置一些变量的值，这个时候我们就完全有必要编写一个存储过程。</p>
+<p>编写存储过程并不是件简单的事情，但是使用存储过程可以简化操作，且减少冗余的操作步骤，同时，还可以减少操作过程中的失误，提高效率，因此应该尽可能的学会使用存储过程。</p>
+<p>下面主要介绍如何创建存储过程。</p>
+<p>可以使用 CREATE PROCEDURE 语句创建存储过程，语法格式如下：<br>CREATE PROCEDURE &lt;过程名&gt; ( [过程参数[,…] ] ) &lt;过程体&gt;<br>[过程参数[,…] ] 格式<br>[ IN | OUT | INOUT ] &lt;参数名&gt; &lt;类型&gt;</p>
+<p>语法说明如下：</p>
+<p>1) 过程名<br>存储过程的名称，默认在当前数据库中创建。若需要在特定数据库中创建存储过程，则要在名称前面加上数据库的名称，即 db_name.sp_name。</p>
+<p>需要注意的是，名称应当尽量避免选取与 MySQL 内置函数相同的名称，否则会发生错误。<br>2) 过程参数<br>存储过程的参数列表。其中，&lt;参数名&gt;为参数名，&lt;类型&gt;为参数的类型（可以是任何有效的 MySQL 数据类型）。当有多个参数时，参数列表中彼此间用逗号分隔。存储过程可以没有参数（此时存储过程的名称后仍需加上一对括号），也可以有 1 个或多个参数。</p>
+<p>MySQL 存储过程支持三种类型的参数，即输入参数、输出参数和输入/输出参数，分别用 IN、OUT 和 INOUT 三个关键字标识。其中，输入参数可以传递给一个存储过程，输出参数用于存储过程需要返回一个操作结果的情形，而输入/输出参数既可以充当输入参数也可以充当输出参数。</p>
+<p>需要注意的是，参数的取名不要与数据表的列名相同，否则尽管不会返回出错信息，但是存储过程的 SQL 语句会将参数名看作列名，从而引发不可预知的结果。<br>3) 过程体<br>存储过程的主体部分，也称为存储过程体，包含在过程调用的时候必须执行的 SQL 语句。这个部分以关键字 BEGIN 开始，以关键字 END 结束。若存储过程体中只有一条 SQL 语句，则可以省略 BEGIN-END 标志。</p>
+<p>在存储过程的创建中，经常会用到一个十分重要的 MySQL 命令，即 DELIMITER 命令，特别是对于通过命令行的方式来操作 MySQL 数据库的使用者，更是要学会使用该命令。</p>
+<p>在 MySQL 中，服务器处理 SQL 语句默认是以分号作为语句结束标志的。然而，在创建存储过程时，存储过程体可能包含有多条 SQL 语句，这些 SQL 语句如果仍以分号作为语句结束符，那么 MySQL 服务器在处理时会以遇到的第一条 SQL 语句结尾处的分号作为整个程序的结束符，而不再去处理存储过程体中后面的 SQL 语句，这样显然不行。</p>
+<p>为解决以上问题，通常使用 DELIMITER 命令将结束命令修改为其他字符。语法格式如下：<br>DELIMITER $$</p>
+<p>语法说明如下：<br>$$ 是用户定义的结束符，通常这个符号可以是一些特殊的符号，如两个“?”或两个“￥”等。<br>当使用 DELIMITER 命令时，应该避免使用反斜杠“\”字符，因为它是 MySQL 的转义字符。</p>
+<p>在 MySQL 命令行客户端输入如下 SQL 语句。<br>mysql &gt; DELIMITER ??</p>
+<p>成功执行这条 SQL 语句后，任何命令、语句或程序的结束标志就换为两个问号“??”了。</p>
+<p>若希望换回默认的分号“;”作为结束标志，则在 MySQL 命令行客户端输入下列语句即可：<br>mysql &gt; DELIMITER ;</p>
+<p>注意：DELIMITER 和分号“;”之间一定要有一个空格。在创建存储过程时，必须具有 CREATE ROUTINE 权限。<br>例 1<br>创建名称为 ShowStuScore 的存储过程，存储过程的作用是从学生成绩信息表中查询学生的成绩信息，输入的 SQL 语句和执行过程如下所示。<br>mysql&gt; DELIMITER //<br>mysql&gt; CREATE PROCEDURE ShowStuScore()<br>    -&gt; BEGIN<br>    -&gt; SELECT * FROM tb_students_score;<br>    -&gt; END //<br>Query OK， 0 rows affected (0.09 sec)<br>结果显示 ShowStuScore 存储过程已经创建成功。<br>例 2<br>创建名称为 GetScoreByStu 的存储过程，输入参数是学生姓名。存储过程的作用是通过输入的学生姓名从学生成绩信息表中查询指定学生的成绩信息，输入的 SQL 语句和执行过程如下所示。<br>mysql&gt; DELIMITER //<br>mysql&gt; CREATE PROCEDURE GetScoreByStu<br>    -&gt; (IN name VARCHAR(30))<br>    -&gt; BEGIN<br>    -&gt; SELECT student_score FROM tb_students_score<br>    -&gt; WHERE student_name=name;<br>    -&gt; END //<br>Query OK, 0 rows affected (0.01 sec)</p>
+<h1 id="查看存储过程"><a href="#查看存储过程" class="headerlink" title="查看存储过程"></a>查看存储过程</h1><p>创建好存储过程后，用户可以通过 SHOW ATATUS 语句来查看存储过程的状态，也可以通过 SHOW CREATE 语句来查看存储过程的定义。本节主要讲解查看存储过程的状态和定义的方法。<br>查看存储过程的状态<br>MySQL 中可以通过 SHOW STATUS 语句查看存储过程的状态，其基本语法形式如下：<br>SHOW PROCEDURE STATUS LIKE 存储过程名;</p>
+<p>LIKE 存储过程名用来匹配存储过程的名称，LIKE 不能省略。<br>实例 1<br>创建数据表 studentinfo，SQL 语句如下：<br>CREATE TABLE <code>studentinfo</code> (<br>    <code>ID</code> int(11) NOT NULL,<br>    <code>NAME</code> varchar(20) DEFAULT NULL,<br>    <code>SCORE</code> decimal(4,2) DEFAULT NULL,<br>    <code>SUBJECT</code> varchar(20) DEFAULT NULL,<br>    <code>TEACHER</code> varchar(20) DEFAULT NULL,<br>    PRIMARY KEY (<code>ID</code>)<br>);</p>
+<p>向数据表 studentinfo 中插入数据，SQL 语句和执行结果如下：<br>mysql&gt; INSERT INTO studentinfo(id,name,score) VALUES(1,”zhangsan”,80),(2,”lisi”,”70”);<br>Query OK, 2 rows affected (0.01 sec)<br>Records: 2  Duplicates: 0  Warnings: 0</p>
+<p>创建存储过程 showstuscore，SQL 语句和运行结果如下：<br>mysql&gt; DELIMITER //<br>mysql&gt; CREATE PROCEDURE showstuscore()<br>    -&gt; BEGIN<br>    -&gt; SELECT id,name,score FROM studentinfo;<br>    -&gt; END //<br>Query OK, 0 rows affected (0.07 sec)</p>
+<p>下面查询名为 showstuscore 的存储过程的状态，SQL 语句和运行结果如下：<br>mysql&gt; SHOW PROCEDURE STATUS LIKE ‘showstuscore’ \G<br><strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong> 1. row <strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong><br>                  Db: test<br>                Name: showstuscore<br>                Type: PROCEDURE<br>             Definer: root@localhost<br>            Modified: 2020-02-20 13:34:50<br>             Created: 2020-02-20 13:34:50<br>       Security_type: DEFINER<br>             Comment:<br>character_set_client: gbk<br>collation_connection: gbk_chinese_ci<br>  Database Collation: latin1_swedish_ci<br>1 row in set (0.01 sec)</p>
+<p>mysql&gt; SHOW PROCEDURE STATUS LIKE ‘show%’ \G<br><strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong> 1. row <strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong><br>                  Db: test<br>                Name: showstuscore<br>                Type: PROCEDURE<br>             Definer: root@localhost<br>            Modified: 2020-02-21 09:34:50<br>             Created: 2020-02-21 09:34:50<br>       Security_type: DEFINER<br>             Comment:<br>character_set_client: gbk<br>collation_connection: gbk_chinese_ci<br>  Database Collation: latin1_swedish_ci<br>1 row in set (0.00 sec)<br>查询结果显示了存储过程的创建时间、修改时间和字符集等信息。<br>查看存储过程的定义<br>MySQL 中可以通过 SHOW CREATE 语句查看存储过程的状态，语法格式如下：<br>SHOW CREATE PROCEDURE 存储过程名;</p>
+<p>实例 2<br>下面使用 SHOW CREATE 查询名为 showstuscore 的存储过程的状态，SQL 语句和运行结果如下：<br>mysql&gt; SHOW CREATE PROCEDURE showstuscore \G<br><strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong> 1. row <strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong><br>           Procedure: showstuscore<br>            sql_mode: STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION<br>    Create Procedure: CREATE DEFINER=<code>root</code>@<code>localhost</code> PROCEDURE <code>showstuscore</code>()<br>BEGIN<br>SELECT id,name,score FROM studentinfo;<br>END<br>character_set_client: gbk<br>collation_connection: gbk_chinese_ci<br>  Database Collation: latin1_swedish_ci<br>1 row in set (0.01 sec)<br>查询结果显示了存储过程的定义和字符集信息等。</p>
+<p>SHOW STATUS 语句只能查看存储过程是操作的哪一个数据库、存储过程的名称、类型、谁定义的、创建和修改时间、字符编码等信息。但是，这个语句不能查询存储过程的集体定义，如果需要查看详细定义，需要使用 SHOW CREATE 语句。<br>拓展阅读<br>存储过程的信息都存储在 information_schema 数据库下的 Routines 表中，可以通过查询该表的记录来查询存储过程的信息，SQL 语句如下：<br>SELECT * FROM information_schema.Routines WHERE ROUTINE_NAME=存储过程名;</p>
+<p>在 information_schema 数据库下的 routines 表中，存储着所有存储过程的定义。所以，使用 SELECT 语句查询 routines 表中的存储过程和函数的定义时，一定要使用 routine_name 字段指定存储过程的名称，否则，将查询出所有的存储过程的定义。</p>
+<h1 id="修改存储过程"><a href="#修改存储过程" class="headerlink" title="修改存储过程"></a>修改存储过程</h1><p>在实际开发过程中，业务需求修改的情况时有发生，所以修改 MySQL 中的存储过程是不可避免的。</p>
+<p>MySQL 中通过 ALTER PROCEDURE 语句来修改存储过程。本节将详细讲解修改存储过程的方法。</p>
+<p>MySQL 中修改存储过程的语法格式如下：<br>ALTER PROCEDURE 存储过程名 [ 特征 … ]</p>
+<p>特征指定了存储过程的特性，可能的取值有：<br>CONTAINS SQL 表示子程序包含 SQL 语句，但不包含读或写数据的语句。<br>NO SQL 表示子程序中不包含 SQL 语句。<br>READS SQL DATA 表示子程序中包含读数据的语句。<br>MODIFIES SQL DATA 表示子程序中包含写数据的语句。<br>SQL SECURITY { DEFINER |INVOKER } 指明谁有权限来执行。<br>DEFINER 表示只有定义者自己才能够执行。<br>INVOKER 表示调用者可以执行。<br>COMMENT ‘string’ 表示注释信息。<br>实例 1<br>下面修改存储过程 showstuscore 的定义，将读写权限改为 MODIFIES SQL DATA，并指明调用者可以执行，代码如下：<br>mysql&gt; ALTER PROCEDURE showstuscore MODIFIES SQL DATA SQL SECURITY INVOKER;<br>Query OK, 0 rows affected (0.01 sec)<br>执行代码，并查看修改后的信息，运行结果如下：<br>mysql&gt; SHOW CREATE PROCEDURE showstuscore \G<br><strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong> 1. row <strong><strong><strong><strong><strong><strong>***</strong></strong></strong></strong></strong></strong><br>           Procedure: showstuscore<br>            sql_mode: STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION<br>    Create Procedure: CREATE DEFINER=<code>root</code>@<code>localhost</code> PROCEDURE <code>showstuscore</code>()<br>    MODIFIES SQL DATA<br>    SQL SECURITY INVOKER<br>BEGIN<br>SELECT id,name,score FROM studentinfo;<br>END<br>character_set_client: gbk<br>collation_connection: gbk_chinese_ci<br>  Database Collation: latin1_swedish_ci<br>1 row in set (0.00 sec)<br>结果显示，存储过程修改成功。从运行结果可以看到，访问数据的权限已经变成了 MODIFIES SQL DATA，安全类型也变成了 INVOKE。</p>
+<p>提示：ALTER PROCEDURE 语句用于修改存储过程的某些特征。如果要修改存储过程的内容，可以先删除原存储过程，再以相同的命名创建新的存储过程；如果要修改存储过程的名称，可以先删除原存储过程，再以不同的命名创建新的存储过程。</p>
+<h1 id="删除存储过程"><a href="#删除存储过程" class="headerlink" title="删除存储过程"></a>删除存储过程</h1><p>存储过程被创建后，就会一直保存在数据库服务器上，直至被删除。当 MySQL 数据库中存在废弃的存储过程时，我们需要将它从数据库中删除。</p>
+<p>MySQL 中使用 DROP PROCEDURE 语句来删除数据库中已经存在的存储过程。语法格式如下：<br>DROP PROCEDURE [ IF EXISTS ] &lt;过程名&gt;</p>
+<p>语法说明如下：<br>过程名：指定要删除的存储过程的名称。<br>IF EXISTS：指定这个关键字，用于防止因删除不存在的存储过程而引发的错误。</p>
+<p>注意：存储过程名称后面没有参数列表，也没有括号，在删除之前，必须确认该存储过程没有任何依赖关系，否则会导致其他与之关联的存储过程无法运行。<br>实例 1<br>下面删除存储过程 ShowStuScore，SQL 语句和运行结果如下：<br>mysql&gt; DROP PROCEDURE ShowStuScore;<br>Query OK, 0 rows affected (0.08 sec)<br>删除后，可以通过查询 information_schema 数据库下的 routines 表来确认上面的删除是否成功。SQL 语句和运行结果如下：<br>mysql&gt; SELECT * FROM information_schema.routines WHERE routine_name=’ShowStuScore’;<br>Empty set (0.03 sec)<br>结果显示，没有查询出任何记录，说明存储过程 ShowStuScore 已经被删除了。</p>
+<h1 id="存储函数"><a href="#存储函数" class="headerlink" title="存储函数"></a>存储函数</h1>
+      
+      <!-- reward -->
+      
+      <div id="reward-btn">
+        打赏
+      </div>
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/07/14/MySQL/MySQL%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/07/14/MySQL/MySQL%E6%97%A5%E5%BF%97/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL/MySQL日志
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/07/14/MySQL/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL/MySQL数据库备份与恢复</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: '',
+        app_key: '',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2017-2021
+        WSQ
+      </li>
+      <li>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    <aside class="sidebar">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/share.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/js/ayer.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+
+    
+  </div>
+</body>
+
+</html>
