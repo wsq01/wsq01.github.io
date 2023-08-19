@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/MyBatis/MyBatis缓存"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/MyBatis/MyBatis%E7%BC%93%E5%AD%98/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.738Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>缓存可以将数据保存在内存中，因此具备快速读取和使用的特点。</p>
+<p>和大多数持久化框架一样，MyBatis 提供了一级缓存和二级缓存的支持。默认情况下，MyBatis 只开启一级缓存。</p>
+<h1 id="一级缓存"><a href="#一级缓存" class="headerlink" title="一级缓存"></a>一级缓存</h1><p>一级缓存是基于<code>PerpetualCache</code>（MyBatis自带）的<code>HashMap</code>本地缓存，作用范围为<code>session</code>域内。当<code>session flush</code>（刷新）或者<code>close</code>（关闭）之后，该<code>session</code>中所有的<code>cache</code>（缓存）就会被清空。</p>
+<p>在参数和 SQL 完全一样的情况下，我们使用同一个<code>SqlSession</code>对象调用同一个<code>mapper</code>的方法，往往只执行一次 SQL。因为使用<code>SqlSession</code>第一次查询后，MyBatis 会将其放在缓存中，再次查询时，如果没有刷新，并且缓存没有超时的情况下，<code>SqlSession</code>会取出当前缓存的数据，而不会再次发送 SQL 到数据库。</p>
+<p>由于<code>SqlSession</code>是相互隔离的，所以如果你使用不同的<code>SqlSession</code>对象，即使调用相同的<code>Mapper</code>、参数和方法，MyBatis 还是会再次发送 SQL 到数据库执行，返回结果。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>在<code>WebsiteMapper</code>类中添加<code>selectWebsiteById</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Website <span class="title function_">selectWebsiteById</span><span class="params">(<span class="type">int</span> id)</span>;</span><br></pre></td></tr></table></figure>
+<p><code>WebsiteMapper.xml</code>中添加相应的映射 SQL 语句。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectWebsiteById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;net.biancheng.po.Website&quot;</span>&gt;</span></span><br><span class="line">  SELECT * FROM website WHERE id=#&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>测试代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.test;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.io.Resources;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line"><span class="keyword">import</span> org.apache.log4j.Logger;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.po.Website;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> Logger.getLogger(Test.class);</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">InputStream</span> <span class="variable">config</span> <span class="operator">=</span> Resources.getResourceAsStream(<span class="string">&quot;mybatis-config.xml&quot;</span>); <span class="comment">// 根据配置文件构建</span></span><br><span class="line">    <span class="type">SqlSessionFactory</span> <span class="variable">ssf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(config);</span><br><span class="line">    <span class="type">SqlSession</span> <span class="variable">ss</span> <span class="operator">=</span> ssf.openSession();</span><br><span class="line">    <span class="type">Website</span> <span class="variable">site</span> <span class="operator">=</span> ss.selectOne(<span class="string">&quot;net.biancheng.mapper.WebsiteMapper.selectWebsiteById&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    logger.debug(<span class="string">&quot;使用同一个sqlsession再执行一次&quot;</span>);</span><br><span class="line">    <span class="type">Website</span> <span class="variable">site2</span> <span class="operator">=</span> ss.selectOne(<span class="string">&quot;net.biancheng.mapper.WebsiteMapper.selectWebsiteById&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 请注意，当我们使用二级缓存的时候，sqlSession调用了 commit方法后才会生效</span></span><br><span class="line">    ss.commit();</span><br><span class="line">    logger.debug(<span class="string">&quot;现在创建一个新的SqlSeesion对象在执行一次&quot;</span>);</span><br><span class="line">    <span class="type">SqlSession</span> <span class="variable">ss2</span> <span class="operator">=</span> ssf.openSession();</span><br><span class="line">    <span class="type">Website</span> <span class="variable">site3</span> <span class="operator">=</span> ss2.selectOne(<span class="string">&quot;net.biancheng.mapper.WebsiteMapper.selectWebsiteById&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 请注意，当我们使用二级缓存的时候，sqlSession调用了 commit方法后才会生效</span></span><br><span class="line">    ss2.commit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DEBUG [main] - ==&gt;  Preparing: SELECT * FROM website WHERE id=?</span><br><span class="line">DEBUG [main] - ==&gt; Parameters: 1(Integer)</span><br><span class="line">DEBUG [main] - &lt;==      Total: 1</span><br><span class="line">DEBUG [main] - 使用同一个sqlsession再执行一次</span><br><span class="line">DEBUG [main] - 现在创建一个新的SqlSeesion对象在执行一次</span><br><span class="line">DEBUG [main] - ==&gt;  Preparing: SELECT * FROM website WHERE id=?</span><br><span class="line">DEBUG [main] - ==&gt; Parameters: 1(Integer)</span><br><span class="line">DEBUG [main] - &lt;==      Total: 1</span><br></pre></td></tr></table></figure>
+<p>从运行结果可以看出，第一个<code>SqlSession</code>实际只发生过一次查询，而第二次查询就从缓存中取出了，也就是<code>SqlSession</code>层面的一级缓存。为了克服这个问题，我们往往需要配置二级缓存，使得缓存在<code>SqlSessionFactory</code>层面上能够提供给各个<code>SqlSession</code>对象共享。</p>
+<h1 id="二级缓存"><a href="#二级缓存" class="headerlink" title="二级缓存"></a>二级缓存</h1><p>二级缓存是全局缓存，作用域超出<code>session</code>范围之外，可以被所有<code>SqlSession</code>共享。</p>
+<p>一级缓存缓存的是 SQL 语句，二级缓存缓存的是结果对象。</p>
+<h2 id="二级缓存的配置"><a href="#二级缓存的配置" class="headerlink" title="二级缓存的配置"></a>二级缓存的配置</h2><ol>
+<li>MyBatis 的全局缓存配置需要在<code>mybatis-config.xml</code>的<code>settings</code>元素中设置。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">setting</span> <span class="attr">name</span>=<span class="string">&quot;cacheEnabled&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在<code>mapper</code>文件（如<code>WebMapper.xml</code>）中设置缓存，默认不开启缓存。需要注意的是，二级缓存的作用域是针对<code>mapper</code>的<code>namescape</code>而言，即只有再次在<code>namescape</code>内（<code>net.biancheng.WebsiteMapper</code>）的查询才能共享这个缓存，代码如下。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namescape</span>=<span class="string">&quot;net.biancheng.WebsiteMapper&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- cache配置 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">cache</span> <span class="attr">eviction</span>=<span class="string">&quot;FIFO&quot;</span> <span class="attr">flushInterval</span>=<span class="string">&quot;60000&quot;</span> <span class="attr">size</span>=<span class="string">&quot;512&quot;</span> <span class="attr">readOnly</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+以上属性说明如下。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">eviction      代表的是缓存回收策略，目前 MyBatis 提供以下策略。<br>LRU：使用较少，移除最长时间不用的对象；<br>FIFO：先进先出，按对象进入缓存的顺序来移除它们；<br>SOFT：软引用，移除基于垃圾回收器状态和软引用规则的对象；<br>WEAK：弱引用，更积极地移除基于垃圾收集器状态和弱引用规则的对象。</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">flushInterval</td>
+<td align="center">刷新间隔时间，单位为毫秒，这里配置的是 100 秒刷新，如果省略该配置，那么只有当 SQL 被执行的时候才会刷新缓存。</td>
+</tr>
+<tr>
+<td align="center">size</td>
+<td align="center">引用数目，正整数，代表缓存最多可以存储多少个对象，不宜设置过大。设置过大会导致内存溢出。这里配置的是 1024 个对象。</td>
+</tr>
+<tr>
+<td align="center">readOnly</td>
+<td align="center">只读，默认值为 false，意味着缓存数据只能读取而不能修改，这样设置的好处是可以快速读取缓存，缺点是没有办法修改缓存。</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>在<code>mapper</code>文件配置支持<code>cache</code>后，如果需要对个别查询进行调整，可以单独设置<code>cache</code>，代码如下。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getWebsiteList&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;net.biancheng.po.Website&quot;</span> <span class="attr">usecache</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+对于 MyBatis 缓存仅作了解即可，因为面对一定规模的数据量，内置的<code>Cache</code>方式就派不上用场了，并且对查询结果集做缓存并不是 MyBatis 所擅长的，它专心做的应该是 SQL 映射。对于缓存，采用 OSCache、Memcached 等专门的缓存服务器来做更为合理。</li>
+</ol>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/MyBatis/MyBatis%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/Spring/Spring%E4%BA%8B%E5%8A%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/Spring/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E8%A8%80/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/SpringBoot/Sring Boot静态资源映射"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/SpringBoot/Sring%20Boot%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%98%A0%E5%B0%84/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.819Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>在 Web 应用中会涉及到大量的静态资源，例如 JS、CSS 和 HTML 等。Spring MVC 导入静态资源文件时，需要配置静态资源的映射；但在 SpringBoot 中则不再需要进行此项配置，因为 SpringBoot 已经默认完成了这一工作。</p>
+<p>Spring Boot 默认为我们提供了 3 种静态资源映射规则：</p>
+<ul>
+<li>WebJars 映射</li>
+<li>默认资源映射</li>
+<li>静态首页（欢迎页）映射</li>
+</ul>
+<h1 id="WebJars-映射"><a href="#WebJars-映射" class="headerlink" title="WebJars 映射"></a>WebJars 映射</h1><p>为了让页面更加美观，让用户有更多更好的体验，Web 应用中通常会使用大量的 JS 和 CSS，例如 jQuery，Backbone.js 和 Bootstrap 等等。通常我们会将这些 Web 前端资源拷贝到 Java Web 项目的 webapp 相应目录下进行管理。但是 Spring Boot 项目是以 JAR 包的形式进行部署的，不存在 webapp 目录，那么 Web 前端资源该如何引入到 Spring Boot 项目中呢？</p>
+<p>WebJars 可以完美的解决上面的问题，它可以 Jar 形式为 Web 项目提供资源文件。</p>
+<p>WebJars 可以将 Web 前端资源（JS，CSS 等）打成一个个的 Jar 包，然后将这些 Jar 包部署到 Maven 中央仓库中进行统一管理，当 Spring Boot 项目中需要引入 Web 前端资源时，只需要访问 WebJars 官网，找到所需资源的 pom 依赖，将其导入到项目中即可。</p>
+<p>所有通过 WebJars 引入的前端资源都存放在当前项目类路径（classpath）下的“&#x2F;META-INF&#x2F;resources&#x2F;webjars&#x2F;” 目录中。</p>
+<p>下图展示如何通过 WebJars 查找 JQuery 的 pom 依赖的过程。</p>
+<p>图1：WebJars 查找 JQuery 的 POM 依赖</p>
+<p>Spring Boot 通过 MVC 的自动配置类  WebMvcAutoConfiguration 为这些 WebJars 前端资源提供了默认映射规则，部分源码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addResourceHandlers</span><span class="params">(ResourceHandlerRegistry registry)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">this</span>.resourceProperties.isAddMappings()) &#123;</span><br><span class="line">    logger.debug(<span class="string">&quot;Default resource handling disabled&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//WebJars 映射规则</span></span><br><span class="line">    <span class="built_in">this</span>.addResourceHandler(registry, <span class="string">&quot;/webjars/**&quot;</span>, <span class="string">&quot;classpath:/META-INF/resources/webjars/&quot;</span>);</span><br><span class="line">    <span class="built_in">this</span>.addResourceHandler(registry, <span class="built_in">this</span>.mvcProperties.getStaticPathPattern(), (registration) -&gt; &#123;</span><br><span class="line">      registration.addResourceLocations(<span class="built_in">this</span>.resourceProperties.getStaticLocations());</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">this</span>.servletContext != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">ServletContextResource</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServletContextResource</span>(<span class="built_in">this</span>.servletContext, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">        registration.addResourceLocations(<span class="keyword">new</span> <span class="title class_">Resource</span>[]&#123;resource&#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过以上源码可知，WebJars 的映射路径为“&#x2F;webjars&#x2F;**”，即所有访问“&#x2F;webjars&#x2F;**”的请求，都会去“classpath:&#x2F;META-INF&#x2F;resources&#x2F;webjars&#x2F;”查找 WebJars 前端资源。<br>示例 1</p>
+<ol>
+<li>在 Spring Boot 项目 spring-boot-springmvc-demo1 的 pom.xml 中添加以下依赖，将 jquery 引入到该项目中。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.webjars&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jquery&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.6.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></li>
+<li>Spring Boot 项目中引入的 jquery 的 Jar 包结构如下图。</li>
+</ol>
+<p>WebJars JQUERY<br>图2：WebJars jquery Jar 包结构</p>
+<ol start="3">
+<li>启动 Spring Boot，浏览器访问“<a target="_blank" rel="noopener" href="http://localhost:8080/webjars/jquery/3.6.0/jquery.js%E2%80%9D%E8%AE%BF%E9%97%AE">http://localhost:8080/webjars/jquery/3.6.0/jquery.js”访问</a> jquery.js，结果如下图。</li>
+</ol>
+<p>图3：WebJars jquery 访问结果<br>默认静态资源映射<br>当访问项目中的任意资源（即“&#x2F;**”）时，Spring Boot 会默认从以下路径中查找资源文件（优先级依次降低）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">classpath:/META-INF/resources/</span><br><span class="line">classpath:/resources/</span><br><span class="line">classpath:/static/</span><br><span class="line">classpath:/public/</span><br></pre></td></tr></table></figure>
+<p>这些路径又被称为静态资源文件夹，它们的优先级顺序为：classpath:&#x2F;META-INF&#x2F;resources&#x2F; &gt; classpath:&#x2F;resources&#x2F; &gt; classpath:&#x2F;static&#x2F; &gt; classpath:&#x2F;public&#x2F; 。</p>
+<p>当我们请求某个静态资源（即以“.html”结尾的请求）时，Spring Boot 会先查找优先级高的文件夹，再查找优先级低的文件夹，直到找到指定的静态资源为止。<br>示例 2</p>
+<ol>
+<li>在 spring-boot-springmvc-demo1 的 src&#x2F;main&#x2F;resources 下的 static 目录中创建一个 hello.html，代码如下。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;&lt;/head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;欢迎您来到编程帮（www.biancheng.net）&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></li>
+<li>启动 Spring Boot，浏览器访问 “<a target="_blank" rel="noopener" href="http://localhost:8080/hello.html%E2%80%9D%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%A6%82%E4%B8%8B%E5%9B%BE%E3%80%82">http://localhost:8080/hello.html”，结果如下图。</a></li>
+</ol>
+<p>默认资源映射<br>图4：默认资源映射<br>静态首页（欢迎页）映射<br>静态资源文件夹下的所有 index.html 被称为静态首页或者欢迎页，它们会被被 &#x2F;** 映射，换句话说就是，当我们访问“&#x2F;”或者“&#x2F;index.html”时，都会跳转到静态首页（欢迎页）。<br>注意，访问静态首页或欢迎页时，其查找顺序也遵循默认静态资源的查找顺序，即先查找优先级高的目录，在查找优先级低的目录，直到找到 index.html 为止。</p>
+<p>示例 3</p>
+<ol>
+<li>在 spring-boot-springmvc-demo1 的 src&#x2F;main&#x2F;resources 下的 public 目录中创建一个 index.html，代码如下。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;首页&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></li>
+<li>启动 Spring Boot，使用浏览器访问“<a target="_blank" rel="noopener" href="http://localhost:8080/%E2%80%9D%EF%BC%8C%E7%BB%93%E6%9E%9C%E5%A6%82%E4%B8%8B%E5%9B%BE%E3%80%82">http://localhost:8080/”，结果如下图。</a></li>
+</ol>
+<p>Spring Boot 欢迎页映射<br>图5：Spring Boot 欢迎页</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/SpringBoot/Sring%20Boot%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%98%A0%E5%B0%84/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/SpringMVC/Spring%20MVC%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/SpringBoot/SpringApplication%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

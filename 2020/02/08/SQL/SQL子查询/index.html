@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>SQL 子查询 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-SQL/SQL子查询"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SQL 子查询
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/02/08/SQL/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" class="article-date">
+  <time datetime="2020-02-08T07:14:53.000Z" itemprop="datePublished">2020-02-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="什么是关联子查询，什么是非关联子查询"><a href="#什么是关联子查询，什么是非关联子查询" class="headerlink" title="什么是关联子查询，什么是非关联子查询"></a>什么是关联子查询，什么是非关联子查询</h1><p>子查询虽然是一种嵌套查询的形式，不过我们依然可以依据子查询是否执行多次，从而将子查询划分为关联子查询和非关联子查询。</p>
+<p>子查询从数据表中查询了数据结果，如果这个数据结果只执行一次，然后这个数据结果作为主查询的条件进行执行，那么这样的子查询叫做非关联子查询。</p>
+<p>同样，如果子查询需要执行多次，即采用循环的方式，先从外部查询开始，每次都传入子查询进行查询，然后再将结果反馈给外部，这种嵌套的执行方式就称为关联子查询。</p>
+<p>单说概念有点抽象，我们用数据表举例说明一下。这里我创建了 NBA 球员数据库，SQL 文件你可以从<a target="_blank" rel="noopener" href="https://github.com/cystanford/sql_nba_data">GitHub上下载</a>。</p>
+<p>文件中一共包括了 5 张表，<code>player</code>表为球员表，<code>team</code>为球队表，<code>team_score</code>为球队比赛表，<code>player_score</code>为球员比赛成绩表，<code>height_grades</code>为球员身高对应的等级表。</p>
+<p>其中<code>player</code>表，也就是球员表，一共有 37 个球员，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">team_id</th>
+<th align="center">player_name</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10001</td>
+<td align="center">1001</td>
+<td align="center">韦恩·艾灵顿</td>
+<td align="center">1.93</td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">1001</td>
+<td align="center">雷吉·杰克逊</td>
+<td align="center">1.91</td>
+</tr>
+<tr>
+<td align="center">10003</td>
+<td align="center">1001</td>
+<td align="center">安德烈·德拉蒙德</td>
+<td align="center">2.11</td>
+</tr>
+<tr>
+<td align="center">10004</td>
+<td align="center">1001</td>
+<td align="center">索恩·马克</td>
+<td align="center">2.16</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">1001</td>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+</tr>
+</tbody></table>
+<p><code>team</code>表为球队表，一共有 3 支球队，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">team_id</th>
+<th align="center">team_name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1001</td>
+<td align="center">底特律活塞</td>
+</tr>
+<tr>
+<td align="center">1002</td>
+<td align="center">印第安纳步行者</td>
+</tr>
+<tr>
+<td align="center">1003</td>
+<td align="center">亚特兰大老鹰</td>
+</tr>
+</tbody></table>
+<p><code>team_score</code>表为球队比赛成绩表，一共记录了两场比赛的成绩，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">game_id</th>
+<th align="center">h_team_id</th>
+<th align="center">v_team_id</th>
+<th align="center">h_team_score</th>
+<th align="center">v-team_score</th>
+<th align="center">game_date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10001</td>
+<td align="center">1001</td>
+<td align="center">1002</td>
+<td align="center">102</td>
+<td align="center">111</td>
+<td align="center">2019-04-01</td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">1002</td>
+<td align="center">1003</td>
+<td align="center">135</td>
+<td align="center">134</td>
+<td align="center">2019-04-10</td>
+</tr>
+</tbody></table>
+<p><code>player_score</code>表为球员比赛成绩表，记录了一场比赛中球员的表现。这张表一共包括 19 个字段，代表的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">game_id <br> 比赛ID</td>
+<td align="center">player_id <br> 球员ID</td>
+<td align="center">is_first <br> 是否首发</td>
+<td align="center">playing_time <br> 出场时间</td>
+</tr>
+<tr>
+<td align="center">rebound <br> 篮板球</td>
+<td align="center">rebound_o <br> 前场篮板</td>
+<td align="center">rebound_d <br> 后场篮板</td>
+<td align="center">assist <br> 助攻</td>
+</tr>
+<tr>
+<td align="center">score <br> 比分</td>
+<td align="center">steal <br> 抢断</td>
+<td align="center">blockshot <br> 盖帽</td>
+<td align="center">fault <br> 失误</td>
+</tr>
+<tr>
+<td align="center">foul <br> 犯规</td>
+<td align="center">shoot_attempts <br> 总出手</td>
+<td align="center">shoot_hits <br> 命中</td>
+<td align="center">shoot_3_attempts <br> 3分出手</td>
+</tr>
+<tr>
+<td align="center">shoot_3_hits <br> 3分命中</td>
+<td align="center">shoot_p_attempts <br> 罚球出手</td>
+<td align="center">shoot_p_hits <br> 罚球命中</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>其中<code>shoot_attempts</code>代表总出手的次数，它等于二分球出手和三分球出手次数的总和。比如 2019 年 4 月 1 日，韦恩·艾灵顿在底特律活塞和印第安纳步行者的比赛中，总出手次数为 19，总命中 10，三分球 13 投 4 中，罚球 4 罚 2 中，因此总分<code>score=(10-4)×2+4×3+2=26</code>，也就是二分球得分<code>12+</code>三分球得分<code>12+</code>罚球得分<code>2=26</code>。</p>
+<p>需要说明的是，通常在工作中，数据表的字段比较多，一开始创建的时候会知道每个字段的定义，过了一段时间再回过头来看，对当初的定义就不那么确定了，容易混淆字段，解决这一问题最好的方式就是做个说明文档，用实例举例。</p>
+<p>比如<code>shoot_attempts</code>是总出手次数（这里的总出手次数 &#x3D; 二分球出手次数 + 三分球出手次数，不包括罚球的次数），用上面提到的韦恩·艾灵顿的例子做补充说明，再回过头来看这张表的时候，就可以很容易理解每个字段的定义了。</p>
+<p>我们以 NBA 球员数据表为例，假设我们想要知道哪个球员的身高最高，最高身高是多少，就可以采用子查询的方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>: <span class="keyword">SELECT</span> player_name, height <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> height <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">max</span>(height) <span class="keyword">FROM</span> player)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（1 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_name</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">索恩·马克</td>
+<td align="center">2.16</td>
+</tr>
+</tbody></table>
+<p>你能看到，通过<code>SELECT max(height) FROM player</code>可以得到最高身高这个数值，结果为 2.16，然后我们再通过<code>player</code>这个表，看谁具有这个身高，再进行输出，这样的子查询就是非关联子查询。</p>
+<p>如果子查询的执行依赖于外部查询，通常情况下都是因为子查询中的表用到了外部的表，并进行了条件关联，因此每执行一次外部查询，子查询都要重新计算一次，这样的子查询就称之为关联子查询。比如我们想要查找每个球队中大于平均身高的球员有哪些，并显示他们的球员姓名、身高以及所在球队<code>ID</code>。</p>
+<p>首先我们需要统计球队的平均身高，即<code>SELECT avg(height) FROM player AS b WHERE a.team_id = b.team_id</code>，然后筛选身高大于这个数值的球员姓名、身高和球队<code>ID</code>，即：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> player_name, height, team_id <span class="keyword">FROM</span> player <span class="keyword">AS</span> a <span class="keyword">WHERE</span> height <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">avg</span>(height) <span class="keyword">FROM</span> player <span class="keyword">AS</span> b <span class="keyword">WHERE</span> a.team_id <span class="operator">=</span> b.team_id)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（18 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_name</th>
+<th align="center">height</th>
+<th align="center">team_id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">安德烈·德拉蒙德</td>
+<td align="center">2.11</td>
+<td align="center">1001</td>
+</tr>
+<tr>
+<td align="center">索恩·马克</td>
+<td align="center">2.16</td>
+<td align="center">1001</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+<td align="center">1002</td>
+</tr>
+</tbody></table>
+<h1 id="EXISTS-子查询"><a href="#EXISTS-子查询" class="headerlink" title="EXISTS 子查询"></a>EXISTS 子查询</h1><p>关联子查询通常也会和<code>EXISTS</code>一起来使用，<code>EXISTS</code>子查询用来判断条件是否满足，满足的话为<code>True</code>，不满足为<code>False</code>。</p>
+<p>比如我们想要看出场过的球员都有哪些，并且显示他们的姓名、球员<code>ID</code>和球队<code>ID</code>。在这个统计中，是否出场是通过<code>player_score</code>这张表中的球员出场表现来统计的，如果某个球员在<code>player_score</code>中有出场记录则代表他出场过，这里就使用到了<code>EXISTS</code>子查询，即<code>EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)</code>，然后将它作为筛选的条件，实际上也是关联子查询，即：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> player_id, team_id, player_name <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> player_id <span class="keyword">FROM</span> player_score <span class="keyword">WHERE</span> player.player_id <span class="operator">=</span> player_score.player_id)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（19 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">team_id</th>
+<th align="center">player_name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10001</td>
+<td align="center">1001</td>
+<td align="center">韦恩·艾灵顿</td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">1001</td>
+<td align="center">雷吉·杰克逊</td>
+</tr>
+<tr>
+<td align="center">10003</td>
+<td align="center">1001</td>
+<td align="center">安德烈·德拉蒙德</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10032</td>
+<td align="center">1002</td>
+<td align="center">TJ·利夫</td>
+</tr>
+</tbody></table>
+<p>同样，<code>NOT EXISTS</code>就是不存在的意思，我们也可以通过<code>NOT EXISTS</code>查询不存在于<code>player_score</code>表中的球员信息，比如主表中的<code>player_id</code>不在子表<code>player_score</code>中，判断语句为<code>NOT EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)</code>。整体的 SQL 语句为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>: <span class="keyword">SELECT</span> player_id, team_id, player_name <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> player_id <span class="keyword">FROM</span> player_score <span class="keyword">WHERE</span> player.player_id <span class="operator">=</span> player_score.player_id)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（18 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">team_id</th>
+<th align="center">player_name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10011</td>
+<td align="center">1001</td>
+<td align="center">布雷克·格里芬</td>
+</tr>
+<tr>
+<td align="center">10012</td>
+<td align="center">1001</td>
+<td align="center">雷吉·巴洛克</td>
+</tr>
+<tr>
+<td align="center">10013</td>
+<td align="center">1001</td>
+<td align="center">卢克·肯纳德</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">1002</td>
+<td align="center">伊凯·阿尼博古</td>
+</tr>
+</tbody></table>
+<h1 id="集合比较子查询"><a href="#集合比较子查询" class="headerlink" title="集合比较子查询"></a>集合比较子查询</h1><p>集合比较子查询的作用是与另一个查询结果集进行比较，我们可以在子查询中使用<code>IN、ANY、ALL</code>和<code>SOME</code>操作符，它们的含义和英文意义一样：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">IN</td>
+<td align="center">判断是否在集合中</td>
+</tr>
+<tr>
+<td align="center">ANY</td>
+<td align="center">需要与比较操作符一起使用，与子查询返回的任何值做比较</td>
+</tr>
+<tr>
+<td align="center">ALL</td>
+<td align="center">需要与比较操作符一起使用，与子查询返回的所有值做比较</td>
+</tr>
+<tr>
+<td align="center">SOME</td>
+<td align="center">实际上是ANY的别名，作用相同，一般常用ANY</td>
+</tr>
+</tbody></table>
+<p>还是通过上面那个例子，假设我们想要看出场过的球员都有哪些，可以采用<code>IN</code>子查询来进行操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> player_id, team_id, player_name <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> player_id <span class="keyword">in</span> (<span class="keyword">SELECT</span> player_id <span class="keyword">FROM</span> player_score <span class="keyword">WHERE</span> player.player_id <span class="operator">=</span> player_score.player_id)</span><br></pre></td></tr></table></figure>
+<p>你会发现运行结果和上面的是一样的，那么问题来了，既然<code>IN</code>和<code>EXISTS</code>都可以得到相同的结果，那么我们该使用<code>IN</code>还是<code>EXISTS</code>呢？</p>
+<p>我们可以把这个模式抽象为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> A <span class="keyword">WHERE</span> cc <span class="keyword">IN</span> (<span class="keyword">SELECT</span> cc <span class="keyword">FROM</span> B)</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> A <span class="keyword">WHERE</span> EXIST (<span class="keyword">SELECT</span> cc <span class="keyword">FROM</span> B <span class="keyword">WHERE</span> B.cc<span class="operator">=</span>A.cc)</span><br></pre></td></tr></table></figure>
+<p>实际上在查询过程中，在我们对<code>cc</code>列建立索引的情况下，我们还需要判断表 A 和表 B 的大小。在这里例子当中，表 A 指的是<code>player</code>表，表 B 指的是<code>player_score</code>表。如果表 A 比表 B 大，那么<code>IN</code>子查询的效率要比<code>EXIST</code>子查询效率高，因为这时 B 表中如果对<code>cc</code>列进行了索引，那么<code>IN</code>子查询的效率就会比较高。</p>
+<p>同样，如果表 A 比表 B 小，那么使用<code>EXISTS</code>子查询效率会更高，因为我们可以使用到 A 表中对<code>cc</code>列的索引，而不用从 B 中进行<code>cc</code>列的查询。</p>
+<p>了解了<code>IN</code>查询后，我们来看下<code>ANY</code>和<code>ALL</code>子查询。<code>ANY</code>和<code>ALL</code>都需要使用比较符，比较符包括了（&gt;）（&#x3D;）（&lt;）（&gt;&#x3D;）（&lt;&#x3D;）和（&lt;&gt;）等。</p>
+<p>如果我们想要查询球员表中，比印第安纳步行者（对应的<code>team_id</code>为 1002）中任何一个球员身高高的球员的信息，并且输出他们的球员<code>ID</code>、球员姓名和球员身高，该怎么写呢？首先我们需要找出所有印第安纳步行者队中的球员身高，即<code>SELECT height FROM player WHERE team_id = 1002</code>，然后使用<code>ANY</code>子查询即：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>: <span class="keyword">SELECT</span> player_id, player_name, height <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> height <span class="operator">&gt;</span> <span class="keyword">ANY</span> (<span class="keyword">SELECT</span> height <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> team_id <span class="operator">=</span> <span class="number">1002</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（35 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">player_name</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10001</td>
+<td align="center">韦恩·艾灵顿</td>
+<td align="center">1.93</td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">雷吉·杰克逊</td>
+<td align="center">1.91</td>
+</tr>
+<tr>
+<td align="center">10003</td>
+<td align="center">安德烈·德拉蒙德</td>
+<td align="center">2.11</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+</tr>
+</tbody></table>
+<p>运行结果为 35 条，你发现有 2 个人的身高是不如印第安纳步行者的所有球员的。</p>
+<p>同样，如果我们想要知道比印第安纳步行者（对应的<code>team_id</code>为 1002）中所有球员身高都高的球员的信息，并且输出球员<code>ID</code>、球员姓名和球员身高，该怎么写呢？</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>: <span class="keyword">SELECT</span> player_id, player_name, height <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> height <span class="operator">&gt;</span> <span class="keyword">ALL</span> (<span class="keyword">SELECT</span> height <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> team_id <span class="operator">=</span> <span class="number">1002</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果：（1 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">player_name</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10004</td>
+<td align="center">索恩·马克</td>
+<td align="center">2.16</td>
+</tr>
+</tbody></table>
+<p>我们能看到比印第安纳步行者所有球员都高的球员，在<code>player</code>这张表（一共 37 个球员）中只有索恩·马克。</p>
+<p>需要强调的是<code>ANY、ALL</code>关键字必须与一个比较操作符一起使用。因为如果你不使用比较操作符，就起不到集合比较的作用，那么使用<code>ANY</code>和<code>ALL</code>就没有任何意义。</p>
+<h1 id="将子查询作为计算字段"><a href="#将子查询作为计算字段" class="headerlink" title="将子查询作为计算字段"></a>将子查询作为计算字段</h1><p>实际上子查询也可以作为主查询的计算字段。比如我想查询每个球队的球员数，也就是对应<code>team</code>这张表，我需要查询相同的<code>team_id</code>在<code>player</code>这张表中所有的球员数量是多少。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>: <span class="keyword">SELECT</span> team_name, (<span class="keyword">SELECT</span> <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> player <span class="keyword">WHERE</span> player.team_id <span class="operator">=</span> team.team_id) <span class="keyword">AS</span> player_num <span class="keyword">FROM</span> team</span><br></pre></td></tr></table></figure>
+<p>运行结果：（3 条记录）</p>
+<table>
+<thead>
+<tr>
+<th align="center">team_name</th>
+<th align="center">player_num</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">底特律活塞</td>
+<td align="center">20</td>
+</tr>
+<tr>
+<td align="center">印第安纳步行者</td>
+<td align="center">17</td>
+</tr>
+<tr>
+<td align="center">亚特兰大老鹰</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<p>你能看到，在<code>player</code>表中只有底特律活塞和印第安纳步行者的球员数据，所以它们的<code>player_num</code>不为 0，而亚特兰大老鹰的<code>player_num</code>等于 0。在查询的时候，我将子查询<code>SELECT count(*) FROM player WHERE player.team_id = team.team_id</code>作为了计算字段，通常我们需要给这个计算字段起一个别名，这里我用的是<code>player_num</code>，因为子查询的语句比较长，使用别名更容易理解。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>按照子查询执行的次数，我们可以将子查询分成关联子查询和非关联子查询，其中非关联子查询与主查询的执行无关，只需要执行一次即可，而关联子查询，则需要将主查询的字段值传入子查询中进行关联查询。</p>
+<p>同时，在子查询中你可能会使用到<code>EXISTS、IN、ANY、ALL</code>和<code>SOME</code>等关键字。在某些情况下使用<code>EXISTS</code>和<code>IN</code>可以得到相同的效果，具体使用哪个执行效率更高，则需要看字段的索引情况以及表 A 和表 B 哪个表更大。同样，<code>IN、ANY、ALL、SOME</code>这些关键字是用于集合比较的，<code>SOME</code>是<code>ANY</code>的别名，当我们使用<code>ANY</code>或<code>ALL</code>的时候，一定要使用比较操作符。</p>
+<p>SQL 中，子查询的使用大大增强了<code>SELECT</code>查询的能力，因为很多时候查询需要从结果集中获取数据，或者需要从同一个表中先计算得出一个数据结果，然后与这个数据结果（可能是某个标量，也可能是某个集合）进行比较。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/02/08/SQL/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/02/12/SQL/SQL%20%E8%A7%86%E5%9B%BE/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SQL 视图
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/02/07/SQL/SQL%20%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SQL 函数</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

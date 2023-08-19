@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Java 包（package） |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/基础/Java包（package）"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java 包（package）
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/18/java/%E5%9F%BA%E7%A1%80/Java%E5%8C%85%EF%BC%88package%EF%BC%89/" class="article-date">
+  <time datetime="2020-09-18T03:23:14.000Z" itemprop="datePublished">2020-09-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>包允许将类组合成较小的单元（类似文件夹），它基本上隐藏了类，并避免了名称上的冲突。包允许在更广泛的范围内保护类、数据和方法。你可以在包内定义类，而在包外的代码不能访问该类。这使你的类相互之间有隐私，但不被其他世界所知。</p>
+<p>包的 3 个作用如下：</p>
+<ul>
+<li>区分相同名称的类。</li>
+<li>能够较好地管理大量的类。</li>
+<li>控制访问范围。</li>
+</ul>
+<h1 id="包定义"><a href="#包定义" class="headerlink" title="包定义"></a>包定义</h1><p>Java 中使用<code>package</code>语句定义包，<code>package</code>语句应该放在源文件的第一行，在每个源文件中只能有一个包定义语句，并且<code>package</code>语句适用于所有类型（类、接口、枚举和注释）的文件。定义包语法格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package 包名;</span><br></pre></td></tr></table></figure>
+<p>Java 包的命名规则如下：</p>
+<ul>
+<li>包名全部由小写字母（多个单词也全部小写）。</li>
+<li>如果包名包含多个层次，每个层次用“.”分割。</li>
+<li>包名一般由倒置的域名开头，比如<code>com.baidu</code>，不要有<code>www</code>。</li>
+<li>自定义包不能<code>java</code>开头。</li>
+</ul>
+<p>注意：如果在源文件中没有定义包，那么类、接口、枚举和注释类型文件将会被放进一个无名的包中，也称为默认包。在实际企业开发中，通常不会把类定义在默认包下。</p>
+<h1 id="包导入"><a href="#包导入" class="headerlink" title="包导入"></a>包导入</h1><p>如果使用不同包中的其它类，需要使用该类的全名（包名+类名）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">example.<span class="type">Test</span> <span class="variable">test</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">example</span>.Test();</span><br></pre></td></tr></table></figure>
+<p>其中，<code>example</code>是包名，<code>Test</code>是包中的类名，<code>test</code>是类的对象。</p>
+<p>为了简化编程，Java 引入了<code>import</code>关键字，<code>import</code>可以向某个 Java 文件中导入指定包层次下的某个类或全部类。<code>import</code>语句位于<code>package</code>语句之后，类定义之前。一个 Java 源文件只能包含一个<code>package</code>语句，但可以包含多个<code>import</code>语句。</p>
+<p>使用<code>import</code>导入单个类的语法格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import 包名+类名;</span><br></pre></td></tr></table></figure>
+<p>使用<code>import</code>语句导入指定包下全部类的用法按如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import example.*;</span><br></pre></td></tr></table></figure>
+<p>上面<code>import</code>语句中的星号（*）只能代表类，不能代表包，表明导入<code>example</code>包下的所有类。</p>
+<p>提示：使用星号（*）可能会增加编译时间，特别是引入多个大包时，所以明确的导入你想要用到的类是一个好方法，需要注意的是使用星号对运行时间和类的大小没有影响。</p>
+<p>通过使用<code>import</code>语句可以简化编程，但<code>import</code>语句并不是必需的，如果在类里使用其它类的全名，可以不使用<code>import</code>语句。</p>
+<p>Java 默认为所有源文件导入<code>java.lang</code>包下的所有类，因此前面在 Java 程序中使用<code>String、System</code>类时都无须使用<code>import</code>语句来导入这些类。但对于<code>Arrays</code>类，其位于<code>java.util</code>包下，则必须使用<code>import</code>语句来导入该类。</p>
+<p>在一些极端的情况下，<code>import</code>语句也帮不了我们，此时只能在源文件中使用类全名。例如，需要在程序中使用<code>java.sql</code>包下的类，也需要使用<code>java.util</code>包下的类，则可以使用如下两行<code>import</code>语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br></pre></td></tr></table></figure>
+<p>如果接下来在程序中需要使用<code>Date</code>类，则会引起如下编译错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Test.java:25:对Date的引用不明确，</span><br><span class="line">java.sql中的类java.sql.Date和java.util中的类java.util.Date都匹配</span><br></pre></td></tr></table></figure>
+<p>上面错误提示：在<code>Test.java</code>文件的第 25 行使用了<code>Date</code>类，而<code>import</code>语句导入的<code>java.sql</code>和<code>java.util</code>包下都包含了<code>Date</code>类，系统不知道使用哪个包下的<code>Date</code>类。在这种情况下，如果需要指定包下的<code>Date</code>类，则只能使用该类的全名：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为了让引用更加明确，即使使用了 import 语句，也还是需要使用类的全名</span></span><br><span class="line">java.sql.<span class="type">Date</span> <span class="variable">d</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.sql.Date();</span><br></pre></td></tr></table></figure>
+<h2 id="系统包"><a href="#系统包" class="headerlink" title="系统包"></a>系统包</h2><p>常用的系统包：</p>
+<table>
+<thead>
+<tr>
+<th align="center">包</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">java.lang</td>
+<td align="center">Java 的核心类库，包含运行 Java 程序必不可少的系统类，如基本数据类型、基本数学函数、字符串处理、异常处理和线程类等，系统默认加载这个包</td>
+</tr>
+<tr>
+<td align="center">java.io</td>
+<td align="center">Java 语言的标准输入&#x2F;输出类库，如基本输入&#x2F;输出流、文件输入&#x2F;输出、过滤输入&#x2F;输出流等</td>
+</tr>
+<tr>
+<td align="center">java.util</td>
+<td align="center">包含如处理时间的 Date 类，处理动态数组的 Vector 类，以及 Stack 和 HashTable 类</td>
+</tr>
+<tr>
+<td align="center">java.awt</td>
+<td align="center">构建图形用户界面（GUI）的类库，低级绘图操作 Graphics 类、图形界面组件和布局管理（如 Checkbox 类、Container 类、LayoutManger 接口等），以及用户界面交互控制和事件响应（如 Event 类）</td>
+</tr>
+<tr>
+<td align="center">java.awt.image</td>
+<td align="center">处理和操纵来自网上的图片的 Java 工具类库</td>
+</tr>
+<tr>
+<td align="center">java.wat.peer</td>
+<td align="center">很少在程序中直接用到，使得同一个 Java 程序在不同的软硬件平台上运行</td>
+</tr>
+<tr>
+<td align="center">java.net</td>
+<td align="center">实现网络功能的类库有 Socket 类、ServerSocket 类</td>
+</tr>
+<tr>
+<td align="center">java.lang.reflect</td>
+<td align="center">提供用于反射对象的工具</td>
+</tr>
+<tr>
+<td align="center">java.util.zip</td>
+<td align="center">实现文件压缩功能</td>
+</tr>
+<tr>
+<td align="center">java.awt.datatransfer</td>
+<td align="center">处理数据传输的工具类，包括剪贴板、字符串发送器等</td>
+</tr>
+<tr>
+<td align="center">java.sql</td>
+<td align="center">实现 JDBC 的类库</td>
+</tr>
+<tr>
+<td align="center">java.rmi</td>
+<td align="center">提供远程连接与载入的支持</td>
+</tr>
+<tr>
+<td align="center">java. security</td>
+<td align="center">提供安全性方面的有关支持</td>
+</tr>
+</tbody></table>
+<h1 id="使用自定义包"><a href="#使用自定义包" class="headerlink" title="使用自定义包"></a>使用自定义包</h1><ol>
+<li>创建一个名为<code>com.dao</code>的包。</li>
+<li>向<code>com.dao</code>包中添加一个<code>Student</code>类，该类包含一个返回<code>String</code>类型数组的<code>GetAll()</code>方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.dao;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String[] GetAll() &#123;</span><br><span class="line">    String[] namelist = &#123;<span class="string">&quot;李潘&quot;</span>,<span class="string">&quot;邓国良&quot;</span>,<span class="string">&quot;任玲玲&quot;</span>,<span class="string">&quot;许月月&quot;</span>,<span class="string">&quot;欧阳娜&quot;</span>,<span class="string">&quot;赵晓慧&quot;</span>&#125;;</span><br><span class="line">    <span class="keyword">return</span> namelist;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>创建<code>com.test</code>包，在该包里创建带<code>main()</code>方法的<code>Test</code>类。</li>
+<li>在<code>main()</code>方法中遍历<code>Student</code>类的<code>GetAll()</code>方法中的元素内容，在遍历内容之前，使用<code>import</code>引入<code>com.dao</code>整个包。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.test;</span><br><span class="line"><span class="keyword">import</span> com.dao.Student;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;学生信息如下：&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(String str:Student.GetAll()) &#123;</span><br><span class="line">      System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+输出结果如下：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">学生信息如下：</span><br><span class="line">李潘</span><br><span class="line">邓国良</span><br><span class="line">任玲玲</span><br><span class="line">许月月</span><br><span class="line">欧阳娜</span><br><span class="line">赵晓慧</span><br></pre></td></tr></table></figure></li>
+</ol>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/18/java/%E5%9F%BA%E7%A1%80/Java%E5%8C%85%EF%BC%88package%EF%BC%89/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            以太网
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/17/java/%E5%9F%BA%E7%A1%80/Java%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%92%8C%E5%85%B3%E9%94%AE%E5%AD%97/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java 修饰符和关键字</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

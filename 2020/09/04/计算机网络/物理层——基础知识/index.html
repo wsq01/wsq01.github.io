@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>物理层——基础知识 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/物理层——基础知识"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  物理层——基础知识
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="article-date">
+  <time datetime="2020-09-04T06:31:20.000Z" itemprop="datePublished">2020-09-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">20 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="物理层的基本概念"><a href="#物理层的基本概念" class="headerlink" title="物理层的基本概念"></a>物理层的基本概念</h1><p>物理层考虑的是怎样才能在连接各种计算机的传输媒体上传输数据比特流，而不是指具体的传输媒体。</p>
+<p>物理层的作用是要尽可能地屏蔽掉不同传输媒体和通信手段的差异。</p>
+<h1 id="数据通信的基础知识"><a href="#数据通信的基础知识" class="headerlink" title="数据通信的基础知识"></a>数据通信的基础知识</h1><h2 id="数据通信系统的模型"><a href="#数据通信系统的模型" class="headerlink" title="数据通信系统的模型"></a>数据通信系统的模型</h2><p>一个数据通信系统可划分为三大部分，即源系统（或发送端、发送方）、传输系统（或传输网络）和目的系统（或接收端、接收方）。</p>
+<p>下图是两个计算机经过普通电话机的连线，再经过公用电话网进行通信的模型。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img1.png" class="" title="数据通信系统的模型">
+
+<p>常用术语：</p>
+<ul>
+<li>数据：运送消息的实体。</li>
+<li>信号：数据的电气或电磁的表现。 </li>
+<li>模拟信号(<code>analogous signal</code>)：代表消息的参数的取值是连续的。 </li>
+<li>数字信号(<code>digital signal</code>)：代表消息的参数的取值是离散的。 </li>
+<li>码元(<code>code</code>)：在使用时间域（或简称为时域）的波形表示数字信号时，代表不同离散数值的基本波形。在使用二进制编码时，只有两种不同的码元，一种代表 0 状态而另一种代表 1 状态。</li>
+</ul>
+<h2 id="有关信道的基本概念"><a href="#有关信道的基本概念" class="headerlink" title="有关信道的基本概念"></a>有关信道的基本概念</h2><p>信道是用来表示向某一个方向传送信息的媒体。因此，一条通信电路往往包含一条发送信道和一条接收信道。</p>
+<p>从通信的双方信息交互方式来看，可以有以下三种基本方式：</p>
+<ul>
+<li>单向通信(单工通信)：即只能有一个方向的通信而没有反方向的交互。无线电广播或有线电广播以及电视广播就属于这种类型。</li>
+<li>双向交替通信(半双工通信)：即通信的双方都可以发送信息，但不能双方同时发送，当然也不能同时接收。这种通信方式是一方发送另一方接收，过一段时间后再反过来。</li>
+<li>双向同时通信：又称全双工通信，即通信的双方可以同时发送和接收信息。</li>
+</ul>
+<p>单向通信只需要一条信道，双向交替通信或双向同时通信都需要两条信道（每个方向各一条）。</p>
+<p>来自信源的信号称为基带信号（即基本频带信号）。像计算机输出的代表各种文字或图像文件的数据信号都属于基带信号。</p>
+<p>基带信号往往包含有较多的低频成分，甚至有直流成分，而许多信道并不能传输这种低频分量或直流分量。因此必须对基带信号进行调制(<code>modulation</code>)。 </p>
+<p>调制分为两大类：</p>
+<ul>
+<li>基带调制：仅对基带信号的波形进行变换，使它能够与信道特性相适应。变换后的信号仍然是基带信号。把这种过程称为编码(<code>coding</code>)。</li>
+<li>带通调制：使用载波(<code>carrier</code>)进行调制，把基带信号的频率范围搬移到较高的频段，并转换为模拟信号，这样就能够更好地在模拟信道中传输（即仅在一段频率范围内能够通过信道）。</li>
+</ul>
+<p>经过载波调制后的信号称为带通信号 (即仅在一段频率范围内能够通过信道)，而使用载波的调制称为带通调制。</p>
+<h3 id="常用编码方式"><a href="#常用编码方式" class="headerlink" title="常用编码方式"></a>常用编码方式</h3><ul>
+<li>不归零制：正电平代表 1，负电平代表 0。</li>
+<li>归零制：正脉冲代表 1，负脉冲代表 0。</li>
+<li>曼彻斯特编码：位周期中心的向上跳变代表 0，位周期中心的向下跳变代表 1。但也可反过来定义。</li>
+<li>差分曼彻斯特编码：在每一位的中心处始终都有跳变。位开始边界有跳变代表 0，而位开始边界没有跳变代表 1。</li>
+</ul>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img2.png" class="" title="数字信号常用的编码方式">
+
+<p>从信号波形中可以看出，曼彻斯特(<code>Manchester</code>)编码和差分曼彻斯特编码产生的信号频率比不归零制高。</p>
+<p>从自同步能力来看，不归零制不能从信号波形本身中提取信号时钟频率（这叫做没有自同步能力），而曼彻斯特编码和差分曼彻斯特编码具有自同步能力。</p>
+<h3 id="基本的带通调制方法"><a href="#基本的带通调制方法" class="headerlink" title="基本的带通调制方法"></a>基本的带通调制方法</h3><p>基带信号往往包含有较多的低频成分，甚至有直流成分，而许多信道并不能传输这种低频分量或直流分量。为了解决这一问题，就必须对基带信号进行调制 (<code>modulation</code>)。<br>最基本的二元制调制方法有以下几种：</p>
+<ul>
+<li>调幅(AM)：载波的振幅随基带数字信号而变化。例如，0或1分别对应于无载波或有载波输出。</li>
+<li>调频(FM)：载波的频率随基带数字信号而变化。例如，0或1分别对应于频率f<sub>1</sub>或f<sub>2</sub>。</li>
+<li>调相(PM)：载波的初始相位随基带数字信号而变化。例如，0或1分别对应于相位0度或180度。</li>
+</ul>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img3.png" class="" title="最基本的三种调制方式">
+
+<h3 id="正交振幅调制"><a href="#正交振幅调制" class="headerlink" title="正交振幅调制"></a>正交振幅调制</h3><p>为了达到更高的信息传输速率，必须采用技术上更为复杂的多元制的振幅相位混合调制方法。例如，正交振幅调制 QAM(<code>Quadrature Amplitude Modulation</code>)。</p>
+<p>例如：可供选择的相位有 12 种，而对于每一种相位有 1 或 2 种振幅可供选择。总共有 16 种组合，即 16 个码元。</p>
+<p>由于<code>4 bit</code>编码共有 16 种不同的组合，因此这 16 个点中的每个点可对应于一种<code>4 bit</code>的编码。数据传输率可提高 4 倍。 </p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img4.png" class="">
+
+<p>不是码元越多越好。若每一个码元可表示的比特数越多，则在接收端进行解调时要正确识别每一种状态就越困难，出错率增加。</p>
+<h2 id="信道的极限容量"><a href="#信道的极限容量" class="headerlink" title="信道的极限容量"></a>信道的极限容量</h2><p>任何实际的信道都不是理想的，在传输信号时会产生各种失真以及带来多种干扰。</p>
+<p>虽然信号在信道上传输时会不可避免的产生失真，但在接收端只要能从失真的波形中能够识别出原来的信号，那么这种失真对通信质量就没有影响。</p>
+<p>码元传输的速率越高，或信号传输的距离越远，或传输媒体质量越差，在信道的输出端的波形的失真就越严重。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img5.png" class="">
+
+<p>从概念上讲，限制码元在信道上的传输速率的因素有两个：信道能够通过的频率范围、信噪比。</p>
+<h3 id="信道能够通过的频率范围"><a href="#信道能够通过的频率范围" class="headerlink" title="信道能够通过的频率范围"></a>信道能够通过的频率范围</h3><p>具体的信道所能通过的频率范围总是有限的。信号中的许多高频分量往往不能通过信道。</p>
+<p>码间串扰：如果信道中的高频分量在传输时受到衰减，那么在接收端收到的波形前沿和后沿就变得不那么陡峭了，每一个码元所占的时间界限也不再明显，这样，在接收端收到的信号波形就失去了码元之间的清晰界限。</p>
+<p>在任何信道中，码元传输的速率是有上限的，否则就会出现码间串扰的问题，使接收端对码元的判决（即识别）成为不可能。</p>
+<p>如果信道的频带越宽，也就是能够通过的信号高频分量越多，那么就可以用更高的速率传送码元而不出现码间串扰。</p>
+<h3 id="信道特性"><a href="#信道特性" class="headerlink" title="信道特性"></a>信道特性</h3><p>模拟信道的带宽如图所示。信道带宽<code>W=f2-f1</code>，其中，<code>f1</code>是信道能通过的最低频率，<code>f2</code>是信道能通过的最高频率，两者都是由信道的物理特性决定的。当组成信道的电路制成了，信道的带宽就决定了。为了使信号传输中的失真小一些，信道要有足够的带宽。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/12.png" class="">
+
+<p>数字信道是一种离散信道，它只能传送取离散值的数字信号。信道的带宽决定了信道中能不失真地传输的脉冲序列的最高速率。一个数字脉冲称为一个码元，用码元速率表示单位时间内信号波形的变换次数，即单位时间内通过信道传输的码元个数。若信号码元宽度为<code>T</code>秒，则码元速率<code>B=1/T</code>。码元速率的单位叫波特，所以码元速率也叫波特率。早在 1924年，亨利·奈奎斯特就推导出了有限带宽无噪声信道的极限波特率，称为尼奎斯特定理。若信道带宽为<code>W</code>，则尼奎斯特定理指出最大码元速率为<code>B=2W</code></p>
+<p>奈奎斯特定理指定的信道容量也叫作奈奎斯特极限，这是由信道的物理特性决定的。超过奈奎斯特极限传送脉冲信号是不可能的，所以要进一步提高波特率必须改善信道带宽。</p>
+<p>码元携带的信息量由码元取的离散值的个数决定。若码元取两个离散值，则一个码元携带 1 位信息。若码元可取 4 种离散值，则一个码元携带两位信息。总之，一一个码元携带的信息量<code>n</code>（位）与码元的种类数<code>N</code>有如下关系：</p>
+<p>n&#x3D;log<sub>2</sub>N  (N&#x3D;2<sup>n</sup>)</p>
+<p>单位时间内在信道上传送的信息量（位数）称为数据速率。在一定的波特率下提高速率的途径是用一个码元表示更多的位数。如果把两位编码为一个码元，则数据速率可成倍提高。有公式</p>
+<p>R&#x3D;Blog<sub>2</sub>N&#x3D;2Wlog<sub>2</sub>N(bps)</p>
+<p>其中，<code>R</code>表示数据速率，单位是每秒位（<code>bps</code>或<code>b/s</code>）。</p>
+<p>数据速率和波特率是两个不同的概念。仅当码元取两个离散值时两者的数值才相等。对于普通电话线路，带宽为 3000Hz，最高波特率为6000Baud，最高数据速率可随着调制方式的不同而取不同的值。这些都是在无噪声的理想情况下的极限值。实际信道会受到各种噪声的干扰，因而远远达不到按奈奎斯特定理计算出的数据传送速率。</p>
+<p>香农的研究表明，有噪声信道的极限数据速率可由下面的公式计算：</p>
+<p>C &#x3D; Wlog<sub>2</sub>(1 + S &#x2F; N)(bit&#x2F;s)</p>
+<p>这个公式叫作香农定理，其中，<code>W</code>为信道带宽，<code>S</code>为信号的平均功率，<code>N</code>为噪声平均功率，<code>S/N</code>叫作信噪比。由于在实际使用中<code>S</code>与<code>N</code>的比值太大，故常取其分贝数（<code>dB</code>）。分贝与信噪比的关系为：</p>
+<p>dB&#x3D;10log<sub>10</sub>(S&#x2F;N)</p>
+<p>综上所述，有两种带宽的概念，在模拟信道，带宽按照公式<code>W=f2-f1</code>计算，例如 CATV 电缆的带宽为<code>600MHz</code>或<code>1000MHz</code>；数字信道的带宽为信道能够达到的最大数据速率，例如以太网的带宽为<code>10Mbps</code>或<code>100Mbps</code>。两者可互相转换。</p>
+<h1 id="物理层下面的传输媒体"><a href="#物理层下面的传输媒体" class="headerlink" title="物理层下面的传输媒体"></a>物理层下面的传输媒体</h1><p>传输媒体也称为传输介质或传输媒介，它就是数据传输系统中在发送器和接收器之间的物理通路。</p>
+<p>传输媒体可分为两大类，即有线传输介质和无线传输介质。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img6.png" class="">
+
+<h2 id="有线传输介质"><a href="#有线传输介质" class="headerlink" title="有线传输介质"></a>有线传输介质</h2><p>有线传输介质是指在两个通信设备之间实现的物理连接部分，它能将信号从一方传输到另一方，有线传输介质主要有双绞线、同轴电缆和光纤。双绞线和同轴电缆传输电信号，光纤传输光信号。 </p>
+<h3 id="双绞线"><a href="#双绞线" class="headerlink" title="双绞线"></a>双绞线</h3><p>把两根相互绝缘的铜导线并排放在一起，然后用规则的方法绞合起来就构成了双绞线。绞合可以减少对相邻导线的电磁干扰。双绞线即能用于传输模拟信号，也能用于传输数字信号，其带宽决定于铜线的直径和传输距离。</p>
+<p>双绞线仅有的缺点即是传输间隔较短，一般的能到达 100 米。</p>
+<p>双绞线可分为屏蔽双绞线(<code>Shielded Twisted Pair，STP</code>)和非屏蔽双绞线(<code>Unshielded Twisted Pair，UTP</code>)。屏蔽双绞线在双绞线与外层绝缘封套之间有一个金属屏蔽层，可以屏蔽电磁干扰。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img7.png" class="">
+
+<p>双绞线有很多种类型，不同类型的双绞线所支持的传输速率一般也不相同。</p>
+<table>
+<thead>
+<tr>
+<th align="center">以太网标准</th>
+<th align="center">线缆类别</th>
+<th align="center">最长有效传送距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10BASE-T</td>
+<td align="center">两对3&#x2F;4&#x2F;5类双绞线</td>
+<td align="center">100米</td>
+</tr>
+<tr>
+<td align="center">100BASE-TX</td>
+<td align="center">两对5类双绞线</td>
+<td align="center">100米</td>
+</tr>
+<tr>
+<td align="center">1000BASE-T</td>
+<td align="center">四对5类双绞线</td>
+<td align="center">100米</td>
+</tr>
+</tbody></table>
+<p>一般千兆网络需要运用四对线，即 8 根芯线。100M 网络以下，一般运用 1、2、3、6 四根线。</p>
+<h4 id="每芯的作用"><a href="#每芯的作用" class="headerlink" title="每芯的作用"></a>每芯的作用</h4><p>每根芯的作用：</p>
+<ol>
+<li>输出数据 (+)</li>
+<li>输出数据 (-)</li>
+<li>输入数据 (+)</li>
+<li>保留为电话使用</li>
+<li>保留为电话使用</li>
+<li>输入数据 (-)</li>
+<li>保留为电话使用</li>
+<li>保留为电话使用</li>
+</ol>
+<p>由此可见，虽然双绞线有 8 根芯线，但在目前广泛使用的百兆网络中，实际上只用到了其中的 4 根，即第1、第2、第3、第6，它们分别起着收、发信号的作用。4、5，7、8 是双向线，保留使用。</p>
+<p>但是在高于 100M 的网络运行下，八芯就会全用，比如六类超六类的网线不光要用<code>1 3 2 6</code>，八芯都需要用到，否则网络运行就会不稳定。</p>
+<h4 id="双绞线线序"><a href="#双绞线线序" class="headerlink" title="双绞线线序"></a>双绞线线序</h4><p>双绞线使用 RJ-45 接头连接网络设备。为保证终端能够正确收发数据，RJ-45 接头中的针脚必须按照一定的线序排列。</p>
+<p>线序：</p>
+<ul>
+<li>T568A：白绿、绿、白橙、蓝 白蓝、橙 白棕、棕</li>
+<li>T568B：白橙、橙 白绿、蓝 白蓝、绿 白棕、棕</li>
+</ul>
+<h3 id="同轴电缆"><a href="#同轴电缆" class="headerlink" title="同轴电缆"></a>同轴电缆</h3><p>同轴电缆是一种早期使用的传输介质，同轴电缆的标准分为两种，10BASE2 和 10BASE5。这两种标准都支持 10Mbps 的传输速率，最长传输距离分别为 185 米和 500 米。</p>
+<table>
+<thead>
+<tr>
+<th align="center">以太网标准</th>
+<th align="center">电缆类别</th>
+<th align="center">最长有效传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10BASE5</td>
+<td align="center">粗同轴电缆</td>
+<td align="center">500米</td>
+</tr>
+<tr>
+<td align="center">10BASE2</td>
+<td align="center">细同轴电缆</td>
+<td align="center">185米</td>
+</tr>
+</tbody></table>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img8.png" class="">
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/8.png" class="">
+
+<p>现在，10Mbps 的传输速率早已不能满足目前企业网络需求，因此同轴电缆在目前企业网络中很少应用。</p>
+<h3 id="光纤"><a href="#光纤" class="headerlink" title="光纤"></a>光纤</h3><p>光纤通信就是利用光导纤维（光纤）传递光脉冲来进行通信。有光脉冲相当于 1，没有光脉冲相当于 0。</p>
+<p>光纤是光纤通信的传输媒体。在发送端有光源，可以采用发光二极管或半导体激光器，它们在电脉冲的作用下能产生出光脉冲。在接收端利用光电二极管做成光检测器，在检测到光脉冲时可还原出电脉冲。</p>
+<p>由于可见光的频率非常高，因此一个光纤通信系统的传输带宽远远大于目前其他各种传输媒体的带宽。</p>
+<h4 id="光纤的工作原理"><a href="#光纤的工作原理" class="headerlink" title="光纤的工作原理"></a>光纤的工作原理</h4><p>光纤通常由非常透明的石英玻璃拉成细丝，主要由纤芯和包层构成双层通信圆柱体。纤芯很细，光波正是通过纤芯进行传导的。包层较纤芯有较低的折射率。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img9.png" class="">
+
+<p>当光线从高折射率的媒体射向低折射率的媒体时，其折射角将大于入射角。因此，只要从纤芯中射到纤芯表面的光线的入射角大于某个临界角度，就可产生全反射，光也就沿着光纤传输下去。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img10.png" class="">
+
+<h4 id="光纤标准"><a href="#光纤标准" class="headerlink" title="光纤标准"></a>光纤标准</h4><table>
+<thead>
+<tr>
+<th align="center">以太网标准</th>
+<th align="center">线缆类别</th>
+<th align="center">最长有效传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10BASE-F</td>
+<td align="center">单模&#x2F;多模光纤</td>
+<td align="center">2000米</td>
+</tr>
+<tr>
+<td align="center">100BASE-FX</td>
+<td align="center">单模&#x2F;多模光纤</td>
+<td align="center">2000米</td>
+</tr>
+<tr>
+<td align="center">1000BASE-LX</td>
+<td align="center">单模&#x2F;多模光纤</td>
+<td align="center">316米</td>
+</tr>
+<tr>
+<td align="center">1000BASE-SX</td>
+<td align="center">单模&#x2F;多模光纤</td>
+<td align="center">316米</td>
+</tr>
+</tbody></table>
+<h4 id="多模光纤与单模光纤"><a href="#多模光纤与单模光纤" class="headerlink" title="多模光纤与单模光纤"></a>多模光纤与单模光纤</h4><p>单模光纤只能传输一种模式的光，不存在模间色散，因此适用于长距离高速传输。</p>
+<p>多模光纤允许不同模式的光在一根光纤上传输，由于模间色散较大而导致信号脉冲展宽严重，因此多模光纤主要用于局域网中的短距离传输。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/img11.png" class="">
+
+<h4 id="光纤优点"><a href="#光纤优点" class="headerlink" title="光纤优点"></a>光纤优点</h4><ul>
+<li>通信容量非常大。</li>
+<li>传输损耗小，中继距离长。</li>
+<li>抗雷电和电磁干扰性能好。</li>
+<li>无串音干扰，保密性好。</li>
+<li>体积小，重量轻。</li>
+</ul>
+<h2 id="非导引型传输媒体"><a href="#非导引型传输媒体" class="headerlink" title="非导引型传输媒体"></a>非导引型传输媒体</h2><p>将自由空间称为“非导引型传输媒体”。</p>
+<p>无线传输所使用的频段很广。</p>
+<p>短波通信（即高频通信）主要是靠电离层的反射，但短波信道的通信质量较差，传输速率低。</p>
+<p>微波在空间主要是直线传播。传统微波通信有两种方式：地面微波接力通信、卫星通信。</p>
+<p>要使用某一段无线电频谱进行通信，通常必须得到本国政府有关无线电频谱管理机构的许可证。但是，也有一些无线电频段是可以自由使用的。这正好满足计算机无线局域网的需求。例如：ISM。各国的 ISM 标准有可能略有差别。</p>
+<p>红外通信、激光通信也使用非导引型媒体。可用于近距离的笔记本电脑相互传送数据。</p>
+<h1 id="光模块"><a href="#光模块" class="headerlink" title="光模块"></a>光模块</h1><h2 id="光模块的工作原理"><a href="#光模块的工作原理" class="headerlink" title="光模块的工作原理"></a>光模块的工作原理</h2><p>光模块作为光纤通信中的重要组成部分，是实现光信号传输过程中光电转换和电光转换功能的光电子器件。</p>
+<p>光模块工作在 OSI 模型的物理层，是光纤通信系统中的核心器件之一。它主要由光电子器件（光发射器、光接收器）、功能电路和光接口等部分组成，主要作用就是实现光纤通信中的光电转换和电光转换功能。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/20.png" class="">
+
+<p>发送接口输入一定码率的电信号，经过内部的驱动芯片处理后由驱动半导体激光器（LD）或者发光二极管（LED）发射出相应速率的调制光信号，通过光纤传输后，接收接口再把光信号由光探测二极管转换成电信号，并经过前置放大器后输出相应码率的电信号。</p>
+<h2 id="光模块的外观结构"><a href="#光模块的外观结构" class="headerlink" title="光模块的外观结构"></a>光模块的外观结构</h2><p>光模块的种类多种多样，外观结构也不尽相同，但是其基本组成结构都包含以下几部分（以SFP封装举例说明）：</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/21.png" class="">
+
+<table>
+<thead>
+<tr>
+<th align="center">结构</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">防尘帽</td>
+<td align="center">保护光纤接头、光纤适配器、光模块的光接口以及其他设备的端口不受外部环境污染和外力损坏。</td>
+</tr>
+<tr>
+<td align="center">裙片</td>
+<td align="center">用于保证光模块和设备光接口之间良好的搭接，只在SFP封装的光模块上存在。</td>
+</tr>
+<tr>
+<td align="center">标签</td>
+<td align="center">用于标识光模块的关键参数及厂家信息等。</td>
+</tr>
+<tr>
+<td align="center">接头</td>
+<td align="center">用于光模块和单板之间的连接，传输信号，给光模块供电等。</td>
+</tr>
+<tr>
+<td align="center">壳体</td>
+<td align="center">保护内部元器件，主要有1*9外壳和SFP外壳两种。</td>
+</tr>
+<tr>
+<td align="center">接收接口（Rx）</td>
+<td align="center">光纤接收接口。</td>
+</tr>
+<tr>
+<td align="center">发送接口（Tx）</td>
+<td align="center">光纤发送接口。</td>
+</tr>
+<tr>
+<td align="center">拉手扣</td>
+<td align="center">用于拔插光模块，且为了辨认方便，不同波段所对应的拉手扣的颜色也是不一样的。</td>
+</tr>
+</tbody></table>
+<h2 id="常见的光模块种类"><a href="#常见的光模块种类" class="headerlink" title="常见的光模块种类"></a>常见的光模块种类</h2><h3 id="按速率分类"><a href="#按速率分类" class="headerlink" title="按速率分类"></a>按速率分类</h3><p>为了满足各种传输速率的需求，产生了不同速率的光模块：400GE 光模块、100GE 光模块、40GE 光模块、25GE 光模块、10GE 光模块、GE 光模块、FE 光模块等。</p>
+<h3 id="按封装类型分类"><a href="#按封装类型分类" class="headerlink" title="按封装类型分类"></a>按封装类型分类</h3><p>传输速率越高，结构越复杂，由此产生了不同的封装方式。华为交换机适用的封装类型有：QSFP-DD、QSFP28、QSFP+、SFP28、SFP&#x2F;eSFP、SFP+、CXP、CFP等。</p>
+<h3 id="按模式分类"><a href="#按模式分类" class="headerlink" title="按模式分类"></a>按模式分类</h3><p>光纤分为单模光纤、多模光纤。为了使用不同类别的光纤，产生了单模光模块、多模光模块。</p>
+<p>单模光模块的中心波长一般是1310nm、1550nm，与单模光纤配套使用。单模光纤传输频带宽，传输容量大，适用于长距传输。</p>
+<p>多模光模块的中心波长一般是850nm，与多模光纤配套使用。多模光纤有模式色散缺陷，其传输性能比单模光纤差，但成本低，适用于较小容量、短距传输。</p>
+<p>注意：使用长距光模块，其发送光功率一般大于过载光功率，因此需要关注光纤长度，保证实际接收光功率小于过载光功率。如果光纤长度较短，使用长距光模块时需要配合光纤光衰（光纤每单位长度上的衰减值，单位为dB&#x2F;km）使用，以避免烧坏对端光模块。</p>
+<h3 id="按中心波长分类"><a href="#按中心波长分类" class="headerlink" title="按中心波长分类"></a>按中心波长分类</h3><p>光模块的工作波长是一个范围，为了方便描述使用中心波长这个参数，单位是纳米（nm）。<br>为了支持光信号传输使用不同的光波段，产生了不同中心波长的光模块，比如：850nm、1310nm、1550nm的光模块等。欢迎关注公众号：网络工程师阿龙</p>
+<h3 id="按颜色分类"><a href="#按颜色分类" class="headerlink" title="按颜色分类"></a>按颜色分类</h3><p>彩色光模块与其它类型的光模块的最大的区别是中心波长不同：<br>一般光模块的中心波长有850nm、1310nm和1550nm三类，中心波长比较单一，我们称该类光为“黑白光”或者“灰光”。</p>
+<p>彩色光模块承载了若干不同中心波长的光，所以交集起来是五颜六色的，我们称该类光为“彩光”。</p>
+<p>彩色光模块分为粗集波光模块（CWDM）和密集波光模块（DWDM）两种。在同一波段下，密集波光模块的种类更多，所以密集波光模块对波段的资源利用更充分。中心波长各异的光在同一根光纤中可以互不干涉的传输，因此，通过无源合波器将来自多路彩色光模块不同中心波长的光合成一路进行传输，远端则通过分波器根据不同的中心波长将光分出多路，有效的节省了光纤线路。彩色光模块主要应用于长距离的传输线路。</p>
+<h2 id="光模块的命名"><a href="#光模块的命名" class="headerlink" title="光模块的命名"></a>光模块的命名</h2><p>了解光模块命名规则就能读懂厂商光模块产品名称所包含的全部信息。</p>
+<img src="/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/22.png" class="">
+
+<table>
+<thead>
+<tr>
+<th align="center">标号</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">A</td>
+<td align="center">表示光模块的封装类型，主要有：SFP&#x2F;eSFP、SFP+、SFP28、QSFP+、CXP、CFP、QSFP28、QSFP-DD</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">表示光模块的速率，主要有：FE、GE、10GE、25GE、40GE、100GE、400GE</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">表示光模块的传输距离类型，其中：SX：短距；LX：中距；LH：长距</td>
+</tr>
+<tr>
+<td align="center">D</td>
+<td align="center">表示光模块的传输距离，单位为km。</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">表示光模块的器件类别，其中：SM：单模；MM：多模</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">表示光模块的中心波长，单位为nm。</td>
+</tr>
+</tbody></table>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/04/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82%E2%80%94%E2%80%94%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/04/java/%E5%9F%BA%E7%A1%80/Java%20%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java 字符串处理
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/01/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">网络体系结构</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

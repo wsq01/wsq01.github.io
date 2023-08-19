@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS Navigator对象、Screen对象 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/基础/JS Navigator对象、Screen对象"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS Navigator对象、Screen对象
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/01/09/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20Navigator%E5%AF%B9%E8%B1%A1%E3%80%81Screen%E5%AF%B9%E8%B1%A1/" class="article-date">
+  <time datetime="2019-01-09T13:01:25.000Z" itemprop="datePublished">2019-01-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><code>window.navigator</code>属性指向一个包含浏览器和系统信息的<code>Navigator</code>对象。脚本通过这个属性了解用户的环境信息。</p>
+<h1 id="Navigator-对象的属性"><a href="#Navigator-对象的属性" class="headerlink" title="Navigator 对象的属性"></a>Navigator 对象的属性</h1><h2 id="Navigator-userAgent"><a href="#Navigator-userAgent" class="headerlink" title="Navigator.userAgent"></a>Navigator.userAgent</h2><p><code>navigator.userAgent</code>属性返回浏览器的<code>User Agent</code>字符串，表示浏览器的厂商和版本信息。</p>
+<p>下面是 Chrome 浏览器的<code>userAgent</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">userAgent</span></span><br><span class="line"><span class="comment">// &quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36&quot;</span></span><br></pre></td></tr></table></figure>
+<p>通过<code>userAgent</code>属性识别浏览器，不是一个好办法。因为必须考虑所有的情况（不同的浏览器，不同的版本），非常麻烦，而且用户可以改变这个字符串。这个字符串的格式并无统一规定，也无法保证未来的适用性，各种上网设备层出不穷，难以穷尽。所以，现在一般不再通过它识别浏览器了，而是使用“功能识别”方法，即逐一测试当前浏览器是否支持要用到的 JavaScript 功能。</p>
+<p>不过，通过<code>userAgent</code>可以大致准确地识别手机浏览器，方法就是测试是否包含<code>mobi</code>字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = navigator.<span class="property">userAgent</span>.<span class="title function_">toLowerCase</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/mobi/i</span>.<span class="title function_">test</span>(ua)) &#123;</span><br><span class="line">  <span class="comment">// 手机浏览器</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 非手机浏览器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果想要识别所有移动设备的浏览器，可以测试更多的特征字符串。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mobi|android|touch|mini/i.<span class="title function_">test</span>(ua)</span><br></pre></td></tr></table></figure>
+<h2 id="Navigator-plugins"><a href="#Navigator-plugins" class="headerlink" title="Navigator.plugins"></a>Navigator.plugins</h2><p><code>Navigator.plugins</code>属性返回一个类似数组的对象，成员是<code>Plugin</code>实例对象，表示浏览器安装的插件，比如 Flash、ActiveX 等。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pluginsLength = navigator.<span class="property">plugins</span>.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pluginsLength; i++) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">plugins</span>[i].<span class="property">name</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">plugins</span>[i].<span class="property">filename</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">plugins</span>[i].<span class="property">description</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(navigator.<span class="property">plugins</span>[i].<span class="property">version</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Navigator-platform"><a href="#Navigator-platform" class="headerlink" title="Navigator.platform"></a>Navigator.platform</h2><p><code>Navigator.platform</code>属性返回用户的操作系统信息，比如<code>MacIntel</code>、<code>Win32</code>、<code>Linux x86_64</code>等 。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">platform</span> <span class="comment">// &quot;Linux x86_64&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Navigator-onLine"><a href="#Navigator-onLine" class="headerlink" title="Navigator.onLine"></a>Navigator.onLine</h2><p><code>navigator.onLine</code>属性返回一个布尔值，表示用户当前在线还是离线（浏览器断线）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">onLine</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>有时，浏览器可以连接局域网，但是局域网不能连通外网。这时，有的浏览器的<code>onLine</code>属性会返回<code>true</code>，所以不能假定只要是<code>true</code>，用户就一定能访问互联网。不过，如果是<code>false</code>，可以断定用户一定离线。</p>
+<p>用户变成在线会触发<code>online</code>事件，变成离线会触发<code>offline</code>事件，可以通过<code>window.ononline</code>和<code>window.onoffline</code>指定这两个事件的回调函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;offline&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;offline&#x27;</span>); &#125;);</span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;online&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;online&#x27;</span>); &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="Navigator-language，Navigator-languages"><a href="#Navigator-language，Navigator-languages" class="headerlink" title="Navigator.language，Navigator.languages"></a>Navigator.language，Navigator.languages</h2><p><code>Navigator.language</code>属性返回一个字符串，表示浏览器的首选语言。该属性只读。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">language</span> <span class="comment">// &quot;en&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>Navigator.languages</code>属性返回一个数组，表示用户可以接受的语言。<code>Navigator.language</code>总是这个数组的第一个成员。HTTP 请求头信息的<code>Accept-Language</code>字段，就来自这个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">languages</span>  <span class="comment">// [&quot;en-US&quot;, &quot;en&quot;, &quot;zh-CN&quot;, &quot;zh&quot;, &quot;zh-TW&quot;]</span></span><br></pre></td></tr></table></figure>
+<p>如果这个属性发生变化，就会在<code>window</code>对象上触发<code>languagechange</code>事件。</p>
+<h2 id="Navigator-geolocation"><a href="#Navigator-geolocation" class="headerlink" title="Navigator.geolocation"></a>Navigator.geolocation</h2><p><code>Navigator.geolocation</code>属性返回一个<code>Geolocation</code>对象，包含用户地理位置的信息。注意，该 API 只有在 HTTPS 协议下可用，否则调用下面方法时会报错。</p>
+<p><code>Geolocation</code>对象提供下面三个方法。</p>
+<ul>
+<li><code>Geolocation.getCurrentPosition()</code>：得到用户的当前位置</li>
+<li><code>Geolocation.watchPosition()</code>：监听用户位置变化</li>
+<li><code>Geolocation.clearWatch()</code>：取消<code>watchPosition()</code>方法指定的监听函数</li>
+</ul>
+<p>注意，调用这三个方法时，浏览器会跳出一个对话框，要求用户给予授权。</p>
+<h2 id="Navigator-cookieEnabled"><a href="#Navigator-cookieEnabled" class="headerlink" title="Navigator.cookieEnabled"></a>Navigator.cookieEnabled</h2><p><code>Navigator.cookieEnabled</code>属性返回一个布尔值，表示浏览器的 Cookie 功能是否打开。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">cookieEnabled</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>注意，这个属性反映的是浏览器总的特性，与是否储存某个具体的网站的 Cookie 无关。用户可以设置某个网站不得储存 Cookie，这时<code>cookieEnabled</code>返回的还是<code>true</code>。</p>
+<h1 id="Navigator-对象的方法"><a href="#Navigator-对象的方法" class="headerlink" title="Navigator 对象的方法"></a>Navigator 对象的方法</h1><h2 id="Navigator-javaEnabled"><a href="#Navigator-javaEnabled" class="headerlink" title="Navigator.javaEnabled()"></a>Navigator.javaEnabled()</h2><p><code>Navigator.javaEnabled()</code>方法返回一个布尔值，表示浏览器是否能运行 Java Applet 小程序。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="title function_">javaEnabled</span>() <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="Navigator-sendBeacon"><a href="#Navigator-sendBeacon" class="headerlink" title="Navigator.sendBeacon()"></a>Navigator.sendBeacon()</h2><p><code>Navigator.sendBeacon()</code>方法用于向服务器异步发送数据。</p>
+<h1 id="Screen-对象"><a href="#Screen-对象" class="headerlink" title="Screen 对象"></a>Screen 对象</h1><p>Screen 对象表示当前窗口所在的屏幕，提供显示设备的信息。<code>window.screen</code>属性指向这个对象。<br>该对象有下面的属性。</p>
+<ul>
+<li><code>Screen.height</code>：浏览器窗口所在的屏幕的高度（单位像素）。除非调整显示器的分辨率，否则这个值可以看作常量，不会发生变化。显示器的分辨率与浏览器设置无关，缩放网页并不会改变分辨率。</li>
+<li><code>Screen.width</code>：浏览器窗口所在的屏幕的宽度（单位像素）。</li>
+<li><code>Screen.availHeight</code>：浏览器窗口可用的屏幕高度（单位像素）。因为部分空间可能不可用，比如系统的任务栏或者 Mac 系统屏幕底部的 Dock 区，这个属性等于<code>height</code>减去那些被系统组件的高度。</li>
+<li><code>Screen.availWidth</code>：浏览器窗口可用的屏幕宽度（单位像素）。</li>
+<li><code>Screen.pixelDepth</code>：整数，表示屏幕的色彩位数，比如<code>24</code>表示屏幕提供24位色彩。</li>
+<li><code>Screen.colorDepth</code>：<code>Screen.pixelDepth</code>的别名。严格地说，<code>colorDepth</code>表示应用程序的颜色深度，<code>pixelDepth</code>表示屏幕的颜色深度，绝大多数情况下，它们都是同一件事。</li>
+<li><code>Screen.orientation</code>：返回一个对象，表示屏幕的方向。该对象的<code>type</code>属性是一个字符串，表示屏幕的具体方向，<code>landscape-primary</code>表示横放，<code>landscape-secondary</code>表示颠倒的横放，<code>portrait-primary</code>表示竖放，<code>portrait-secondary</code>。</li>
+</ul>
+<p>下面是<code>Screen.orientation</code>的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">screen</span>.<span class="property">orientation</span></span><br><span class="line"><span class="comment">// &#123; angle: 0, type: &quot;landscape-primary&quot;, onchange: null &#125;</span></span><br></pre></td></tr></table></figure>
+<p>下面的例子保证屏幕分辨率大于 1024 x 768。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">screen</span>.<span class="property">width</span> &gt;= <span class="number">1024</span> &amp;&amp; <span class="variable language_">window</span>.<span class="property">screen</span>.<span class="property">height</span> &gt;= <span class="number">768</span>) &#123;</span><br><span class="line">  <span class="comment">// 分辨率不低于 1024x768</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是根据屏幕的宽度，将用户导向不同网页的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((screen.<span class="property">width</span> &lt;= <span class="number">800</span>) &amp;&amp; (screen.<span class="property">height</span> &lt;= <span class="number">600</span>)) &#123;</span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">location</span>.<span class="title function_">replace</span>(<span class="string">&#x27;small.html&#x27;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="variable language_">window</span>.<span class="property">location</span>.<span class="title function_">replace</span>(<span class="string">&#x27;wide.html&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/01/09/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20Navigator%E5%AF%B9%E8%B1%A1%E3%80%81Screen%E5%AF%B9%E8%B1%A1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/02/09/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20cookie/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS Cookie
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/01/06/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20window%E5%AF%B9%E8%B1%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS window对象</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>v3组合式API基础 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-vue/v3组合式API基础"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  v3组合式API基础
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/23/vue/v3%E7%BB%84%E5%90%88%E5%BC%8FAPI%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2022-07-23T09:52:35.000Z" itemprop="datePublished">2022-07-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">21 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="创建一个-Vue-应用"><a href="#创建一个-Vue-应用" class="headerlink" title="创建一个 Vue 应用"></a>创建一个 Vue 应用</h1><h2 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h2><p>每个 Vue 应用都是通过<code>createApp</code>函数创建的一个新的应用实例：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">createApp</span>(&#123;</span><br><span class="line">  <span class="comment">/* 根组件选项 */</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="根组件"><a href="#根组件" class="headerlink" title="根组件"></a>根组件</h2><p>我们传入<code>createApp</code>的对象实际上是一个组件，每个应用都需要一个“根组件”，其他组件将作为其子组件。</p>
+<p>如果你使用的是单文件组件，我们可以直接从另一个文件中导入根组件。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="comment">// 从一个单文件组件中导入根组件</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">createApp</span>(<span class="title class_">App</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="挂载应用"><a href="#挂载应用" class="headerlink" title="挂载应用"></a>挂载应用</h2><p>应用实例必须在调用了<code>.mount()</code>方法后才会渲染出来。该方法接收一个“容器”参数，可以是一个实际的 DOM 元素或是一个 CSS 选择器字符串：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">mount</span>(<span class="string">&#x27;#app&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>应用根组件的内容将会被渲染在容器元素里面。容器元素自己将不会被视为应用的一部分。</p>
+<p><code>.mount()</code>方法应该始终在整个应用配置和资源注册完成后被调用。同时应注意，不同于其他资源注册方法，它的返回值是根组件实例而非应用实例。</p>
+<h2 id="多个应用实例"><a href="#多个应用实例" class="headerlink" title="多个应用实例"></a>多个应用实例</h2><p>你不必再受限于一个页面只能拥有一个应用实例。<code>createApp</code> API 允许多个 Vue 应用共存于同一个页面上，而且每个应用都拥有自己的用于配置和全局资源的作用域。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app1 = <span class="title function_">createApp</span>(&#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;)</span><br><span class="line">app1.<span class="title function_">mount</span>(<span class="string">&#x27;#container-1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app2 = <span class="title function_">createApp</span>(&#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125;)</span><br><span class="line">app2.<span class="title function_">mount</span>(<span class="string">&#x27;#container-2&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="响应式基础"><a href="#响应式基础" class="headerlink" title="响应式基础"></a>响应式基础</h1><h2 id="声明响应式状态"><a href="#声明响应式状态" class="headerlink" title="声明响应式状态"></a>声明响应式状态</h2><p>我们可以使用<code>reactive()</code>函数创建一个响应式对象或数组：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;button @click=&quot;increment&quot;&gt;</span><br><span class="line">    &#123; &#123; state.count &#125; &#125;</span><br><span class="line">  &lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; reactive &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">const state = reactive(&#123; count: 0 &#125;)</span><br><span class="line"></span><br><span class="line">function increment() &#123;</span><br><span class="line">  state.count++</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>响应式对象其实是 JavaScript <code>Proxy</code>，其行为表现与一般对象相似。不同之处在于 Vue 能够跟踪对响应式对象<code>property</code>的访问与更改操作。</p>
+<h4 id="DOM-更新时机"><a href="#DOM-更新时机" class="headerlink" title="DOM 更新时机"></a>DOM 更新时机</h4><p>当你更改响应式状态后，DOM 也会自动更新。然而，你得注意 DOM 的更新并不是同步的。相反，Vue 将缓冲它们直到更新周期的 “下个时机” 以确保无论你进行了多少次声明更改，每个组件都只需要更新一次。</p>
+<p>若要等待一个状态改变后的 DOM 更新完成，可以使用<code>nextTick()</code>这个全局 API：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; nextTick &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">increment</span>(<span class="params"></span>) &#123;</span><br><span class="line">  state.<span class="property">count</span>++</span><br><span class="line">  <span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 访问更新后的 DOM</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="深层响应性"><a href="#深层响应性" class="headerlink" title="深层响应性"></a>深层响应性</h4><p>在 Vue 中，状态都是默认深层响应式的。这意味着即使在更改深层次的对象或数组，你的改动也能被检测到。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; reactive &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = <span class="title function_">reactive</span>(&#123;</span><br><span class="line">  <span class="attr">nested</span>: &#123; <span class="attr">count</span>: <span class="number">0</span> &#125;,</span><br><span class="line">  <span class="attr">arr</span>: [<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">mutateDeeply</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 以下都会按照期望工作</span></span><br><span class="line">  obj.<span class="property">nested</span>.<span class="property">count</span>++</span><br><span class="line">  obj.<span class="property">arr</span>.<span class="title function_">push</span>(<span class="string">&#x27;baz&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="响应式代理-vs-原始对象"><a href="#响应式代理-vs-原始对象" class="headerlink" title="响应式代理 vs 原始对象"></a>响应式代理 vs 原始对象</h4><p><code>reactive()</code>返回的是一个原始对象的<code>Proxy</code>，它和原始对象是不相等的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> raw = &#123;&#125;</span><br><span class="line"><span class="keyword">const</span> proxy = <span class="title function_">reactive</span>(raw)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代理和原始对象不是全等的</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(proxy === raw) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>只有代理是响应式的，更改原始对象不会触发更新。因此，使用 Vue 的响应式系统的最佳实践是 仅使用你声明对象的代理版本。</p>
+<p>为保证访问代理的一致性，对同一个对象调用<code>reactive()</code>会总是返回同样的代理，而对一个已存在代理调用<code>reactive()</code>也是返回同样的代理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在同一个对象上调用 reactive() 会返回相同的代理</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reactive</span>(raw) === proxy) <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在一个代理上调用 reactive() 会返回它自己</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">reactive</span>(proxy) === proxy) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>这个规则对嵌套对象也适用。依靠深层响应性，响应式对象内的嵌套对象依然是代理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proxy = <span class="title function_">reactive</span>(&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> raw = &#123;&#125;</span><br><span class="line">proxy.<span class="property">nested</span> = raw</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(proxy.<span class="property">nested</span> === raw) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h4 id="reactive-的局限性"><a href="#reactive-的局限性" class="headerlink" title="reactive() 的局限性"></a>reactive() 的局限性</h4><p><code>reactive()</code> API 有两条限制：</p>
+<ul>
+<li>仅对对象类型有效（对象、数组和<code>Map、Set</code>这样的集合类型），而对<code>string、number</code>和<code>boolean</code>这样的原始类型无效。</li>
+<li>因为 Vue 的响应式系统是通过<code>property</code>访问进行追踪的，因此我们必须始终保持对该响应式对象的相同引用。这意味着我们不可以随意地“替换”一个响应式对象，因为这将导致对初始引用的响应性连接丢失：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> state = <span class="title function_">reactive</span>(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上面的引用 (&#123; count: 0 &#125;) 将不再被追踪（响应性连接已丢失！）</span></span><br><span class="line">state = <span class="title function_">reactive</span>(&#123; <span class="attr">count</span>: <span class="number">1</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>同时这也意味着当我们将响应式对象的 property 赋值或解构至本地变量时，或是将该 property 传入一个函数时，我们会失去响应性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> state = <span class="title function_">reactive</span>(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// n 是一个局部变量，同 state.count</span></span><br><span class="line"><span class="comment">// 失去响应性连接</span></span><br><span class="line"><span class="keyword">let</span> n = state.<span class="property">count</span></span><br><span class="line"><span class="comment">// 不影响原始的 state</span></span><br><span class="line">n++</span><br><span class="line"></span><br><span class="line"><span class="comment">// count 也和 state.count 失去了响应性连接</span></span><br><span class="line"><span class="keyword">let</span> &#123; count &#125; = state</span><br><span class="line"><span class="comment">// 不会影响原始的 state</span></span><br><span class="line">count++</span><br><span class="line"></span><br><span class="line"><span class="comment">// 该函数接收一个普通数字，并且</span></span><br><span class="line"><span class="comment">// 将无法跟踪 state.count 的变化</span></span><br><span class="line"><span class="title function_">callSomeFunction</span>(state.<span class="property">count</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="ref-定义响应式变量"><a href="#ref-定义响应式变量" class="headerlink" title="ref() 定义响应式变量"></a>ref() 定义响应式变量</h2><p>为了解决<code>reactive()</code>带来的限制，Vue 也提供了一个<code>ref()</code>方法来允许我们创建可以使用任何值类型的响应式<code>ref</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> count = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><code>ref()</code>从参数中获取到值，将其包装为一个带<code>.value property</code>的<code>ref</code>对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(count) <span class="comment">// &#123; value: 0 &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(count.<span class="property">value</span>) <span class="comment">// 0</span></span><br><span class="line"></span><br><span class="line">count.<span class="property">value</span>++</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(count.<span class="property">value</span>) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>和响应式对象的<code>property</code>类似，<code>ref</code>的<code>.value property</code>也是响应式的。同时，当值为对象类型时，会用<code>reactive()</code>自动转换它的<code>.value</code>。</p>
+<p>一个包含对象类型值的<code>ref</code>可以响应式地替换整个对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> objectRef = <span class="title function_">ref</span>(&#123; <span class="attr">count</span>: <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是响应式的替换</span></span><br><span class="line">objectRef.<span class="property">value</span> = &#123; <span class="attr">count</span>: <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+<p><code>ref</code>被传递给函数或是从一般对象上被解构时，不会丢失响应性：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">foo</span>: <span class="title function_">ref</span>(<span class="number">1</span>),</span><br><span class="line">  <span class="attr">bar</span>: <span class="title function_">ref</span>(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 该函数接收一个 ref</span></span><br><span class="line"><span class="comment">// 需要通过 .value 取值</span></span><br><span class="line"><span class="comment">// 但它会保持响应性</span></span><br><span class="line"><span class="title function_">callSomeFunction</span>(obj.<span class="property">foo</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 仍然是响应式的</span></span><br><span class="line"><span class="keyword">const</span> &#123; foo, bar &#125; = obj</span><br></pre></td></tr></table></figure>
+<h4 id="ref-在模板中的解包"><a href="#ref-在模板中的解包" class="headerlink" title="ref 在模板中的解包"></a>ref 在模板中的解包</h4><p>当<code>ref</code>在模板中作为顶层<code>property</code>被访问时，它们会被自动“解包”，所以不需要使用<code>.value</code>。下面是之前的计数器例子，用<code>ref()</code>代替：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> count = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">increment</span>(<span class="params"></span>) &#123;</span><br><span class="line">  count.<span class="property">value</span>++</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">&quot;increment&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &#123; &#123; count &#125; &#125; <span class="comment">&lt;!-- 无需 .value --&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>请注意，仅当<code>ref</code>是模板渲染上下文的顶层<code>property</code>时才适用自动“解包”。 例如，<code>foo</code>是顶层<code>property</code>，但<code>object.foo</code>不是。</p>
+<p>所以我们给出以下<code>object</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const object = &#123; foo: ref(1) &#125;</span><br></pre></td></tr></table></figure>
+<p>下面的表达式将不会像预期的那样工作：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123; object.<span class="property">foo</span> + <span class="number">1</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+<p>渲染的结果会是一个<code>[object Object]</code>，因为<code>object.foo</code>是一个<code>ref</code>对象。我们可以通过让<code>foo</code>成为顶级<code>property</code>来解决这个问题：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; foo &#125; = object</span><br><span class="line">&#123; &#123; foo + <span class="number">1</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+<p>现在渲染结果将是 2。</p>
+<p>需要注意的是，如果一个<code>ref</code>是文本插值（即一个<code>&#123; &#123; &#125; &#125;</code>符号）计算的最终值，它也将被解包。因此下面的渲染结果将为 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123; object.foo &#125; &#125;</span><br></pre></td></tr></table></figure>
+<p>这只是文本插值的一个方便功能，相当于<code>&#123; &#123; object.foo.value &#125; &#125;</code>。</p>
+<h4 id="ref-在响应式对象中的解包"><a href="#ref-在响应式对象中的解包" class="headerlink" title="ref 在响应式对象中的解包"></a>ref 在响应式对象中的解包</h4><p>当一个<code>ref</code>作为一个响应式对象的<code>property</code>被访问或更改时，它会自动解包，因此会表现得和一般的<code>property</code>一样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = <span class="title function_">ref</span>(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> state = <span class="title function_">reactive</span>(&#123;</span><br><span class="line">  count</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(state.<span class="property">count</span>) <span class="comment">// 0</span></span><br><span class="line"></span><br><span class="line">state.<span class="property">count</span> = <span class="number">1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(count.<span class="property">value</span>) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>如果将一个新的<code>ref</code>赋值给一个关联了已有<code>ref</code>的<code>property</code>，那么它会替换掉旧的<code>ref</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const otherCount = ref(2)</span><br><span class="line"></span><br><span class="line">state.count = otherCount</span><br><span class="line">console.log(state.count) // 2</span><br><span class="line">// 原始 ref 现在已经和 state.count 失去联系</span><br><span class="line">console.log(count.value) // 1</span><br></pre></td></tr></table></figure>
+<h4 id="数组和集合类型的-ref-解包"><a href="#数组和集合类型的-ref-解包" class="headerlink" title="数组和集合类型的 ref 解包"></a>数组和集合类型的 ref 解包</h4><p>不像响应式对象，当<code>ref</code>作为响应式数组或像<code>Map</code>这种原生集合类型的元素被访问时，不会进行解包。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const books = reactive([ref(&#x27;Vue 3 Guide&#x27;)])</span><br><span class="line">// 这里需要 .value</span><br><span class="line">console.log(books[0].value)</span><br><span class="line"></span><br><span class="line">const map = reactive(new Map([[&#x27;count&#x27;, ref(0)]]))</span><br><span class="line">// 这里需要 .value</span><br><span class="line">console.log(map.get(&#x27;count&#x27;).value)</span><br></pre></td></tr></table></figure>
+<h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><p>模板中的表达式虽然方便，但也只能用来做简单的操作。如果在模板中写太多逻辑，会让模板变得臃肿，难以维护。比如说，我们有这样一个包含嵌套数组的对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const author = reactive(&#123;</span><br><span class="line">  name: &#x27;John Doe&#x27;,</span><br><span class="line">  books: [</span><br><span class="line">    &#x27;Vue 2 - Advanced Guide&#x27;,</span><br><span class="line">    &#x27;Vue 3 - Basic Guide&#x27;,</span><br><span class="line">    &#x27;Vue 4 - The Mystery&#x27;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>我们想根据<code>author</code>是否已有一些书籍来展示不同的信息：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Has published books:<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123; &#123;author.books.length&gt; 0 ? &#x27;Yes&#x27; : &#x27;No&#x27;&#125; &#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里的模板看起来有些复杂。我们必须认真看好一会儿才能明白它的计算依赖于<code>author.books</code>。更重要的是，如果在模板中需要不止一次这样的计算，我们可能不想写重复的代码。</p>
+<p>推荐使用计算属性来描述依赖响应式状态的复杂逻辑。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; reactive, computed &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">const author = reactive(&#123;</span><br><span class="line">  name: &#x27;John Doe&#x27;,</span><br><span class="line">  books: [</span><br><span class="line">    &#x27;Vue 2 - Advanced Guide&#x27;,</span><br><span class="line">    &#x27;Vue 3 - Basic Guide&#x27;,</span><br><span class="line">    &#x27;Vue 4 - The Mystery&#x27;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 一个计算属性 ref</span><br><span class="line">const publishedBooksMessage = computed(() =&gt; &#123;</span><br><span class="line">  return author.books.length &gt; 0 ? &#x27;Yes&#x27; : &#x27;No&#x27;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;p&gt;Has published books:&lt;/p&gt;</span><br><span class="line">  &lt;span&gt;&#123; &#123; publishedBooksMessage &#125; &#125;&lt;/span&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<p>我们在这里定义了一个计算属性<code>publishedBooksMessage</code>。<code>computed()</code>方法期望接收一个<code>getter</code>函数，返回值为一个计算属性<code>ref</code>。和其他一般的<code>ref</code>类似，可以通过<code>publishedBooksMessage.value</code>访问计算结果。计算属性<code>ref</code>也会在模板中自动解包，因此在模板表达式中引用时无需添加<code>.value</code>。</p>
+<p>Vue 的计算属性会自动追踪响应式依赖。它会检测到<code>publishedBooksMessage</code>依赖于<code>author.books</code>，所以当<code>author.books</code>改变时，任何依赖于<code>publishedBooksMessage</code>的绑定都会同时更新。</p>
+<h1 id="侦听器"><a href="#侦听器" class="headerlink" title="侦听器"></a>侦听器</h1><h2 id="基本示例"><a href="#基本示例" class="headerlink" title="基本示例"></a>基本示例</h2><p>计算属性允许我们声明性地计算推导值。然而，在有些情况下，为了应对一些状态的变化，我们需要运行些“副作用”：例如更改 DOM，或者根据异步操作的结果，去修改另一处的状态。</p>
+<p>在组合式 API 中，我们可以使用<code>watch</code>函数在每次响应式状态发生变化时触发回调函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, watch &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">const question = ref(&#x27;&#x27;)</span><br><span class="line">const answer = ref(&#x27;Questions usually contain a question mark. ;-)&#x27;)</span><br><span class="line"></span><br><span class="line">// 可以直接侦听一个 ref</span><br><span class="line">watch(question, async (newQuestion, oldQuestion) =&gt; &#123;</span><br><span class="line">  if (newQuestion.indexOf(&#x27;?&#x27;) &gt; -1) &#123;</span><br><span class="line">    answer.value = &#x27;Thinking...&#x27;</span><br><span class="line">    try &#123;</span><br><span class="line">      const res = await fetch(&#x27;https://yesno.wtf/api&#x27;)</span><br><span class="line">      answer.value = (await res.json()).answer</span><br><span class="line">    &#125; catch (error) &#123;</span><br><span class="line">      answer.value = &#x27;Error! Could not reach the API. &#x27; + error</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;p&gt;</span><br><span class="line">    Ask a yes/no question:</span><br><span class="line">    &lt;input v-model=&quot;question&quot; /&gt;</span><br><span class="line">  &lt;/p&gt;</span><br><span class="line">  &lt;p&gt;&#123; &#123; answer &#125; &#125;&lt;/p&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="侦听来源类型"><a href="#侦听来源类型" class="headerlink" title="侦听来源类型"></a>侦听来源类型</h2><p><code>watch</code>的第一个参数可以是不同形式的“来源”：它可以是一个<code>ref</code>(包括计算属性)、一个响应式对象、一个<code>getter</code>函数、或多个来源组成的数组：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">const x = ref(0)</span><br><span class="line">const y = ref(0)</span><br><span class="line"></span><br><span class="line">// 单个 ref</span><br><span class="line">watch(x, (newX) =&gt; &#123;</span><br><span class="line">  console.log(`x is $&#123;newX&#125;`)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// getter 函数</span><br><span class="line">watch(</span><br><span class="line">  () =&gt; x.value + y.value,</span><br><span class="line">  (sum) =&gt; &#123;</span><br><span class="line">    console.log(`sum of x + y is: $&#123;sum&#125;`)</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">// 多个来源组成的数组</span><br><span class="line">watch([x, () =&gt; y.value], ([newX, newY]) =&gt; &#123;</span><br><span class="line">  console.log(`x is $&#123;newX&#125; and y is $&#123;newY&#125;`)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>注意，你不能侦听响应式对象的<code>property</code>，例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const obj = reactive(&#123; count: 0 &#125;)</span><br><span class="line"></span><br><span class="line">// 这不起作用，因为你向 watch() 传入了一个 number</span><br><span class="line">watch(obj.count, (count) =&gt; &#123;</span><br><span class="line">  console.log(`count is: $&#123;count&#125;`)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>而是用<code>getter</code>函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 提供一个 getter 函数</span><br><span class="line">watch(</span><br><span class="line">  () =&gt; obj.count,</span><br><span class="line">  (count) =&gt; &#123;</span><br><span class="line">    console.log(`count is: $&#123;count&#125;`)</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="深层侦听器"><a href="#深层侦听器" class="headerlink" title="深层侦听器"></a>深层侦听器</h2><p>直接给<code>watch()</code>传入一个响应式对象，会隐式地创建一个深层侦听器——该回调函数在所有嵌套的变更时都会被触发：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const obj = reactive(&#123; count: 0 &#125;)</span><br><span class="line"></span><br><span class="line">watch(obj, (newValue, oldValue) =&gt; &#123;</span><br><span class="line">  // 在嵌套的 property 变更时触发</span><br><span class="line">  // 注意：`newValue` 此处和 `oldValue` 是相等的</span><br><span class="line">  // 因为它们是同一个对象！</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">obj.count++</span><br></pre></td></tr></table></figure>
+<p>这不同于返回响应式对象的<code>getter</code>函数：只有在<code>getter</code>函数返回不同的对象时，才会触发回调：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  () =&gt; state.someObject,</span><br><span class="line">  () =&gt; &#123;</span><br><span class="line">    // 仅当 state.someObject 被替换时触发</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>然而，在上面的例子里，你可以显式地加上<code>deep</code>选项，强制转成深层侦听器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">watch(</span><br><span class="line">  () =&gt; state.someObject,</span><br><span class="line">  (newValue, oldValue) =&gt; &#123;</span><br><span class="line">    // 注意：`newValue` 此处和 `oldValue` 是相等的</span><br><span class="line">    // *除非* state.someObject 被整个替换了</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123; deep: true &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="watchEffect"><a href="#watchEffect" class="headerlink" title="watchEffect()"></a>watchEffect()</h2><p><code>watch()</code>是懒执行的：仅在侦听源变化时，才会执行回调。但在某些场景中，我们希望在创建侦听器时，立即执行一遍回调。举个例子，我们想请求一些初始数据，然后在相关状态更改时重新请求数据。我们可以这样写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">const url = ref(&#x27;https://...&#x27;)</span><br><span class="line">const data = ref(null)</span><br><span class="line"></span><br><span class="line">async function fetchData() &#123;</span><br><span class="line">  const response = await fetch(url.value)</span><br><span class="line">  data.value = await response.json()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 立即获取</span><br><span class="line">fetchData()</span><br><span class="line">// ...再侦听 url 变化</span><br><span class="line">watch(url, fetchData)</span><br></pre></td></tr></table></figure>
+<p>这段代码还可以用<code>watchEffect</code>函数来简化。<code>watchEffect()</code>会立即执行一遍回调函数，如果这时函数产生了副作用，Vue 会自动追踪副作用的依赖关系，自动分析出响应源。上面的例子可以重写为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">watchEffect(async () =&gt; &#123;</span><br><span class="line">  const response = await fetch(url.value)</span><br><span class="line">  data.value = await response.json()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这个例子中，回调会立即执行。在执行期间，它会自动追踪<code>url.value</code>作为依赖（近似于计算属性）。每当<code>url.value</code>变化时，回调会再次执行。</p>
+<h2 id="watch-vs-watchEffect"><a href="#watch-vs-watchEffect" class="headerlink" title="watch vs watchEffect"></a>watch vs watchEffect</h2><p><code>watch</code>和<code>watchEffect</code>都能响应式地执行有副作用的回调。它们之间的主要区别是追踪响应式依赖的方式：</p>
+<ul>
+<li><code>watch</code>只追踪明确侦听的源。它不会追踪任何在回调中访问到的东西。另外，仅在响应源确实改变时才会触发回调。<code>watch</code>会避免在发生副作用时追踪依赖，因此，我们能更加精确地控制回调函数的触发时机。</li>
+<li><code>watchEffect</code>，则会在副作用发生期间追踪依赖。它会在同步执行过程中，自动追踪所有能访问到的响应式<code>property</code>。这更方便，而且代码往往更简洁，但其响应性依赖关系不那么明确。</li>
+</ul>
+<h2 id="回调的刷新时机"><a href="#回调的刷新时机" class="headerlink" title="回调的刷新时机"></a>回调的刷新时机</h2><p>当你更改了响应式状态，它可能会同时触发 Vue 组件更新和侦听器回调。</p>
+<p>默认情况下，用户创建的侦听器回调，都会在 Vue 组件更新之前被调用。这意味着你在侦听器回调中访问的 DOM 将是被 Vue 更新之前的状态。</p>
+<p>如果想在侦听器回调中能访问被 Vue 更新之后的 DOM，你需要指明<code>flush: &#39;post&#39;</code>选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watch(source, callback, &#123;</span><br><span class="line">  flush: &#x27;post&#x27;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">watchEffect(callback, &#123;</span><br><span class="line">  flush: &#x27;post&#x27;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>后置刷新的<code>watchEffect()</code>有个更方便的别名<code>watchPostEffect()</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; watchPostEffect &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">watchPostEffect(() =&gt; &#123;</span><br><span class="line">  /* 在 Vue 更新后执行 */</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="停止侦听器"><a href="#停止侦听器" class="headerlink" title="停止侦听器"></a>停止侦听器</h2><p>在<code>&lt;script setup&gt;</code>中用同步语句创建的侦听器，会自动绑定到宿主组件实例上，并且会在宿主组件卸载时自动停止。因此，在大多数情况下，你无需关心怎么停止一个侦听器。</p>
+<p>一个关键点是，侦听器必须用同步语句创建：如果用异步回调创建一个侦听器，那么它不会绑定到当前组件上，你必须手动停止它，以防内存泄漏。如下方这个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; watchEffect &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">// 它会自动停止</span><br><span class="line">watchEffect(() =&gt; &#123;&#125;)</span><br><span class="line"></span><br><span class="line">// ...这个则不会！</span><br><span class="line">setTimeout(() =&gt; &#123;</span><br><span class="line">  watchEffect(() =&gt; &#123;&#125;)</span><br><span class="line">&#125;, 100)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>要手动停止一个侦听器，请调用<code>watch</code>或<code>watchEffect</code>返回的函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const unwatch = watchEffect(() =&gt; &#123;&#125;)</span><br><span class="line"></span><br><span class="line">// ...当该侦听器不再需要时</span><br><span class="line">unwatch()</span><br></pre></td></tr></table></figure>
+<p>注意，需要异步创建侦听器的情况很少，请尽可能选择同步创建。如果需要等待一些异步数据，你可以使用条件式的侦听逻辑：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 需要异步请求得到的数据</span><br><span class="line">const data = ref(null)</span><br><span class="line"></span><br><span class="line">watchEffect(() =&gt; &#123;</span><br><span class="line">  if (data.value) &#123;</span><br><span class="line">    // 数据加载后执行某些操作...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="模板-ref"><a href="#模板-ref" class="headerlink" title="模板 ref"></a>模板 ref</h1><p>虽然 Vue 的声明性渲染模型为你抽象了大部分对 DOM 的直接操作，但在某些情况下，我们仍然需要直接访问底层 DOM 元素。要实现这一点，我们可以使用特殊的<code>ref attribute</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input ref=&quot;input&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p><code>ref</code>是一个特殊的<code>attribute</code>，和<code>v-for</code>中的<code>key</code>类似。它允许我们在一个特定的 DOM 元素或子组件实例被挂载后，获得对它的直接引用。这可能很有用，比如说在组件挂载时编程式地聚焦到一个<code>input</code>元素上，或在一个元素上初始化一个第三方库。</p>
+<h2 id="访问模板-ref"><a href="#访问模板-ref" class="headerlink" title="访问模板 ref"></a>访问模板 ref</h2><p>为了通过组合式 API 获得该模板<code>ref</code>，我们需要声明一个同名的<code>ref</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, onMounted &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">// 声明一个 ref 来存放该元素的引用</span><br><span class="line">// 必须和模板 ref 同名</span><br><span class="line">const input = ref(null)</span><br><span class="line"></span><br><span class="line">onMounted(() =&gt; &#123;</span><br><span class="line">  input.value.focus()</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;input ref=&quot;input&quot; /&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<p>如果你正试图观察一个模板<code>ref</code>的变化，确保考虑到<code>ref</code>的值为<code>null</code>的情况：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">watchEffect(() =&gt; &#123;</span><br><span class="line">  if (input.value) &#123;</span><br><span class="line">    input.value.focus()</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    // 此时还未挂载，或此元素已经被卸载（例如通过 v-if 控制）</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="v-for-中的-ref"><a href="#v-for-中的-ref" class="headerlink" title="v-for 中的 ref"></a>v-for 中的 ref</h2><p>当<code>ref</code>在<code>v-for</code>中使用时，相应的<code>ref</code>中包含的值是一个数组，它将在元素被挂载后填充：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, onMounted &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">const list = ref([</span><br><span class="line">  /* ... */</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">const itemRefs = ref([])</span><br><span class="line"></span><br><span class="line">onMounted(() =&gt; console.log(itemRefs.value))</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-for=&quot;item in list&quot; ref=&quot;itemRefs&quot;&gt;</span><br><span class="line">      &#123; &#123; item &#125; &#125;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<p>应该注意的是，<code>ref</code>数组不能保证与源数组相同的顺序。</p>
+<h2 id="函数型-ref"><a href="#函数型-ref" class="headerlink" title="函数型 ref"></a>函数型 ref</h2><p>除了使用字符串值作名字，<code>ref attribute</code>还可以绑定为一个函数，会在每次组件更新时都被调用。函数接受该元素引用作为第一个参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input :ref=&quot;(el) =&gt; &#123; /* 将 el 分配给 property 或 ref */ &#125;&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>如果你正在使用一个动态的<code>:ref</code>绑定，我们也可以传一个函数。当元素卸载时，这个<code>el</code>参数会是<code>null</code>。你当然也可以使用一个方法而不是内联函数。</p>
+<h2 id="组件上的-ref"><a href="#组件上的-ref" class="headerlink" title="组件上的 ref"></a>组件上的 ref</h2><p><code>ref</code>也可以被用在一个子组件上。此时<code>ref</code>中引用的是组件实例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref, onMounted &#125; from &#x27;vue&#x27;</span><br><span class="line">import Child from &#x27;./Child.vue&#x27;</span><br><span class="line"></span><br><span class="line">const child = ref(null)</span><br><span class="line"></span><br><span class="line">onMounted(() =&gt; &#123;</span><br><span class="line">  // child.value 是 &lt;Child /&gt; 组件的实例</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;Child ref=&quot;child&quot; /&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+<p>如果一个子组件使用的是选项式 API 或没有使用<code>&lt;script setup&gt;</code>，被引用的组件实例和该子组件的<code>this</code>完全一致，这意味着父组件对子组件的每一个属性和方法都有完全的访问权。这使得在父组件和子组件之间创建紧密耦合的实现细节变得很容易，当然也因此，应该只在绝对需要时才使用组件引用。大多数情况下，你应该首先使用标准的<code>props</code>和<code>emit</code>接口来实现父子组件交互。</p>
+<p>有一个例外的情况，使用了<code>&lt;script setup&gt;</code>的组件是默认私有的：一个父组件无法访问到一个使用了<code>&lt;script setup&gt;</code>的子组件中的任何东西，除非子组件在其中通过<code>defineExpose</code>宏显式暴露：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref &#125; from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">const a = 1</span><br><span class="line">const b = ref(2)</span><br><span class="line"></span><br><span class="line">defineExpose(&#123;</span><br><span class="line">  a,</span><br><span class="line">  b</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>当父组件通过模板<code>ref</code>获取到了该组件的实例时，得到的实例类型为<code>&#123; a: number, b: number &#125;</code> (<code>ref</code>都会自动解包，和一般的实例一样)。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/07/23/vue/v3%E7%BB%84%E5%90%88%E5%BC%8FAPI%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/09/06/utils/vsCode%E6%8F%92%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            vscode插件
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/07/20/vue/v3%E6%96%B0%E8%AF%AD%E6%B3%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">vue3新语法</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

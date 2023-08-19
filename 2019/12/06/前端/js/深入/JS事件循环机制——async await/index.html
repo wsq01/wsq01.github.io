@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS事件循环机制——async await |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/深入/JS事件循环机制——async await"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS事件循环机制——async await
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/12/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94async%20await/" class="article-date">
+  <time datetime="2019-12-06T10:22:08.000Z" itemprop="datePublished">2019-12-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>使用<code>Promise</code>能很好地解决回调地狱的问题，但是这种方式充满了<code>Promise</code>的<code>then()</code>方法，如果处理流程比较复杂的话，那么整段代码将充斥着<code>then</code>，语义化不明显，代码不能很好地表示执行流程。</p>
+<p>比如下面这样一个实际的使用场景：我先请求<code>a</code>网站的内容，等返回信息之后，我再请求<code>a</code>网站的另外一个资源。下面代码展示的是使用<code>fetch</code>来实现这样的需求，<code>fetch</code>被定义在<code>window</code>对象中，可以用它来发起对远程资源的请求，该方法返回的是一个<code>Promise</code>对象，<code>fetch</code>是浏览器原生支持的，并有没利用<code>XMLHttpRequest</code>来封装。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;https://www.a.com&#x27;</span>)</span><br><span class="line">	.<span class="title function_">then</span>(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(response)</span><br><span class="line">		<span class="keyword">return</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.a.com/test&#x27;</span>)</span><br><span class="line">	&#125;).<span class="title function_">then</span>(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(response)</span><br><span class="line">	&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(error)</span><br><span class="line">	&#125;)</span><br></pre></td></tr></table></figure>
+<p>从这段<code>Promise</code>代码可以看出来，使用<code>promise.then</code>也是相当复杂，虽然整个请求流程已经线性化了，但是代码里面包含了大量的<code>then</code>函数，使得代码依然不是太容易阅读。基于这个原因，ES7 引入了<code>async/await</code>，这是 JavaScript 异步编程的一个重大改进，提供了在不阻塞主线程的情况下使用同步代码实现异步访问资源的能力，并且使得代码逻辑更加清晰。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> response1 = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org&#x27;</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response1)</span><br><span class="line">    <span class="keyword">let</span> response2 = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org/test&#x27;</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response2)</span><br><span class="line">  &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">foo</span>()</span><br></pre></td></tr></table></figure>
+<p>通过上面代码，你会发现整个异步处理的逻辑都是使用同步代码的方式来实现的，而且还支持<code>try catch</code>来捕获异常，这就是完全在写同步代码，所以是非常符合人的线性思维的。</p>
+<h1 id="生成器-VS-协程"><a href="#生成器-VS-协程" class="headerlink" title="生成器 VS 协程"></a>生成器 VS 协程</h1><p>我们先来看看什么是生成器函数？</p>
+<p>生成器函数是一个带星号函数，而且是可以暂停执行和恢复执行的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span>* <span class="title function_">genDemo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot; 开始执行第一段 &quot;</span>)</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot; 开始执行第二段 &quot;</span>)</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot; 开始执行第三段 &quot;</span>)</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot; 执行结束 &quot;</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;generator 2&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;main 0&#x27;</span>)</span><br><span class="line"><span class="keyword">let</span> gen = <span class="title function_">genDemo</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(gen.<span class="title function_">next</span>().<span class="property">value</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;main 1&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(gen.<span class="title function_">next</span>().<span class="property">value</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;main 2&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(gen.<span class="title function_">next</span>().<span class="property">value</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;main 3&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(gen.<span class="title function_">next</span>().<span class="property">value</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;main 4&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>执行上面这段代码，观察输出结果，你会发现函数<code>genDemo</code>并不是一次执行完的，全局代码和<code>genDemo</code>函数交替执行。其实这就是生成器函数的特性，可以暂停执行，也可以恢复执行。下面我们就来看看生成器函数的具体使用方式：</p>
+<p>在生成器函数内部执行一段代码，如果遇到<code>yield</code>关键字，那么 JavaScript 引擎将返回关键字后面的内容给外部，并暂停该函数的执行。<br>外部函数可以通过<code>next</code>方法恢复函数的执行。</p>
+<p>要搞懂函数为何能暂停和恢复，那你首先要了解协程的概念。协程是一种比线程更加轻量级的存在。你可以把协程看成是跑在线程上的任务，一个线程上可以存在多个协程，但是在线程上同时只能执行一个协程，比如当前执行的是 A 协程，要启动 B 协程，那么 A 协程就需要将主线程的控制权交给 B 协程，这就体现在 A 协程暂停执行，B 协程恢复执行；同样，也可以从 B 协程中启动 A 协程。通常，如果从 A 协程启动 B 协程，我们就把 A 协程称为 B 协程的父协程。</p>
+<p>正如一个进程可以拥有多个线程一样，一个线程也可以拥有多个协程。最重要的是，协程不是被操作系统内核所管理，而完全是由程序所控制（也就是在用户态执行）。这样带来的好处就是性能得到了很大的提升，不会像线程切换那样消耗资源。</p>
+<p>为了让你更好地理解协程是怎么执行的，我结合上面那段代码的执行过程，画出了下面的“协程执行流程图”，你可以对照着代码来分析：</p>
+<img src="/2019/12/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94async%20await/img1.png" class="" title="协程执行流程图">
+
+<p>从图中可以看出来协程的四点规则：</p>
+<ul>
+<li>通过调用生成器函数<code>genDemo</code>来创建一个协程<code>gen</code>，创建之后，<code>gen</code>协程并没有立即执行。</li>
+<li>要让<code>gen</code>协程执行，需要通过调用<code>gen.next</code>。</li>
+<li>当协程正在执行的时候，可以通过<code>yield</code>关键字来暂停<code>gen</code>协程的执行，并返回主要信息给父协程。</li>
+<li>如果协程在执行期间，遇到了<code>return</code>关键字，那么 JavaScript 引擎会结束当前协程，并将<code>return</code>后面的内容返回给父协程。</li>
+</ul>
+<p>不过，对于上面这段代码，你可能又有这样疑问：父协程有自己的调用栈，<code>gen</code>协程时也有自己的调用栈，当<code>gen</code>协程通过<code>yield</code>把控制权交给父协程时，V8 是如何切换到父协程的调用栈？当父协程通过<code>gen.next</code>恢复<code>gen</code>协程时，又是如何切换<code>gen</code>协程的调用栈？</p>
+<p>要搞清楚上面的问题，你需要关注以下两点内容。</p>
+<p>第一点：<code>gen</code>协程和父协程是在主线程上交互执行的，并不是并发执行的，它们之前的切换是通过<code>yield</code>和<code>gen.next</code>来配合完成的。</p>
+<p>第二点：当在<code>gen</code>协程中调用了<code>yield</code>方法时，JavaScript 引擎会保存<code>gen</code>协程当前的调用栈信息，并恢复父协程的调用栈信息。同样，当在父协程中执行<code>gen.next</code>时，JavaScript 引擎会保存父协程的调用栈信息，并恢复<code>gen</code>协程的调用栈信息。</p>
+<p>为了直观理解父协程和<code>gen</code>协程是如何切换调用栈的，你可以参考下图：</p>
+<img src="/2019/12/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94async%20await/img2.png" class="" title="gen 协程和父协程之间的切换">
+
+<p>到这里相信你已经弄清楚了协程是怎么工作的，其实在 JavaScript 中，生成器就是协程的一种实现方式，这样相信你也就理解什么是生成器了。那么接下来，我们使用生成器和<code>Promise</code>来改造开头的那段<code>Promise</code>代码。改造后的代码如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//foo 函数</span></span><br><span class="line"><span class="keyword">function</span>* <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="keyword">let</span> response1 = <span class="keyword">yield</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(response1)</span><br><span class="line">  <span class="keyword">let</span> response2 = <span class="keyword">yield</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org/test&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(response2)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 执行 foo 函数的代码</span></span><br><span class="line"><span class="keyword">let</span> gen = <span class="title function_">foo</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getGenPromise</span>(<span class="params">gen</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gen.<span class="title function_">next</span>().<span class="property">value</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">getGenPromise</span>(gen).<span class="title function_">then</span>(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(response)</span><br><span class="line">	<span class="keyword">return</span> <span class="title function_">getGenPromise</span>(gen)</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(response)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>从图中可以看到，<code>foo</code>函数是一个生成器函数，在<code>foo</code>函数里面实现了用同步代码形式来实现异步操作；但是在<code>foo</code>函数外部，我们还需要写一段执行<code>foo</code>函数的代码，如上述代码的后半部分所示，那下面我们就来分析下这段代码是如何工作的。</p>
+<p>首先执行的是<code>let gen = foo()</code>，创建了<code>gen</code>协程。<br>然后在父协程中通过执行<code>gen.next</code>把主线程的控制权交给<code>gen</code>协程。<br><code>gen</code>协程获取到主线程的控制权后，就调用<code>fetch</code>函数创建了一个<code>Promise</code>对象<code>response1</code>，然后通过<code>yield</code>暂停<code>gen</code>协程的执行，并将<code>response1</code>返回给父协程。<br>父协程恢复执行后，调用<code>response1.then</code>方法等待请求结果。<br>等通过<code>fetch</code>发起的请求完成之后，会调用<code>then</code>中的回调函数，<code>then</code>中的回调函数拿到结果之后，通过调用<code>gen.next</code>放弃主线程的控制权，将控制权交<code>gen</code>协程继续执行下个请求。<br>以上就是协程和<code>Promise</code>相互配合执行的一个大致流程。不过通常，我们把执行生成器的代码封装成一个函数，并把这个执行生成器代码的函数称为执行器，如下面这种方式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span>* <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="keyword">let</span> response1 = <span class="keyword">yield</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response1&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(response1)</span><br><span class="line">	<span class="keyword">let</span> response2 = <span class="keyword">yield</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://www.geekbang.org/test&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;response2&#x27;</span>)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(response2)</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">co</span>(<span class="title function_">foo</span>());</span><br></pre></td></tr></table></figure>
+<p>通过使用生成器配合执行器，就能实现使用同步的方式写出异步代码了，这样也大大加强了代码的可读性。</p>
+<h1 id="async-x2F-await"><a href="#async-x2F-await" class="headerlink" title="async&#x2F;await"></a>async&#x2F;await</h1><p>虽然生成器已经能很好地满足我们的需求了，但是程序员的追求是无止境的，这不又在 ES7 中引入了<code>async/await</code>，这种方式能够彻底告别执行器和生成器，实现更加直观简洁的代码。其实<code>async/await</code>技术背后的秘密就是<code>Promise</code>和生成器应用，往低层说就是微任务和协程应用。要搞清楚<code>async</code>和<code>await</code>的工作原理，我们就得对<code>async</code>和<code>await</code>分开分析。</p>
+<h2 id="1-async"><a href="#1-async" class="headerlink" title="1. async"></a>1. async</h2><p>我们先来看看<code>async</code>到底是什么？根据 MDN 定义，<code>async</code>是一个通过异步执行并隐式返回<code>Promise</code>作为结果的函数。</p>
+<p>对<code>async</code>函数的理解，这里需要重点关注两个词：异步执行和隐式返回<code>Promise</code>。</p>
+<p>关于异步执行的原因，我们一会儿再分析。这里我们先来看看是如何隐式返回<code>Promise</code>的，你可以参考下面的代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">foo</span>())  <span class="comment">// Promise &#123;&lt;resolved&gt;: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>执行这段代码，我们可以看到调用<code>async</code>声明的<code>foo</code>函数返回了一个<code>Promise</code>对象，状态是<code>resolved</code>，返回结果如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Promise</span> &#123;&lt;resolved&gt;: <span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-await"><a href="#2-await" class="headerlink" title="2. await"></a>2. await</h2><p>我们知道了<code>async</code>函数返回的是一个<code>Promise</code>对象，那下面我们再结合文中这段代码来看看<code>await</code>到底是什么。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">let</span> a = <span class="keyword">await</span> <span class="number">100</span></span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(a)</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">0</span>)</span><br><span class="line"><span class="title function_">foo</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>观察上面这段代码，你能判断出打印出来的内容是什么吗？这得先来分析<code>async</code>结合<code>await</code>到底会发生什么。我们先站在协程的视角来看看这段代码的整体执行流程图：</p>
+<img src="/2019/12/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94async%20await/img3.png" class="" title="async&#x2F;await 执行流程图">
+
+<p>结合上图，我们来一起分析下<code>async/await</code>的执行流程。</p>
+<p>首先，执行<code>console.log(0)</code>这个语句，打印出来 0。</p>
+<p>紧接着就是执行<code>foo</code>函数，由于<code>foo</code>函数是被<code>async</code>标记过的，所以当进入该函数的时候，JavaScript 引擎会保存当前的调用栈等信息，然后执行<code>foo</code>函数中的<code>console.log(1)</code>语句，并打印出 1。</p>
+<p>接下来就执行到<code>foo</code>函数中的<code>await 100</code>这个语句了，这里是我们分析的重点，因为在执行<code>await 100</code>这个语句时，JavaScript 引擎在背后为我们默默做了太多的事情，那么下面我们就把这个语句拆开，来看看 JavaScript 到底都做了哪些事情。</p>
+<p>当执行到<code>await 100</code>时，会默认创建一个<code>Promise</code>对象，代码如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> promise_ = <span class="keyword">new</span> <span class="title class_">Promise</span>((resolve,reject) &#123;</span><br><span class="line">  <span class="title function_">resolve</span>(<span class="number">100</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>在这个<code>promise_</code>对象创建的过程中，我们可以看到在<code>executor</code>函数中调用了<code>resolve</code>函数，JavaScript 引擎会将该任务提交给微任务队列。</p>
+<p>然后 JavaScript 引擎会暂停当前协程的执行，将主线程的控制权转交给父协程执行，同时会将<code>promise_</code>对象返回给父协程。</p>
+<p>主线程的控制权已经交给父协程了，这时候父协程要做的一件事是调用<code>promise_.then</code>来监控<code>promise</code>状态的改变。</p>
+<p>接下来继续执行父协程的流程，这里我们执行<code>console.log(3)</code>，并打印出来 3。随后父协程将执行结束，在结束之前，会进入微任务的检查点，然后执行微任务队列，微任务队列中有<code>resolve(100)</code>的任务等待执行，执行到这里的时候，会触发<code>promise_.then</code>中的回调函数，如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">promise_.<span class="title function_">then</span>(<span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 回调函数被激活后</span></span><br><span class="line">  <span class="comment">// 将主线程控制权交给 foo 协程，并将 vaule 值传给协程</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>该回调函数被激活以后，会将主线程的控制权交给<code>foo</code>函数的协程，并同时将<code>value</code>值传给该协程。</p>
+<p><code>foo</code>协程激活之后，会把刚才的<code>value</code>值赋给了变量<code>a</code>，然后<code>foo</code>协程继续执行后续语句，执行完成之后，将控制权归还给父协程。</p>
+<p>以上就是<code>await/async</code>的执行流程。正是因为<code>async</code>和<code>await</code>在背后为我们做了大量的工作，所以我们才能用同步的方式写出异步代码来。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>Promise</code>的编程模型依然充斥着大量的<code>then</code>方法，虽然解决了回调地狱的问题，但是在语义方面依然存在缺陷，代码中充斥着大量的<code>then</code>函数，这就是<code>async/await</code>出现的原因。</p>
+<p>使用<code>async/await</code>可以实现用同步代码的风格来编写异步代码，这是因为<code>async/await</code>的基础技术使用了生成器和<code>Promise</code>，生成器是协程的实现，利用生成器能实现生成器函数的暂停和恢复。</p>
+<p>另外，V8 引擎还为<code>async/await</code>做了大量的语法层面包装，所以了解隐藏在背后的代码有助于加深你对<code>async/await</code>的理解。</p>
+<p><code>async/await</code>无疑是异步编程领域非常大的一个革新，也是未来的一个主流的编程风格。其实，除了 JavaScript，Python、Dart、C# 等语言也都引入了<code>async/await</code>，使用它不仅能让代码更加整洁美观，而且还能确保该函数始终都能返回<code>Promise</code>。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/12/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94async%20await/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/12/23/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8%E2%80%94%E2%80%94%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            浏览器安全——同源策略
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/12/05/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94Promise/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS事件循环机制——Promise</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

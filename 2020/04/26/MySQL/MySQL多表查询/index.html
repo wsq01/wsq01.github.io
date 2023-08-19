@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL多表查询 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-MySQL/MySQL多表查询"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL多表查询
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/04/26/MySQL/MySQL%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/" class="article-date">
+  <time datetime="2020-04-26T03:48:12.000Z" itemprop="datePublished">2020-04-26</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">22 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>多表查询就是同时查询两个或两个以上的表。在 MySQL 中，多表查询主要有交叉连接、内连接和外连接。</p>
+<h1 id="CROSS-JOIN：交叉连接"><a href="#CROSS-JOIN：交叉连接" class="headerlink" title="CROSS JOIN：交叉连接"></a>CROSS JOIN：交叉连接</h1><p>交叉连接（<code>CROSS JOIN</code>）一般用来返回连接表的笛卡尔积。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT &lt;字段名&gt; FROM &lt;表1&gt; CROSS JOIN &lt;表2&gt; [WHERE子句]</span><br><span class="line">或</span><br><span class="line">SELECT &lt;字段名&gt; FROM &lt;表1&gt;, &lt;表2&gt; [WHERE子句] </span><br></pre></td></tr></table></figure>
+<p>语法说明：</p>
+<ul>
+<li>字段名：需要查询的字段名称。</li>
+<li>&lt;表1&gt;&lt;表2&gt;：需要交叉连接的表名。</li>
+<li><code>WHERE</code>子句：用来设置交叉连接的查询条件。</li>
+</ul>
+<blockquote>
+<p>注意：多个表交叉连接时，在<code>FROM</code>后连续使用<code>CROSS JOIN</code>或<code>,</code>即可。</p>
+</blockquote>
+<p>当连接的表之间没有关系时，我们会省略掉<code>WHERE</code>子句，这时返回结果就是两个表的笛卡尔积，返回结果数量就是两个表的数据行相乘。需要注意的是，如果每个表有 1000 行，那么返回结果的数量就有 1000×1000 &#x3D; 1000000 行，数据量是非常巨大的。</p>
+<p>交叉连接可以查询两个或两个以上的表。</p>
+<p>查询学生信息表和科目信息表，并得到一个笛卡尔积。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_students_info;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> name   <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">10</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_course;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> course_name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="number">5</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_course <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> tb_students_info;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> course_name <span class="operator">|</span> id <span class="operator">|</span> name   <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">50</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由运行结果可以看出，<code>tb_course</code>和<code>tb_students_info</code>表交叉连接查询后，返回了 50 条记录。可以想象，当表中的数据较多时，得到的运行结果会非常长，而且得到的运行结果也没太大的意义。所以，通过交叉连接的方式进行多表查询的这种方法并不常用，我们应该尽量避免这种查询。</p>
+<p>查询<code>tb_course</code>表中的<code>id</code>字段和<code>tb_students_info</code>表中的<code>course_id</code>字段相等的内容：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_course <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> tb_students_info </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> tb_students_info.course_id <span class="operator">=</span> tb_course.id;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> course_name <span class="operator">|</span> id <span class="operator">|</span> name   <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">10</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>如果在交叉连接时使用<code>WHERE</code>子句，MySQL 会先生成两个表的笛卡尔积，然后再选择满足<code>WHERE</code>条件的记录。因此，表的数量较多时，交叉连接会非常非常慢。一般情况下不建议使用交叉连接。</p>
+<p>在 MySQL 中，多表查询一般使用内连接和外连接，它们的效率要高于交叉连接。</p>
+<h2 id="笛卡尔积"><a href="#笛卡尔积" class="headerlink" title="笛卡尔积"></a>笛卡尔积</h2><p>笛卡尔积是指两个集合<code>X</code>和<code>Y</code>的乘积。</p>
+<p>例如，有<code>A</code>和<code>B</code>两个集合：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A = &#123;1,2&#125;</span><br><span class="line">B = &#123;3,4,5&#125;</span><br></pre></td></tr></table></figure>
+<p>集合<code>A×B 和 B×A</code>的结果集分别表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A×B=&#123;(1,3), (1,4), (1,5), (2,3), (2,4), (2,5) &#125;;</span><br><span class="line">B×A=&#123;(3,1), (3,2), (4,1), (4,2), (5,1), (5,2) &#125;;</span><br></pre></td></tr></table></figure>
+<p>以上<code>A×B</code>和<code>B×A</code>的结果就叫做两个集合的笛卡尔积。并且，从以上结果我们可以看出：</p>
+<ul>
+<li>两个集合相乘，不满足交换率，即<code>A×B≠B×A</code>。</li>
+<li><code>A</code>集合和<code>B</code>集合的笛卡尔积是<code>A</code>集合的元素个数 × <code>B</code>集合的元素个数。</li>
+</ul>
+<p>多表查询遵循的算法就是以上提到的笛卡尔积，表与表之间的连接可以看成是在做乘法运算。在实际应用中，应避免使用笛卡尔积，因为笛卡尔积中容易存在大量的不合理数据，简单来说就是容易导致查询结果重复、混乱。</p>
+<h1 id="INNER-JOIN：内连接"><a href="#INNER-JOIN：内连接" class="headerlink" title="INNER JOIN：内连接"></a>INNER JOIN：内连接</h1><p>内连接主要通过设置连接条件的方式，来移除查询结果中某些数据行的交叉连接。简单来说，就是利用条件表达式来消除交叉连接的某些数据行。</p>
+<p>内连接使用<code>INNER JOIN</code>关键字连接两张表，并使用<code>ON</code>子句来设置连接条件。如果没有连接条件，<code>INNER JOIN</code>和<code>CROSS JOIN</code>在语法上是等同的，两者可以互换。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="keyword">FROM</span> <span class="operator">&lt;</span>表<span class="number">1</span><span class="operator">&gt;</span> <span class="keyword">INNER</span> <span class="keyword">JOIN</span> <span class="operator">&lt;</span>表<span class="number">2</span><span class="operator">&gt;</span> [<span class="keyword">ON</span>子句]</span><br></pre></td></tr></table></figure>
+<p>语法说明：</p>
+<ul>
+<li>字段名：需要查询的字段名称。</li>
+<li>&lt;表1&gt;&lt;表2&gt;：需要内连接的表名。</li>
+<li><code>INNER JOIN</code>：内连接中可以省略<code>INNER</code>关键字，只用关键字<code>JOIN</code>。</li>
+<li><code>ON</code>子句：用来设置内连接的连接条件。</li>
+</ul>
+<p><code>INNER JOIN</code>也可以使用<code>WHERE</code>子句指定连接条件，但是<code>INNER JOIN ... ON</code>语法是官方的标准写法，而且<code>WHERE</code>子句在某些时候会影响查询的性能。</p>
+<p>多个表内连接时，在<code>FROM</code>后连续使用<code>INNER JOIN</code>或<code>JOIN</code>即可。</p>
+<p>在<code>tb_students_info</code>表和<code>tb_course</code>表之间，使用内连接查询学生姓名和相对应的课程名称。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> s.name,c.course_name <span class="keyword">FROM</span> tb_students_info s <span class="keyword">INNER</span> <span class="keyword">JOIN</span> tb_course c </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> s.course_id <span class="operator">=</span> c.id;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> name   <span class="operator">|</span> course_name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Dany   <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Green  <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry  <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jane   <span class="operator">|</span> Python      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jim    <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> John   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Lily   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Susan  <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Thomas <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Tom    <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="number">10</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>在这里的查询语句中，两个表之间的关系通过<code>INNER JOIN</code>指定，连接的条件使用<code>ON</code>子句给出。</p>
+<p>注意：当对多个表进行查询时，要在<code>SELECT</code>语句后面指定字段是来源于哪一张表。因此，在多表查询时，<code>SELECT</code>语句后面的写法是表名.列名。另外，如果表名非常长的话，也可以给表设置别名，这样就可以直接在<code>SELECT</code>语句后面写上表的别名.列名。</p>
+<h1 id="LEFT-x2F-RIGHT-JOIN：外连接"><a href="#LEFT-x2F-RIGHT-JOIN：外连接" class="headerlink" title="LEFT&#x2F;RIGHT JOIN：外连接"></a>LEFT&#x2F;RIGHT JOIN：外连接</h1><p>内连接的查询结果都是符合连接条件的记录，而外连接会先将连接的表分为基表和参考表，再以基表为依据返回满足和不满足条件的记录。</p>
+<p>外连接可以分为左外连接和右外连接。</p>
+<h2 id="左连接"><a href="#左连接" class="headerlink" title="左连接"></a>左连接</h2><p>左外连接又称为左连接，使用<code>LEFT OUTER JOIN</code>关键字连接两个表，并使用<code>ON</code>子句来设置连接条件。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="keyword">FROM</span> <span class="operator">&lt;</span>表<span class="number">1</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> <span class="operator">&lt;</span>表<span class="number">2</span><span class="operator">&gt;</span> <span class="operator">&lt;</span><span class="keyword">ON</span>子句<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+<p>语法说明：</p>
+<ul>
+<li>字段名：需要查询的字段名称。</li>
+<li>&lt;表1&gt;&lt;表2&gt;：需要左连接的表名。</li>
+<li><code>LEFT OUTER JOIN</code>：左连接中可以省略<code>OUTER</code>关键字，只使用关键字<code>LEFT JOIN</code>。</li>
+<li><code>ON</code>子句：用来设置左连接的连接条件，不能省略。</li>
+</ul>
+<p>上述语法中，“表1”为基表，“表2”为参考表。左连接查询时，可以查询出“表1”中的所有记录和“表2”中匹配连接条件的记录。如果“表1”的某行在“表2”中没有匹配行，那么在返回结果中，“表2”的字段值均为空值（<code>NULL</code>）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_course;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> course_name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Python      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> HTML        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-------------+</span></span><br><span class="line"><span class="number">6</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_students_info;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> name   <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">11</span> <span class="operator">|</span> LiMing <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">180</span> <span class="operator">|</span>         <span class="number">7</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">11</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> s.name,c.course_name <span class="keyword">FROM</span> tb_students_info s <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> tb_course c </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> s.`course_id`<span class="operator">=</span>c.`id`;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> name   <span class="operator">|</span> course_name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Dany   <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry  <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span>   <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Green  <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jim    <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jane   <span class="operator">|</span> Python      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> John   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Lily   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Susan  <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Thomas <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Tom    <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> LiMing <span class="operator">|</span> <span class="keyword">NULL</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="number">12</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>可以看到，运行结果显示了 12 条记录，<code>name</code>为<code>LiMing</code>的学生目前没有课程，因为对应的<code>tb_course</code>表中没有该学生的课程信息，所以该条记录只取出了<code>tb_students_info</code>表中相应的值，而从<code>tb_course</code>表中取出的值为<code>NULL</code>。</p>
+<h2 id="右连接"><a href="#右连接" class="headerlink" title="右连接"></a>右连接</h2><p>右外连接又称为右连接，右连接是左连接的反向连接。使用<code>RIGHT OUTER JOIN</code>关键字连接两个表，并使用<code>ON</code>子句来设置连接条件。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">&lt;</span>字段名<span class="operator">&gt;</span> <span class="keyword">FROM</span> <span class="operator">&lt;</span>表<span class="number">1</span><span class="operator">&gt;</span> <span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> <span class="operator">&lt;</span>表<span class="number">2</span><span class="operator">&gt;</span> <span class="operator">&lt;</span><span class="keyword">ON</span>子句<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+<p>语法说明：</p>
+<ul>
+<li>字段名：需要查询的字段名称。</li>
+<li>&lt;表1&gt;&lt;表2&gt;：需要右连接的表名。</li>
+<li><code>RIGHT OUTER JOIN</code>：右连接中可以省略<code>OUTER</code>关键字，只使用关键字<code>RIGHT JOIN</code>。</li>
+<li><code>ON</code>子句：用来设置右连接的连接条件，不能省略。</li>
+</ul>
+<p>与左连接相反，右连接以“表2”为基表，“表1”为参考表。右连接查询时，可以查询出“表2”中的所有记录和“表1”中匹配连接条件的记录。如果“表2”的某行在“表1”中没有匹配行，那么在返回结果中，“表1”的字段值均为空值（<code>NULL</code>）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> s.name,c.course_name <span class="keyword">FROM</span> tb_students_info s <span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> tb_course c </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> s.`course_id`<span class="operator">=</span>c.`id`;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> name   <span class="operator">|</span> course_name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="operator">|</span> Dany   <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Green  <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry  <span class="operator">|</span> Java        <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jane   <span class="operator">|</span> Python      <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jim    <span class="operator">|</span> MySQL       <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> John   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Lily   <span class="operator">|</span> Go          <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Susan  <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Thomas <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Tom    <span class="operator">|</span> C<span class="operator">+</span><span class="operator">+</span>         <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span>   <span class="operator">|</span> HTML        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+-------------+</span></span><br><span class="line"><span class="number">11</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>可以看到，结果显示了 11 条记录，名称为<code>HTML</code>的课程目前没有学生，因为对应的<code>tb_students_info</code>表中并没有该学生的信息，所以该条记录只取出了<code>tb_course</code>表中相应的值，而从<code>tb_students_info</code>表中取出的值为<code>NULL</code>。</p>
+<p>多个表左&#x2F;右连接时，在<code>ON</code>子句后连续使用<code>LEFT/RIGHT OUTER JOIN</code>或<code>LEFT/RIGHT JOIN</code>即可。</p>
+<p>使用外连接查询时，一定要分清需要查询的结果，是需要显示左表的全部记录还是右表的全部记录，然后选择相应的左连接和右连接。</p>
+<h1 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h1><p>子查询是 MySQL 中比较常用的查询方法，通过子查询可以实现多表查询。子查询指将一个查询语句嵌套在另一个查询语句中。子查询可以在<code>SELECT、UPDATE</code>和<code>DELETE</code>语句中使用，而且可以进行多层嵌套。在实际开发时，子查询经常出现在<code>WHERE</code>子句中。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WHERE</span> <span class="operator">&lt;</span>表达式<span class="operator">&gt;</span> <span class="operator">&lt;</span>操作符<span class="operator">&gt;</span> (子查询)</span><br></pre></td></tr></table></figure>
+<p>其中，操作符可以是比较运算符和<code>IN、NOT IN、EXISTS、NOT EXISTS</code>等关键字。</p>
+<ol>
+<li><code>IN | NOT IN</code><br>当表达式与子查询返回的结果集中的某个值相等时，返回<code>TRUE</code>，否则返回<code>FALSE</code>；若使用关键字<code>NOT</code>，则返回值正好相反。</li>
+<li><code>EXISTS | NOT EXISTS</code><br>用于判断子查询的结果集是否为空，若子查询的结果集不为空，返回<code>TRUE</code>，否则返回<code>FALSE</code>；若使用关键字<code>NOT</code>，则返回的值正好相反。</li>
+</ol>
+<p>使用子查询在<code>tb_students_info</code>表和<code>tb_course</code>表中查询学习 Java 课程的学生姓名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> tb_students_info </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> course_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> course_name <span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span> name  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span> Dany  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br></pre></td></tr></table></figure>
+<p>上述查询过程也可以分为以下 2 步执行，实现效果是相同的。</p>
+<p>1）首先单独执行内查询，查询出<code>tb_course</code>表中课程为 Java 的<code>id</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> id <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> course_name <span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+</span></span><br></pre></td></tr></table></figure>
+<p>2）然后执行外层查询，在<code>tb_students_info</code>表中查询<code>course_id</code>等于 1 的学生姓名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> tb_students_info <span class="keyword">WHERE</span> course_id <span class="keyword">IN</span> (<span class="number">1</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span> name  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span> Dany  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br></pre></td></tr></table></figure>
+<p>习惯上，外层的<code>SELECT</code>查询称为父查询，圆括号中嵌入的查询称为子查询（子查询必须放在圆括号内）。MySQL 在处理上例的<code>SELECT</code>语句时，执行流程为：先执行子查询，再执行父查询。</p>
+<p>在<code>SELECT</code>语句中使用<code>NOT IN</code>关键字，查询没有学习 Java 课程的学生姓名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> tb_students_info </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> course_id <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> course_name <span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> name   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> Green  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jane   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jim    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> John   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Lily   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Susan  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Thomas <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Tom    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> LiMing <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">9</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>使用<code>=</code>运算符，在<code>tb_course</code>表和<code>tb_students_info</code>表中查询出所有学习 Python 课程的学生姓名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> tb_students_info</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> course_id <span class="operator">=</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> course_name <span class="operator">=</span> <span class="string">&#x27;Python&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="operator">|</span> name <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="operator">|</span> Jane <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>使用<code>&lt;&gt;</code>运算符，在<code>tb_course</code>表和<code>tb_students_info</code>表中查询出没有学习 Python 课程的学生姓名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> tb_students_info</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> course_id <span class="operator">&lt;&gt;</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> course_name <span class="operator">=</span> <span class="string">&#x27;Python&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> name   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> Dany   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Green  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Henry  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Jim    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> John   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Lily   <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Susan  <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Thomas <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> Tom    <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> LiMing <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">10</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>查询<code>tb_course</code>表中是否存在<code>id=1</code>的课程，如果存在，就查询出<code>tb_students_info</code>表中的记录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_students_info</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> <span class="keyword">EXISTS</span>(<span class="keyword">SELECT</span> course_name <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">1</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> name   <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany   <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">2</span> <span class="operator">|</span> Green  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">158</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">3</span> <span class="operator">|</span> Henry  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">185</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">4</span> <span class="operator">|</span> Jane   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">162</span> <span class="operator">|</span>         <span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> Jim    <span class="operator">|</span>   <span class="number">24</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">175</span> <span class="operator">|</span>         <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">6</span> <span class="operator">|</span> John   <span class="operator">|</span>   <span class="number">21</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">172</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">7</span> <span class="operator">|</span> Lily   <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> Susan  <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">170</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> Thomas <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">178</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> Tom    <span class="operator">|</span>   <span class="number">23</span> <span class="operator">|</span> 女   <span class="operator">|</span>    <span class="number">165</span> <span class="operator">|</span>         <span class="number">5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">11</span> <span class="operator">|</span> LiMing <span class="operator">|</span>   <span class="number">22</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">180</span> <span class="operator">|</span>         <span class="number">7</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+--------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">11</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>tb_course</code>表中存在<code>id=1</code>的记录，因此<code>EXISTS</code>表达式返回<code>TRUE</code>，外层查询语句接收<code>TRUE</code>之后对表<code>tb_students_info</code>进行查询，返回所有的记录。</p>
+<p><code>EXISTS</code>关键字可以和其它查询条件一起使用，条件表达式与<code>EXISTS</code>关键字之间用<code>AND</code>和<code>OR</code>连接。</p>
+<p>查询<code>tb_course</code>表中是否存在<code>id=1</code>的课程，如果存在，就查询出<code>tb_students_info</code>表中<code>age</code>字段大于 24 的记录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> tb_students_info</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> age<span class="operator">&gt;</span><span class="number">24</span> <span class="keyword">AND</span> <span class="keyword">EXISTS</span>(<span class="keyword">SELECT</span> course_name <span class="keyword">FROM</span> tb_course <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">1</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span> id <span class="operator">|</span> name <span class="operator">|</span> age  <span class="operator">|</span> sex  <span class="operator">|</span> height <span class="operator">|</span> course_id <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+------+------+--------+-----------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">1</span> <span class="operator">|</span> Dany <span class="operator">|</span>   <span class="number">25</span> <span class="operator">|</span> 男   <span class="operator">|</span>    <span class="number">160</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+------+------+------+--------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>结果显示，从<code>tb_students_info</code>表中查询出了一条记录，这条记录的<code>age</code>字段取值为 25。内层查询语句从<code>tb_course</code>表中查询到记录，返回<code>TRUE</code>。外层查询语句开始进行查询。根据查询条件，从<code>tb_students_info</code>表中查询<code>age</code>大于 24 的记录。</p>
+<p>子查询的功能也可以通过表连接完成，但是子查询会使 SQL 语句更容易阅读和编写。</p>
+<p>一般来说，表连接（内连接和外连接等）都可以用子查询替换，但反过来却不一定，有的子查询不能用表连接来替换。子查询比较灵活、方便、形式多样，适合作为查询的筛选条件，而表连接更适合于查看连接表的数据。</p>
+<h2 id="子查询注意事项"><a href="#子查询注意事项" class="headerlink" title="子查询注意事项"></a>子查询注意事项</h2><h3 id="1-子查询语句可以嵌套在-SQL-语句中任何表达式出现的位置"><a href="#1-子查询语句可以嵌套在-SQL-语句中任何表达式出现的位置" class="headerlink" title="1. 子查询语句可以嵌套在 SQL 语句中任何表达式出现的位置"></a>1. 子查询语句可以嵌套在 SQL 语句中任何表达式出现的位置</h3><p>在<code>SELECT</code>语句中，子查询可以被嵌套在<code>SELECT</code>语句的列、表和查询条件中，即<code>SELECT</code>子句，<code>FROM</code>子句、<code>WHERE</code>子句、<code>GROUP BY</code>子句和<code>HAVING</code>子句。</p>
+<p>嵌套在<code>SELECT</code>语句的<code>SELECT</code>子句中的子查询语法格式如下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> (子查询) <span class="keyword">FROM</span> 表名;</span><br></pre></td></tr></table></figure>
+<p>提示：子查询结果为单行单列，但不必指定列别名。</p>
+<p>嵌套在<code>SELECT</code>语句的<code>FROM</code>子句中的子查询语法格式如下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> (子查询) <span class="keyword">AS</span> 表的别名;</span><br></pre></td></tr></table></figure>
+<p>注意：必须为表指定别名。一般返回多行多列数据记录，可以当作一张临时表。</p>
+<h3 id="2-只出现在子查询中而没有出现在父查询中的表不能包含在输出列中"><a href="#2-只出现在子查询中而没有出现在父查询中的表不能包含在输出列中" class="headerlink" title="2. 只出现在子查询中而没有出现在父查询中的表不能包含在输出列中"></a>2. 只出现在子查询中而没有出现在父查询中的表不能包含在输出列中</h3><p>多层嵌套子查询的最终数据集只包含父查询（即最外层的查询）的<code>SELECT</code>子句中出现的字段，而子查询的输出结果通常会作为其外层子查询数据源或用于数据判断匹配。</p>
+<p>常见错误如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">result</span>);</span><br></pre></td></tr></table></figure>
+<p>这个子查询语句产生语法错误的原因在于主查询语句的<code>FROM</code>子句是一个子查询语句，因此应该为子查询结果集指定别名。正确代码如下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">result</span>) <span class="keyword">AS</span> Temp;</span><br></pre></td></tr></table></figure>
+<h2 id="子查询改写为表连接"><a href="#子查询改写为表连接" class="headerlink" title="子查询改写为表连接"></a>子查询改写为表连接</h2><p>子查询如递归函数一样，有时侯能达到事半功倍的效果，但是其执行效率较低。与表连接相比，子查询比较灵活，方便，形式多样，适合作为查询的筛选条件，而表连接更适合查看多表的数据。</p>
+<p>一般情况下，子查询会产生笛卡儿积，表连接的效率要高于子查询。因此在编写 SQL 语句时应尽量使用连接查询。</p>
+<p>表连接（内连接和外连接等）都可以用子查询替换，但反过来却不一定，有的子查询不能用表连接来替换。</p>
+<p>哪些子查询的查询命令可以改写为表连接。</p>
+<p>在检查那些倾向于编写成子查询的查询语句时，可以考虑将子查询替换为表连接，看看连接的效率是不是比子查询更好些。同样，如果某条使用子查询的<code>SELECT</code>语句需要花费很长时间才能执行完毕，那么可以尝试把它改写为表连接，看看执行效果是否有所改善。</p>
+<h3 id="1-改写用来查询匹配值的子查询"><a href="#1-改写用来查询匹配值的子查询" class="headerlink" title="1. 改写用来查询匹配值的子查询"></a>1. 改写用来查询匹配值的子查询</h3><p>下面这条示例语句包含一个子查询，它会把<code>score</code>表里的考试成绩查询出来：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> score</span><br><span class="line"><span class="keyword">WHERE</span> grade_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> grade <span class="keyword">WHERE</span> category <span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>在编写以上语句时，可以不使用子查询，而是把它转换为一个简单的连接：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> score.<span class="operator">*</span> <span class="keyword">FROM</span> score <span class="keyword">INNER</span> <span class="keyword">JOIN</span> grade</span><br><span class="line"><span class="keyword">ON</span> score.grade_id <span class="operator">=</span> grade.id <span class="keyword">WHERE</span> grade.category <span class="operator">=</span> <span class="string">&#x27;Java&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>再来看另一个示例。下面这条查询语句可以把所有女生的考试成绩查询出来：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">from</span> score</span><br><span class="line"><span class="keyword">WHERE</span> student_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> student_id <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> sex <span class="operator">=</span> <span class="string">&#x27;F&#x27;</span>) ;</span><br></pre></td></tr></table></figure>
+<p>这条语句可以转换为以下连接：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> score.<span class="operator">*</span> <span class="keyword">FROM</span> score <span class="keyword">INNER</span> <span class="keyword">JOIN</span> student</span><br><span class="line"><span class="keyword">ON</span> score.student_id <span class="operator">=</span> student.student_id <span class="keyword">WHERE</span> student.sex <span class="operator">=</span> <span class="string">&#x27;F&#x27;</span> ;</span><br></pre></td></tr></table></figure>
+<p>我们可以发现这些子查询语句都遵从这样一种形式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> table1</span><br><span class="line"><span class="keyword">WHERE</span> column1 <span class="keyword">IN</span> (<span class="keyword">SELECT</span> column2a <span class="keyword">FROM</span> table2 <span class="keyword">WHERE</span> column2b <span class="operator">=</span> <span class="keyword">value</span>);</span><br></pre></td></tr></table></figure>
+<p>其中，<code>column1</code>代表<code>table1</code>中的字段，<code>column2a</code>和<code>column2b</code>代表<code>table2</code>表中的字段。这类查询都可以被转换为下面这种形式的连接查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table1. <span class="operator">*</span> <span class="keyword">FROM</span> table1 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> table2</span><br><span class="line"><span class="keyword">ON</span> table1. column1 <span class="operator">=</span> table. column2a <span class="keyword">WHERE</span> table2. column2b <span class="operator">=</span> <span class="keyword">value</span>;</span><br></pre></td></tr></table></figure>
+<p>在某些场合，子查询和关联查询可能会返回不同的结果。比如，当<code>table2</code>包含<code>column2a</code>的多个实例时，就会发生这种情况。这种形式的子查询只会为每个<code>column2a</code>值生成一个实例，而连接操作会为所有值生成实例，并且其输出会包含重复行。如果想要防止这种重复记录出现，就要在编写连接查询语句时使用<code>SELECT DISTINCT</code>，而不能使用<code>SELECT</code>。</p>
+<h3 id="2-改写用来查询非匹配（缺失）值的子查询"><a href="#2-改写用来查询非匹配（缺失）值的子查询" class="headerlink" title="2. 改写用来查询非匹配（缺失）值的子查询"></a>2. 改写用来查询非匹配（缺失）值的子查询</h3><p>另一种常见的子查询语句类型是：把存在于某个表里，但在另一个表里并不存在的那些值查找出来。“哪些值不存在”有关的问题通常都可以用<code>LEFT JOIN</code>来解决。</p>
+<p>如下语句用来测试哪些学生没有出现在<code>absence</code>表里（用于查找全勤学生）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student</span><br><span class="line"><span class="keyword">WHERE</span> student_id <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="keyword">SELECT</span> student_id <span class="keyword">FROM</span> absence) ;</span><br></pre></td></tr></table></figure>
+<p>以上查询语句可以使用<code>LEFT JOIN</code>来改写：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> student.<span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> absence</span><br><span class="line"><span class="keyword">ON</span> student.student_id <span class="operator">=</span> absence.student_id <span class="keyword">WHERE</span> absence.student_ id <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+<p>通常情况下，如果子查询语句符合如下所示的形式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> table1</span><br><span class="line"><span class="keyword">WHERE</span> column1 <span class="keyword">NOT</span> <span class="keyword">IN</span> ( <span class="keyword">SELECT</span> column2 <span class="keyword">FROM</span> table2) ;</span><br></pre></td></tr></table></figure>
+<p>那么可以把它改写为下面这样的连接查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table1.<span class="operator">*</span> <span class="keyword">FROM</span> table1 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> table2</span><br><span class="line"><span class="keyword">ON</span> table1.column1 <span class="operator">=</span> table2.column2 <span class="keyword">WHERE</span> table2.column2 <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+<p>这里需要假设<code>table2.column2</code>被定义成了<code>NOT NULL</code>的。</p>
+<p>与<code>LEFT JOIN</code>相比，子查询更加直观。大部分人都可以毫无困难地理解“没被包含在…里面”的含义，因为它不是数据库编程技术带来的新概念。而“左连接”有所不同，很难用自然语言直观地描述出它的含义。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/04/26/MySQL/MySQL%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/04/27/MySQL/MySQL%E8%A7%86%E5%9B%BE/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL 视图
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/25/MySQL/MySQL%E6%93%8D%E4%BD%9C%E8%A1%A8%E4%B8%AD%E6%95%B0%E6%8D%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL 操作表中的数据</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>ARP详解 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/ARP详解"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  ARP详解
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/" class="article-date">
+  <time datetime="2020-10-13T03:08:41.000Z" itemprop="datePublished">2020-10-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>从网络分层上看，我们知道二层网络中，使用 MAC 地址进行传输，MAC 地址做为数据链路层的设备标识符。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/1.png" class="">
+
+<p>三层网络中，使用 IP 地址进行传输，IP 地址做为网络层的设备标识符。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/2.png" class="">
+
+<p>我们还知道，容易记忆的域名，通过 DNS 解析成 IP 地址，有了 IP 地址就可以在网络上找到目的地。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/3.png" class="">
+
+<p>IP 地址通过 ARP，获得 MAC 地址，有了 MAC 地址才能在物理网络上传输数据。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/4.png" class="">
+
+<p>ARP，是地址解析协议。根据设备的 IP 地址来查询对应 MAC 地址的协议。主机通过 ARP 查询到 MAC 地址后，将在 ARP 缓存表中增加映射表项，即 IP 地址和 MAC 地址的映射表项。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/5.png" class="">
+
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/img15.png" class="">
+
+<h1 id="MAC-地址"><a href="#MAC-地址" class="headerlink" title="MAC 地址"></a>MAC 地址</h1><p>每个网卡或三层网口都有一个 MAC 地址， MAC 地址是烧录到硬件上，因此也称为硬件地址。MAC 地址作为数据链路设备的地址标识符，需要保证网络中的每个 MAC 地址都是唯一的，才能正确识别到数据链路上的设备。</p>
+<p>MAC 地址由 6 个字节组成。前 3 个字节表示厂商识别码，每个网卡厂商都有特定唯一的识别数字。后 3 个字节由厂商给每个网卡进行分配。厂商可以保证生产出来的网卡不会有相同 MAC 地址的网卡。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/0.png" class="">
+
+<p>现在可以通过软件修改 MAC 地址，虚拟机使用物理机网卡的 MAC 地址，并不能保证 MAC 地址是唯一的。但是只要 MAC 地址相同的设备不在同一个数据链路上就没问题。</p>
+<p>为了查看方便，6 个字节的 MAC 地址使用十六进制来表示。每个字节的 8 位二进制数分别用 2 个十六进制数来表示，例如我的网卡 MAC 地址是<code>E0-06-E6-39-86-31</code>。</p>
+<p>比特，英文名<code>bit</code>，也叫位。二进制中最小单位，一个比特的值要么是 0 要么是 1。</p>
+<p>字节，英文名<code>Byte</code>。一个字节由八个比特构成。</p>
+<h1 id="ARP-原理"><a href="#ARP-原理" class="headerlink" title="ARP 原理"></a>ARP 原理</h1><p>ARP 是如何知道 MAC 地址的呢？简单说，ARP 是通过 ARP 请求和 ARP 响应报文确定 MAC 地址的。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/6.png" class="">
+
+<p>假如主机 A 向同一网段上的主机 B 发送数据。主机 A 的 IP 地址为<code>10.0.0.1</code>，主机 B 的 IP 地址为<code>10.0.0.2</code>，主机 C 的 IP 地址为<code>10.0.0.3</code>。它们都不知道对方的 MAC 地址。ARP 地址解析过程如下：</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/7.png" class="">
+
+<ol>
+<li>主机 A 首先查看自己的 ARP 表（即 ARP 缓存表），确定是否有主机 B 的 IP 地址对应表项。如果有，则直接使用表项中的 MAC 地址进行封装，封装成帧后发送给主机 B。<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/8.png" class=""></li>
+<li>如果主机 A 的 ARP 表没有对应的表项，就发送一个广播帧，源 IP 和源 MAC 地址是主机 A，目的 IP 地址是主机 B，目的 MAC 地址是广播 MAC 地址，即<code>FFFF-FFFF-FFFF</code>。这就是 ARP 请求报文。<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/9.png" class=""></li>
+<li>ARP 请求是广播报文，同一个网段的所有主机都能收到。只有主机 B 发现报文中的目的 IP 地址是自己，于是主机 B 发送响应报文给主机 A，源 MAC 地址和源 IP 地址是主机 B，目的 MAC 地址和目的 IP 地址是主机 A ，这个报文就叫 ARP 响应报文。同时，主机 B 的 ARP 表记录主机 A 的映射关系，即主机 A 的 IP 地址和 MAC 地址的对应关系。<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/10.png" class=""></li>
+<li>主机 C 也收到了 ARP 请求报文，但目的 IP 地址不是自己，所以不会进行响应。于是主机 C 添加主机 A 的映射关系到 ARP 表，并丢弃 ARP 请求报文。<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/11.png" class=""></li>
+<li>主机 A 收到 ARP 响应报文后，添加主机 B 的映射关系，同时用主机 B 的 MAC 地址做为目的地址封装成帧，并发送给主机 B。<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/12.png" class=""></li>
+</ol>
+<p>如果每发送一个 IP 报文就要进行一次 ARP 请求，来确定 MAC 地址，那将会造成不必要的网络流量，通常的做法是用 ARP 表记录 IP 地址和 MAC 地址的映射关系。主机发送报文时，首先会查看它的 ARP 表，目的是为了确定是否是已知的设备 MAC 地址。如果有，就直接使用；如果没有，就发起 ARP 请求获取。不过，缓存是有一定期限的。ARP 表项在老化时间（<code>aging time</code>）内是有效的，如果老化时间内未被使用，表项就会被删除。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/13.png" class="">
+
+<p>ARP 表项分为动态 ARP 表项和静态 ARP 表项：</p>
+<ul>
+<li>动态 ARP 表项由 ARP 动态获取，因此在网络通信中，无需事先知道 MAC 地址，只要有 IP 地址即可。如果老化时间内未被使用，表项就会被自动删除。</li>
+<li>静态 ARP 表项是手工配置，不会老化。静态 ARP 表项的优先级高于动态 ARP 表项，可以将相应的动态 ARP 表项覆盖。</li>
+</ul>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/14.png" class="">
+
+<h1 id="代理-ARP"><a href="#代理-ARP" class="headerlink" title="代理 ARP"></a>代理 ARP</h1><p>ARP 广播报文会被路由器隔离，没有默认网关、网段不同的主机相互通信时，连接这两个网络的路由器可以响应这个 ARP 请求，这个过程叫做代理 ARP（<code>Proxy ARP</code>）。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/15.png" class="">
+
+<p>主机 A 与另一个网段的主机 B 通信，主机 A 直接发送 ARP 请求，解析主机 B 的 MAC 地址。运行了代理 ARP 的路由器收到 ARP 请求后，代替主机 A 在<code>20.0.0.0</code>网段发出 ARP 请求，解析主机 B 的地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/16.png" class="">
+
+<p>主机 B 收到路由器发出的 ARP 请求，发出 ARP 响应报文，告知自己的 MAC 地址是<code>2222-2222-2222</code>。路由器收到 ARP 响应后，也向主机 A 发送 ARP 响应，但目的 MAC 地址是与<code>10.0.0.0</code>网段连接的端口 MAC 地址是<code>1010-1010-1010</code>。主机 A 收到报文后，在 ARP 表中添加 IP 地址是<code>20.0.0.1</code>和 MAC 地址是<code>1010-1010-1010</code>的映射表项。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/17.png" class="">
+
+<p>因此主机 A 会将所有要发送给主机 B 的数据发送给路由器，路由器再将其转发给主机 B。反之亦然。</p>
+<p>代理 ARP 功能屏蔽了分离的网络，主机不用修改 IP地址和子网掩码就可以和现有的网络互通。让用户使用起来，跟在同一个网络上一样。代理 ARP 使用在主机没有默认网络，或没有任何路由的网络上，通常是那些不支持设定子网掩码的老设备。但代理 ARP 会转发 ARP 广播报文，造成网络效率低，不适合用于大规模网络。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/18.png" class="">
+
+<h1 id="RARP"><a href="#RARP" class="headerlink" title="RARP"></a>RARP</h1><p>RARP 是将 ARP 反过来，从设备 MAC 地址获取 IP 地址的一种协议。通常是打印机等小型嵌入式设备接入网络时会用得到。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/19.png" class="">
+
+<h2 id="RARP-原理"><a href="#RARP-原理" class="headerlink" title="RARP 原理"></a>RARP 原理</h2><p>使用 RARP 需要搭建一台 RARP 服务器，在服务器上注册设备的 MAC 地址及 IP 地址。</p>
+<p>设备插电启动后，广播发送一个请求报文，希望获得 IP 地址应答。目的 MAC 地址是广播地址，源 MAC 地址是自己的物理地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/20.png" class="">
+
+<p>RARP 服务器收到 IP 地址请求后，给设备分配一个 IP 地址，并通过响应报文发送给设备。设备收到响应报文后，把 RARP 服务器分配的 IP 地址设置成自己的 IP 地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/21.png" class="">
+
+<h1 id="免费-ARP"><a href="#免费-ARP" class="headerlink" title="免费 ARP"></a>免费 ARP</h1><p>免费 ARP 是一种特殊的 ARP 请求，它并非通过 IP 找到对应的 MAC 地址，而是当主机启动的时候，发送一个免费 ARP 请求，即请求自己的 IP 地址的 MAC 地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/22.png" class="">
+
+<p>与普通 ARP 请求报文的区别在于报文中的目标 IP 地址。普通 ARP 报文中的目标 IP 地址是其它主机的 IP 地址；而免费 ARP 的请求报文中，目标 IP 地址是自己的 IP 地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/23.png" class="">
+
+<p>免费 ARP 的作用：</p>
+<p>起到一个宣告作用。它以广播的形式将数据包发送出去，不需要得到回应，只为了告诉其它主机自己的 IP 地址和 MAC 地址。</p>
+<p>可用于检测 IP 地址冲突。当一台主机发送了免费 ARP 请求报文后，如果收到了 ARP 响应报文，则说明网络内已经存在使用该 IP 地址的主机。</p>
+<p>可用于更新其它主机的 ARP 缓存表。如果该主机更换了网卡，而其它主机的 ARP 缓存表仍然保留着原来的 MAC 地址。这时，通过免费的 ARP 数据包，更新其它主机的 ARP 缓存表。</p>
+<h1 id="ARP-报文"><a href="#ARP-报文" class="headerlink" title="ARP 报文"></a>ARP 报文</h1><p>ARP 报文分为 ARP 请求报文和 ARP 应答报文，它们的报文格式相同，但是各个字段的取值不同。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/24.png" class="">
+
+<p>ARP 报文中各个字段的含义如下。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/25.png" class="">
+
+<h1 id="网络实战"><a href="#网络实战" class="headerlink" title="网络实战"></a>网络实战</h1><p>ARP 可以动态地进行地址解析，因此网络中的设备无需配置，只要有 IP 地址就可以自动获得 MAC 地址。但是静态 ARP 和代理 ARP 等是需要单独配置。下面我们代理 ARP 的实验。</p>
+<h2 id="代理-ARP-1"><a href="#代理-ARP-1" class="headerlink" title="代理 ARP"></a>代理 ARP</h2><h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/26.png" class="">
+
+<h3 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h3><ul>
+<li>PC1 和 PC2 只配置 IP 地址和子网掩码；</li>
+<li>RT（路由器）配置代理 ARP 功能，PC1 可以 ping 通 PC2。</li>
+</ul>
+<h3 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h3><p>PC1 、PC2 分别配置 IP 地址。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/27.png" class="">
+
+<p>RT 配置 IP 地址和代理 ARP 功能。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/28.png" class="">
+
+<h3 id="功能验证"><a href="#功能验证" class="headerlink" title="功能验证"></a>功能验证</h3><p>配置完成后，下面就要进行验证，检查功能是否生效、配置是否正确。在 PC1 上 ping PC2 的 IP 地址，进行连通性测试。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/29.png" class="">
+
+<p>还可以抓包查看完整的报文交互过程，同时验证下理论知识是否正确。</p>
+<img src="/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/30.png" class="">
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/10/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ARP%E8%AF%A6%E8%A7%A3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/10/14/java/%E5%9F%BA%E7%A1%80/Java%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java 反射机制
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/10/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82%E2%80%94%E2%80%94TCP%E5%92%8CUDP/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">传输层——TCP和UDP</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

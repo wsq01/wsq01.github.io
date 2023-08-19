@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Shell/Bash 数组"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2023/07/17/Shell/Bash%20%E6%95%B0%E7%BB%84/" class="article-date">
+  <time datetime="2023-07-17T01:15:08.064Z" itemprop="datePublished">2023-07-17</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="创建数组"><a href="#创建数组" class="headerlink" title="创建数组"></a>创建数组</h1><p>数组可以采用逐个赋值的方法创建。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ARRAY[INDEX]=value</span><br></pre></td></tr></table></figure>
+<p>上面语法中，<code>ARRAY</code>是数组的名字，可以是任意合法的变量名。<code>INDEX</code>是一个大于或等于零的整数，也可以是算术表达式。注意数组第一个元素的下标是 0， 而不是 1。</p>
+<p>下面创建一个三个成员的数组。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ array[0]=val</span><br><span class="line">$ array[1]=val</span><br><span class="line">$ array[2]=val</span><br></pre></td></tr></table></figure>
+<p>数组也可以采用一次性赋值的方式创建。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ARRAY=(value1 value2 ... valueN)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等同于</span></span><br><span class="line">ARRAY=(</span><br><span class="line">  value1</span><br><span class="line">  value2</span><br><span class="line">  value3</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>采用上面方式创建数组时，可以按照默认顺序赋值，也可以在每个值前面指定位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ array=(a b c)</span><br><span class="line">$ array=([2]=c [0]=a [1]=b)</span><br><span class="line"></span><br><span class="line">$ days=(Sun Mon Tue Wed Thu Fri Sat)</span><br><span class="line">$ days=([0]=Sun [1]=Mon [2]=Tue [3]=Wed [4]=Thu [5]=Fri [6]=Sat)</span><br></pre></td></tr></table></figure>
+<p>只为某些值指定位置，也是可以的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">names=(hatter [5]=duchess alice)</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>hatter</code>是数组的 0 号位置，<code>duchess</code>是 5 号位置，<code>alice</code>是 6 号位置。</p>
+<p>没有赋值的数组元素的默认值是空字符串。</p>
+<p>定义数组的时候，可以使用通配符。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mp3s=( *.mp3 )</span><br></pre></td></tr></table></figure>
+<p>上面例子中，将当前目录的所有 MP3 文件，放进一个数组。</p>
+<p>先用<code>declare -a</code>命令声明一个数组，也是可以的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -a ARRAYNAME</span><br></pre></td></tr></table></figure>
+<p><code>read -a</code>命令则是将用户的命令行输入，存入一个数组。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">read</span> -a dice</span><br></pre></td></tr></table></figure>
+<p>上面命令将用户的命令行输入，存入数组<code>dice</code>。</p>
+<h1 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h1><h2 id="读取单个元素"><a href="#读取单个元素" class="headerlink" title="读取单个元素"></a>读取单个元素</h2><p>读取数组指定位置的成员，要使用下面的语法。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;array[i]&#125;</span>     <span class="comment"># i 是索引</span></span><br></pre></td></tr></table></figure>
+<p>上面语法里面的大括号是必不可少的，否则 Bash 会把索引部分<code>[i]</code>按照原样输出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ array[0]=a</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;array[0]&#125;</span></span><br><span class="line">a</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$array</span>[0]</span><br><span class="line">a[0]</span><br></pre></td></tr></table></figure>
+<p>上面例子中，数组的第一个元素是<code>a</code>。如果不加大括号，Bash 会直接读取<code>$array</code>首成员的值，然后将<code>[0]</code>按照原样输出。</p>
+<h2 id="读取所有成员"><a href="#读取所有成员" class="headerlink" title="读取所有成员"></a>读取所有成员</h2><p><code>@</code>和<code>*</code>是数组的特殊索引，表示返回数组的所有成员。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ foo=(a b c d e f)</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;foo[@]&#125;</span></span><br><span class="line">a b c d e f</span><br></pre></td></tr></table></figure>
+<p>这两个特殊索引配合<code>for</code>循环，就可以用来遍历数组。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;names[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><code>@</code>和<code>*</code>放不放在双引号之中，是有差别的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ activities=( swimming <span class="string">&quot;water skiing&quot;</span> canoeing <span class="string">&quot;white-water rafting&quot;</span> surfing )</span><br><span class="line">$ <span class="keyword">for</span> act <span class="keyword">in</span> <span class="variable">$&#123;activities[@]&#125;</span>; \</span><br><span class="line"><span class="keyword">do</span> \</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Activity: <span class="variable">$act</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">Activity: swimming</span><br><span class="line">Activity: water</span><br><span class="line">Activity: skiing</span><br><span class="line">Activity: canoeing</span><br><span class="line">Activity: white-water</span><br><span class="line">Activity: rafting</span><br><span class="line">Activity: surfing</span><br></pre></td></tr></table></figure>
+<p>上面的例子中，数组<code>activities</code>实际包含 5 个成员，但是<code>for...in</code>循环直接遍历<code>$&#123;activities[@]&#125;</code>，导致返回 7 个结果。为了避免这种情况，一般把<code>$&#123;activities[@]&#125;</code>放在双引号之中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> act <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;activities[@]&#125;</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">do</span> \</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Activity: <span class="variable">$act</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">Activity: swimming</span><br><span class="line">Activity: water skiing</span><br><span class="line">Activity: canoeing</span><br><span class="line">Activity: white-water rafting</span><br><span class="line">Activity: surfing</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>$&#123;activities[@]&#125;</code>放在双引号之中，遍历就会返回正确的结果。</p>
+<p><code>$&#123;activities[*]&#125;</code>不放在双引号之中，跟<code>$&#123;activities[@]&#125;</code>不放在双引号之中是一样的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> act <span class="keyword">in</span> <span class="variable">$&#123;activities[*]&#125;</span>; \</span><br><span class="line"><span class="keyword">do</span> \</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Activity: <span class="variable">$act</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">Activity: swimming</span><br><span class="line">Activity: water</span><br><span class="line">Activity: skiing</span><br><span class="line">Activity: canoeing</span><br><span class="line">Activity: white-water</span><br><span class="line">Activity: rafting</span><br><span class="line">Activity: surfing</span><br></pre></td></tr></table></figure>
+<p><code>$&#123;activities[*]&#125;</code>放在双引号之中，所有成员就会变成单个字符串返回。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> act <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;activities[*]&#125;</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">do</span> \</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Activity: <span class="variable">$act</span>&quot;</span>; \</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">Activity: swimming water skiing canoeing white-water rafting surfing</span><br></pre></td></tr></table></figure>
+<p>所以，拷贝一个数组的最方便方法，就是写成下面这样。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hobbies=( <span class="string">&quot;<span class="variable">$&#123;activities[@]&#125;</span>&quot;</span> )</span><br></pre></td></tr></table></figure>
+<p>上面例子中，数组<code>activities</code>被拷贝给了另一个数组<code>hobbies</code>。</p>
+<p>这种写法也可以用来为新数组添加成员。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hobbies=( <span class="string">&quot;<span class="variable">$&#123;activities[@]&#125;</span>&quot;</span> diving )</span><br></pre></td></tr></table></figure>
+<p>上面例子中，新数组<code>hobbies</code>在数组<code>activities</code>的所有成员之后，又添加了一个成员。</p>
+<h2 id="默认位置"><a href="#默认位置" class="headerlink" title="默认位置"></a>默认位置</h2><p>如果读取数组成员时，没有读取指定哪一个位置的成员，默认使用 0 号位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -a foo</span><br><span class="line">$ foo=A</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;foo[0]&#125;</span></span><br><span class="line">A</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>foo</code>是一个数组，赋值的时候不指定位置，实际上是给<code>foo[0]</code>赋值。</p>
+<p>引用一个不带下标的数组变量，则引用的是 0 号位置的数组元素。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ foo=(a b c d e f)</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;foo&#125;</span></span><br><span class="line">a</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">a</span><br></pre></td></tr></table></figure>
+<p>上面例子中，引用数组元素的时候，没有指定位置，结果返回的是 0 号位置。</p>
+<h2 id="数组的长度"><a href="#数组的长度" class="headerlink" title="数组的长度"></a>数组的长度</h2><p>要想知道数组的长度（即一共包含多少成员），可以使用下面两种语法。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;#array[*]&#125;</span></span><br><span class="line"><span class="variable">$&#123;#array[@]&#125;</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ a[100]=foo</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;#a[*]&#125;</span></span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;#a[@]&#125;</span></span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>上面例子中，把字符串赋值给 100 位置的数组元素，这时的数组只有一个元素。</p>
+<p>注意，如果用这种语法去读取具体的数组成员，就会返回该成员的字符串长度。这一点必须小心。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ a[100]=foo</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;#a[100]&#125;</span></span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<p>上面例子中，&#96;$</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/07/17/Shell/Bash%20%E6%95%B0%E7%BB%84/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/21/Shell/set/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/17/Shell/Bash%20%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

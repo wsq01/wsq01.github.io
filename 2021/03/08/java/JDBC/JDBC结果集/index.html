@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JDBC 结果集 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/JDBC/JDBC结果集"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JDBC 结果集
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/08/java/JDBC/JDBC%E7%BB%93%E6%9E%9C%E9%9B%86/" class="article-date">
+  <time datetime="2021-03-08T07:51:24.000Z" itemprop="datePublished">2021-03-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JDBC/">JDBC</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>SQL语句执行后从数据库查询读取数据，返回的数据放在结果集中。<code>java.sql.ResultSet</code>接口表示数据库查询的结果集。</p>
+<p><code>ResultSet</code>对象维护指向结果集中当前行的游标。 术语“结果集”是指包含在<code>ResultSet</code>对象中的行和列数据。</p>
+<p><code>ResultSet</code>接口的方法可以分为三类：</p>
+<ul>
+<li>浏览方法：用于移动光标。</li>
+<li>获取方法：用于查看光标指向的当前行的列中的数据。</li>
+<li>更新方法：用于更新当前行的列中的数据。 然后在基础数据库中更新数据。</li>
+</ul>
+<p>光标可以基于<code>ResultSet</code>的属性移动。当创建生成<code>ResultSet</code>的相应<code>Statement</code>时，将指定这些属性。</p>
+<p>JDBC 提供以下连接方法来创建具有所需<code>ResultSet</code>的语句：</p>
+<ul>
+<li><code>createStatement(int RSType, int RSConcurrency);</code></li>
+<li><code>prepareStatement(String SQL, int RSType, int RSConcurrency);</code></li>
+<li><code>prepareCall(String sql, int RSType, int RSConcurrency);</code></li>
+</ul>
+<p>第一个参数表示<code>ResultSet</code>对象的类型，第二个参数是两个<code>ResultSet</code>常量之一，用于指定结果集是只读还是可更新。</p>
+<h2 id="ResultSet类型"><a href="#ResultSet类型" class="headerlink" title="ResultSet类型"></a>ResultSet类型</h2><p>可能的<code>RSType</code>值如下。如果不指定任何<code>ResultSet</code>类型，将自动分配一个<code>TYPE_FORWARD_ONLY</code>值。</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ResultSet.TYPE_FORWARD_ONLY</td>
+<td align="center">光标只能在结果集中向前移动。</td>
+</tr>
+<tr>
+<td align="center">ResultSet.TYPE_SCROLL_INSENSITIVE</td>
+<td align="center">光标可以向前和向后滚动，结果集对创建结果集后发生的数据库所做的更改不敏感。</td>
+</tr>
+<tr>
+<td align="center">ResultSet.TYPE_SCROLL_SENSITIVE</td>
+<td align="center">光标可以向前和向后滚动，结果集对创建结果集之后发生的其他数据库的更改敏感。</td>
+</tr>
+</tbody></table>
+<h2 id="ResultSet的并发性"><a href="#ResultSet的并发性" class="headerlink" title="ResultSet的并发性"></a>ResultSet的并发性</h2><p>可能的<code>RSConcurrency</code>如下。 如果不指定任何并发类型，将自动获得一个<code>CONCUR_READ_ONLY</code>值。</p>
+<table>
+<thead>
+<tr>
+<th align="center">并发</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ResultSet.CONCUR_READ_ONLY</td>
+<td align="center">创建只读结果集，这是默认值。</td>
+</tr>
+<tr>
+<td align="center">ResultSet.CONCUR_UPDATABLE</td>
+<td align="center">创建可更新的结果集</td>
+</tr>
+</tbody></table>
+<h2 id="浏览结果集"><a href="#浏览结果集" class="headerlink" title="浏览结果集"></a>浏览结果集</h2><p><code>ResultSet</code>接口中有几种涉及移动光标的方法，包括：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public void beforeFirst() throws SQLException</td>
+<td align="center">将光标移动到第一行之前</td>
+</tr>
+<tr>
+<td align="center">public void afterLast() throws SQLException</td>
+<td align="center">将光标移动到最后一行之后</td>
+</tr>
+<tr>
+<td align="center">public boolean first() throws SQLException</td>
+<td align="center">将光标移动到第一行</td>
+</tr>
+<tr>
+<td align="center">public void last() throws SQLException</td>
+<td align="center">将光标移动到最后一行</td>
+</tr>
+<tr>
+<td align="center">public boolean absolute(int row) throws SQLException</td>
+<td align="center">将光标移动到指定的行</td>
+</tr>
+<tr>
+<td align="center">public boolean relative(int row) throws SQLException</td>
+<td align="center">从当前指向的位置，将光标向前或向后移动给定行数</td>
+</tr>
+<tr>
+<td align="center">public boolean previous() throws SQLException</td>
+<td align="center">将光标移动到上一行。 如果上一行关闭结果集，此方法返回false</td>
+</tr>
+<tr>
+<td align="center">public boolean next() throws SQLException</td>
+<td align="center">将光标移动到下一行。 如果结果集中没有更多行，则此方法返回false</td>
+</tr>
+<tr>
+<td align="center">public int getRow() throws SQLException</td>
+<td align="center">返回光标指向的行号</td>
+</tr>
+<tr>
+<td align="center">public void moveToInsertRow() throws SQLException</td>
+<td align="center">将光标移动到结果集中的特殊行，该行可用于将新行插入数据库。当前光标位置被记住</td>
+</tr>
+<tr>
+<td align="center">public void moveToCurrentRow() throws SQLException</td>
+<td align="center">如果光标当前位于插入行，则将光标移回当前行; 否则，此方法什么也不做</td>
+</tr>
+</tbody></table>
+<h2 id="查看结果集"><a href="#查看结果集" class="headerlink" title="查看结果集"></a>查看结果集</h2><p><code>ResultSet</code>接口包含数十种获取当前行数据的方法。</p>
+<p>每个可能的数据类型都有一个<code>get</code>方法，每个<code>get</code>方法有两个版本，一个是采用列名称。另一个采用列索引。</p>
+<p>例如，如果对查看感兴趣的列包含一个<code>int</code>，则需要使用<code>ResultSet</code>的其中一个<code>getInt()</code>方法：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public int getInt(String columnName) throws SQLException</td>
+<td align="center">返回名为columnName的列中当前行中的int值</td>
+</tr>
+<tr>
+<td align="center">public int getInt(int columnIndex) throws SQLException</td>
+<td align="center">返回指定列索引当前行中的int值。列索引从1开始，意味着行的第一列为1，行的第二列为2，依此类推</td>
+</tr>
+</tbody></table>
+<p>类似地，在八个 Java 基元类型中的每一个的<code>ResultSet</code>接口中都有<code>get</code>方法，以及常见的类型，如<code>java.lang.String</code>，<code>java.lang.Object</code>和<code>java.net.URL</code>等。</p>
+<h2 id="更新结果集"><a href="#更新结果集" class="headerlink" title="更新结果集"></a>更新结果集</h2><p><code>ResultSet</code>接口包含用于更新结果集的数据的更新方法的集合。</p>
+<p>与<code>get</code>方法一样，每种数据类型都有两种更新方法：一个是采用列名称。另一个采用列索引。</p>
+<p>例如，要更新结果集当前行的<code>String</code>列，可以使用以下<code>updateString()</code>方法之一：</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public void updateString(int columnIndex, String s) throws SQLException</td>
+<td align="center">将指定列中的String值更改为指定的s值</td>
+</tr>
+<tr>
+<td align="center">public void updateString(String columnName, String s) throws SQLException</td>
+<td align="center">与前面的方法类似，除了使用列的名称而不是列的索引指定</td>
+</tr>
+</tbody></table>
+<p>有八种基本数据类型的更新方法，以及<code>java.sql</code>包中的<code>String，Object，URL</code>和 SQL 数据类型。</p>
+<p>更新结果集中的一行会更改<code>ResultSet</code>对象中当前行的列，但不会更改底层数据库中的列的值。要更新数据库中的行，需要调用以下方法之一。</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public void updateRow()</td>
+<td align="center">更新数据库中当前行</td>
+</tr>
+<tr>
+<td align="center">public void deleteRow()</td>
+<td align="center">从数据库中删除当前行</td>
+</tr>
+<tr>
+<td align="center">public void refreshRow()</td>
+<td align="center">刷新结果集中的数据以反映数据库中最近的任何更改</td>
+</tr>
+<tr>
+<td align="center">public void cancelRowUpdates()</td>
+<td align="center">取消对当前行所做的任何更新</td>
+</tr>
+<tr>
+<td align="center">public void insertRow()</td>
+<td align="center">在数据库中插入一行。只有当光标指向插入行时，才能调用此方法</td>
+</tr>
+</tbody></table>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="浏览结果集-1"><a href="#浏览结果集-1" class="headerlink" title="浏览结果集"></a>浏览结果集</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NavigatingResultSet</span> &#123;</span><br><span class="line">  <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/EMP&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//  Database credentials</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line">      <span class="comment">//STEP 4: Execute a query to create statment with</span></span><br><span class="line">      <span class="comment">// required arguments for RS example.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);</span><br><span class="line">      String sql;</span><br><span class="line">      sql = <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line">      <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Move cursor to the last row.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Moving cursor to the last...&quot;</span>);</span><br><span class="line">      rs.last();</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 5: Extract data from result set</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Displaying record...&quot;</span>);</span><br><span class="line">      <span class="comment">//Retrieve by column name</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">      <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Display values</span></span><br><span class="line">      System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">      System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">      System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">      System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Move cursor to the first row.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Moving cursor to the first row...&quot;</span>);</span><br><span class="line">      rs.first();</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 6: Extract data from result set</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Displaying record...&quot;</span>);</span><br><span class="line">      <span class="comment">//Retrieve by column name</span></span><br><span class="line">      id  = rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">      age = rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">      first = rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">      last = rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Display values</span></span><br><span class="line">      System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">      System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">      System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">      System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">      <span class="comment">// Move cursor to the first row.</span></span><br><span class="line"></span><br><span class="line">      System.out.println(<span class="string">&quot;Moving cursor to the next row...&quot;</span>);</span><br><span class="line">      rs.next();</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 7: Extract data from result set</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Displaying record...&quot;</span>);</span><br><span class="line">      id  = rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">      age = rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">      first = rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">      last = rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Display values</span></span><br><span class="line">      System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">      System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">      System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">      System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 8: Clean-up environment</span></span><br><span class="line">      rs.close();</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(stmt!=<span class="literal">null</span>)</span><br><span class="line">          stmt.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span>(SQLException se2)&#123;</span><br><span class="line">      &#125;<span class="comment">// nothing we can do</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">          conn.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">        se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">    &#125;<span class="comment">//end try</span></span><br><span class="line">    System.out.println(<span class="string">&quot;Goodbye!&quot;</span>);</span><br><span class="line">  &#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end JDBCExample</span></span><br></pre></td></tr></table></figure>
+<h2 id="更新结果集-1"><a href="#更新结果集-1" class="headerlink" title="更新结果集"></a>更新结果集</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JDBCExample</span> &#123;</span><br><span class="line">  <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/EMP&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//  Database credentials</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;username&quot;</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;password&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 4: Execute a query to create statment with</span></span><br><span class="line">      <span class="comment">// required arguments for RS example.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);</span><br><span class="line">      <span class="comment">//STEP 5: Execute a query</span></span><br><span class="line">      <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line">      <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">      System.out.println(<span class="string">&quot;List result set for reference....&quot;</span>);</span><br><span class="line">      printRs(rs);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 6: Loop through result set and add 5 in age</span></span><br><span class="line">      <span class="comment">//Move to BFR postion so while-loop works properly</span></span><br><span class="line">      rs.beforeFirst();</span><br><span class="line">      <span class="comment">//STEP 7: Extract data from result set</span></span><br><span class="line">      <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">        <span class="comment">//Retrieve by column name</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">newAge</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>) + <span class="number">5</span>;</span><br><span class="line">        rs.updateDouble( <span class="string">&quot;age&quot;</span>, newAge );</span><br><span class="line">        rs.updateRow();</span><br><span class="line">      &#125;</span><br><span class="line">      System.out.println(<span class="string">&quot;List result set showing new ages...&quot;</span>);</span><br><span class="line">      printRs(rs);</span><br><span class="line">      <span class="comment">// Insert a record into the table.</span></span><br><span class="line">      <span class="comment">//Move to insert row and add column data with updateXXX()</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Inserting a new record...&quot;</span>);</span><br><span class="line">      rs.moveToInsertRow();</span><br><span class="line">      rs.updateInt(<span class="string">&quot;id&quot;</span>,<span class="number">104</span>);</span><br><span class="line">      rs.updateString(<span class="string">&quot;first&quot;</span>,<span class="string">&quot;John&quot;</span>);</span><br><span class="line">      rs.updateString(<span class="string">&quot;last&quot;</span>,<span class="string">&quot;Paul&quot;</span>);</span><br><span class="line">      rs.updateInt(<span class="string">&quot;age&quot;</span>,<span class="number">40</span>);</span><br><span class="line">      <span class="comment">//Commit row</span></span><br><span class="line">      rs.insertRow();</span><br><span class="line"></span><br><span class="line">      System.out.println(<span class="string">&quot;List result set showing new set...&quot;</span>);</span><br><span class="line">      printRs(rs);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Delete second record from the table.</span></span><br><span class="line">      <span class="comment">// Set position to second record first</span></span><br><span class="line">      rs.absolute( <span class="number">2</span> );</span><br><span class="line">      System.out.println(<span class="string">&quot;List the record before deleting...&quot;</span>);</span><br><span class="line">      <span class="comment">//Retrieve by column name</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">      <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Display values</span></span><br><span class="line">      System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">      System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">      System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">      System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line"></span><br><span class="line">     <span class="comment">//Delete row</span></span><br><span class="line">      rs.deleteRow();</span><br><span class="line">      System.out.println(<span class="string">&quot;List result set after deleting one records...&quot;</span>);</span><br><span class="line">      printRs(rs);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 8: Clean-up environment</span></span><br><span class="line">      rs.close();</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">   &#125; <span class="keyword">catch</span>(SQLException se) &#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">   &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">          conn.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">        se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">   &#125;<span class="comment">//end try</span></span><br><span class="line">   System.out.println(<span class="string">&quot;Goodbye!&quot;</span>);</span><br><span class="line">  &#125;<span class="comment">//end main</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">printRs</span><span class="params">(ResultSet rs)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">    <span class="comment">//Ensure we start with first row</span></span><br><span class="line">    rs.beforeFirst();</span><br><span class="line">    <span class="keyword">while</span>(rs.next()) &#123;</span><br><span class="line">      <span class="comment">//Retrieve by column name</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">      <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Display values</span></span><br><span class="line">      System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">      System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">      System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">      System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">  &#125;<span class="comment">//end printRs()</span></span><br><span class="line">&#125;<span class="comment">//end JDBCExample</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/03/08/java/JDBC/JDBC%E7%BB%93%E6%9E%9C%E9%9B%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDBC/" rel="tag">JDBC</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/03/11/java/JDBC/JDBC%20%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JDBC 批量处理
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/07/%E5%89%8D%E7%AB%AF/css/%E6%95%85%E9%9A%9C%E9%A3%8E%E6%A0%BC%E6%96%87%E5%AD%97%E5%8A%A8%E7%94%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">故障风格文字动画</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

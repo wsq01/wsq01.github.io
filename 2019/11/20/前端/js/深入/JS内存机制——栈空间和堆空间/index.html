@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS内存机制——栈空间和堆空间 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/深入/JS内存机制——栈空间和堆空间"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS内存机制——栈空间和堆空间
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/" class="article-date">
+  <time datetime="2019-11-20T03:01:23.000Z" itemprop="datePublished">2019-11-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="JavaScript-是什么类型的语言"><a href="#JavaScript-是什么类型的语言" class="headerlink" title="JavaScript 是什么类型的语言"></a>JavaScript 是什么类型的语言</h1><p>每种编程语言都具有内建的数据类型，但它们的数据类型常有不同之处，使用方式也很不一样，比如 C 语言在定义变量之前，就需要确定变量的类型，你可以看下面这段 C 代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">   <span class="type">char</span>* b = <span class="string">&quot; 极客时间 &quot;</span>;</span><br><span class="line">   <span class="type">bool</span> c = <span class="literal">true</span>;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码声明变量的特点是：在声明变量之前需要先定义变量类型。我们把这种在使用之前就需要确认其变量数据类型的称为静态语言。</p>
+<p>相反地，我们把在运行过程中需要检查数据类型的语言称为动态语言。JavaScript 就是动态语言，因为在声明变量之前并不需要确认其数据类型。</p>
+<p>虽然 C 语言是静态，但是在 C 语言中，我们可以把其他类型数据赋予给一个声明好的变量，如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c = a</span><br></pre></td></tr></table></figure>
+<p>前面代码中，我们把<code>int</code>型的变量<code>a</code>赋值给了<code>bool</code>型的变量<code>c</code>，这段代码也是可以编译执行的，因为在赋值过程中，C 编译器会把<code>int</code>型的变量悄悄转换为<code>bool</code>型的变量，我们通常把这种偷偷转换的操作称为隐式类型转换。而支持隐式类型转换的语言称为弱类型语言，不支持隐式类型转换的语言称为强类型语言。在这点上，C 和 JavaScript 都是弱类型语言。</p>
+<p>对于各种语言的类型，你可以参考下图：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img1.png" class="" title="语言类型图">
+
+<h1 id="JavaScript-的数据类型"><a href="#JavaScript-的数据类型" class="headerlink" title="JavaScript 的数据类型"></a>JavaScript 的数据类型</h1><p>现在我们知道了，JavaScript 是一种弱类型的、动态的语言。那这些特点意味着什么呢？</p>
+<ul>
+<li>弱类型，意味着你不需要告诉 JavaScript 引擎这个或那个变量是什么数据类型，JavaScript 引擎在运行代码的时候自己会计算出来。</li>
+<li>动态，意味着你可以使用同一个变量保存不同类型的数据。</li>
+</ul>
+<p>JavaScript 中的数据类型一种有 8 种，它们分别是：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img2.png" class="">
+
+<p>了解这些类型之后，还有三点需要你注意一下。</p>
+<p>第一点，使用<code>typeof</code>检测<code>Null</code>类型时，返回的是<code>Object</code>。这是当初 JavaScript 语言的一个 Bug，一直保留至今，之所以一直没修改过来，主要是为了兼容老的代码。</p>
+<p>第二点，<code>Object</code>类型比较特殊，它是由上述 7 种类型组成的一个包含了<code>key-value</code>对的数据类型。如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myObj = &#123;</span><br><span class="line">  <span class="attr">name</span>:<span class="string">&#x27;极客时间&#x27;</span>,</span><br><span class="line">  <span class="attr">update</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;....&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从中你可以看出来，<code>Object</code>是由<code>key-value</code>组成的，其中的<code>vaule</code>可以是任何类型，包括函数，这也就意味着你可以通过<code>Object</code>来存储函数，<code>Object</code>中的函数又称为方法，比如上述代码中的<code>update</code>方法。</p>
+<p>第三点，我们把前面的 7 种数据类型称为原始类型，把最后一个对象类型称为引用类型，之所以把它们区分为两种不同的类型，是因为它们在内存中存放的位置不一样。到底怎么个不一样法呢？接下来，我们就来讲解一下 JavaScript 的原始类型和引用类型到底是怎么储存的。</p>
+<h1 id="内存空间"><a href="#内存空间" class="headerlink" title="内存空间"></a>内存空间</h1><p>要理解 JavaScript 在运行过程中数据是如何存储的，你就得先搞清楚其存储空间的种类。JavaScript 的内存模型图如下：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img3.png" class="" title="JavaScript 内存模型">
+
+<p>从图中可以看出， 在 JavaScript 的执行过程中， 主要有三种类型内存空间，分别是代码空间、栈空间和堆空间。</p>
+<p>其中的代码空间主要是存储可执行代码的。</p>
+<h1 id="栈空间和堆空间"><a href="#栈空间和堆空间" class="headerlink" title="栈空间和堆空间"></a>栈空间和堆空间</h1><p>这里的栈空间就是我们之前反复提及的调用栈，是用来存储执行上下文的。为了搞清楚栈空间是如何存储数据的，我们还是先看下面这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">    <span class="keyword">var</span> b = a</span><br><span class="line">    <span class="keyword">var</span> c = &#123;<span class="attr">name</span>:<span class="string">&quot; 极客时间 &quot;</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> d = c</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">foo</span>()</span><br></pre></td></tr></table></figure>
+<p>当执行一段代码时，需要先编译，并创建执行上下文，然后再按照顺序执行代码。那么下面我们来看看，当执行到第 3 行代码时，其调用栈的状态，你可以参考下面这张调用栈状态图：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img4.png" class="" title="执行到第 3 行时的调用栈状态图">
+
+<p>从图中可以看出来，当执行到第 3 行时，变量<code>a</code>和变量<code>b</code>的值都被保存在执行上下文中，而执行上下文又被压入到栈中，所以你也可以认为变量<code>a</code>和变量<code>b</code>的值都是存放在栈中的。</p>
+<p>接下来继续执行第 4 行代码，由于 JavaScript 引擎判断右边的值是一个引用类型，这时候处理的情况就不一样了，JavaScript 引擎并不是直接将该对象存放到变量环境中，而是将它分配到堆空间里面，分配后该对象会有一个在“堆”中的地址，然后再将该数据的地址写进<code>c</code>的变量值，最终分配好内存的示意图如下所示：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img5.png" class="" title="对象类型是“堆”来存储">
+
+<p>从上图你可以清晰地观察到，对象类型是存放在堆空间的，在栈空间中只是保留了对象的引用地址，当 JavaScript 需要访问该数据的时候，是通过栈中的引用地址来访问的，相当于多了一道转手流程。</p>
+<p>好了，现在你应该知道了原始类型的数据值都是直接保存在“栈”中的，引用类型的值是存放在“堆”中的。不过你也许会好奇，为什么一定要分“堆”和“栈”两个存储空间呢？所有数据直接存放在“栈”中不就可以了吗？</p>
+<p>答案是不可以的。这是因为 JavaScript 引擎需要用栈来维护程序执行期间上下文的状态，如果栈空间大了话，所有的数据都存放在栈空间里面，那么会影响到上下文切换的效率，进而又影响到整个程序的执行效率。比如文中的<code>foo</code>函数执行结束了，JavaScript 引擎需要离开当前的执行上下文，只需要将指针下移到上个执行上下文的地址就可以了，<code>foo</code>函数执行上下文栈区空间全部回收，具体过程你可以参考下图：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img6.png" class="" title="调用栈中切换执行上下文状态">
+
+<p>所以通常情况下，栈空间都不会设置太大，主要用来存放一些原始类型的小数据。而引用类型的数据占用的空间都比较大，所以这一类数据会被存放到堆中，堆空间很大，能存放很多大的数据，不过缺点是分配内存和回收内存都会占用一定的时间。</p>
+<p>解释了程序在执行过程中为什么需要堆和栈两种数据结构后，我们还是回到示例代码那里，看看它最后一步将变量<code>c</code>赋值给变量<code>d</code>是怎么执行的？</p>
+<p>在 JavaScript 中，赋值操作和其他语言有很大的不同，原始类型的赋值会完整复制变量值，而引用类型的赋值是复制引用地址。</p>
+<p>所以<code>d=c</code>的操作就是把<code>c</code>的引用地址赋值给<code>d</code>，你可以参考下图：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img7.png" class="" title="引用赋值">
+
+<p>从图中你可以看到，变量<code>c</code>和变量<code>d</code>都指向了同一个堆中的对象，通过<code>c</code>修改<code>name</code>的值，变量<code>d</code>的值也跟着改变，归根结底它们是同一个对象。</p>
+<h1 id="闭包的内存模型"><a href="#闭包的内存模型" class="headerlink" title="闭包的内存模型"></a>闭包的内存模型</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">  <span class="keyword">let</span> test1 = <span class="number">1</span></span><br><span class="line">  <span class="keyword">const</span> test2 = <span class="number">2</span></span><br><span class="line">  <span class="keyword">var</span> innerBar = &#123; </span><br><span class="line">    <span class="attr">setName</span>: <span class="keyword">function</span>(<span class="params">newName</span>) &#123;</span><br><span class="line">      myName = newName</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">getName</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(test1)</span><br><span class="line">      <span class="keyword">return</span> myName</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> innerBar</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar = <span class="title function_">foo</span>()</span><br><span class="line">bar.<span class="title function_">setName</span>(<span class="string">&quot; 极客邦 &quot;</span>)</span><br><span class="line">bar.<span class="title function_">getName</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar.<span class="title function_">getName</span>())</span><br></pre></td></tr></table></figure>
+<p>当执行这段代码的时候，你应该有过这样的分析：由于变量<code>myName、test1、test2</code>都是原始类型数据，所以在执行<code>foo</code>函数的时候，它们会被压入到调用栈中；当<code>foo</code>函数执行结束之后，调用栈中<code>foo</code>函数的执行上下文会被销毁，其内部变量<code>myName、test1、test2</code>也应该一同被销毁。</p>
+<p>当<code>foo</code>函数的执行上下文销毁时，由于<code>foo</code>函数产生了闭包，所以变量<code>myName</code>和<code>test1</code>并没有被销毁，而是保存在内存中，那么应该如何解释这个现象呢？</p>
+<p>要解释这个现象，我们就得站在内存模型的角度来分析这段代码的执行流程。</p>
+<ol>
+<li>当 JavaScript 引擎执行到<code>foo</code>函数时，首先会编译，并创建一个空执行上下文。</li>
+<li>在编译过程中，遇到内部函数<code>setName</code>，JavaScript 引擎还要对内部函数做一次快速的词法扫描，发现该内部函数引用了<code>foo</code>函数中的<code>myName</code>变量，由于是内部函数引用了外部函数的变量，所以 JavaScript 引擎判断这是一个闭包，于是在堆空间创建换一个<code>closure(foo)</code>的对象（这是一个内部对象，JavaScript 是无法访问的），用来保存<code>myName</code>变量。</li>
+<li>接着继续扫描到<code>getName</code>方法时，发现该函数内部还引用变量<code>test1</code>，于是 JavaScript 引擎又将<code>test1</code>添加到<code>closure(foo)</code>对象中。这时候堆中的<code>closure(foo)</code>对象中就包含了<code>myName</code>和<code>test1</code>两个变量了。</li>
+<li>由于<code>test2</code>并没有被内部函数引用，所以<code>test2</code>依然保存在调用栈中。</li>
+</ol>
+<p>通过上面的分析，我们可以画出执行到<code>foo</code>函数中<code>return innerBar</code>语句时的调用栈状态，如下图所示：</p>
+<img src="/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/img8.png" class="" title="闭包的产生过程">
+
+<p>从上图你可以清晰地看出，当执行到<code>foo</code>函数时，闭包就产生了；当<code>foo</code>函数执行结束之后，返回的<code>getName</code>和<code>setName</code>方法都引用<code>clourse(foo)</code>对象，所以即使<code>foo</code>函数退出了，<code>clourse(foo)</code>依然被其内部的<code>getName</code>和<code>setName</code>方法引用。所以在下次调用<code>bar.setName</code>或者<code>bar.getName</code>时，创建的执行上下文中就包含了<code>clourse(foo)</code>。</p>
+<p>总的来说，产生闭包的核心有两步：第一步是需要预扫描内部函数；第二步是把内部函数引用的外部变量保存到堆中。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/11/20/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%A0%88%E7%A9%BA%E9%97%B4%E5%92%8C%E5%A0%86%E7%A9%BA%E9%97%B4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6/" rel="tag">JS内存机制</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/11/22/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS内存机制——垃圾回收
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/11/14/vue/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E5%8E%9F%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">前端路由原理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

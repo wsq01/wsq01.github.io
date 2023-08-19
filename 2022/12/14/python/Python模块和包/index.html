@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/Python模块和包"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/12/14/python/Python%E6%A8%A1%E5%9D%97%E5%92%8C%E5%8C%85/" class="article-date">
+  <time datetime="2022-12-14T04:08:50.780Z" itemprop="datePublished">2022-12-14</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">9.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">36 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="导入模块"><a href="#导入模块" class="headerlink" title="导入模块"></a>导入模块</h1><p><code>import</code>的用法主要有以下两种：<br><code>import 模块名1 [as 别名1], 模块名2 [as 别名2]，…</code>：使用这种语法格式的<code>import</code>语句，会导入指定模块中的所有成员（包括变量、函数、类等）。不仅如此，当需要使用模块中的成员时，需用该模块名（或别名）作为前缀，否则 Python 解释器会报错。<br><code>from 模块名 import 成员名1 [as 别名1]，成员名2 [as 别名2]，…</code>：使用这种语法格式的<code>import</code>语句，只会导入模块中指定的成员，而不是全部成员。同时，当程序中使用该成员时，无需附加任何前缀，直接使用成员名（或别名）即可。</p>
+<p>注意，用<code>[]</code>括起来的部分，可以使用，也可以省略。</p>
+<p>其中，第二种<code>import</code>语句也可以导入指定模块中的所有成员，即使用<code>form</code>模块名<code>import ＊</code>，但此方式不推荐使用。</p>
+<h2 id="import-模块名-as-别名"><a href="#import-模块名-as-别名" class="headerlink" title="import 模块名 as 别名"></a>import 模块名 as 别名</h2><p>下面程序使用导入整个模块的最简单语法来导入指定模块：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys整个模块</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment"># 使用sys模块名作为前缀来访问模块中的成员</span></span><br><span class="line"><span class="built_in">print</span>(sys.argv[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>上面第 2 行代码使用最简单的方式导入了<code>sys</code>模块，因此在程序中使用<code>sys</code>模块内的成员时，必须添加模块名作为前缀。</p>
+<p>运行上面程序，可以看到如下输出结果（<code>sys</code>模块下的<code>argv</code>变量用于获取运行 Python 程序的命令行参数，其中<code>argv[0]</code>用于获取当前 Python 程序的存储路径）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\mengma\Desktop\hello.py</span><br></pre></td></tr></table></figure>
+<p>导入整个模块时，也可以为模块指定别名。例如如下程序：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys整个模块，并指定别名为s</span></span><br><span class="line"><span class="keyword">import</span> sys <span class="keyword">as</span> s</span><br><span class="line"><span class="comment"># 使用s模块别名作为前缀来访问模块中的成员</span></span><br><span class="line"><span class="built_in">print</span>(s.argv[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>第 2 行代码在导入<code>sys</code>模块时才指定了别名<code>s</code>，因此在程序中使用<code>sys</code>模块内的成员时，必须添加模块别名<code>s</code>作为前缀。运行该程序，可以看到如下输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\mengma\Desktop\hello.py</span><br></pre></td></tr></table></figure>
+<p>也可以一次导入多个模块，多个模块之间用逗号隔开。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys、os两个模块</span></span><br><span class="line"><span class="keyword">import</span> sys,os</span><br><span class="line"><span class="comment"># 使用模块名作为前缀来访问模块中的成员</span></span><br><span class="line"><span class="built_in">print</span>(sys.argv[<span class="number">0</span>])</span><br><span class="line"><span class="comment"># os模块的sep变量代表平台上的路径分隔符</span></span><br><span class="line"><span class="built_in">print</span>(os.sep)</span><br></pre></td></tr></table></figure>
+<p>上面第 2 行代码一次导入了 sys 和 os 两个模块，因此程序要使用 sys、os 两个模块内的成员，只要分别使用 sys、os 模块名作为前缀即可。在 Windows 平台上运行该程序，可以看到如下输出结果（os 模块的 sep 变量代表平台上的路径分隔符）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\mengma\Desktop\hello.py</span><br><span class="line">\</span><br></pre></td></tr></table></figure>
+<p>在导入多个模块的同时，也可以为模块指定别名：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys、os两个模块，并为sys指定别名s，为os指定别名o</span></span><br><span class="line"><span class="keyword">import</span> sys <span class="keyword">as</span> s,os <span class="keyword">as</span> o</span><br><span class="line"><span class="comment"># 使用模块别名作为前缀来访问模块中的成员</span></span><br><span class="line"><span class="built_in">print</span>(s.argv[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(o.sep)</span><br></pre></td></tr></table></figure>
+<p>上面第 2 行代码一次导入了sys 和 os 两个模块，并分别为它们指定别名为 s、o，因此程序可以通过 s、o 两个前缀来使用 sys、os 两个模块内的成员。在 Windows 平台上运行该程序，可以看到如下输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\mengma\Desktop\hello.py</span><br><span class="line">\</span><br></pre></td></tr></table></figure>
+<h2 id="from-模块名-import-成员名-as-别名"><a href="#from-模块名-import-成员名-as-别名" class="headerlink" title="from 模块名 import 成员名 as 别名"></a>from 模块名 import 成员名 as 别名</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys模块的argv成员</span></span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv</span><br><span class="line"><span class="comment"># 使用导入成员的语法，直接使用成员名访问</span></span><br><span class="line"><span class="built_in">print</span>(argv[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>第 2 行代码导入了<code>sys</code>模块中的<code>argv</code>成员，这样即可在程序中直接使用 argv 成员，无须使用任何前缀。</p>
+<p>导入模块成员时，也可以为成员指定别名，例如如下程序：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys模块的argv成员，并为其指定别名v</span></span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv <span class="keyword">as</span> v</span><br><span class="line"><span class="comment"># 使用导入成员（并指定别名）的语法，直接使用成员的别名访问</span></span><br><span class="line"><span class="built_in">print</span>(v[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>第 2 行代码导入了<code>sys</code>模块中的<code>argv</code>成员，并为该成员指定别名<code>v</code>，这样即可在程序中通过别名<code>v</code>使用<code>argv</code>成员，无须使用任何前缀。</p>
+<p><code>form...import</code>导入模块成员时，支持一次导入多个成员：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys模块的argv,winver成员</span></span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv, winver</span><br><span class="line"><span class="comment"># 使用导入成员的语法，直接使用成员名访问</span></span><br><span class="line"><span class="built_in">print</span>(argv[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(winver)</span><br></pre></td></tr></table></figure>
+<p>上面第 2 行代码导入了<code>sys</code>模块中的<code>argv、 winver</code>成员，这样即可在程序中直接使用<code>argv、winver</code>两个成员，无须使用任何前缀。运行该程序，可以看到如下输出结果（<code>sys</code>的<code>winver</code>成员记录了该 Python 的版本号）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\mengma\Desktop\hello.py</span><br><span class="line">3.11</span><br></pre></td></tr></table></figure>
+<p>一次导入多个模块成员时，也可指定别名，同样使用<code>as</code>关键字为成员指定别名：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入sys模块的argv,winver成员，并为其指定别名v、wv</span></span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv <span class="keyword">as</span> v, winver <span class="keyword">as</span> wv</span><br><span class="line"><span class="comment"># 使用导入成员（并指定别名）的语法，直接使用成员的别名访问</span></span><br><span class="line"><span class="built_in">print</span>(v[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(wv)</span><br></pre></td></tr></table></figure>
+<p>上面第 2 行代码导入了 sys 模块中的 argv、winver 成员，并分别为它们指定了别名 v、wv，这样即可在程序中通过 v 和 wv 两个别名使用 argv、winver 成员，无须使用任何前缀。</p>
+<h2 id="不推荐使用-from-import-导入模块所有成员"><a href="#不推荐使用-from-import-导入模块所有成员" class="headerlink" title="不推荐使用 from import 导入模块所有成员"></a>不推荐使用 from import 导入模块所有成员</h2><p>在使用<code>from...import</code>语法时，可以一次导入指定模块内的所有成员（此方式不推荐）：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#导入sys 棋块内的所有成员</span></span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#使用导入成员的语法，直接使用成员的别名访问</span></span><br><span class="line"><span class="built_in">print</span>(argv[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(winver)</span><br></pre></td></tr></table></figure>
+<p>上面代码一次导入了<code>sys</code>模块中的所有成员，这样程序即可通过成员名来使用该模块内的所有成员。该程序的输出结果和前面程序的输出结果完全相同。</p>
+<p>需要说明的是，一般不推荐使用“from 模块 import”这种语法导入指定模块内的所有成员，因为它存在潜在的风险。比如同时导入<code>module1</code>和<code>module2</code>内的所有成员，假如这两个模块内都有一个<code>foo()</code>函数，那么当在程序中执行如下代码时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foo()</span><br></pre></td></tr></table></figure>
+<p>上面调用的这个<code>foo()</code>函数到底是<code>module1</code>模块中的还是<code>module2</code>模块中的？因此，这种导入指定模块内所有成员的用法是有风险的。</p>
+<p>但如果换成如下两种导入方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import module1</span><br><span class="line">import module2 as m2</span><br></pre></td></tr></table></figure>
+<p>接下来要分别调用这两个模块中的<code>foo()</code>函数就非常清晰。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用模块module1 的模块名作为前缀调用foo()函数</span></span><br><span class="line">module1.foo()</span><br><span class="line"><span class="comment">#使用module2 的模块别名作为前缀调用foo()函数</span></span><br><span class="line">m2.foo()</span><br><span class="line">或者使用 <span class="keyword">from</span>...<span class="keyword">import</span> 语句也是可以的：</span><br><span class="line"><span class="comment">#导入module1 中的foo 成员，并指定其别名为foo1</span></span><br><span class="line"><span class="keyword">from</span> module1 <span class="keyword">import</span> foo <span class="keyword">as</span> fool</span><br><span class="line"><span class="comment">#导入module2 中的foo 成员，并指定其别名为foo2</span></span><br><span class="line"><span class="keyword">from</span> module2 <span class="keyword">import</span> foo <span class="keyword">as</span> foo2</span><br></pre></td></tr></table></figure>
+<p>此时通过别名将 module1 和 module2 两个模块中的 foo 函数很好地进行了区分，接下来分别调用两个模块中 foo() 函数就很清晰：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo1() #调用module1 中的foo()函数</span><br><span class="line">foo2() #调用module2 中的foo()函数</span><br></pre></td></tr></table></figure>
+<h1 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h1><p>Python 模块就是 Python 程序，换句话说，只要是 Python 程序，都可以作为模块导入。例如，下面定义了一个简单的模块（编写在 demo.py 文件中）：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;小明&quot;</span></span><br><span class="line">add = <span class="string">&quot;xiaoming&quot;</span></span><br><span class="line"><span class="built_in">print</span>(name,add)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">say</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;人生苦短，我学Python！&quot;</span>)</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CLanguage</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name,add</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.add = add</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">say</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(self.name,self.add)</span><br></pre></td></tr></table></figure>
+<p>可以看到，我们在 demo.py 文件中放置了变量（name 和 add）、函数（ say() ）以及一个 Clanguage 类，该文件就可以作为一个模板。</p>
+<p>但通常情况下，为了检验模板中代码的正确性，我们往往需要为其设计一段测试代码，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">say()</span><br><span class="line">clangs = CLanguage(&quot;小红&quot;,&quot;xiaohong&quot;)</span><br><span class="line">clangs.say()</span><br><span class="line">运行 demo.py 文件，其执行结果为：</span><br><span class="line">小明 xiaoming</span><br><span class="line">人生苦短，我学Python！</span><br><span class="line">小红 xiaohong</span><br></pre></td></tr></table></figure>
+<p>通过观察模板中程序的执行结果可以断定，模板文件中包含的函数以及类，是可以正常工作的。</p>
+<p>在此基础上，我们可以新建一个 test.py 文件，并在该文件中使用 demo.py 模板文件，即使用 import 语句导入 demo.py：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import demo</span><br></pre></td></tr></table></figure>
+<p>注意，虽然 demo 模板文件的全称为 demo.py，但在使用 import 语句导入时，只需要使用该模板文件的名称即可。</p>
+<p>此时，如果直接运行 test.py 文件，其执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">小明 xiaoming</span><br><span class="line">人生苦短，我学Python！</span><br><span class="line">小红 xiaohong</span><br></pre></td></tr></table></figure>
+<p>可以看到，当执行 test.py 文件时，它同样会执行 demo.py 中用来测试的程序，这显然不是我们想要的效果。正常的效果应该是，只有直接运行模板文件时，测试代码才会被执行；反之，如果是其它程序以引入的方式执行模板文件，则测试代码不应该被执行。</p>
+<p>要实现这个效果，可以借助 Python 内置的<code>__name__</code>变量。当直接运行一个模块时，<code>name</code>变量的值为<code>__main__</code>；而将模块被导入其他程序中并运行该程序时，处于模块中的<code>__name__</code>变量的值就变成了模块名。因此，如果希望测试函数只有在直接运行模块文件时才执行，则可在调用测试函数时增加判断，即只有当<code>__name__ ==&#39;__main__&#39;</code>时才调用测试函数。</p>
+<p>因此，我们可以修改 demo.py 模板文件中的测试代码为：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">  say()</span><br><span class="line">  clangs = CLanguage(<span class="string">&quot;小明&quot;</span>,<span class="string">&quot;xiaoming&quot;</span>)</span><br><span class="line">  clangs.say()</span><br></pre></td></tr></table></figure>
+<p>显然，这里执行的仅是模板文件中的输出语句，测试代码并未执行。</p>
+<h2 id="自定义模块编写说明文档"><a href="#自定义模块编写说明文档" class="headerlink" title="自定义模块编写说明文档"></a>自定义模块编写说明文档</h2><p>我们知道，在定义函数或者类时，可以为其添加说明文档，以方便用户清楚的知道该函数或者类的功能。自定义模块也不例外。</p>
+<p>为自定义模块添加说明文档，和函数或类的添加方法相同，即只需在模块开头的位置定义一个字符串即可。例如，为 demo.py 模板文件添加一个说明文档：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">demo 模块中包含以下内容：</span><br><span class="line">name 字符串变量：初始值为“Python教程”</span><br><span class="line">add    字符串变量：初始值为“http://c.biancheng.net/python”</span><br><span class="line">say() 函数</span><br><span class="line">CLanguage类：包含 name 和 add 属性和 say() 方法。</span><br><span class="line">&#x27;&#x27;&#x27;</span><br></pre></td></tr></table></figure>
+<p>在此基础上，我们可以通过模板的 <strong>doc</strong> 属性，来访问模板的说明文档。例如，在 test.py 文件中添加如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import demo</span><br><span class="line">print(demo.__doc__)</span><br></pre></td></tr></table></figure>
+<p>程序运行结果为：<br>Python教程 <a target="_blank" rel="noopener" href="http://c.biancheng.net/python">http://c.biancheng.net/python</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">demo 模块中包含以下内容：</span><br><span class="line">name 字符串变量：初始值为“Python教程”</span><br><span class="line">add    字符串变量：初始值为“http://c.biancheng.net/python”</span><br><span class="line">say() 函数</span><br><span class="line">CLanguage类：包含 name 和 add 属性和 say() 方法。</span><br></pre></td></tr></table></figure>
+<h1 id="导入模块的3种方式"><a href="#导入模块的3种方式" class="headerlink" title="导入模块的3种方式"></a>导入模块的3种方式</h1><p>即自定义 Python 模板后，在其它文件中用 import（或 from…import） 语句引入该文件时，Python 解释器同时如下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &#x27;模块名&#x27;</span><br></pre></td></tr></table></figure>
+<p>意思是 Python 找不到这个模块名，这是什么原因导致的呢？要想解决这个问题，读者要先搞清楚 Python 解释器查找模块文件的过程。</p>
+<p>通常情况下，当使用 import 语句导入模块后，Python 会按照以下顺序查找指定的模块文件：<br>在当前目录，即当前执行的程序文件所在目录下查找；<br>到 PYTHONPATH（环境变量）下的每个目录中查找；<br>到 Python 默认的安装目录下查找。</p>
+<p>以上所有涉及到的目录，都保存在标准模块 sys 的 sys.path 变量中，通过此变量我们可以看到指定程序文件支持查找的所有目录。换句话说，如果要导入的模块没有存储在 sys.path 显示的目录中，那么导入该模块并运行程序时，Python 解释器就会抛出 ModuleNotFoundError（未找到模块）异常。</p>
+<p>解决“Python找不到指定模块”的方法有 3 种，分别是：</p>
+<ul>
+<li>向 sys.path 中临时添加模块文件存储位置的完整路径；</li>
+<li>将模块放在 sys.path 变量中已包含的模块加载路径中；</li>
+<li>设置 path 系统环境变量。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#hello.py</span><br><span class="line">def say ():</span><br><span class="line">    print(&quot;Hello,World!&quot;)</span><br><span class="line">#say.py</span><br><span class="line">import hello</span><br><span class="line">hello.say()</span><br></pre></td></tr></table></figure>
+<p>显然，hello.py 文件和 say.py 文件并不在同一目录，此时运行 say.py 文件，其运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> Traceback (most recent call last):</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\say.py&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    import hello</span><br><span class="line">ModuleNotFoundError: No module named &#x27;hello&#x27;</span><br></pre></td></tr></table></figure>
+<p>可以看到，Python 解释器抛出了 ModuleNotFoundError 异常。接下来，分别用以上 3 种方法解决这个问题。</p>
+<h2 id="导入模块方式一：临时添加模块完整路径"><a href="#导入模块方式一：临时添加模块完整路径" class="headerlink" title="导入模块方式一：临时添加模块完整路径"></a>导入模块方式一：临时添加模块完整路径</h2><p>模块文件的存储位置，可以临时添加到 sys.path 变量中，即向 sys.path 中添加 D:\python_module（hello.py 所在目录），在 say.py 中的开头位置添加如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">sys.path.append(&#x27;D:\\python_module&#x27;)</span><br></pre></td></tr></table></figure>
+<p>注意：在添加完整路径中，路径中的 ‘&#39; 需要使用 \ 进行转义，否则会导致语法错误。再次运行 say.py 文件，运行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello,World!</span><br></pre></td></tr></table></figure>
+<p>可以看到，程序成功运行。在此基础上，我们在 say.py 文件中输出 sys.path 变量的值，会得到以下结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;C:\\Users\\mengma\\Desktop&#x27;, &#x27;D:\\python3.6\\Lib\\idlelib&#x27;, &#x27;D:\\python3.6\\python36.zip&#x27;, &#x27;D:\\python3.6\\DLLs&#x27;, &#x27;D:\\python3.6\\lib&#x27;, &#x27;D:\\python3.6&#x27;, &#x27;C:\\Users\\mengma\\AppData\\Roaming\\Python\\Python36\\site-packages&#x27;, &#x27;D:\\python3.6\\lib\\site-packages&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\win32&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\win32\\lib&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\Pythonwin&#x27;, &#x27;D:\\python_module&#x27;]</span><br></pre></td></tr></table></figure>
+<p>该输出信息中，红色部分就是临时添加进去的存储路径。需要注意的是，通过该方法添加的目录，只能在执行当前文件的窗口中有效，窗口关闭后即失效。</p>
+<h2 id="导入模块方式二：将模块保存到指定位置"><a href="#导入模块方式二：将模块保存到指定位置" class="headerlink" title="导入模块方式二：将模块保存到指定位置"></a>导入模块方式二：将模块保存到指定位置</h2><p>如果要安装某些通用性模块，比如复数功能支持的模块、矩阵计算支持的模块、图形界面支持的模块等，这些都属于对 Python 本身进行扩展的模块，这种模块应该直接安装在 Python 内部，以便被所有程序共享，此时就可借助于 Python 默认的模块加载路径。</p>
+<p>Python 程序默认的模块加载路径保存在 sys.path 变量中，因此，我们可以在 say.py 程序文件中先看看 sys.path 中保存的默认加载路径，向 say.py 文件中输出 sys.path 的值，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;C:\\Users\\mengma\\Desktop&#x27;, &#x27;D:\\python3.6\\Lib\\idlelib&#x27;, &#x27;D:\\python3.6\\python36.zip&#x27;, &#x27;D:\\python3.6\\DLLs&#x27;, &#x27;D:\\python3.6\\lib&#x27;, &#x27;D:\\python3.6&#x27;, &#x27;C:\\Users\\mengma\\AppData\\Roaming\\Python\\Python36\\site-packages&#x27;, &#x27;D:\\python3.6\\lib\\site-packages&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\win32&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\win32\\lib&#x27;, &#x27;D:\\python3.6\\lib\\site-packages\\Pythonwin&#x27;]</span><br></pre></td></tr></table></figure>
+<p>上面的运行结果中，列出的所有路径都是 Python 默认的模块加载路径，但通常来说，我们默认将 Python 的扩展模块添加在 lib\site-packages 路径下，它专门用于存放 Python 的扩展模块和包。</p>
+<p>所以，我们可以直接将我们已编写好的 hello.py 文件添加到  lib\site-packages 路径下，就相当于为 Python 扩展了一个 hello 模块，这样任何 Python 程序都可使用该模块。</p>
+<p>移动工作完成之后，再次运行 say.py 文件，可以看到成功运行的结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello,World!</span><br></pre></td></tr></table></figure>
+<h2 id="导入模块方式三：设置环境变量"><a href="#导入模块方式三：设置环境变量" class="headerlink" title="导入模块方式三：设置环境变量"></a>导入模块方式三：设置环境变量</h2><p>PYTHONPATH 环境变量（简称 path 变量）的值是很多路径组成的集合，Python 解释器会按照 path 包含的路径进行一次搜索，直到找到指定要加载的模块。当然，如果最终依旧没有找到，则 Python 就报 ModuleNotFoundError 异常。</p>
+<p>在 Windows 平台上设置环境变量<br>首先，找到桌面上的“计算机”（或者我的电脑），并点击鼠标右键，单击“属性”。此时会显示“控制面板\所有控制面板项\系统”窗口，单击该窗口左边栏中的“高级系统设置”菜单，出现“系统属性”对话框，如图 1 所示。</p>
+<p>图 1 系统属性对话框</p>
+<p>如图 1 所示，点击“环境变量”按钮，此时将弹出图 2 所示的对话框：</p>
+<p>图 2 环境变量对话框</p>
+<p>如图 2 所示，通过该对话框，就可以完成 path 环境变量的设置。需要注意的是，该对话框分为上下 2 部分，其中上面的“用户变量”部分用于设置当前用户的环境变量，下面的“系统变量”部分用于设置整个系统的环境变量。</p>
+<p>通常情况下，建议大家设置设置用户的 path 变量即可，因为此设置仅对当前登陆系统的用户有效，而如果修改系统的 path 变量，则对所有用户有效。<br>对于普通用户来说，设置用户 path 变量和系统 path 变量的效果是相同的，但 Python 在使用 path 变量时，会先按照系统 path 变量的路径去查找，然后再按照用户 path 变量的路径去查找。</p>
+<p>这里我们选择设置当前用户的 path 变量。单击用户变量中的“新建”按钮， 系统会弹出如图 3 所示的对话框。</p>
+<p>图 3 新建PYTHONPATH环境变量</p>
+<p>其中，在“变量名”文本框内输入 PYTHONPATH，表明将要建立名为 PYTHONPATH 的环境变量；在“变量值”文本框内输入 .;d:\python_ module。注意，这里其实包含了两条路径（以分号 ；作为分隔符）：<br>第一条路径为一个点（.），表示当前路径，当运行 Python 程序时，Python 将可以从当前路径加载模块；<br>第二条路径为 d:\python_ module，当运行 Python 程序时，Python 将可以从 d:\python_ module 中加载模块。</p>
+<p>然后点击“确定”，即成功设置 path 环境变量。此时，我们只需要将模块文件移动到和引入该模块的文件相同的目录，或者移动到 d:\python_ module 路径下，该模块就能被成功加载。<br>在 Linux 上设置环境变量<br>启动 Linux 的终端窗口，进入当前用户的 home 路径下，然后在 home 路径下输入如下命令：<br>ls - a</p>
+<p>该命令将列出当前路径下所有的文件，包括隐藏文件。Linux 平台的环境变量是通过 .bash_profile 文件来设置的，使用无格式编辑器打开该文件，在该文件中添加 PYTHONPATH 环境变量。也就是为该文件增加如下一行：<br>#设置PYTHON PATH 环境变量<br>PYTHONPATH&#x3D;.:&#x2F;home&#x2F;mengma&#x2F;python_module</p>
+<p>Linux 与 Windows 平台不一样，多个路径之间以冒号（:）作为分隔符，因此上面一行同样设置了两条路径，点（.）代表当前路径，还有一条路径是 &#x2F;home&#x2F;mengma&#x2F;python_module（mengma 是在 Linux 系统的登录名）。</p>
+<p>在完成了 PYTHONPATH 变量值的设置后，在 .bash_profile 文件的最后添加导出 PYTHONPATH 变量的语句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#导出PYTHONPATH 环境变量</span><br><span class="line">export PYTHONPATH</span><br></pre></td></tr></table></figure>
+<p>重新登录 Linux 平台，或者执行如下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source.bash_profile</span><br></pre></td></tr></table></figure>
+<p>这两种方式都是为了运行该文件，使在文件中设置的 PYTHONPATH 变量值生效。</p>
+<p>在成功设置了上面的环境变量之后，接下来只要把前面定义的模块（Python 程序）放在与当前所运行 Python 程序相同的路径中（或放在 &#x2F;home&#x2F;mengma&#x2F;python_module 路径下），该模块就能被成功加载了。<br>在Mac OS X 上设置环境变量<br>在 Mac OS X 上设置环境变量与 Linux 大致相同（因为 Mac OS X 本身也是类 UNIX 系统）。启动 Mac OS X 的终端窗口（命令行界面），进入当前用户的 home 路径下，然后在 home 路径下输入如下命令：<br>ls -a</p>
+<p>该命令将列出当前路径下所有的文件，包括隐藏文件。Mac OS X 平台的环境变量也可通过，bash_profile 文件来设置，使用无格式编辑器打开该文件，在该文件中添加 PYTHONPATH 环境变量。也就是为该文件增加如下一行：<br>#设置PYTHON PATH 环境变盘<br>PYTHONPATH&#x3D;.:&#x2F;Users&#x2F;mengma&#x2F;python_module</p>
+<p>Mac OS X 的多个路径之间同样以冒号（:）作为分隔符，因此上面一行同样设置了两条路径：点（.）代表当前路径，还有一条路径是 &#x2F;Users&#x2F;mengma&#x2F;python_module。</p>
+<p>在完成了 PYTHONPATH 变量值的设置后，在 .bash_profile 文件的最后添加导出 PYTHONPATH 变量的语句。<br>#导出PYTHON PATH 环境变量<br>export PYTHONPATH</p>
+<p>重新登录 Mac OS X 系统，或者执行如下命令：<br>source.bash_profile</p>
+<p>这两种方式都是为了运行该文件，使在文件中设置的 PYTHONPATH 变量值生效。</p>
+<p>在成功设置了上面的环境变量之后，接下来只要把前面定义的模块（Python 程序）放在与当前所运行 Python 程序相同的路径中（或放在 Users&#x2F;mengma&#x2F;python_module 路径下），该模块就能被成功加载了。</p>
+<h1 id="all-变量"><a href="#all-变量" class="headerlink" title="__all__变量"></a>__all__变量</h1><p>事实上，当我们向文件导入某个模块时，导入的是该模块中那些名称不以下划线（单下划线“_”或者双下划线“__”）开头的变量、函数和类。因此，如果我们不想模块文件中的某个成员被引入到其它文件中使用，可以在其名称前添加下划线。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#demo.py</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">say</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;人生苦短，我学Python！&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">CLanguage</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小明&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">disPython</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小红&quot;</span>)</span><br><span class="line"><span class="comment">#test.py</span></span><br><span class="line"><span class="keyword">from</span> demo <span class="keyword">import</span> *</span><br><span class="line">say()</span><br><span class="line">CLanguage()</span><br><span class="line">disPython()</span><br></pre></td></tr></table></figure>
+<p>在此基础上，如果<code>demo.py</code>模块中的<code>disPython()</code>函数不想让其它文件引入，则只需将其名称改为<code>_disPython()</code>或者<code>__disPython()</code>。修改之后，再次执行<code>test.py</code>，其输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">人生苦短，我学Python！</span><br><span class="line">小明：xiaoming</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:/Users/mengma/Desktop/2.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">    disPython()</span><br><span class="line">NameError: name &#x27;disPython&#x27; is not defined</span><br></pre></td></tr></table></figure>
+<p>显然，<code>test.py</code>文件中无法使用未引入的<code>disPython()</code>函数。</p>
+<h2 id="Python模块-all-变量"><a href="#Python模块-all-变量" class="headerlink" title="Python模块__all__变量"></a>Python模块__all__变量</h2><p>除此之外，还可以借助模块提供的<code>__all__</code>变量，该变量的值是一个列表，存储的是当前模块中一些成员（变量、函数或者类）的名称。通过在模块文件中设置<code>__all__</code>变量，当其它文件以<code>from 模块名 import *</code>的形式导入该模块时，该文件中只能使用<code>__all__</code>列表中指定的成员。<br>也就是说，只有以<code>from 模块名 import *</code>形式导入的模块，当该模块设有<code>__all__</code>变量时，只能导入该变量指定的成员，未指定的成员是无法导入的。</p>
+<p>举个例子，修改 demo.py 模块文件中的代码：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">say</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;人生苦短，我学Python！&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">CLanguage</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小明&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">disPython</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小红&quot;</span>)</span><br><span class="line">__all__ = [<span class="string">&quot;say&quot;</span>,<span class="string">&quot;CLanguage&quot;</span>]</span><br></pre></td></tr></table></figure>
+<p>可见，<code>__all__</code>变量只包含<code>say()</code>和<code>CLanguage()</code>的函数名，不包含<code>disPython()</code>函数的名称。此时直接执行<code>test.py</code>文件，其执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">人生苦短，我学Python！</span><br><span class="line">小明</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:/Users/mengma/Desktop/2.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">    disPython()</span><br><span class="line">NameError: name &#x27;disPython&#x27; is not defined</span><br></pre></td></tr></table></figure>
+<p>显然，对于 test.py 文件来说，demo.py 模块中的 disPython() 函数是未引入，这样调用是非法的。</p>
+<p>再次声明，<code>__all__</code>变量仅限于在其它文件中以“from 模块名 import *”的方式引入。也就是说，如果使用以下 2 种方式引入模块，则<code>__all__</code>变量的设置是无效的。</p>
+<ol>
+<li><p>以“import 模块名”的形式导入模块。通过该方式导入模块后，总可以通过模块名前缀（如果为模块指定了别名，则可以使用模快的别名作为前缀）来调用模块内的所有成员（除了以下划线开头命名的成员）。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#demo.py</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">say</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;人生苦短，我学Python！&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">CLanguage</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小明&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">disPython</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;小红&quot;</span>)</span><br><span class="line">__all__ = [<span class="string">&quot;say&quot;</span>]</span><br><span class="line"><span class="comment">#test.py</span></span><br><span class="line"><span class="keyword">import</span> demo</span><br><span class="line">demo.say()</span><br><span class="line">demo.CLanguage()</span><br><span class="line">demo.disPython()</span><br></pre></td></tr></table></figure>
+<p>可以看到，虽然 demo.py 模块文件中设置有<code>__all__</code>变量，但是当以<code>import demo</code>的方式引入后，<code>__all__</code>变量将不起作用。</p>
+</li>
+<li><p>以<code>from 模块名 import 成员</code>的形式直接导入指定成员。使用此方式导入的模块，<code>__all__</code>变量即便设置，也形同虚设。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> demo <span class="keyword">import</span> say</span><br><span class="line"><span class="keyword">from</span> demo <span class="keyword">import</span> CLanguage</span><br><span class="line"><span class="keyword">from</span> demo <span class="keyword">import</span> disPython</span><br><span class="line">say()</span><br><span class="line">CLanguage()</span><br><span class="line">disPython()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><p>实际开发中，一个大型的项目往往需要使用成百上千的 Python 模块，如果将这些模块都堆放在一起，势必不好管理。而且，使用模块可以有效避免变量名或函数名重名引发的冲突，但是如果模块名重复怎么办呢？因此，Python提出了包（Package）的概念。</p>
+<p>简单理解，包就是文件夹，只不过在该文件夹下必须存在一个名为<code>__init__.py</code>的文件。</p>
+<p>注意，这是 Python 2.x 的规定，而在 Python 3.x 中，<code>__init__.py</code>对包来说，并不是必须的。</p>
+<p>每个包的目录下都必须建立一个<code>__init__.py</code>的模块，可以是一个空模块，可以写一些初始化代码，其作用就是告诉 Python 要将该目录当成包来处理。</p>
+<p>注意，<code>__init__.py</code>不同于其他模块文件，此模块的模块名不是<code>__init__</code>，而是它所在的包名。例如，在<code>settings</code>包中的<code>__init__.py</code>文件，其模块名就是<code>settings</code>。</p>
+<p>包是一个包含多个模块的文件夹，它的本质依然是模块，因此包中也可以包含包。</p>
+<p>Python 库：相比模块和包，库是一个更大的概念，例如在 Python 标准库中的每个库都有好多个包，而每个包中都有若干个模块。</p>
+<h1 id="创建包，导入包"><a href="#创建包，导入包" class="headerlink" title="创建包，导入包"></a>创建包，导入包</h1><p>包其实就是文件夹，更确切的说，是一个包含<code>__init__.py</code>文件的文件夹。因此，如果我们想手动创建一个包，只需进行以下 2 步操作：</p>
+<ul>
+<li>新建一个文件夹，文件夹的名称就是新建包的包名；</li>
+<li>在该文件夹中，创建一个<code>__init__.py</code>文件（前后各有 2 个下划线‘_’），该文件中可以不编写任何代码。当然，也可以编写一些 Python 初始化代码，则当有其它程序文件导入包时，会自动执行该文件中的代码。</li>
+</ul>
+<p>例如，现在我们创建一个非常简单的包，该包的名称为<code>my_package</code>，可以仿照以上 2 步进行：</p>
+<ul>
+<li>创建一个文件夹，其名称设置为<code>my_package</code>；</li>
+<li>在该文件夹中添加一个<code>__init__.py</code>文件，此文件中可以不编写任何代码。不过，这里向该文件编写如下代码：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">创建第一个 Python 包</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">print(&#x27;python&#x27;)</span><br></pre></td></tr></table></figure>
+可以看到，<code>__init__.py</code>文件中，包含了 2 部分信息，分别是此包的说明信息和一条<code>print</code>输出语句。</li>
+</ul>
+<p>由此，我们就成功创建好了一个 Python 包。</p>
+<p>创建好包之后，我们就可以向包中添加模块（也可以添加包）。这里给<code>my_package</code>包添加 2 个模块，分别是<code>module1.py、module2.py</code>，各自包含的代码分别如下所示：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#module1.py模块文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">arc</span>):</span><br><span class="line">  <span class="built_in">print</span>(arc)</span><br><span class="line"><span class="comment">#module2.py 模块文件</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CLanguage</span>:</span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;python&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>现在，我们就创建好了一个具有如下文件结构的包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">my_package</span><br><span class="line">     ┠── __init__.py</span><br><span class="line">     ┠── module1.py</span><br><span class="line">     ┗━━  module2.py</span><br></pre></td></tr></table></figure>
+<h2 id="Python包的导入"><a href="#Python包的导入" class="headerlink" title="Python包的导入"></a>Python包的导入</h2><p>包其实本质上还是模块，因此导入模块的语法同样也适用于导入包。无论导入我们自定义的包，还是导入从他处下载的第三方包，导入方法可归结为以下 3 种：</p>
+<ul>
+<li><code>import 包名[.模块名 [as 别名]]</code></li>
+<li><code>from 包名 import 模块名 [as 别名]</code></li>
+<li><code>from 包名.模块名 import 成员名 [as 别名]</code></li>
+</ul>
+<p>用<code>[]</code>括起来的部分，是可选部分，即可以使用，也可以直接忽略。</p>
+<p>注意，导入包的同时，会在包目录下生成一个含有<code>__init__.cpython-36.pyc</code>文件的<code>__pycache__</code>文件夹。</p>
+<h4 id="1-import-包名-模块名-as-别名"><a href="#1-import-包名-模块名-as-别名" class="headerlink" title="1) import 包名[.模块名 [as 别名]]"></a>1) import 包名[.模块名 [as 别名]]</h4><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package.module1</span><br><span class="line">my_package.module1.display(<span class="string">&quot;java&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到，通过此语法格式导入包中的指定模块后，在使用该模块中的成员（变量、函数、类）时，需添加“包名.模块名”为前缀。当然，如果使用<code>as</code>给包名.模块名”起一个别名的话，就使用直接使用这个别名作为前缀使用该模块中的方法了：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package.module1 <span class="keyword">as</span> module</span><br><span class="line">module.display(<span class="string">&quot;python&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>另外，当直接导入指定包时，程序会自动执行该包所对应文件夹下的<code>__init__.py</code>文件中的代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line">my_package.module1.display(<span class="string">&quot;linux&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>直接导入包名，并不会将包中所有模块全部导入到程序中，它的作用仅仅是导入并执行包下的<code>__init__.py</code>文件，因此，运行该程序，在执行<code>__init__.py</code>文件中代码的同时，还会抛出<code>AttributeError</code>异常（访问的对象不存在）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\demo.py&quot;, line 2, in &lt;module&gt;</span><br><span class="line">    my_package.module1.display(&quot;linux&quot;)</span><br><span class="line">AttributeError: module &#x27;my_package&#x27; has no attribute &#x27;module1&#x27;</span><br></pre></td></tr></table></figure>
+<p>我们知道，包的本质就是模块，导入模块时，当前程序中会包含一个和模块名同名且类型为<code>module</code>的变量，导入包也是如此：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line"><span class="built_in">print</span>(my_package)</span><br><span class="line"><span class="built_in">print</span>(my_package.__doc__)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(my_package))</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">&lt;module &#x27;my_package&#x27; from &#x27;C:\\Users\\mengma\\Desktop\\my_package\\__init__.py&#x27;&gt;</span><br><span class="line"></span><br><span class="line">创建第一个 Python 包</span><br><span class="line"></span><br><span class="line">&lt;class &#x27;module&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="2-from-包名-import-模块名-as-别名"><a href="#2-from-包名-import-模块名-as-别名" class="headerlink" title="2) from 包名 import 模块名 [as 别名]"></a>2) from 包名 import 模块名 [as 别名]</h4><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> my_package <span class="keyword">import</span> module1</span><br><span class="line">module1.display(<span class="string">&quot;golang&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">golang</span><br></pre></td></tr></table></figure>
+<p>可以看到，使用此语法格式导入包中模块后，在使用其成员时不需要带包名前缀，但需要带模块名前缀。</p>
+<p>当然，我们也可以使用<code>as</code>为导入的指定模块定义别名：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> my_package <span class="keyword">import</span> module1 <span class="keyword">as</span> module</span><br><span class="line">module.display(<span class="string">&quot;golang&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>同样，既然包也是模块，那么这种语法格式自然也支持<code>from 包名 import *</code>这种写法，它和<code>import</code>包名 的作用一样，都只是将该包的<code>__init__.py</code>文件导入并执行。</p>
+<h4 id="3-from-包名-模块名-import-成员名-as-别名"><a href="#3-from-包名-模块名-import-成员名-as-别名" class="headerlink" title="3) from 包名.模块名 import 成员名 [as 别名]"></a>3) from 包名.模块名 import 成员名 [as 别名]</h4><p>此语法格式用于向程序中导入“包.模块”中的指定成员（变量、函数或类）。通过该方式导入的变量（函数、类），在使用时可以直接使用变量名（函数名、类名）调用：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> my_package.module1 <span class="keyword">import</span> display</span><br><span class="line">display(<span class="string">&quot;shell&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">shell</span><br></pre></td></tr></table></figure>
+<p>当然，也可以使用<code>as</code>为导入的成员起一个别名：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> my_package.module1 <span class="keyword">import</span> display <span class="keyword">as</span> dis</span><br><span class="line">dis(<span class="string">&quot;shell&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>该程序的运行结果和上面相同。</p>
+<p>另外，在使用此种语法格式加载指定包的指定模块时，可以使用 * 代替成员名，表示加载该模块下的所有成员。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> my_package.module1 <span class="keyword">import</span> *</span><br><span class="line">display(<span class="string">&quot;python&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="查看模块"><a href="#查看模块" class="headerlink" title="查看模块"></a>查看模块</h1><h2 id="查看模块成员：dir-函数"><a href="#查看模块成员：dir-函数" class="headerlink" title="查看模块成员：dir()函数"></a>查看模块成员：dir()函数</h2><p>通过<code>dir()</code>函数，我们可以查看某指定模块包含的全部成员（包括变量、函数和类）。注意这里所指的全部成员，不仅包含可供我们调用的模块成员，还包含所有名称以双下划线“__”开头和结尾的成员，而这些“特殊”命名的成员，是为了在本模块中使用的，并不希望被其它文件调用。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">dir</span>(string))</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;Formatter&#x27;, &#x27;Template&#x27;, &#x27;_ChainMap&#x27;, &#x27;_TemplateMetaclass&#x27;, &#x27;__all__&#x27;, &#x27;__builtins__&#x27;, &#x27;__cached__&#x27;, &#x27;__doc__&#x27;, &#x27;__file__&#x27;, &#x27;__loader__&#x27;, &#x27;__name__&#x27;, &#x27;__package__&#x27;, &#x27;__spec__&#x27;, &#x27;_re&#x27;, &#x27;_string&#x27;, &#x27;ascii_letters&#x27;, &#x27;ascii_lowercase&#x27;, &#x27;ascii_uppercase&#x27;, &#x27;capwords&#x27;, &#x27;digits&#x27;, &#x27;hexdigits&#x27;, &#x27;octdigits&#x27;, &#x27;printable&#x27;, &#x27;punctuation&#x27;, &#x27;whitespace&#x27;]</span><br></pre></td></tr></table></figure>
+<p>可以看到，通过<code>dir()</code>函数获取到的模块成员，不仅包含供外部文件使用的成员，还包含很多“特殊”（名称以 2 个下划线开头和结束）的成员，列出这些成员，对我们并没有实际意义。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="built_in">print</span>([e <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">dir</span>(string) <span class="keyword">if</span> <span class="keyword">not</span> e.startswith(<span class="string">&#x27;_&#x27;</span>)])</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;Formatter&#x27;, &#x27;Template&#x27;, &#x27;ascii_letters&#x27;, &#x27;ascii_lowercase&#x27;, &#x27;ascii_uppercase&#x27;, &#x27;capwords&#x27;, &#x27;digits&#x27;, &#x27;hexdigits&#x27;, &#x27;octdigits&#x27;, &#x27;printable&#x27;, &#x27;punctuation&#x27;, &#x27;whitespace&#x27;]</span><br></pre></td></tr></table></figure>
+<p>显然通过列表推导式，可在<code>dir()</code>函数输出结果的基础上，筛选出对我们有用的成员并显示出来。</p>
+<h2 id="查看模块成员：-all-变量"><a href="#查看模块成员：-all-变量" class="headerlink" title="查看模块成员：__all__变量"></a>查看模块成员：__all__变量</h2><p><code>__all__</code>变量也可以查看模块（包）内包含的所有成员。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="built_in">print</span>(string.__all__)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;ascii_letters&#x27;, &#x27;ascii_lowercase&#x27;, &#x27;ascii_uppercase&#x27;, &#x27;capwords&#x27;, &#x27;digits&#x27;, &#x27;hexdigits&#x27;, &#x27;octdigits&#x27;, &#x27;printable&#x27;, &#x27;punctuation&#x27;, &#x27;whitespace&#x27;, &#x27;Formatter&#x27;, &#x27;Template&#x27;]</span><br></pre></td></tr></table></figure>
+<p>和<code>dir()</code>函数相比，<code>__all__</code>变量在查看指定模块成员时，它不会显示模块中的特殊成员，同时还会根据成员的名称进行排序显示。</p>
+<p>不过需要注意的是，并非所有的模块都支持使用<code>__all__</code>变量，因此对于获取有些模块的成员，就只能使用<code>dir()</code>函数。</p>
+<h1 id="doc-属性：查看文档"><a href="#doc-属性：查看文档" class="headerlink" title="__doc__属性：查看文档"></a>__doc__属性：查看文档</h1><p>在使用<code>dir()</code>函数和<code>__all__</code>变量的基础上，虽然我们能知晓指定模块（或包）中所有可用的成员（变量、函数和类）：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="built_in">print</span>(string.__all__)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;ascii_letters&#x27;, &#x27;ascii_lowercase&#x27;, &#x27;ascii_uppercase&#x27;, &#x27;capwords&#x27;, &#x27;digits&#x27;, &#x27;hexdigits&#x27;, &#x27;octdigits&#x27;, &#x27;printable&#x27;, &#x27;punctuation&#x27;, &#x27;whitespace&#x27;, &#x27;Formatter&#x27;, &#x27;Template&#x27;]</span><br></pre></td></tr></table></figure>
+<p>但对于以上的输出结果，对于不熟悉<code>string</code>模块的用户，还是不清楚这些名称分别表示的是什么意思，更不清楚各个成员有什么功能。</p>
+<p>针对这种情况，我们可以使用<code>help()</code>函数来获取指定成员（甚至是该模块）的帮助信息。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#***__init__.py 文件中的内容***</span></span><br><span class="line"><span class="keyword">from</span> my_package.module1 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> my_package.module2 <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#***module1.py 中的内容***</span></span><br><span class="line"><span class="comment">#module1.py模块文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">arc</span>):</span><br><span class="line">  <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  直接输出指定的参数</span></span><br><span class="line"><span class="string">  &#x27;&#x27;&#x27;</span></span><br><span class="line">  <span class="built_in">print</span>(arc)</span><br><span class="line"><span class="comment">#***module2.py中的内容***</span></span><br><span class="line"><span class="comment">#module2.py 模块文件</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CLanguage</span>:</span><br><span class="line">  <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  CLanguage是一个类，其包含：</span></span><br><span class="line"><span class="string">  display() 方法</span></span><br><span class="line"><span class="string">  &#x27;&#x27;&#x27;</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;http://c.biancheng.net/python/&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>现在，我们先借助<code>dir()</code>函数，查看<code>my_package</code>包中有多少可供我们调用的成员：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line"><span class="built_in">print</span>([e <span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">dir</span>(my_package) <span class="keyword">if</span> <span class="keyword">not</span> e.startswith(<span class="string">&#x27;_&#x27;</span>)])</span><br></pre></td></tr></table></figure>
+<p>程序输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;CLanguage&#x27;, &#x27;display&#x27;, &#x27;module1&#x27;, &#x27;module2&#x27;]</span><br></pre></td></tr></table></figure>
+<p>通过此输出结果可以得知，在<code>my_package</code>包中，有以上 4 个成员可供我们使用。接下来，我们使用<code>help()</code>函数来查看这些成员的具体含义（以 module1 为例）：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line"><span class="built_in">help</span>(my_package.module1)</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Help on module my_package.module1 in my_package:</span><br><span class="line"></span><br><span class="line">NAME</span><br><span class="line">    my_package.module1 - #module1.py模块文件</span><br><span class="line"></span><br><span class="line">FUNCTIONS</span><br><span class="line">    display(arc)</span><br><span class="line">        直接输出指定的参数</span><br><span class="line"></span><br><span class="line">FILE</span><br><span class="line">    c:\users\mengma\desktop\my_package\module1.py</span><br></pre></td></tr></table></figure>
+<p>通过输出结果可以得知，<code>module1</code>实际上是一个模块文件，其包含<code>display()</code>函数，该函数的功能是直接输出指定的<code>arc</code>参数。同时，还显示出了该模块具体的存储位置。</p>
+<p>值得一提的是，之所以我们可以使用<code>help()</code>函数查看具体成员的信息，是因为该成员本身就包含表示自身身份的说明文档（本质是字符串，位于该成员内部开头的位置）。无论是函数还是类，都可以使用<code>__doc__</code>属性获取它们的说明文档，模块也不例外。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line"><span class="built_in">print</span>(my_package.module1.display.__doc__)</span><br></pre></td></tr></table></figure>
+<p>其实，<code>help()</code>函数底层也是借助<code>__doc__</code>属性实现的。</p>
+<p>如果使用<code>help()</code>函数或者<code>__doc__</code>属性，仍然无法满足我们的需求，还可以调用<code>__file__</code>属性，查看该模块或者包文件的具体存储位置，直接查看其源代码。</p>
+<h1 id="file-属性：查看模块的源文件路径"><a href="#file-属性：查看模块的源文件路径" class="headerlink" title="__file__属性：查看模块的源文件路径"></a>__file__属性：查看模块的源文件路径</h1><p>当指定模块（或包）没有说明文档时，仅通过<code>help()</code>函数或者<code>__doc__</code>属性，无法有效帮助我们理解该模块（包）的具体功能。在这种情况下，我们可以通过<code>__file__</code>属性查找该模块（或包）文件所在的具体存储位置，直接查看其源代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_package</span><br><span class="line"><span class="built_in">print</span>(my_package.__file__) <span class="comment"># C:\Users\mengma\Desktop\my_package\__init__.py</span></span><br></pre></td></tr></table></figure>
+<p>注意，因为当引入<code>my_package</code>包时，其实际上执行的是<code>__init__.py</code>文件，因此这里查看<code>my_package</code>包的存储路径，输出的<code>__init__.py</code>文件的存储路径。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="built_in">print</span>(string.__file__) <span class="comment"># D:\python3.6\lib\string.py</span></span><br></pre></td></tr></table></figure>
+<p>注意，并不是所有模块都提供<code>__file__</code>属性，因为并不是所有模块的实现都采用 Python 语言，有些模块采用的是其它编程语言。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/12/14/python/Python%E6%A8%A1%E5%9D%97%E5%92%8C%E5%8C%85/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/12/15/python/Python%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Python类和对象
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/12/14/python/Python%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

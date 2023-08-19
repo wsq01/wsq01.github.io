@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>认识操作系统 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-操作系统/认识操作系统"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  认识操作系统
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="article-date">
+  <time datetime="2021-12-28T11:13:32.000Z" itemprop="datePublished">2021-12-28</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/">计算机组成</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="硬件结构"><a href="#硬件结构" class="headerlink" title="硬件结构"></a>硬件结构</h1><h2 id="图灵机的⼯作⽅式"><a href="#图灵机的⼯作⽅式" class="headerlink" title="图灵机的⼯作⽅式"></a>图灵机的⼯作⽅式</h2><p>图灵的基本思想是⽤机器来模拟⼈们⽤纸笔进⾏数学运算的过程，⽽且还定义了计算机由哪些部分组成，程序⼜是如何执⾏的。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/1.png" class="">
+
+<p>图灵机的基本组成如下：</p>
+<ul>
+<li>有⼀条「纸带」，纸带由⼀个个连续的格⼦组成，每个格⼦可以写⼊字符，纸带就好⽐内存，⽽纸带上的格⼦的字符就好⽐内存中的数据或程序；</li>
+<li>有⼀个「读写头」，读写头可以读取纸带上任意格⼦的字符，也可以把字符写⼊到纸带的格⼦；</li>
+<li>读写头上有⼀些部件，⽐如存储单元、控制单元以及运算单元：</li>
+</ul>
+<ol>
+<li>存储单元⽤于存放数据；</li>
+<li>控制单元⽤于识别字符是数据还是指令，以及控制程序的流程等；</li>
+<li>运算单元⽤于执⾏运算指令；</li>
+</ol>
+<p>知道了图灵机的组成后，我们以简单数学运算的<code>1+2</code>作为例⼦，来看看它是怎么执⾏这⾏代码的。</p>
+<p>⾸先，⽤读写头把<code>1、2、+</code>这 3 个字符分别写⼊到纸带上的 3 个格⼦，然后读写头先停在 1 字符对应的格⼦上；</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.png" class="">
+
+<p>接着，读写头读⼊ 1 到存储设备中，这个存储设备称为图灵机的状态；</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/3.png" class="">
+
+<p>然后读写头向右移动⼀个格，⽤同样的⽅式把 2 读⼊到图灵机的状态，于是现在图灵机的状态中存储着两个连续的数字，1 和 2；</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/4.png" class="">
+
+<p>读写头再往右移动⼀个格，就会碰到 + 号，读写头读到 + 号后，将 + 号传输给「控制单元」，控制单元发现是⼀个 + 号⽽不是数字，所以没有存⼊到状态中，因为 + 号是运算符指令，作⽤是加和⽬前的状态，于是通知「运算单元」⼯作。运算单元收到要加和状态中的值的通知后，就会把状态中的 1 和 2 读⼊并计算，再将计算的结果 3 存放到状态中；</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/5.png" class="">
+
+<p>最后，运算单元将结果返回给控制单元，控制单元将结果传输给读写头，读写头向右移动，把结果 3 写⼊到纸带的格⼦中；</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/6.png" class="">
+
+<p>通过上⾯的图灵机计算 1+2 的过程，可以发现图灵机主要功能就是读取纸带格⼦中的内容，然后交给控制单元识别字符是数字还是运算符指令，如果是数字则存⼊到图灵机状态中，如果是运算符，则通知运算符单元读取状态中的数值进⾏计算，计算结果最终返回给读写头，读写头把结果写⼊到纸带的格⼦中。</p>
+<p>事实上，图灵机这个看起来很简单的⼯作⽅式，和我们今天的计算机是基本⼀样的。接下来，我们⼀同再看看当今计算机的组成以及⼯作⽅式。</p>
+<h2 id="冯诺依曼模型"><a href="#冯诺依曼模型" class="headerlink" title="冯诺依曼模型"></a>冯诺依曼模型</h2><p>在 1945 年冯诺依曼和其他计算机科学家们提出了计算机具体实现的报告，其遵循了图灵机的设计，⽽且还提出⽤电⼦元件构造计算机，并约定了⽤⼆进制进⾏计算和存储，还定义计算机基本结构为 5 个部分，分别是中央处理器（CPU）、内存、输⼊设备、输出设备、总线。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/7.png" class="">
+
+<p>这 5 个部分也被称为冯诺依曼模型，接下来看看这 5 个部分的具体作⽤。</p>
+<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><p>我们的程序和数据都是存储在内存，存储的区域是线性的。</p>
+<p>数据存储的单位是⼀个⼆进制位（<code>bit</code>），即 0 或 1。最⼩的存储单位是字节（<code>byte</code>），1 字节等于 8 位。内存的地址是从 0 开始编号的，然后⾃增排列，最后⼀个地址为内存总字节数 - 1，这种结构好似我们程序⾥的数组，所以内存读写任何⼀个数据的速度都是⼀样的。</p>
+<h3 id="中央处理器"><a href="#中央处理器" class="headerlink" title="中央处理器"></a>中央处理器</h3><p>中央处理器也就是我们常说的 CPU，32 位和 64 位 CPU 最主要区别在于⼀次能计算多少字节数据：</p>
+<ul>
+<li>32 位 CPU ⼀次可以计算 4 个字节；</li>
+<li>64 位 CPU ⼀次可以计算 8 个字节；</li>
+</ul>
+<p>这⾥的 32 位和 64 位，通常称为 CPU 的位宽。</p>
+<p>之所以 CPU 要这样设计，是为了能计算更⼤的数值，如果是 8 位的 CPU，那么⼀次只能计算 1 个字节 0~255 范围内的数值，这样就⽆法⼀次完成计算<code>10000*500</code>，于是为了能⼀次计算⼤数的运算，CPU 需要⽀持多个<code>byte</code>⼀起计算，所以 CPU 位宽越⼤，可以计算的数值就越⼤，⽐如说 32 位 CPU 能计算的最⼤整数是 4294967295 。</p>
+<p>CPU 内部还有⼀些组件，常⻅的有寄存器、控制单元和逻辑运算单元等。其中，控制单元负责控制 CPU ⼯作，逻辑运算单元负责计算，⽽寄存器可以分为多种类，每种寄存器的功能⼜不尽相同。</p>
+<p>CPU 中的寄存器主要作⽤是存储计算时的数据，为什么有了内存还需要寄存器？原因很简单，因为内存离 CPU 太远了，⽽寄存器就在 CPU ⾥，还紧挨着控制单元和逻辑运算单元，⾃然计算时速度会很快。</p>
+<p>常⻅的寄存器种类：</p>
+<ul>
+<li>通⽤寄存器，⽤来存放需要进⾏运算的数据，⽐如需要进⾏加和运算的两个数据。</li>
+<li>程序计数器，⽤来存储 CPU 要执⾏下⼀条指令「所在的内存地址」，注意不是存储了下⼀条要执⾏的指令，此时指令还在内存中，程序计数器只是存储了下⼀条指令的地址。</li>
+<li>指令寄存器，⽤来存放程序计数器指向的指令，也就是指令本身，指令被执⾏完成之前，指令都存储在这⾥。</li>
+</ul>
+<h3 id="总线"><a href="#总线" class="headerlink" title="总线"></a>总线</h3><p>总线是⽤于 CPU 和内存以及其他设备之间的通信，总线可分为 3 种：</p>
+<ul>
+<li>地址总线，⽤于指定 CPU 将要操作的内存地址；</li>
+<li>数据总线，⽤于读写内存的数据；</li>
+<li>控制总线，⽤于发送和接收信号，⽐如中断、设备复位等信号，CPU 收到信号后⾃然进⾏响应，这时也需要控制总线；</li>
+</ul>
+<p>当 CPU 要读写内存数据的时候，⼀般需要通过两个总线：</p>
+<ul>
+<li>⾸先要通过「地址总线」来指定内存的地址；</li>
+<li>再通过「数据总线」来传输数据；</li>
+</ul>
+<h3 id="输⼊、输出设备"><a href="#输⼊、输出设备" class="headerlink" title="输⼊、输出设备"></a>输⼊、输出设备</h3><p>输⼊设备向计算机输⼊数据，计算机经过计算后，把数据输出给输出设备。期间，如果输⼊设备是键盘，按下按键时是需要和 CPU 进⾏交互的，这时就需要⽤到控制总线了。</p>
+<h2 id="线路位宽与-CPU-位宽"><a href="#线路位宽与-CPU-位宽" class="headerlink" title="线路位宽与 CPU 位宽"></a>线路位宽与 CPU 位宽</h2><p>数据是如何通过线路传输的呢？其实是通过操作电压，低电压表示 0，⾼压电压则表示 1。</p>
+<p>如果构造了⾼低⾼这样的信号，其实就是 101 ⼆进制数据，⼗进制则表示 5，如果只有⼀条线路，就意味着每次只能传递<code>1 bit</code>的数据，即 0 或 1，那么传输 101 这个数据，就需要 3 次才能传输完成，这样的效率⾮常低。</p>
+<p>这样⼀位⼀位传输的⽅式，称为串⾏，下⼀个<code>bit</code>必须等待上⼀个<code>bit</code>传输完成才能进⾏传输。当然，想⼀次多传⼀些数据，增加线路即可，这时数据就可以并⾏传输。</p>
+<p>为了避免低效率的串⾏传输的⽅式，线路的位宽最好⼀次就能访问到所有的内存地址。CPU 要想操作的内存地址就需要地址总线，如果地址总线只有 1 条，那每次只能表示 0 或 1 这两种情况，所以 CPU ⼀次只能操作 2 个内存地址，如果想要 CPU 操作 4G 的内存，那么就需要 32 条地址总线，因为 2<sup>32</sup> &#x3D; 4G。</p>
+<p>知道了线路位宽的意义后，我们再来看看 CPU 位宽。</p>
+<p>CPU 的位宽最好不要⼩于线路位宽，⽐如 32 位 CPU 控制 40 位宽的地址总线和数据总线的话，⼯作起来就会⾮常复杂且麻烦，所以 32 位的 CPU 最好和 32 位宽的线路搭配，因为 32 位 CPU ⼀次最多只能操作 32 位宽的地址总线和数据总线。</p>
+<p>如果⽤ 32 位 CPU 去加和两个 64 位⼤⼩的数字，就需要把这 2 个 64 位的数字分成 2 个低位 32 位数字和 2 个⾼位 32 位数字来计算，先加个两个低位的 32 位数字，算出进位，然后加和两个⾼位的 32 位数字，最后再加上进位，就能算出结果了，可以发现 32 位 CPU 并不能⼀次性计算出加和两个 64 位数字的结果。</p>
+<p>对于 64 位 CPU 就可以⼀次性算出加和两个 64 位数字的结果，因为 64 位 CPU 可以⼀次读⼊ 64 位的数字，并且 64 位 CPU 内部的逻辑运算单元也⽀持 64 位数字的计算。</p>
+<p>但是并不代表 64 位 CPU 性能⽐ 32 位 CPU ⾼很多，很少应⽤需要算超过 32 位的数字，所以如果计算的数额不超过 32 位数字的情况下，32 位和 64 位 CPU 之间没什么区别的，只有当计算超过 32 位数字的情况下，64 位的优势才能体现出来。</p>
+<p>另外，32 位 CPU 最⼤只能操作 4GB 内存，就算装了 8GB 内存条也没⽤。⽽ 64 位 CPU 寻址范围则很⼤，理论最⼤的寻址空间为 2<sup>64</sup>。</p>
+<h2 id="程序执⾏的基本过程"><a href="#程序执⾏的基本过程" class="headerlink" title="程序执⾏的基本过程"></a>程序执⾏的基本过程</h2><p>在前⾯，我们知道了程序在图灵机的执⾏过程，接下来我们来看看程序在冯诺依曼模型上是怎么执⾏的。</p>
+<p>程序实际上是⼀条⼀条指令，所以程序的运⾏过程就是把每⼀条指令⼀步⼀步的执⾏起来，负责执⾏指令的就是 CPU 了。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/8.png" class="">
+
+<p>CPU 执⾏程序的过程如下：</p>
+<ul>
+<li>第⼀步，CPU 读取「程序计数器」的值，这个值是指令的内存地址，然后 CPU 的「控制单元」操作「地址总线」指定需要访问的内存地址，接着通知内存设备准备数据，数据准备好后通过「数据总线」将指令数据传给 CPU，CPU 收到内存传来的数据后，将这个指令数据存⼊到「指令寄存器」。</li>
+<li>第⼆步，CPU 分析「指令寄存器」中的指令，确定指令的类型和参数，如果是计算类型的指令，就把指令交给「逻辑运算单元」运算；如果是存储类型的指令，则交由「控制单元」执⾏；</li>
+<li>第三步，CPU 执⾏完指令后，「程序计数器」的值⾃增，表示指向下⼀条指令。这个⾃增的⼤⼩，由 CPU 的位宽决定，⽐如 32 位的 CPU，指令是 4 个字节，需要 4 个内存地址存放，因此「程序计数器」的值会⾃增 4；</li>
+</ul>
+<p>简单总结⼀下就是，⼀个程序执⾏的时候，CPU 会根据程序计数器⾥的内存地址，从内存⾥⾯把需要执⾏的指令读取到指令寄存器⾥⾯执⾏，然后根据指令⻓度⾃增，开始顺序读取下⼀条指令。</p>
+<p>CPU 从程序计数器读取指令、到执⾏、再到下⼀条指令，这个过程会不断循环，直到程序执⾏结束，这个不断循环的过程被称为 CPU 的指令周期。</p>
+<h2 id="a-x3D-1-2-执⾏具体过程"><a href="#a-x3D-1-2-执⾏具体过程" class="headerlink" title="a&#x3D;1+2 执⾏具体过程"></a>a&#x3D;1+2 执⾏具体过程</h2><p>知道了基本的程序执⾏过程后，接下来⽤<code>a =1+2</code>的作为例⼦，进⼀步分析该程序在冯诺伊曼模型的执⾏过程。</p>
+<p>CPU 是不认识<code>a=1+2</code>这个字符串，这些字符串只是⽅便我们程序员认识，要想这段程序能跑起来，还需要把整个程序翻译成汇编语⾔的程序，这个过程称为编译成汇编代码。</p>
+<p>针对汇编代码，我们还需要⽤汇编器翻译成机器码，这些机器码由 0 和 1 组成的机器语⾔，这⼀条条机器码，就是⼀条条的计算机指令，这个才是 CPU 能够真正认识的东⻄。</p>
+<p>下⾯来看看<code>a=1+2</code>在 32 位 CPU 的执⾏过程。</p>
+<p>程序编译过程中，编译器通过分析代码，发现 1 和 2 是数据，于是程序运⾏时，内存会有个专⻔的区域来存放这些数据，这个区域就是「数据段」。如下图，数据 1 和 2 的区域位置：</p>
+<ul>
+<li>数据 1 被存放到<code>0x104</code>位置；</li>
+<li>数据 2 被存放到<code>0x100</code>位置；</li>
+</ul>
+<p>注意，数据和指令是分开区域存放的，存放指令区域的地⽅称为「正⽂段」。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/9.png" class="">
+
+<p>编译器会把<code>a=1+2</code>翻译成 4 条指令，存放到正⽂段中。如图，这 4 条指令被存放到了<code>0x200~0x20c</code>的区域中：</p>
+<ul>
+<li><code>0x200</code>的内容是<code>load</code>指令将<code>0x100</code>地址中的数据 2 装⼊到寄存器 R0；</li>
+<li><code>0x204</code>的内容是<code>load</code>指令将<code>0x104</code>地址中的数据 1 装⼊到寄存器 R1；</li>
+<li><code>0x208</code>的内容是<code>add</code>指令将寄存器 R0 和 R1 的数据相加，并把结果存放到寄存器 R2；</li>
+<li><code>0x20c</code>的内容是<code>store</code>指令将寄存器 R2 中的数据存回数据段中的<code>0x108</code>地址中，这个地址也就是变量<code>a</code>内存中的地址；</li>
+</ul>
+<p>编译完成后，具体执⾏程序的时候，程序计数器会被设置为 0x200 地址，然后依次执⾏这 4 条指令。</p>
+<p>上⾯的例⼦中，由于是在 32 位 CPU 执⾏的，因此⼀条指令是占 32 位⼤⼩，所以你会发现每条指令间隔 4 个字节。</p>
+<p>⽽数据的⼤⼩是根据你在程序中指定的变量类型，⽐如<code>int</code>类型的数据则占 4 个字节，<code>char</code>类型的数据则占 1 个字节。</p>
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><p>上⾯的例⼦中，图中指令的内容是简易的汇编代码，⽬的是为了⽅便理解指令的具体内容，事实上指令的内容是⼀串⼆进制数字的机器码，每条指令都有对应的机器码，CPU 通过解析机器码来知道指令的内容。</p>
+<p>不同的 CPU 有不同的指令集，也就是对应着不同的汇编语⾔和不同的机器码，接下来选⽤最简单的 MIPS 指集，来看看机器码是如何⽣成的，这样也能明⽩⼆进制的机器码的具体含义。</p>
+<p>MIPS 的指令是⼀个 32 位的整数，⾼ 6 位代表着操作码，表示这条指令是⼀条什么样的指令，剩下的 26 位不同指令类型所表示的内容也就不相同，主要有三种类型R、I 和 J。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/10.png" class="">
+
+<p>这三种类型的含义：</p>
+<ul>
+<li>R 指令，⽤在算术和逻辑操作，⾥⾯由读取和写⼊数据的寄存器地址。如果是逻辑位移操作，后⾯还有位移操作的「位移量」，⽽最后的「功能码」则是再前⾯的操作码不够的时候，扩展操作码来表示对应的具体指令的；</li>
+<li>I 指令，⽤在数据传输、条件分⽀等。这个类型的指令，就没有了位移量和操作码，也没有了第三个寄存器，⽽是把这三部分直接合并成了⼀个地址值或⼀个常数；</li>
+<li>J 指令，⽤在跳转，⾼ 6 位之外的 26 位都是⼀个跳转后的地址；</li>
+</ul>
+<p>接下来，我们把前⾯例⼦的这条指令：「<code>add</code>指令将寄存器 R0 和 R1 的数据相加，并把结果放⼊到 R2」，翻译成机器码。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/11.png" class="">
+
+<p>加和运算<code>add</code>指令是属于 R 指令类型：</p>
+<ul>
+<li><code>add</code>对应的 MIPS 指令⾥操作码是<code>000000</code>，以及最末尾的功能码是<code>100000</code>，这些数值都是固定的，查⼀下 MIPS 指令集的⼿册就能知道的；</li>
+<li><code>rs</code>代表第⼀个寄存器 R0 的编号，即<code>00000</code>；</li>
+<li><code>rt</code>代表第⼆个寄存器 R1 的编号，即<code>00001</code>；</li>
+<li><code>rd</code>代表⽬标的临时寄存器 R2 的编号，即 00010；</li>
+</ul>
+<p>因为不是位移操作，所以位移量是<code>00000</code>把上⾯这些数字拼在⼀起就是⼀条 32 位的 MIPS 加法指令了，那么⽤ 16 进制表示的机器码则是<code>0x00011020</code>。</p>
+<p>编译器在编译程序的时候，会构造指令，这个过程叫做指令的编码。CPU 执⾏程序的时候，就会解析指令，这个过程叫作指令的解码。</p>
+<p>现代⼤多数 CPU 都使⽤来流⽔线的⽅式来执⾏指令，所谓的流⽔线就是把⼀个任务拆分成多个⼩任务，于是⼀条指令通常分为 4 个阶段，称为 4 级流⽔线，如下图：</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/12.png" class="">
+
+<p>四个阶段的具体含义：</p>
+<ol>
+<li>CPU 通过程序计数器读取对应内存地址的指令，这个部分称为<code>Fetch</code>（取得指令）；</li>
+<li>CPU 对指令进⾏解码，这个部分称为<code>Decode</code>（指令译码）；</li>
+<li>CPU 执⾏指令，这个部分称为<code>Execution</code>（执⾏指令）；</li>
+<li>CPU 将计算结果存回寄存器或者将寄存器的值存⼊内存，这个部分称为<code>Store</code>（数据回写）；</li>
+</ol>
+<p>上⾯这 4 个阶段，我们称为指令周期，CPU 的⼯作就是⼀个周期接着⼀个周期，周⽽复始。</p>
+<p>事实上，不同的阶段其实是由计算机中的不同组件完成的：</p>
+<ul>
+<li>取指令的阶段，我们的指令是存放在存储器⾥的，实际上，通过程序计数器和指令寄存器取出指令的过程，是由控制器操作的；</li>
+<li>指令的译码过程，也是由控制器进⾏的；</li>
+<li>指令执⾏的过程，⽆论是进⾏算术操作、逻辑操作，还是进⾏数据传输、条件分⽀操作，都是由算术逻辑单元操作的，也就是由运算器处理的。但是如果是⼀个简单的⽆条件地址跳转，则是直接在控制器⾥⾯完成的，不需要⽤到运算器。</li>
+</ul>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/13.png" class="">
+
+<h3 id="指令的类型"><a href="#指令的类型" class="headerlink" title="指令的类型"></a>指令的类型</h3><p>指令从功能⻆度划分，可以分为 5 ⼤类：</p>
+<ul>
+<li>数据传输类型的指令，⽐如<code>store/load</code>是寄存器与内存间数据传输的指令，<code>mov</code>是将⼀个内存地址的数据移动到另⼀个内存地址的指令；</li>
+<li>运算类型的指令，⽐如加减乘除、位运算、⽐较⼤⼩等等，它们最多只能处理两个寄存器中的数据；</li>
+<li>跳转类型的指令，通过修改程序计数器的值来达到跳转执⾏指令的过程，⽐如编程中常⻅的<code>if else、swtich-case</code>、函数调⽤等。</li>
+<li>信号类型的指令，⽐如发⽣中断的指令<code>trap</code>；</li>
+<li>闲置类型的指令，⽐如指令<code>nop</code>，执⾏后 CPU 会空转⼀个周期；</li>
+</ul>
+<h3 id="指令的执⾏速度"><a href="#指令的执⾏速度" class="headerlink" title="指令的执⾏速度"></a>指令的执⾏速度</h3><p>CPU 的硬件参数都会有 GHz 这个参数，⽐如⼀个 1 GHz 的 CPU，指的是时钟频率是 1 G，代表着 1 秒会产⽣ 1G 次数的脉冲信号，每⼀次脉冲信号⾼低电平的转换就是⼀个周期，称为时钟周期。</p>
+<p>对于 CPU 来说，在⼀个时钟周期内，CPU 仅能完成⼀个最基本的动作，时钟频率越⾼，时钟周期就越短，⼯作速度也就越快。</p>
+<p>⼀个时钟周期⼀定能执⾏完⼀条指令吗？答案是不⼀定的，⼤多数指令不能在⼀个时钟周期完成，通常需要若⼲个时钟周期。不同的指令需要的时钟周期是不同的，加法和乘法都对应着⼀条 CPU 指令，但是乘法需要的时钟周期就要⽐加法多。</p>
+<p>程序执⾏的时候，耗费的 CPU 时间少就说明程序是快的，对于程序的 CPU 执⾏时间，我们可以拆解成 CPU 时钟周期数（CPU Cycles）和时钟周期时间（Clock Cycle Time）的乘积。</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/14.png" class="">
+
+<p>时钟周期时间就是我们前⾯提及的 CPU 主频，主频越⾼说明 CPU 的⼯作速度就越快，⽐如电脑的 CPU 是 2.4GHz 四核 Intel Core i5，这⾥的 2.4GHz 就是电脑的主频，时钟周期时间就是 1&#x2F;2.4G。</p>
+<p>要想 CPU 跑的更快，⾃然缩短时钟周期时间，也就是提升 CPU 主频，但是今⾮彼⽇，摩尔定律早已失效，当今的 CPU 主频已经很难再做到翻倍的效果了。</p>
+<p>另外，换⼀个更好的 CPU，这个也是我们软件⼯程师控制不了的事情，我们应该把⽬光放到另外⼀个乘法因⼦ —— CPU 时钟周期数，如果能减少程序所需的 CPU 时钟周期数量，⼀样也是能提升程序的性能的。</p>
+<p>对于 CPU 时钟周期数我们可以进⼀步拆解成：「指令数 x 每条指令的平均时钟周期数（Cycles Per Instruction，简称 CPI ）」，于是程序的 CPU 执⾏时间的公式可变成如下：</p>
+<img src="/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/15.png" class="">
+
+<p>因此，要想程序跑的更快，优化这三者即可：</p>
+<ul>
+<li>指令数，表示执⾏程序所需要多少条指令，以及哪些指令。这个层⾯是基本靠编译器来优化，毕竟同样的代码，在不同的编译器，编译出来的计算机指令会有各种不同的表示⽅式。</li>
+<li>每条指令的平均时钟周期数 CPI，表示⼀条指令需要多少个时钟周期数，现代⼤多数 CPU 通过流⽔线技术（Pipline），让⼀条指令需要的 CPU 时钟周期数尽可能的少；</li>
+<li>时钟周期时间，表示计算机主频，取决于计算机硬件。有的 CPU ⽀持超频技术，打开了超频意味着把 CPU 内部的时钟给调快了，于是 CPU ⼯作速度就变快了，但是也是有代价的，CPU 跑的越快，散热的压⼒就会越⼤，CPU 会很容易奔溃。</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/12/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A4%E8%AF%86%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/" rel="tag">计算机组成</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/12/29/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B8%BA%E4%BB%80%E4%B9%880.1+0.2%E4%B8%8D%E7%AD%89%E4%BA%8E0.3/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            为什么0.1+0.2不等于0.3
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/12/22/%E7%BD%91%E7%BB%9C%E6%98%AF%E6%80%8E%E6%A0%B7%E8%BF%9E%E6%8E%A5%E7%9A%84/%E7%BD%91%E7%BB%9C%E6%98%AF%E6%80%8E%E6%A0%B7%E8%BF%9E%E6%8E%A5%E7%9A%846/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">网络是怎样连接的——响应返回浏览器</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

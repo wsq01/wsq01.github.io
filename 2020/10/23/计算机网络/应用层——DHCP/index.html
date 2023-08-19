@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>应用层——DHCP |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/应用层——DHCP"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  应用层——DHCP
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/" class="article-date">
+  <time datetime="2020-10-23T02:01:42.000Z" itemprop="datePublished">2020-10-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">15 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="刚插上网线，电脑怎么知道自己的-IP-地址的？"><a href="#刚插上网线，电脑怎么知道自己的-IP-地址的？" class="headerlink" title="刚插上网线，电脑怎么知道自己的 IP 地址的？"></a>刚插上网线，电脑怎么知道自己的 IP 地址的？</h1><img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/20.png" class="" title="五层网络协议对应的消息体变化分析">
+
+<p>如果你知道某台电脑的 IP，就可以向这个 IP 发起连接请求，建立连接后就可以操作收发数据。</p>
+<p>要发送的数据，会在网络层里加入 IP 头。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/21.png" class="" title="ip报头">
+
+<p>这里面最重要的是发送端和接收端的 IP 地址。有了 IP 地址，数据包就能在网络世界里找到该由谁来接收这个数据包。</p>
+<p>所以说上面的网络通信离不开 IP。</p>
+<p>假设我有一台新买的电脑，还没联网呢，这时候拿着新买的网线，插入网线口，网线插口亮起来了。</p>
+<p>然后就可以开始用它上网了。</p>
+<p>那么问题来了。</p>
+<p>刚插上网线，电脑怎么知道自己的 IP 是什么？怎么就突然能上网了呢？</p>
+<p>这个话题，我们从 DHCP 聊起。</p>
+<h1 id="DHCP是什么"><a href="#DHCP是什么" class="headerlink" title="DHCP是什么"></a>DHCP是什么</h1><p>插上网线之后，获得 IP 的方式主要有两种。</p>
+<p>第一种是，自己手动在电脑里配。在选择手动配置之后，除了 IP 地址还需要配上子网掩码和路由器的地址。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/22.png" class="" title="手动配IP">
+
+<p>这几个词对于大部分普通人来说，很难理解。大部分人没事都不会去配这玩意。有没有办法可以让这些IP信息自动获得？</p>
+<p>有，这就是第二种获取 IP 的方式，DHCP。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/23.png" class="" title="DHCP自动生成IP">
+
+<p>通过 DHCP，在联网之后可以自动获取到本机需要的 IP 地址，子网掩码还有路由器地址。</p>
+<h1 id="动态主机配置协议-DHCP"><a href="#动态主机配置协议-DHCP" class="headerlink" title="动态主机配置协议 DHCP"></a>动态主机配置协议 DHCP</h1><p>动态主机配置协议 DHCP(<code>Dynamic Host Configuration Protocol</code>) 提供了即插即用连网的机制。</p>
+<p>这种机制允许一台计算机加入新的网络和获取 IP 地址，而不用手工配置。</p>
+<p>DHCP 对运行客户软件和服务器软件的计算机都适用。当运行客户软件的计算机移至一个新的网络时，就可使用 DHCP 获取其配置信息而不需要手工干预。</p>
+<p>DHCP 给运行服务器软件、且位置固定的计算机指派一个永久地址，给运行客户端软件的计算机分配一个临时地址。</p>
+<p>需要 IP 地址的主机在启动时就向 DHCP 服务器广播发送发现报文（将目的 IP 地址置为全1，即<code>255.255.255.255</code>），这时该主机就成为 DHCP 客户。发送广播报文是因为现在还不知道 DHCP 服务器在什么地方，因此要发现 DHCP 服务器的 IP 地址。</p>
+<p>这台主机目前还没有 IP 地址，因此它将 IP 数据报的源 IP 地址设为全 0。这样，在本地网络上的所有主机都能收到此广播报文，但只有 DHCP 服务器才回答此广播报文。</p>
+<p>DHCP 服务器先在其数据库中查找该计算机的配置信息。若找到，则返回找到的信息。若找不到，则从服务器的 IP 地址池中取一个地址分配给该计算机。</p>
+<p>DHCP 服务器的回答报文叫做提供报文。 </p>
+<p>DHCP 说白了，就是向某个管 IP 分配的服务器，也就是 DHCP 服务器，申请 IP 地址。其实一般家里用的路由器就自带这个功能。</p>
+<h2 id="协议配置"><a href="#协议配置" class="headerlink" title="协议配置"></a>协议配置</h2><p>在协议软件中给参数赋值的动作叫做协议配置。</p>
+<p>一个软件协议在使用之前必须是已正确配置的。具体的配置信息有哪些则取决于协议栈。 </p>
+<p>例如，连接到互联网的计算机的协议软件需要配置的参数包括：</p>
+<ul>
+<li>IP 地址</li>
+<li>子网掩码</li>
+<li>默认路由器的 IP 地址</li>
+<li>域名服务器的 IP 地址</li>
+</ul>
+<p>这些信息通常存储在一个配置文件中，计算机在引导过程中可以对这个文件进行存取。 </p>
+<h2 id="DHCP-工作方式"><a href="#DHCP-工作方式" class="headerlink" title="DHCP 工作方式"></a>DHCP 工作方式</h2><p>DHCP 使用客户-服务器方式，采用请求&#x2F;应答方式工作。</p>
+<p>DHCP 基于 UDP 工作，DHCP 服务器运行在 67 号端口， DHCP客户运行在 68 号端口。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/img1.png" class="">
+<br>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/img2.png" class="">
+<br>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/img3.png" class="">
+
+<h2 id="DHCP-中继代理"><a href="#DHCP-中继代理" class="headerlink" title="DHCP 中继代理"></a>DHCP 中继代理</h2><p>并不是每个网络上都有 DHCP 服务器，这样会使 DHCP 服务器的数量太多。现在是每一个网络至少有一个 DHCP 中继代理，它配置了 DHCP 服务器的 IP 地址信息。</p>
+<p>当 DHCP 中继代理收到主机发送的发现报文后，就以单播方式向 DHCP 服务器转发此报文，并等待其回答。收到 DHCP 服务器回答的提供报文后，DHCP 中继代理再将此提供报文发回给主机。</p>
+<p>DHCP 中继代理以单播方式转发发现报文。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/img4.png" class="">
+
+<h2 id="租用期"><a href="#租用期" class="headerlink" title="租用期"></a>租用期</h2><p>DHCP 服务器分配给 DHCP 客户的 IP 地址是临时的，因此 DHCP 客户只能在一段有限的时间内使用这个分配到的 IP 地址。DHCP 协议称这段时间为租用期（默认为 8 天）。 </p>
+<p>租用期的数值应由 DHCP 服务器自己决定。</p>
+<p>DHCP 客户也可在自己发送的报文中（例如，发现报文）提出对租用期的要求。 </p>
+<h2 id="DHCP-协议的工作过程"><a href="#DHCP-协议的工作过程" class="headerlink" title="DHCP 协议的工作过程"></a>DHCP 协议的工作过程</h2><img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/img5.png" class="">
+
+<ol>
+<li>DHCP 服务器被动打开 UDP 端口 67，等待客户端发来的报文。</li>
+<li>DHCP 客户从 UDP 端口 68 广播发送 DHCP 发现报文<code>DHCP DISCOVER</code>。</li>
+<li>凡收到 DHCP 发现报文的 DHCP 服务器收到消息后，会在自己维护的一个 IP 池里拿出一个空闲 IP，通过单播的形式发出 DHCP 提供报文<code>DHCP OFFER</code>，因此 DHCP 客户可能收到多个 DHCP 提供报文 。</li>
+<li>DHCP 客户从几个 DHCP 服务器中选择其中的一个，并向所选择的 DHCP 服务器发送 DHCP 请求报文<code>DHCP REQUEST</code>。</li>
+<li>被选择的 DHCP 服务器发送确认报文<code>DHCP ACK</code>，进入已绑定状态，并可开始使用得到的临时 IP 地址了。<br>DHCP 客户现在要根据服务器提供的租用期 T 设置两个计时器 T<sub>1</sub> 和 T<sub>2</sub>，它们的超时时间分别是 0.5T 和 0.875T。当超时时间到就要请求更新租用期。</li>
+<li>租用期过了一半（T<sub>1</sub> 时间到），DHCP 发送请求报文<code>DHCP REQUEST</code>，要求更新租用期。 </li>
+<li>DHCP 服务器若同意，则发回确认报文<code>DHCP ACK</code>。DHCP 客户得到了新的租用期，重新设置计时器。</li>
+<li>DHCP 服务器若不同意，则发回否认报<code>DHCP NACK</code>。这时 DHCP 客户必须立即停止使用原来的 IP 地址，而必须重新申请 IP 地址（回到步骤 2）。<br>若 DHCP 服务器不响应步骤 6 的请求报文<code>DHCP REQUEST</code>，则在租用期过了 87.5% 时，DHCP 客户必须重新发送请求报文<code>DHCP REQUEST</code>（重复步骤 6），然后又继续后面的步骤。 </li>
+<li>DHCP 客户可随时提前终止服务器所提供的租用期，这时只需向 DHCP 服务器发送释放报文<code>DHCP RELEASE</code>即可。</li>
+</ol>
+<p>自动获得 IP 地址和自动获得 DNS 服务器地址就表示是使用 DHCP 协议。</p>
+<p>可以发现，DHCP 交互中，全程都是使用 UDP 广播通信。</p>
+<p>用的是广播，那如果 DHCP 服务器和客户端不是在同一个局域网内，路由器又不会转发广播包，那不是每个网络都要配一个 DHCP 服务器？</p>
+<p>所以，为了解决这一问题，就出现了 DHCP 中继代理。有了 DHCP 中继代理以后，对不同网段的 IP 地址分配也可以由一个 DHCP 服务器统一进行管理。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/29.png" class="">
+
+<p>HCP 客户端会向 DHCP 中继代理发送 DHCP 请求包，而 DHCP 中继代理在收到这个广播包以后，再以单播的形式发给 DHCP 服务器。</p>
+<p>服务器端收到该包以后再向 DHCP 中继代理返回应答，并由 DHCP 中继代理将此包广播给 DHCP 客户端 。</p>
+<p>因此，DHCP 服务器即使不在同一个链路上也可以实现统一分配和管理IP地址。</p>
+<h2 id="为什么要有第三和第四阶段"><a href="#为什么要有第三和第四阶段" class="headerlink" title="为什么要有第三和第四阶段"></a>为什么要有第三和第四阶段</h2><p>大家有没有发现，在<code>Offer</code>阶段，就已经拿到了 IP 了，为什么还要有后面的<code>Request</code>和<code>ACK</code>呢？</p>
+<p>这是因为本地网段内，可能有不止一台 DHCP 服务器，在你广播之后，每个 DHCP 服务器都有可能给你发<code>Offer</code>。</p>
+<p>本着先到先得的原则，你的机子一般会对第一个到的<code>Offer</code>响应<code>DHCP Request</code>，目的是为了确认<code>Offer</code>，在你确认<code>Offer</code>这段时间内，DHCP 服务器确认这个 IP 还没被分出去，你才可以安心使用这个 IP。</p>
+<p>就像你找工作的过程。你海投简历（<code>DHCP Discover</code>），然后拿到了多个<code>offer(DHCP Offer)</code>。</p>
+<p>这时候事情还没完，你一般会跟 HR 说：”你给我两天时间，我要跟家里人商量下”。</p>
+<p>HR 也会对你说：”那你尽快确认，我这边还有不少候选人等着”。</p>
+<p>之后你考虑下来觉得不错，跟HR说要接这个<code>Offer（DHCP Request）</code>，HR 看了下这个岗位还在，才能确认让你第二天来上班（<code>DHCP ACK</code>）。如果这个公司的岗位已经招到其他候选人了，第四阶段的消息就会改为发<code>DHCP NAK</code>，意思是拒绝了你的接<code>Offer</code>请求。</p>
+<h2 id="DHCP抓包"><a href="#DHCP抓包" class="headerlink" title="DHCP抓包"></a>DHCP抓包</h2><p>在命令行里执行下面的命令，可以强行让电脑的<code>en0</code>网卡重新走一遍 DHCP 流程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ipconfig set en0 DHCP</span><br></pre></td></tr></table></figure>
+<p><code>en0</code>可以替换成其他网卡，比如<code>eth0</code>啥的。</p>
+<p>这时候就可以抓到相关的数据包。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/25.png" class="">
+
+<p>我们可以看到蓝色的四个数据包，分别对应上面提到的四个 DHCP 阶段。</p>
+<p>其中第二阶段中的<code>DHCP Offer</code>里会返回给我们需要的 IP、子网掩码、路由器地址以及DNS服务器地址。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/26.png" class="" title="offer阶段">
+
+<p>另外，通过抓包，我们可以发现 DHCP 是应用层的协议，基于传输层 UDP 协议进行数据传输。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/27.png" class="">
+
+<h2 id="为什么DHCP用UDP，能不能改用TCP？"><a href="#为什么DHCP用UDP，能不能改用TCP？" class="headerlink" title="为什么DHCP用UDP，能不能改用TCP？"></a>为什么DHCP用UDP，能不能改用TCP？</h2><p>主要原因还是因为 TCP 是面向连接的，而 UDP 是无连接的。</p>
+<p>所谓”连接”，他就只有一个发送端和一个接收端，就跟水管一样。</p>
+<p>而 DHCP 由于一开始并不知道要跟谁建立连接，所以只能通过广播的形式发送消息。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/28.png" class="" title="广播寻找DHCP服务器">
+
+<p>同样是在本地网段内发广播消息，UDP 只需要发给<code>255.255.255.255</code>。它实际上并不是值某个具体的机器，而是一个特殊地址，这个地址有特殊含义，只要设了这个目的地址，就会在一定本地网段内进行广播。</p>
+<p>而 TCP 却不同，它需要先建立连接，但实际上<code>255.255.255.255</code>对应的机器并不存在，因此也不能建立连接。如果同样要做到广播的效果，就需要先得到本地网段内所有机器的 IP，然后挨个建立连接，再挨个发消息。这就很低效了。</p>
+<p>因此 DHCP 选择了 UDP，而不是 TCP。</p>
+<h2 id="为什么第二阶段不是广播，而是单播"><a href="#为什么第二阶段不是广播，而是单播" class="headerlink" title="为什么第二阶段不是广播，而是单播"></a>为什么第二阶段不是广播，而是单播</h2><p>其实，这是 DHCP 协议的一个小优化。原则上大家在<code>DHCP Offer</code>阶段，都用广播，那肯定是最稳的，目标机器收到后自然就会进入第三阶段<code>DHCP Request</code>。而非目标机器，收到后解包后发现目的机器的 mac 地址跟自己的不同，也会丢掉这个包。</p>
+<p>但是问题就出在，这个非目的机器需要每次都在网卡收到包，并解完包，才发现原来这不是给它的消息，这。。。真，有被打扰到。</p>
+<p>如果本地网段内这样的包满天飞，也浪费机器性能。</p>
+<p>如果能用单播，那当然是最好的。但这时候目的机器其实并没有 IP 地址，有些系统在这种情况下能收单播包，有些则认为不能收，这个跟系统的实现有关。因此，对于能收单播包的系统，会在发<code>DHCP Discover</code>阶段设一个<code>Broadcast flag = 0 (unicast)</code>的标志位，告诉服务器，支持单播回复，于是服务器就会在<code>DHCP Offer</code>阶段以单播的形式进行回复。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/30.png" class="">
+
+<h2 id="是不是每次联网都要经历DHCP四个阶段？"><a href="#是不是每次联网都要经历DHCP四个阶段？" class="headerlink" title="是不是每次联网都要经历DHCP四个阶段？"></a>是不是每次联网都要经历DHCP四个阶段？</h2><p>只要想联网，就需要 IP，要用 IP，就得走 DHCP 协议去分配。</p>
+<p>但大家也发现了，DHCP 第一阶段和第二阶段都可能会发广播消息。对于家用电脑还好，插个网线，之后就雷打不动。但像手机这样的移动设备，是要带着到处跑的，坐个地铁，进个电梯，公司里到处走走，都可能会涉及到网络切换。</p>
+<p>这每次都要来一个完整的四阶段，各种广播消息满天飞，其实对网络环境不太友好。</p>
+<p>于是问题叒来了，是不是每次联网都要经历 DHCP 四个阶段？</p>
+<p>当然不需要。</p>
+<p>我们会发现每次断开wifi再打开wifi时，机子会经历一个从没网到有网的过程。</p>
+<p>这时候去抓个包，会发现。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/31.png" class="">
+
+<p>其实只发生了 DHCP 的第三和第四阶段。这是因为机子记录了曾经使用过<code>192.168.31.170</code>这个 IP，重新联网后，会优先再次请求这个 IP，这样就省下了第一第二阶段的广播了。</p>
+<p>另外需要注意的是，抓包图里<code>DHCP Request</code>之所以出现两次，是因为第一次<code>Request</code>发出后太久没得到回应，因此重发。</p>
+<h2 id="DHCP分配下来的IP一定不会重复吗？"><a href="#DHCP分配下来的IP一定不会重复吗？" class="headerlink" title="DHCP分配下来的IP一定不会重复吗？"></a>DHCP分配下来的IP一定不会重复吗？</h2><p>一般来说 DHCP 服务器会在它维护的 IP 池里找到一个没人用的 IP 分配给机子，</p>
+<p>这个 IP 如果重复分配了，那本地网段内就会出现两个同样的 IP，这个 IP 下面却对应两个不同的 mac 地址。但其他机器上的 ARP 缓存中却只会记录其中一条 mac 地址到 IP 的映射关系。</p>
+<p>于是，数据在传递的过程中就会出错。</p>
+<p>因此本地网段内 IP 必须唯一。</p>
+<p>那么 DHCP 分配下来的 IP 有没有可能跟别的 IP 是重复的？</p>
+<p>都这么问了，那肯定是可能的。</p>
+<p>有两个常见的情况会出现 IP 重复。</p>
+<p>IP 是可以自己手动配的，自己配的 IP 是有可能跟其他 DHCP 分配下来的 IP 是相同的。解决方案也很简单，尽量不要手动去配 IP，统一走 DHCP。或者在 DHCP 服务器里维护的 IP 范围里，将这条 IP剔除。</p>
+<p>一个本地网段内，是可以有多个 DHCP 服务器的，而他们维护的 IP 地址范围是有可能重叠的，于是就有可能将相同的 IP 给到不同的机子。解决方案也很简单，修改两台 DHCP 服务器的维护的 IP 地址范围，让它们不重叠就行了。</p>
+<p>不过吧，上面的解决方案，都需要有权限去修改 DHCP 服务器。</p>
+<p>得到<code>DHCP ACK</code>之后立马就能使用这个 IP 了吗？</p>
+<p>不。</p>
+<p>在得到<code>DHCP ACK</code>之后，机子不会立刻就用这个 IP。</p>
+<p>而是会先发三条 ARP 消息。</p>
+<img src="/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/32.png" class="">
+
+<p>大家知道 ARP 消息的目的是通过 IP 地址去获得 mac 地址。所以普通的 ARP 消息里，是填了 IP 地址，不填 mac 地址的。</p>
+<p>但这三条 ARP 协议，比较特殊，它们叫无偿 ARP，特点是它会把 IP 和 mac 地址都填好了，而且填的还是自己的 IP 和 mac 地址。</p>
+<p>目的有两个。</p>
+<p>一个是为了告诉本地网段内所有机子，从现在起，xx IP 地址属于 xx mac 地址，让大家记录在 ARP 缓存中。</p>
+<p>另一个就是看下本地网段里有没有其他机子也用了这个 IP，如果有冲突的话，那需要重新再走一次 DHCP 流程。</p>
+<p>在三次无偿 ARP 消息之后，确认没有冲突了，才会开始使用这个 IP 地址进行通信。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>电脑插上网线，联网后会通过 DHCP 协议动态申请一个 IP，同时获得子网掩码，路由器地址等信息。</p>
+<p>DHCP 分为四个阶段，分别是<code>Discover，Offer，Request</code>和<code>ACK</code>。如果曾经连过这个网，机器会记录你上次使用的 IP，再次连接时优先使用原来的那个 IP，因此只需要经历第三第四阶段。</p>
+<p>DHCP 是应用层协议，考虑到需要支持广播功能，底层使用的是 UDP 协议，而不是 TCP 协议。</p>
+<p>DHCP 分配下来的 IP 是有可能跟某台手动配置的 IP 地址重复的。</p>
+<p>DHCP 得到 IP 之后还会发3次无偿 ARP 通告，在确认没有冲突后开始使用这个 IP。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/10/23/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94DHCP/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/10/26/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82%E2%80%94%E2%80%94SNMP/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            应用层——SNMP
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/10/22/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">应用层——电子邮件</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

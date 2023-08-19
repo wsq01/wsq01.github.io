@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>对称密码 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-密码技术/对称密码"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  对称密码
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/" class="article-date">
+  <time datetime="2020-12-10T03:25:51.000Z" itemprop="datePublished">2020-12-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/">密码技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>计算机的操作对象是由 0 和 1 排列而成的比特序列。无论是文字、图像、声音、视频还是程序，在计算机中都是用比特序列来表示的。执行加密操作的程序，就是将表示明文的比特序列转换为表示密文的比特序列。</p>
+<p>将现实世界中的东西映射为比特序列的操作称为编码(<code>encoding</code>)。例如<code>midnight</code>这个单词，我们可以对其中的每一个字母逐一进行编码，这种编码规则叫 ASCII。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">m  -&gt;  01101101</span><br><span class="line">i  -&gt;  01101001</span><br><span class="line">d  -&gt;  01100100</span><br><span class="line">n  -&gt;  01101110</span><br><span class="line">i  -&gt;  01101001</span><br><span class="line">g  -&gt;  01100111</span><br><span class="line">h  -&gt;  01101000</span><br><span class="line">t  -&gt;  01110100</span><br></pre></td></tr></table></figure>
+<h2 id="XOR"><a href="#XOR" class="headerlink" title="XOR"></a>XOR</h2><p>XOR(<code>exclusive or</code>)异或运算。</p>
+<h3 id="1个比特的XOR"><a href="#1个比特的XOR" class="headerlink" title="1个比特的XOR"></a>1个比特的XOR</h3><p>1个比特的XOR运算规则如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0 XOR 0 = 0</span><br><span class="line">0 XOR 1 = 1</span><br><span class="line">1 XOR 0 = 1</span><br><span class="line">1 XOR 1 = 0</span><br></pre></td></tr></table></figure>
+<p>可以将 0 理解为偶数，1理解为奇数，就可以将 XOR 和加法运算等同起来。</p>
+<p>由于 XOR 和加法运算很相似，因此一般用 + 和 O 组合而成的符号 ⊕ 来表示 XOR。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0 ⊕ 0 = 0</span><br><span class="line">0 ⊕ 1 = 1</span><br><span class="line">1 ⊕ 0 = 1</span><br><span class="line">1 ⊕ 1 = 0</span><br></pre></td></tr></table></figure>
+<p>规律：两个相同的数进行 XOR 运算的结果一定为 0。</p>
+<h3 id="比特序列的-XOR"><a href="#比特序列的-XOR" class="headerlink" title="比特序列的 XOR"></a>比特序列的 XOR</h3><p>长比特序列之间的 XOR 运算只需对其中每个相对应的比特进行 XOR 运算就可以了。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img1.png" class="">
+
+<p>由于两个相同的数进行 XOR 运算的结果一定为 0，因此如果将 A ⊕ B 的结果再与 B 进行 XOR 运算，则结果会变回 A。也就是说，两个公式中的 B 会相互抵消。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img2.png" class="">
+
+<p>上面的计算和加密、解密的步骤非常相似。</p>
+<ul>
+<li>将明文 A 用密钥 B 进行加密，得到密文 A ⊕ B</li>
+<li>将密文 A ⊕ B 用密钥 B 进行解密，得到明文 A</li>
+</ul>
+<h2 id="一次性密码本"><a href="#一次性密码本" class="headerlink" title="一次性密码本"></a>一次性密码本</h2><p>只要通过暴力破解法对密钥空间进行遍历，无论什么密文总有一天也能够被破译。一次性密码本是个例外，即便使用暴力破解法遍历整个密钥空间，一次性密码本也绝对无法被破译。</p>
+<h3 id="一次性密码本的加密"><a href="#一次性密码本的加密" class="headerlink" title="一次性密码本的加密"></a>一次性密码本的加密</h3><p>一次性密码本的原理是将明文与一串随机的比特序列进行 XOR 运算。</p>
+<p>下面将明文<code>midnight</code>这个字符串通过 ASCII 进行编码并产生一串比特序列。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m         i         d         n         i         g         h         t</span><br><span class="line">01101101  01101001  01100100  01101110  01101001  01100111  01101000  01110100</span><br></pre></td></tr></table></figure>
+<p>明文被编码为一串 64 比特的比特序列。</p>
+<p>然后再来产生一个和明文长度相同的 64 比特的随机比特序列，这个序列就是 XOR 加密的密钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01101011  11111010  01001000  11011000  01100101  11010101  10101111  00011100</span><br></pre></td></tr></table></figure>
+<p>将明文与密钥的比特序列进行 XOR 运算，并得到一串新的比特序列，这次运算的结果就是一次性密码本的密文。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img3.png" class="">
+
+<p>这样产生的比特序列如果要显示在计算机上，看上去就像乱码一样，因此密文通常不会被还原成字符，而是被作为二进制数据来处理。</p>
+<h3 id="一次性密码本的解密"><a href="#一次性密码本的解密" class="headerlink" title="一次性密码本的解密"></a>一次性密码本的解密</h3><p>解密就是加密的反向运算。也就是说，用密文和密钥进行 XOR 运算就可以得到明文。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img4.png" class="">
+
+<h3 id="一次性密码本是无法破译的"><a href="#一次性密码本是无法破译的" class="headerlink" title="一次性密码本是无法破译的"></a>一次性密码本是无法破译的</h3><p>这里说的无法破译并不是指在现实的时间内难以破译，而是指即使拥有一种运算能力无穷大的计算机，可以在一瞬间遍历任意大小的密钥空间，也依然无法破译。</p>
+<p>我们假设对一次性密码本的密文尝试进行暴力破解，那么总有一天我们会尝试到和加密时相同的密钥，也就能解除明文<code>midnight</code>，这时毋庸置疑的事实。然而，即使我们能解密出<code>midnight</code>这个字符串，我们也无法判断它是否是正确的明文。</p>
+<p>这是因为在对一次性密码本尝试解密的过程中，所有的 64 比特的排列组合都会出现，这其中既会包含像<code>aaaaaaaa</code>、<code>abcdefg</code>、<code>ZZZZZZZZ</code>这样的规则字符串，也会包含<code>midnight</code>、<code>onenight</code>、<code>mistress</code>等英文单词，还会包含<code>%Ta_AjvX</code>、<code>ER#f6</code>等看不懂的组合。由于明文中所有可能的排列组合都会出现，因此我们无法判断其中哪一个才是正确的明文。</p>
+<p>所谓暴力破解，就是按顺序将所有的密钥都尝试一遍，并判断所得到的是不是正确的明文的方法。</p>
+<p>在一次性密码本中，由于我们无法判断得到的是不是正确的明文，因此一次性密码本是无法破译的。</p>
+<h3 id="一次性密码本为什么没有被使用"><a href="#一次性密码本为什么没有被使用" class="headerlink" title="一次性密码本为什么没有被使用"></a>一次性密码本为什么没有被使用</h3><h4 id="密钥的配送"><a href="#密钥的配送" class="headerlink" title="密钥的配送"></a>密钥的配送</h4><p>接收者收到了发送者发来的密文，接收者要想进行解密，就必须使用和发送者进行加密时相同的密钥，因此发送者必须将密钥也发给接收者，且该密钥的长度和密文是相等的。但这样就产生了一个矛盾：如果能有一种方法将密钥安全的发出去，那么岂不是也可以用同样的方法来安全的发送明文吗？</p>
+<h4 id="密钥的保存"><a href="#密钥的保存" class="headerlink" title="密钥的保存"></a>密钥的保存</h4><p>为了保护明文，就需要保护和明文一样长的密钥。密钥不能丢弃或删除，因为没有密钥就无法解密，丢弃密钥就等于丢弃明文。也就是说，我们只是将保护明文这一命题替换成了保护和明文一样长的密钥而已，问题没有得到实质性的解决。</p>
+<h4 id="密钥的重用"><a href="#密钥的重用" class="headerlink" title="密钥的重用"></a>密钥的重用</h4><p>在一次性密码本中绝对不能重用过去用过的随机比特序列，因为作为密钥的比特序列一旦泄露，过去所有的机密通信内容将全部被解密。</p>
+<h4 id="密钥的同步"><a href="#密钥的同步" class="headerlink" title="密钥的同步"></a>密钥的同步</h4><p>当明文很长时，一次性密码本的密钥也会跟着变长。而且在通信过程中，发送者和接收者的密钥比特序列不允许有任何错位，否则错位的比特后的所有信息都将无法解密。</p>
+<h4 id="密钥的生成"><a href="#密钥的生成" class="headerlink" title="密钥的生成"></a>密钥的生成</h4><p>在一次性密码本中，需要生成大量的随机数。这里的随机数必须是无重现性的真正随机数。出于这个原因，能够真正使用一次性密码本的，只有那些机密性重过一切，且可以花费大量财力和人力来生成并配送密钥的场合。</p>
+<p>综上所述，一次性密码本是一种几乎没有实用价值的密码。</p>
+<h1 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h1><p>随着计算机的进步，现在 DES 已经能够被暴力破解，因此除了用它来解密以前的密文外，不应该再使用 DES 了。</p>
+<h2 id="加密和解密"><a href="#加密和解密" class="headerlink" title="加密和解密"></a>加密和解密</h2><p>DES 是一种将 64 比特的明文加密成 64 比特的密文的对称密码算法，它的密钥长度是 56 比特。尽管从规格上来说，DES 的密钥长度是 64 比特，但由于每隔 7 比特会设置一个用于错误检查的比特，因此实质上其密钥长度是 56 比特。</p>
+<p>DES 是以 64 比特的明文（比特序列）为一个单位来进行加密的，这个 64 比特的单位称为分组。一般来说，以分组为单位进行处理的密码算法称为分组密码(<code>block cipher</code>)，DES 就是分组密码的一种。</p>
+<p>DES 每次只能加密 64 比特的数据，如果要加密的明文比较长，就需要对 DES 加密进行迭代，而迭代的具体方式就称为模式。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img9.png" class="" title="DES 的加密与解密">
+
+<h2 id="DES-的结构（Feistel-网络）"><a href="#DES-的结构（Feistel-网络）" class="headerlink" title="DES 的结构（Feistel 网络）"></a>DES 的结构（Feistel 网络）</h2><p>DES 的基本结构是由 Horst Feistel 设计的，因此也称为 Feistel 网络、Feistel 结构。</p>
+<p>在 Feistel 网络中，加密的各个步骤称为轮，整个加密过程就是进行若干次轮的循环。</p>
+<p>下图是 Feistel 网络中一轮的计算流程。DES 是一种 16 轮循环的 Feistel 网络。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img10.png" class="" title="Feistel 网络中的一轮">
+
+<p>上图中，子密钥指的是本轮加密所使用的密钥。在 Feistel 网络中，每一轮都需要使用一个不同的子密钥。</p>
+<p>轮函数的作用是根据右侧和子密钥生成对左侧进行加密的比特序列，它是密码系统的核心。将轮函数的输出与左侧进行 XOR 运算，其结果是加密后的左侧。也就是说，我们用 XOR 将轮函数的输出与左侧进行了合并。而输入的右侧则会直接成为输出的右侧。</p>
+<p>一轮的具体计算步骤：</p>
+<ol>
+<li>将输入的数据等分为左右两部分</li>
+<li>将输入的右侧直接发送到输出的右侧</li>
+<li>将输入的右侧发送到轮函数</li>
+<li>轮函数根据右侧数据和子密钥，计算出一串看上去是随机的比特序列</li>
+<li>将上一步得到的比特序列与左侧数据进行 XOR 运算，并将结果作为加密后的左侧</li>
+</ol>
+<p>但是这样一来右侧根本没有被加密，因此我们需要用不同的子密钥对一轮的处理重复若干次，并在每两轮处理之间将左侧和右侧的数据对调。</p>
+<p>下图展示了一个 3 轮的 Feistel 网络，3 轮加密计算需要进行两次左右对调。对调只在两轮之间进行，最后一轮结束之后不需要对调。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img11.png" class="" title="Feistel 网络的加密(3轮)">
+
+<p>将一轮加密的输出结果用相同的子密钥重新运行一次，无论轮函数的具体算法是什么，都能将密文正确的还原为明文。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img12.png" class="">
+
+<p>有多个轮的情况下也是一样。也就是说，Feistel 网络的解密操作只要按照相反的顺序来使用子密钥就可以完成了，而 Feistel 网络本身的结构，在加密和解密时都是完全相同的。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img13.png" class="" title="Feistel 网络的解密(3轮)">
+
+<p>Feistel 网络的性质：</p>
+<ul>
+<li>Feistel 网络的轮数可以任意增加。无论进行多少轮的加密计算，都不会发生无法解密的情况。</li>
+<li>加密时无论使用任何函数作为轮函数都可以正确解密。轮函数可以无需考虑解密的问题，可以被设计的任意复杂。</li>
+<li>加密和解密可以用完全相同的结构来实现，因此用于实现 DES 算法的硬件设备的设计也变容易了。</li>
+</ul>
+<p>综上所述，无论是任意轮数，任何轮函数，Feistel 网络都可以用相同的结构实现加密和解密，且加密的结果必定能够正确解密。</p>
+<h1 id="三重-DES"><a href="#三重-DES" class="headerlink" title="三重 DES"></a>三重 DES</h1><p>现在 DES 可以被暴力破解，因此我们需要一种用来替代 DES 的分组密码，三重 DES 就是出于这个目的被开发出来的。</p>
+<p>三重 DES 是将 DES 重复 3 次所得到的一种密码算法，缩写为 3DES。</p>
+<h2 id="三重-DES-的加密"><a href="#三重-DES-的加密" class="headerlink" title="三重 DES 的加密"></a>三重 DES 的加密</h2><p>下图是 3DES 的加密机制。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img14.png" class="" title="3DES 的加密">
+
+<h1 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h1><p>AES(<code>Advanced Encryption Standard</code>) 是取代其前任标准（DES）而成为新标准的一种对称密码算法。</p>
+<h2 id="Rijndael"><a href="#Rijndael" class="headerlink" title="Rijndael"></a>Rijndael</h2><p>Rijndael 是由密码学家 Joan Daemen 和 Vincent Rijmen 设计的分组密码算法，于 2000 年被选为新一代的标准密码算法——AES。</p>
+<p>Rijndael 的分组长度和密钥长度可以分别以 32 比特为单位在 128 比特到 256 比特的范围内进行选择。不过在 AES 的规格中，分组长度固定为 128 比特，密钥长度只有 128、192 和 256 比特三种。</p>
+<h2 id="Rijndael-的加密和解密"><a href="#Rijndael-的加密和解密" class="headerlink" title="Rijndael 的加密和解密"></a>Rijndael 的加密和解密</h2><p>和 DES 一样，Rijndael 算法也是由多个轮构成的，其中每一轮分为<code>SubBytes</code>、<code>ShiftRows</code>、<code>MixColumns</code>和<code>AddRoundKey</code>共 4 个步骤。DES 使用 Feistel 网络作为其基本结构，而 Rijndael 没有使用 Feistel 网络，而是使用了 SPN 结构。</p>
+<p>Rijndael 的输入分组为 128 比特，也就是 16字节。首先，需要逐个字节的对 16 字节的输入数据<code>SubBytes</code>处理。所谓<code>SubBytes</code>，就是以每个字节（0~255 的任意值）的值为索引，从一张拥有 256 个值的替换表中查找出对应值的处理。也就是说，要将一个 1 字节的值替换成另一个 1 字节的值。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img5.png" class="">
+
+<p><code>SubBytes</code>之后需要进行<code>ShiftRows</code>处理，这一步是将以 4 字节为单位的行按照一定的规则向左平移，且每一行平移的字节数是不同的。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img6.png" class="">
+
+<p><code>ShiftRows</code>之后需要进行<code>MixColumns</code>处理。这一步是对一个 4 字节的值进行比特运算，将其变为另外一个 4 字节值。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img7.png" class="" title="混合列">
+
+<p>最后，需要将<code>MixColumns</code>的输出与轮密钥进行 XOR，即进行<code>AddRoundKey</code>处理。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img8.png" class="" title="与轮密钥进行 XOR">
+
+<p>到这里，Rijndael 的一轮就结束了。实际上，在 Rijndael 中需要重复进行 10~14轮计算。</p>
+<p>通过上面的结构可以发现输入的所有比特在一轮中都会被加密。和每一轮都只加密一半输入的比特的 Feistel 网络相比，这种方式的优势在于加密所需要的的轮数更少。此外，<code>SubBytes、ShifRows</code>和<code>MixColumns</code>可以分别以字节、行和列为单位进行并行计算。</p>
+<p>在 Rijndael 的加密过程中，每一轮所进行的处理为：<code>SubBytes -&gt; ShifRows -&gt; MixColumns -&gt; AddRoundKey</code>。</p>
+<p>在解密时，则是按照相反的顺序来进行的，即<code>AddRoundKey -&gt; InvMixColumns -&gt; InvShifRows -&gt; InvSubBytes</code>。其中，<code>AddRoundKey</code>是与轮密钥进行 XOR 运算，因此这一步在加密和解密时是完全相同的，剩下的步骤中名字前面都带有<code>Inv</code>，表示与原始步骤相对应的逆运算。</p>
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img15.png" class="" title="InvMixColumns">
+
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img16.png" class="" title="InvShifRows">
+
+<img src="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/img17.png" class="" title="InvSubBytes"> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/" rel="tag">密码技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            分组密码的模式
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/11/15/java/%E5%9F%BA%E7%A1%80/Java%20%E6%B3%A8%E8%A7%A3/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java 注解</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

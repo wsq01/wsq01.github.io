@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>数据链路层——点对点协议PPP |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/数据链路层——点对点协议PPP"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数据链路层——点对点协议PPP
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/" class="article-date">
+  <time datetime="2020-09-10T09:21:34.000Z" itemprop="datePublished">2020-09-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>数据链路层使用的信道主要有两种：点对点信道和广播信道。</p>
+<p>对于点对点的链路，目前使用得最广泛的数据链路层协议是点对点协议 PPP(<code>Point-to-Point Protocol</code>)。</p>
+<h1 id="PPP-协议的特点"><a href="#PPP-协议的特点" class="headerlink" title="PPP 协议的特点"></a>PPP 协议的特点</h1><p>互联网用户通常都要连接到某个 ISP 才能接入到互联网。PPP 协议就是用户计算机和 ISP 进行通信时所使用的数据链路层协议。</p>
+<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img1.png" class="">
+
+<h2 id="PPP-协议应满足的需求"><a href="#PPP-协议应满足的需求" class="headerlink" title="PPP 协议应满足的需求"></a>PPP 协议应满足的需求</h2><ul>
+<li>简单 —— 这是首要的要求。</li>
+<li>封装成帧 —— 必须规定特殊的字符作为帧定界符。</li>
+<li>透明性 —— 必须保证数据传输的透明性。</li>
+<li>多种网络层协议 —— 能够在同一条物理链路上同时支持多种网络层协议。</li>
+<li>多种类型链路 —— 能够在多种类型的链路上运行。</li>
+<li>差错检测 —— 能够对接收端收到的帧进行检测，并立即丢弃有差错的帧。</li>
+<li>检测连接状态 —— 能够及时自动检测出链路是否处于正常工作状态。</li>
+<li>最大传送单元 —— 必须对每一种类型的点对点链路设置最大传送单元  MTU 的标准默认值，促进各种实现之间的互操作性。</li>
+<li>网络层地址协商 —— 必须提供一种机制使通信的两个网络层实体能够通过协商知道或能够配置彼此的网络层地址。</li>
+<li>数据压缩协商 —— 必须提供一种方法来协商使用数据压缩算法。</li>
+</ul>
+<p>PPP 协议不需要的功能：纠错、流量控制、序号、多点线路、半双工或单工链路。</p>
+<h2 id="PPP-协议的组成"><a href="#PPP-协议的组成" class="headerlink" title="PPP 协议的组成"></a>PPP 协议的组成</h2><p>PPP 协议有三个组成部分：</p>
+<ul>
+<li>一个将 IP 数据报封装到串行链路的方法。</li>
+<li>链路控制协议 LCP(<code>Link Control Protocol</code>)。用来建立、配置和测试数据链路连接。</li>
+<li>一套网络控制协议 NCP(<code>Network Control Protocol</code>)。</li>
+</ul>
+<h1 id="PPP-协议的帧格式"><a href="#PPP-协议的帧格式" class="headerlink" title="PPP 协议的帧格式"></a>PPP 协议的帧格式</h1><h2 id="各字段的意义"><a href="#各字段的意义" class="headerlink" title="各字段的意义"></a>各字段的意义</h2><p>PPP 帧的首部和尾部分别为 4 个字段和 2 个字段。</p>
+<p>标志字段<code>F = 0x7E</code>。标志字段表示一个帧的开始或结束。标志字段就是 PPP 帧的定界符。连续两帧之间只需要用一个标志字段。如果出现连续两个标志字段，就表示这是一个空帧。</p>
+<p>地址字段 A 只置为<code>0xFF</code>。地址字段实际上并不起作用。</p>
+<p>控制字段 C 通常置为<code>0x03</code>。</p>
+<p>PPP 是面向字节的，所有的 PPP 帧的长度都是整数字节。</p>
+<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img2.png" class="">
+
+<p>透明传输问题：</p>
+<ul>
+<li>当 PPP 用在异步传输时，就使用一种特殊的字符填充法。</li>
+<li>当 PPP 用在同步传输链路时，协议规定采用硬件来完成比特填充。</li>
+</ul>
+<h2 id="字符填充"><a href="#字符填充" class="headerlink" title="字符填充"></a>字符填充</h2><p>当信息字段中出现和标志字段一样的比特（<code>0x7E</code>）组合时，就必须采取一些措施使这种形式上和标志字段一样的比特组合不出现在信息字段中。</p>
+<p>当 PPP 使用异步传输时，它把转义符定义为<code>0x7D</code>，并使用字节填充，填充方法：</p>
+<ul>
+<li>将信息字段中出现的每一个<code>0x7E</code>字节转变成为 2 字节序列 (<code>0x7D, 0x5E</code>)。 </li>
+<li>若信息字段中出现一个<code>0x7D</code>的字节, 则将其转变成为 2 字节序列(<code>0x7D, 0x5D</code>)。</li>
+<li>若信息字段中出现 ASCII 码的控制字符（即数值小于<code>0x20</code>的字符），则在该字符前面要加入一个<code>0x7D</code>字节，同时将该字符的编码加以改变。例如出现<code>0x03</code>，就要把它转变为(<code>0x7D, 0x23</code>)。</li>
+</ul>
+<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img3.png" class="">
+
+<h2 id="零比特填充"><a href="#零比特填充" class="headerlink" title="零比特填充"></a>零比特填充</h2><p>PPP 协议用在 SONET&#x2F;SDH 链路时，使用同步传输（一连串的比特连续传送）。这时 PPP 协议采用零比特填充方法来实现透明传输。</p>
+<p>零比特填充具体做法：</p>
+<ul>
+<li>在发送端，只要发现有 5 个连续 1，则立即填入一个 0。保证在信息字段中不会出现6个连续1。</li>
+<li>接收端对帧中的比特流进行扫描。每当发现 5 个连续1时，就把这 5 个连续 1 后的一个 0 删除。</li>
+</ul>
+<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img4.png" class="">
+
+<p>PPP 协议之所以不使用序号和确认机制是出于以下的考虑：</p>
+<ul>
+<li>在数据链路层出现差错的概率不大时，使用比较简单的 PPP 协议较为合理。</li>
+<li>在因特网环境下，PPP 的信息字段放入的数据是 IP  数据报。数据链路层的可靠传输并不能够保证网络层的传输也是可靠的。</li>
+<li>帧检验序列 FCS 字段可保证无差错接受。</li>
+</ul>
+<h1 id="PPP-协议的工作状态"><a href="#PPP-协议的工作状态" class="headerlink" title="PPP 协议的工作状态"></a>PPP 协议的工作状态</h1><ul>
+<li>当用户拨号接入 ISP 时，路由器的调制解调器对拨号做出确认，并建立一条物理连接。</li>
+<li>PC 机向路由器发送一系列的 LCP 分组（封装成多个 PPP 帧），以便建立 TCP 连接。</li>
+<li>这些分组及其响应选择一些 PPP 参数，并进行网络层配置，NCP 给新接入的 PC 机分配一个临时的 IP 地址，使 PC 机成为因特网上的一个主机。</li>
+<li>通信完毕时，NCP 释放网络层连接，收回原来分配出去的 IP 地址。接着，LCP 释放数据链路层连接。最后释放的是物理层的连接。</li>
+</ul>
+<p>可见，PPP 协议已不是纯粹的数据链路层的协议，它还包含了物理层和网络层的内容。</p>
+<img src="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/img5.png" class="">
+
+<p>PPP 链路的起始状态和终止状态永远是链路静止状态，这时在用户个人电脑和 ISP 的路由器之间并不存在物理层的连接。</p>
+<p>当用户个人电脑通过调制解调器呼叫路由器时，路由器就能检测到调制解调器发出的载波信号。在双方建立的物理层连接后，PPP 就进入链路建立状态，其目的是建立链路层 LCP 连接。</p>
+<p>这时 LCP 开始协商一些配置项，即发送 LCP 的配置请求帧。这是个 PPP 帧，其协议字段置为 LCP 对应的代码，而信息字段包含特定的配置请求。链路的另一端可以发送以下响应中的一种：配置确认帧、配置否认帧、配置拒绝帧。</p>
+<p>协商结束后双方就建立了 LCP 链路，接着就进入鉴别状态。在这一状态，只允许传送 LCP 协议的分组、鉴别协议的分组以及监测链路质量的分组。</p>
+<p>若使用口令鉴别协议 PAP(<code>Password Authentication Protocol</code>)，则需要发起通信的一方发送身份标识符和口令。如果需要更高的安全性，可以使用口令握手鉴别协议 CHAP(<code>Challenge-Handshake Authentication Protocol</code>)。鉴别成功，进入网络层协议状态。鉴别失败，转到链路终止状态。</p>
+<p>在网络层协议状态，PPP 链路的两端的网络控制协议 NCP 根据网络层的不同协议互相交换网络层特定的网络控制分组。这个步骤很重要，因为路由器能同时支持多种网络层协议。总之，PPP 协议两端的网络层可以运行不同的网络层协议，但仍然可使用同一个 PPP 协议进行通信。</p>
+<p>当网络层配置完毕后，链路就进入可进行数据通信的链路打开状态。链路的两个 PPP 端点可以彼此向对方发送分组。两个 PPP 端点还可以发送回送请求 LCP 分组和回送回答 LCP 分组，以检查链路的状态。</p>
+<p>数据传输结束后，可以由链路的一端发出终止请求 LCP 分组请求终止链路连接，在收到对方发来的终止确认 LCP 分组后，转到链路终止状态。如果链路出现故障，也会从链路打开状态转到链路终止状态。当调制解调器的载波停止后，则回到链路静止状态。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/11/java/%E5%9F%BA%E7%A1%80/Java%E6%95%B0%E7%BB%84/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java 数组
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E7%82%B9%E5%AF%B9%E7%82%B9%E4%BF%A1%E9%81%93/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数据链路层——点对点信道</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MyBatis 入门 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/MyBatis/MyBatis入门"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MyBatis 入门
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/04/07/java/MyBatis/MyBatis%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2021-04-07T08:24:15.000Z" itemprop="datePublished">2021-04-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MyBatis/">MyBatis</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">22 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>MyBatis 是一个基于 Java 的持久层框架。MyBatis 提供的持久层框架包括 SQL Maps 和 Data Access Objects（DAO），它消除了几乎所有的 JDBC 代码和参数的手工设置以及结果集的检索。</p>
+<p>MyBatis 使用简单的 XML 或注解用于配置和映射原始类型，将接口和 Java 的 POJOs（Plain Old Java Objects，普通的 Java 对象）映射成数据库中的记录。</p>
+<p>Java 的持久层框架产品常见的有 Hibernate 和 MyBatis。</p>
+<p>Hibernate 和 MyBatis 的区别：</p>
+<ol>
+<li>sql 优化方面</li>
+</ol>
+<ul>
+<li>Hibernate 不需要编写大量的 SQL，就可以完全映射，提供了日志、缓存、级联（级联比 MyBatis 强大）等特性，此外还提供 HQL（Hibernate Query Language）对 POJO 进行操作。但会多消耗性能。</li>
+<li>MyBatis 手动编写 SQL，支持动态 SQL、处理列表、动态生成表名、支持存储过程。工作量相对大些。</li>
+</ul>
+<ol start="2">
+<li>开发方面</li>
+</ol>
+<ul>
+<li>MyBatis 是一个半自动映射的框架，因为 MyBatis 需要手动匹配 POJO、SQL 和映射关系。</li>
+<li>Hibernate 是一个全表映射的框架，只需提供 POJO 和映射关系即可。</li>
+</ul>
+<ol start="3">
+<li>Hibernate 优势</li>
+</ol>
+<ul>
+<li>Hibernate 的 DAO 层开发比 MyBatis 简单，Mybatis 需要维护 SQL 和结果映射。</li>
+<li>Hibernate 对对象的维护和缓存要比 MyBatis 好，对增删改查的对象的维护要方便。</li>
+<li>Hibernate 数据库移植性很好，MyBatis 的数据库移植性不好，不同的数据库需要写不同 SQL。</li>
+<li>Hibernate 有更好的二级缓存机制，可以使用第三方缓存。MyBatis 本身提供的缓存机制不佳。</li>
+</ul>
+<ol start="4">
+<li>Mybatis优势</li>
+</ol>
+<ul>
+<li>MyBatis 可以进行更为细致的 SQL 优化，可以减少查询字段。</li>
+<li>MyBatis 容易掌握，而 Hibernate 门槛较高。</li>
+</ul>
+<p>总的来说，MyBatis 是一个小巧、方便、高效、简单、直接、半自动化的持久层框架，Hibernate 是一个强大、方便、高效、复杂、间接、全自动化的持久层框架。</p>
+<p>所以对于性能要求不太苛刻的系统，比如管理系统、ERP 等推荐使用 Hibernate，而对于性能要求高、响应快、灵活的系统则推荐使用 MyBatis。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>要使用 MyBatis， 只需将<code>mybatis-x.x.x.jar</code>文件置于类路径（<code>classpath</code>）中即可。</p>
+<p>如果使用 Maven 来构建项目，则需将下面的依赖代码置于<code>pom.xml</code>文件中：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>x.x.x<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="MyBatis-的工作原理"><a href="#MyBatis-的工作原理" class="headerlink" title="MyBatis 的工作原理"></a>MyBatis 的工作原理</h1><img src="/2021/04/07/java/MyBatis/MyBatis%E5%85%A5%E9%97%A8/1.png" class="" title="MyBatis 框架的执行流程图">
+
+<p>流程说明：</p>
+<ol>
+<li>读取 MyBatis 配置文件：<code>mybatis-config.xml</code>为 MyBatis 的全局配置文件，配置了 MyBatis 的运行环境等信息，例如数据库连接信息。</li>
+<li>加载映射文件。映射文件即 SQL 映射文件，该文件中配置了操作数据库的 SQL 语句，需要在 MyBatis 配置文件<code>mybatis-config.xml</code>中加载。<code>mybatis-config.xml</code>文件可以加载多个映射文件，每个文件对应数据库中的一张表。</li>
+<li>构造会话工厂：通过 MyBatis 的环境等配置信息构建会话工厂<code>SqlSessionFactory</code>。</li>
+<li>创建会话对象：由会话工厂创建<code>SqlSession</code>对象，该对象中包含了执行 SQL 语句的所有方法。</li>
+<li><code>Executor</code>执行器：MyBatis 底层定义了一个<code>Executor</code>接口来操作数据库，它将根据<code>SqlSession</code>传递的参数动态地生成需要执行的 SQL 语句，同时负责查询缓存的维护。</li>
+<li><code>MappedStatement</code>对象：在<code>Executor</code>接口的执行方法中有一个<code>MappedStatement</code>类型的参数，该参数是对映射信息的封装，用于存储要映射的 SQL 语句的<code>id</code>、参数等信息。</li>
+<li>输入参数映射：输入参数类型可以是<code>Map、List</code>等集合类型，也可以是基本数据类型和 POJO 类型。输入参数映射过程类似于 JDBC 对<code>preparedStatement</code>对象设置参数的过程。</li>
+<li>输出结果映射：输出结果类型可以是<code>Map、 List</code>等集合类型，也可以是基本数据类型和 POJO 类型。输出结果映射过程类似于 JDBC 对结果集的解析过程。</li>
+</ol>
+<h1 id="MyBatis的核心组件"><a href="#MyBatis的核心组件" class="headerlink" title="MyBatis的核心组件"></a>MyBatis的核心组件</h1><p>MyBatis 的核心组件分为 4 个部分。</p>
+<ol>
+<li><code>SqlSessionFactoryBuilder</code>（构造器）：它会根据配置或者代码来生成<code>SqlSessionFactory</code>，采用的是分步构建的<code>Builder</code>模式。</li>
+<li><code>SqlSessionFactory</code>（工厂接口）：依靠它来生成<code>SqlSession</code>，使用的是工厂模式。</li>
+<li><code>SqlSession</code>（会话）：一个既可以发送 SQL 执行返回结果，也可以获取<code>Mapper</code>的接口。一般我们会让其在业务逻辑代码中“消失”，而使用的是 MyBatis 提供的<code>SQL Mapper</code>接口编程技术，它能提高代码的可读性和可维护性。</li>
+<li><code>SQL Mapper</code>（映射器）：它由一个 Java 接口和 XML 文件（或注解）构成，需要给出对应的 SQL 和映射规则。它负责发送 SQL 去执行，并返回结果。</li>
+</ol>
+<p>注意，无论是映射器还是<code>SqlSession</code>都可以发送 SQL 到数据库执行。</p>
+<h1 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h1><p>使用 MyBatis 首先是使用配置或者代码去生产<code>SqlSessionFactory</code>，MyBatis 提供了构造器<code>SqlSessionFactoryBuilder</code>。它提供了一个类<code>org.apache.ibatis.session.Configuration</code>作为引导，采用的是<code>Builder</code>模式。具体的分步则是在<code>Configuration</code>类里面完成的。</p>
+<p>在 MyBatis 中，既可以通过读取配置的 XML 文件的形式生成<code>SqlSessionFactory</code>，也可以通过 Java 代码的形式去生成<code>SqlSessionFactory</code>。</p>
+<p>当配置了 XML 或者提供代码后，MyBatis 会读取配置文件，通过<code>Configuration</code>类对象构建整个 MyBatis 的上下文。</p>
+<p>注意，<code>SqlSessionFactory</code>是一个接口，在 MyBatis 中它存在两个实现类：<code>SqlSessionManager</code>和<code>DefaultSqlSessionFactory</code>。</p>
+<p>一般而言，具体是由<code>DefaultSqlSessionFactory</code>去实现的，而<code>SqlSessionManager</code>使用在多线程的环境中，它的具体实现依靠<code>DefaultSqlSessionFactory</code>。</p>
+<img src="/2021/04/07/java/MyBatis/MyBatis%E5%85%A5%E9%97%A8/2.png" class="" title="SqlSessionFactory 的生成">
+
+<p>每个基于 MyBatis 的应用都是以一个<code>SqlSessionFactory</code>的实例为中心的，而<code>SqlSessionFactory</code>唯一的作用就是生产 MyBatis 的核心接口对象<code>SqlSession</code>，所以它的责任是唯一的。我们往往会采用单例模式处理它。</p>
+<h2 id="使用-XML-构建-SqlSessionFactory"><a href="#使用-XML-构建-SqlSessionFactory" class="headerlink" title="使用 XML 构建 SqlSessionFactory"></a>使用 XML 构建 SqlSessionFactory</h2><p>在 MyBatis 中的 XML 分为两类，一类是基础配置文件，通常只有一个，主要是配置一些最基本的上下文参数和运行环境；另一类是映射文件，它可以配置映射关系、SQL、参数等信息。</p>
+<p>基础配置文件<code>mybatis-config.xml</code>，放在工程类路径下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">configuration</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span><span class="comment">&lt;!--别名--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">typeAliases</span> <span class="attr">alias</span>=<span class="string">&quot;user&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.mybatis.po.User&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 数据库环境 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 使用JDBC的事务管理 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- MySQL数据库驱动 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 连接数据库的URL --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf8&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1128&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 将mapper文件加入到配置文件中 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mybatis/mapper/UserMapper.xml&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>有了基础配置文件，就可以生成<code>SqlSessionFactory</code>了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SqlSessionFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">InputStream is;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> Resources.getResourceAsStream(resource);</span><br><span class="line">  factory = <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(is);</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">  e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先读取<code>mybatis-config.xml</code>，然后通过<code>SqlSessionFactoryBuilder</code>的<code>Builder</code>方法去创建<code>SqlSessionFactory</code>。整个过程比较简单，而里面的步骤还是比较烦琐的，只是 MyBatis 采用了<code>Builder</code>模式隐藏了这些细节。这样一个<code>SqlSessionFactory</code>就被创建出来了。</p>
+<h2 id="使用代码创建-SqlSessionFactory"><a href="#使用代码创建-SqlSessionFactory" class="headerlink" title="使用代码创建 SqlSessionFactory"></a>使用代码创建 SqlSessionFactory</h2><p>通过代码来实现与使用 XML 构建<code>SqlSessionFactory</code>一样的功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数据库连接池信息</span></span><br><span class="line"><span class="type">PooledDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PooledDataSource</span>();</span><br><span class="line">dataSource.setDriver(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line">dataSource.setUsername(<span class="string">&quot;root&quot;</span>);</span><br><span class="line">dataSource.setPassword (<span class="string">&quot;1128&quot;</span>);</span><br><span class="line">dataSource.setUrl(<span class="string">&quot;jdbc:mysql://localhost:3306/mybatis&quot;</span>);</span><br><span class="line">dataSource.setDefeultAutoCommit(<span class="literal">false</span>);</span><br><span class="line"><span class="comment">// 采用 MyBatis 的 JDBC 事务方式</span></span><br><span class="line"><span class="type">TransactionFactory</span> <span class="variable">transactionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JdbcTransactionFactory</span>();</span><br><span class="line"><span class="type">Environment</span> <span class="variable">environment</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Environment</span> (<span class="string">&quot;development&quot;</span>, transactionFactory, dataSource);</span><br><span class="line"><span class="comment">// 创建 Configuration 对象</span></span><br><span class="line"><span class="type">Configuration</span> <span class="variable">configuration</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>(environment);</span><br><span class="line"><span class="comment">// 注册一个 MyBatis 上下文别名</span></span><br><span class="line">configuration.getTypeAliasRegistry().registerAlias(<span class="string">&quot;role&quot;</span>, Role.class);</span><br><span class="line"><span class="comment">// 加入一个映射器</span></span><br><span class="line">configuration.addMapper(RoleMapper.class);</span><br><span class="line"><span class="comment">//使用 SqlSessionFactoryBuilder 构建 SqlSessionFactory</span></span><br><span class="line"><span class="type">SqlSessionFactory</span> <span class="variable">SqlSessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBuilder</span>().build(configuration);</span><br><span class="line"><span class="keyword">return</span> SqlSessionFactory;</span><br></pre></td></tr></table></figure>
+<p>它和 XML 方式实现的功能是一致的。但是代码冗长，如果发生系统修改，那么有可能需要重新编译代码才能继续，所以这不是一个很好的方式。</p>
+<p>除非有特殊的需要，比如在配置文件中，需要配置加密过的数据库用户名和密码，需要我们在生成<code>SqlSessionFactory</code>前解密为明文的时候，才会考虑使用这样的方式。</p>
+<h1 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h1><p>在 MyBatis 中，<code>SqlSession</code>是其核心接口。在 MyBatis 中有两个实现类，<code>DefaultSqlSession</code>和<code>SqlSessionManager</code>。</p>
+<p><code>DefaultSqlSession</code>是单线程使用的，而<code>SqlSessionManager</code>在多线程环境下使用。<code>SqlSession</code>的作用类似于一个 JDBC 中的<code>Connection</code>对象，代表着一个连接资源的启用。它的作用有 3 个：获取<code>Mapper</code>接口、发送 SQL 给数据库、控制数据库事务。</p>
+<p>创建<code>SqlSession</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SqlSession</span> <span class="variable">sqlSession</span> <span class="operator">=</span> SqlSessionFactory.openSession();</span><br></pre></td></tr></table></figure>
+<p>注意，<code>SqlSession</code>只是一个门面接口，它有很多方法，可以直接发送 SQL。它就好像一家软件公司的商务人员，是一个门面，而实际干活的是软件工程师。在 MyBatis 中，真正干活的是<code>Executor</code>。</p>
+<p><code>SqlSession</code>控制数据库事务的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义 SqlSession</span></span><br><span class="line"><span class="type">SqlSession</span> <span class="variable">sqlSession</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// 打开 SqlSession 会话</span></span><br><span class="line">  sqlSession = SqlSessionFactory.openSession();</span><br><span class="line">  <span class="comment">// some code...</span></span><br><span class="line">  sqlSession.commit();    <span class="comment">// 提交事务</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">  sqlSession.rollback();  <span class="comment">// 回滚事务</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  <span class="comment">// 在 finally 语句中确保资源被顺利关闭</span></span><br><span class="line">  <span class="keyword">if</span> (sqlSession != <span class="literal">null</span>)&#123;</span><br><span class="line">    sqlSession.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用<code>commit</code>方法提交事务，或者使用<code>rollback</code>方法回滚事务。因为它代表着一个数据库的连接资源，使用后要及时关闭它，如果不关闭，那么数据库的连接资源就会很快被耗费光，整个系统就会瘫痪，所以用<code>finally</code>语句保证其顺利关闭。</p>
+<h1 id="实现映射器的2种方式"><a href="#实现映射器的2种方式" class="headerlink" title="实现映射器的2种方式"></a>实现映射器的2种方式</h1><p>映射器由一个接口和对应的 XML 文件（或注解）组成。它可以配置以下内容：</p>
+<ul>
+<li>描述映射规则。</li>
+<li>提供 SQL 语句，并可以配置 SQL 参数类型、返回类型、缓存刷新等信息。</li>
+<li>配置缓存。</li>
+<li>提供动态 SQL。</li>
+</ul>
+<p>两种实现映射器的方式，XML 文件形式和注解形式。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `role` (</span><br><span class="line">  `id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `role_name` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `note` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+<p>定义一个 POJO。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mybatis.po;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Role</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> Long id;</span><br><span class="line">  <span class="keyword">private</span> String roleName;</span><br><span class="line">  <span class="keyword">private</span> String note;</span><br><span class="line"><span class="comment">/**setter and getter**/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>映射器的主要作用就是将 SQL 查询到的结果映射为一个 POJO，或者将 POJO 的数据插入到数据库中，并定义一些关于缓存等的重要内容。</p>
+<p>注意，开发只是一个接口，而不是一个实现类。接口不能直接运行。MyBatis 运用了动态代理技术使得接口能运行起来，MyBatis 会为这个接口生成一个代理对象，代理对象会去处理相关的逻辑。</p>
+<h2 id="用-XML-实现映射器"><a href="#用-XML-实现映射器" class="headerlink" title="用 XML 实现映射器"></a>用 XML 实现映射器</h2><p>用 XML 定义映射器分为两个部分：接口和 XML。先定义一个映射器接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mybatis.mapper;</span><br><span class="line"><span class="keyword">import</span> com.mybatis.po.Role;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RoleMapper</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> Role <span class="title function_">getRole</span><span class="params">(Long id)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在用 XML 方式创建<code>SqlSession</code>的配置文件中有这样一段代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mybatis/mapper/RoleMapper.xml&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>它的作用就是引入一个 XML 文件。用 XML 方式创建映射器。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span></span></span><br><span class="line"><span class="meta"><span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.mybatis.mapper.RoleMapper&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getRole&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;long&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;role&quot;</span>&gt;</span></span><br><span class="line">    SELECT id,role_name as roleName,note FROM role WHERE id =#&#123;id&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>有了这两个文件，就完成了一个映射器的定义。</p>
+<p><code>&lt;mapper&gt;</code>元素中的属性<code>namespace</code>所对应的是一个接口的全限定名，于是 MyBatis 上下文就可以通过它找到对应的接口。</p>
+<p><code>&lt;select&gt;</code>元素表明这是一条查询语句，而属性<code>id</code>标识了这条 SQL，属性<code>parameterType=&quot;long&quot;</code>说明传递给 SQL 的是一个<code>long</code>型的参数，而<code>resultType=&quot;role&quot;</code>表示返回的是一个<code>role</code>类型的返回值。而<code>role</code>是之前配置文件<code>mybatis-config.xml</code>配置的别名，指代的是<code>com.mybatis.po.Role</code>。</p>
+<p>注意，我们并没有配置 SQL 执行后和 role 的对应关系，它是如何映射的呢？</p>
+<p>其实这里采用的是一种被称为自动映射的功能，MyBatis 在默认情况下提供自动映射，只要 SQL 返回的列名能和 POJO 对应起来即可。</p>
+<p>这里 SQL 返回的列名<code>id</code>和<code>note</code>是可以和之前定义的 POJO 的属性对应起来的，而表里的列<code>role_name</code>通过 SQL 别名的改写，使其成为<code>roleName</code>，也是和 POJO 对应起来的，所以此时 MyBatis 就可以把 SQL 查询的结果通过自动映射的功能映射成为一个 POJO。</p>
+<h2 id="注解实现映射器"><a href="#注解实现映射器" class="headerlink" title="注解实现映射器"></a>注解实现映射器</h2><p>除 XML 方式定义映射器外，还可以采用注解方式定义映射器，它只需要一个接口就可以通过 MyBatis 的注解来注入 SQL。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.mybatis.mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Select;</span><br><span class="line"><span class="keyword">import</span> com.mybatis.po.Role;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RoleMapper2</span> &#123;</span><br><span class="line">  <span class="meta">@Select(&quot;select id,role_name as roleName,note from t_role where id=#&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> Role <span class="title function_">getRole</span><span class="params">(Long id)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这完全等同于 XML 方式创建映射器。如果它和 XML 方式同时定义时，XML 方式将覆盖掉注解方式。此外，XML 可以相互引入，而注解是不可以的，所以在一些比较复杂的场景下，使用 XML 方式会更加灵活和方便。</p>
+<p>这个接口可以在 XML 中定义，我们仿造在<code>mybatis-config.xml</code>中配置 XML 语句：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mybatis/mapper/RoleMapper.xml&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>把它修改为下面的形式即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mybatis/mapper/RoleMapper2&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>也可以使用<code>configuration</code>对象注册这个接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configuration.addMapper(RoleMapper2.class);</span><br></pre></td></tr></table></figure>
+<h1 id="执行SQL的两种方式"><a href="#执行SQL的两种方式" class="headerlink" title="执行SQL的两种方式"></a>执行SQL的两种方式</h1><h2 id="SqlSession-发送-SQL"><a href="#SqlSession-发送-SQL" class="headerlink" title="SqlSession 发送 SQL"></a>SqlSession 发送 SQL</h2><p>有了映射器就可以通过<code>SqlSession</code>发送 SQL 了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Role</span> <span class="variable">role</span> <span class="operator">=</span> (Role)sqlSession.select(<span class="string">&quot;com.mybatis.mapper.RoleMapper.getRole&quot;</span>, <span class="number">1L</span>);</span><br></pre></td></tr></table></figure>
+<p><code>selectOne</code>方法表示使用查询并且只返回一个对象，而参数则是一个<code>String</code>对象和一个<code>Object</code>对象。这里是一个<code>long</code>参数，<code>long</code>参数是它的主键。</p>
+<p><code>String</code>对象是由一个命名空间加上 SQL <code>id</code>组合而成的，它完全定位了一条 SQL，这样 MyBatis 就会找到对应的 SQL。如果在 MyBatis 中只有一个<code>id</code>为<code>getRole</code>的 SQL，那么也可以简写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Role</span> <span class="variable">role</span> <span class="operator">=</span> (Role)sqlSession.selectOne(<span class="string">&quot;getRole&quot;</span>,<span class="number">1L</span>);</span><br></pre></td></tr></table></figure>
+<p>这是 MyBatis 前身 iBatis 所留下的方式。</p>
+<h2 id="用-Mapper-接口发送-SQL"><a href="#用-Mapper-接口发送-SQL" class="headerlink" title="用 Mapper 接口发送 SQL"></a>用 Mapper 接口发送 SQL</h2><p><code>SqlSession</code>还可以获取<code>Mapper</code>接口，通过<code>Mapper</code>接口发送 SQL。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">RoleMapper</span> <span class="variable">roleMapper</span> <span class="operator">=</span> sqlSession.getMapper(RoleMapper.class);</span><br><span class="line"><span class="type">Role</span> <span class="variable">role</span> <span class="operator">=</span> roleMapper.getRole(<span class="number">1L</span>);</span><br></pre></td></tr></table></figure>
+<p>通过<code>SqlSession</code>的<code>getMapper</code>方法来获取一个<code>Mapper</code>接口，就可以调用它的方法了。因为 XML 文件或者接口注解定义的 SQL 都可以通过“类的全限定名+方法名”查找，所以 MyBatis 会启用对应的 SQL 进行运行，并返回结果。</p>
+<h2 id="对比两种发送-SQL-方式"><a href="#对比两种发送-SQL-方式" class="headerlink" title="对比两种发送 SQL 方式"></a>对比两种发送 SQL 方式</h2><p>建议采用<code>SqlSession</code>获取<code>Mapper</code>的方式，理由如下：</p>
+<p>使用<code>Mapper</code>接口编程可以消除<code>SqlSession</code>带来的功能性代码，提高可读性，而<code>SqlSession</code>发送 SQL，需要一个 SQL <code>id</code>去匹配 SQL，比较晦涩难懂。使用<code>Mapper</code>接口，类似<code>roleMapper.getRole（1L）</code>则是完全面向对象的语言，更能体现业务的逻辑。</p>
+<p>使用<code>Mapper.getRole（1L）</code>方式，IDE 会提示错误和校验，而使用<code>sqlSession.selectOne（“getRole”,1L）</code>语法，只有在运行中才能知道是否会产生错误。</p>
+<p>目前使用<code>Mapper</code>接口编程已成为主流，尤其在 Spring 中运用 MyBatis 时，<code>Mapper</code>接口的使用就更为简单</p>
+<h1 id="核心组件的作用域和生命周期"><a href="#核心组件的作用域和生命周期" class="headerlink" title="核心组件的作用域和生命周期"></a>核心组件的作用域和生命周期</h1><h2 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h2><p><code>SqlSessionFactoryBuilder</code>的作用在于创建<code>SqlSessionFactory</code>，创建成功后，<code>SqlSessionFactoryBuilder</code>就失去了作用，所以它只能存在于创建<code>SqlSessionFactory</code>的方法中，而不要让其长期存在。因此<code>SqlSessionFactoryBuilder</code>实例的最佳作用域是方法作用域（也就是局部方法变量）。</p>
+<h2 id="SqlSessionFactory-1"><a href="#SqlSessionFactory-1" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h2><p><code>SqlSessionFactory</code>可以被认为是一个数据库连接池，它的作用是创建<code>SqlSession</code>接口对象。因为 MyBatis 的本质就是 Java 对数据库的操作，所以<code>SqlSessionFactory</code>的生命周期存在于整个 MyBatis 的应用之中，所以一旦创建了<code>SqlSessionFactory</code>，就要长期保存它，直至不再使用 MyBatis 应用，所以可以认为<code>SqlSessionFactory</code>的生命周期就等同于 MyBatis 的应用周期。</p>
+<p>由于<code>SqlSessionFactory</code>是一个对数据库的连接池，所以它占据着数据库的连接资源。如果创建多个<code>SqlSessionFactory</code>，那么就存在多个数据库连接池，这样不利于对数据库资源的控制，也会导致数据库连接资源被消耗光，出现系统宕机等情况，所以尽量避免发生这样的情况。</p>
+<p>因此在一般的应用中我们往往希望<code>SqlSessionFactory</code>作为一个单例，让它在应用中被共享。所以说<code>SqlSessionFactory</code>的最佳作用域是应用作用域。</p>
+<h2 id="SqlSession-1"><a href="#SqlSession-1" class="headerlink" title="SqlSession"></a>SqlSession</h2><p>如果说<code>SqlSessionFactory</code>相当于数据库连接池，那么<code>SqlSession</code>就相当于一个数据库连接（<code>Connection</code>对象），你可以在一个事务里面执行多条 SQL，然后通过它的<code>commit、rollback</code>等方法，提交或者回滚事务。</p>
+<p>所以它应该存活在一个业务请求中，处理完整个请求后，应该关闭这条连接，让它归还给<code>SqlSessionFactory</code>，否则数据库资源就很快被耗费精光，系统就会瘫痪，所以用<code>try...catch...finally...</code>语句来保证其正确关闭。</p>
+<p>所以<code>SqlSession</code>的最佳的作用域是请求或方法作用域。</p>
+<h2 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h2><p><code>Mapper</code>是一个接口，它由<code>SqlSession</code>所创建，所以它的最大生命周期至多和<code>SqlSession</code>保持一致，尽管它很好用，但是由于<code>SqlSession</code>的关闭，它的数据库连接资源也会消失，所以它的生命周期应该小于等于<code>SqlSession</code>的生命周期。<code>Mapper</code>代表的是一个请求中的业务处理，所以它应该在一个请求中，一旦处理完了相关的业务，就应该废弃它。</p>
+<img src="/2021/04/07/java/MyBatis/MyBatis%E5%85%A5%E9%97%A8/3.png" class="" title="MyBatis 组件的生命周期">
+
+<h1 id="resultMap元素"><a href="#resultMap元素" class="headerlink" title="resultMap元素"></a>resultMap元素</h1><p><code>&lt;resultMap&gt;</code>元素表示结果映射集，是 MyBatis 中最重要也是最强大的元素，主要用来定义映射规则、级联的更新以及定义类型转化器等。</p>
+<h2 id="resultMap-元素的结构"><a href="#resultMap-元素的结构" class="headerlink" title="resultMap 元素的结构"></a>resultMap 元素的结构</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;&quot;</span> <span class="attr">type</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">constructor</span>&gt;</span><span class="comment">&lt;!-- 类再实例化时用来注入结果到构造方法 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">idArg</span>/&gt;</span><span class="comment">&lt;!-- ID参数，结果为ID --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span>/&gt;</span><span class="comment">&lt;!-- 注入到构造方法的一个普通结果 --&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;/<span class="name">constructor</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span>/&gt;</span><span class="comment">&lt;!-- 用于表示哪个列是主键 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span>/&gt;</span><span class="comment">&lt;!-- 注入到字段或JavaBean属性的普通结果 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;&quot;</span>/&gt;</span><span class="comment">&lt;!-- 用于一对一关联 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;&quot;</span>/&gt;</span><span class="comment">&lt;!-- 用于一对多、多对多关联 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">discriminator</span> <span class="attr">javaType</span>=<span class="string">&quot;&quot;</span>&gt;</span><span class="comment">&lt;!-- 使用结果值来决定使用哪个结果映射 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">case</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>/&gt;</span><span class="comment">&lt;!-- 基于某些值的结果映射 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">discriminator</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&lt;resultMap&gt;</code>元素的<code>type</code>属性表示需要的<code>POJO</code>，<code>id</code>属性是<code>resultMap</code>的唯一标识。</li>
+<li>子元素<code>&lt;constructor&gt;</code>用于配置构造方法（当 POJO 未定义无参数的构造方法时使用）。</li>
+<li>子元素<code>&lt;id&gt;</code>用于表示哪个列是主键。</li>
+<li>子元素<code>&lt;result&gt;</code>用于表示POJO和数据表普通列的映射关系。</li>
+<li>子元素<code>&lt;association&gt;、&lt;collection&gt;</code>和<code>&lt;discriminator&gt;</code>用在级联的情况下。</li>
+</ul>
+<p>一条查询 SQL 语句执行后将返回结果，而结果可以使用<code>Map</code>存储，也可以使用<code>POJO</code>存储。</p>
+<h2 id="使用-Map-存储结果集"><a href="#使用-Map-存储结果集" class="headerlink" title="使用 Map 存储结果集"></a>使用 Map 存储结果集</h2><p>任何<code>select</code>语句都可以使用<code>Map</code>存储结果：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 查询所有用户信息存到Map中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAllUserMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">    select * from user</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>测试上述 SQL 配置文件的过程如下：</p>
+<p>首先在<code>com.dao.UserDao</code>接口中添加以下接口方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Map&lt;String,Object&gt;&gt; <span class="title function_">selectAllUserMap</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>com.controller</code>包的<code>UserController</code>类中调用接口方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查询所有用户信息存到Map中</span></span><br><span class="line">List&lt;Map&lt;String, Object&gt;&gt; lmp = userDao.selectAllUserMap();</span><br><span class="line"><span class="keyword">for</span> (Map&lt;String, Object&gt; map : lmp) &#123;</span><br><span class="line">  System.out.println(map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述 Map 的 key 是 select 语句查询的字段名（必须完全一样），而 Map 的 value 是查询返回结果中字段对应的值，一条记录映射到一个 Map 对象中。Map 用起来很方便，但可读性稍差，有的开发者不太喜欢使用 Map，更多时候喜欢使用 POJO 的方式。</p>
+<h2 id="使用POJO存储结果集"><a href="#使用POJO存储结果集" class="headerlink" title="使用POJO存储结果集"></a>使用POJO存储结果集</h2><p>使用<code>POJO</code>的方式存储结果集，一方面可以使用自动映射，例如使用<code>resultType</code>属性，但有时候需要更为复杂的映射或级联，这时候就需要使用<code>&lt;select&gt;</code>元素的<code>resultMap</code>属性配置映射集合：</p>
+<h3 id="1-创建-POJO-类"><a href="#1-创建-POJO-类" class="headerlink" title="1.创建 POJO 类"></a>1.创建 POJO 类</h3><p>在应用的<code>com.pojo</code>包中创建<code>POJO</code>类<code>MapUser</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pojo;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MapUser</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> Integer m_uid;</span><br><span class="line">  <span class="keyword">private</span> String m_uname;</span><br><span class="line">  <span class="keyword">private</span> String m_usex;</span><br><span class="line">  <span class="comment">// 此处省略setter和getter方法</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;User[uid=&quot;</span> + m_uid + <span class="string">&quot;,uname=&quot;</span> + m_uname + <span class="string">&quot;,usex=&quot;</span> + m_usex + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-配置-resultMap-元素"><a href="#2-配置-resultMap-元素" class="headerlink" title="2.配置 resultMap 元素"></a>2.配置 resultMap 元素</h3><p>在 SQL 映射文件<code>UserMapper.xml</code>中配置<code>&lt;resultMap&gt;</code>元素，其属性<code>type</code>引用<code>POJO</code>类。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--使用自定义结果集类型--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">type</span>=<span class="string">&quot;com.pojo.MapUser&quot;</span> <span class="attr">id</span>=<span class="string">&quot;myResult&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- property 是 com.pojo.MapUser 类中的属性--&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- column是查询结果的列名，可以来自不同的表--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;m_uid&quot;</span> <span class="attr">column</span>=<span class="string">&quot;uid&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;m_uname&quot;</span> <span class="attr">column</span>=<span class="string">&quot;uname&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;m_usex&quot;</span> <span class="attr">column</span>=<span class="string">&quot;usex&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-配置-select-元素"><a href="#3-配置-select-元素" class="headerlink" title="3.配置 select 元素"></a>3.配置 select 元素</h3><p>在 SQL 映射文件<code>UserMapper.xml</code>中配置<code>&lt;select&gt;</code>元素，其属性<code>resultMap</code>引用了<code>&lt;resultMap&gt;</code>元素的<code>id</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 使用自定义结果集类型查询所有用户 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectResultMap&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;myResult&quot;</span>&gt;</span></span><br><span class="line">    select * from user</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-添加接口方法"><a href="#4-添加接口方法" class="headerlink" title="4.添加接口方法"></a>4.添加接口方法</h3><p>在<code>com.dao.UserDao</code>接口中添加以下接口方法：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public List<span class="tag">&lt;<span class="name">MapUser</span>&gt;</span> selectResultMap();</span><br></pre></td></tr></table></figure>
+<h3 id="5-调用接口方法"><a href="#5-调用接口方法" class="headerlink" title="5.调用接口方法"></a>5.调用接口方法</h3><p>在<code>com.controller</code>包的<code>UserController</code>类中调用接口方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用resultMap映射结果集</span></span><br><span class="line">List&lt;MapUser&gt; listResultMap = userDao.selectResultMap();</span><br><span class="line"><span class="keyword">for</span> (MapUser myUser : listResultMap) &#123;</span><br><span class="line">  System.out.println(myUser);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/04/07/java/MyBatis/MyBatis%E5%85%A5%E9%97%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/04/08/java/MyBatis/MyBatis%20%E6%B3%A8%E8%A7%A3/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MyBatis 注解
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/11/java/JDBC/JDBC%20%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JDBC 批量处理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JDBC Statements |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/JDBC/JDBC Statements"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JDBC Statements
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/06/java/JDBC/JDBC%20Statements/" class="article-date">
+  <time datetime="2021-03-06T09:24:42.000Z" itemprop="datePublished">2021-03-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JDBC/">JDBC</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>当获得了与数据库的连接后，就可以与数据库进行交互了。JDBC <code>Statement</code>，<code>CallableStatement</code>和<code>PreparedStatement</code>接口定义了可用于发送 SQL 的命令，并从数据库接收数据的方法和属性。还定义了有助于在 Java 和 SQL 数据类型的数据类型差异转换的方法。</p>
+<table>
+<thead>
+<tr>
+<th align="center">接口</th>
+<th align="center">推荐使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Statement</td>
+<td align="center">用于对数据库进行通用访问，在运行时使用静态SQL语句时很有用。Statement接口不能接受参数</td>
+</tr>
+<tr>
+<td align="center">PreparedStatement</td>
+<td align="center">当计划要多次使用SQL语句时使用。<br>PreparedStatement接口在运行时接受输入参数</td>
+</tr>
+<tr>
+<td align="center">CallableStatement</td>
+<td align="center">当想要访问数据库存储过程时使用。<br>CallableStatement接口也可以接受运行时输入参数</td>
+</tr>
+</tbody></table>
+<h1 id="Statement对象"><a href="#Statement对象" class="headerlink" title="Statement对象"></a>Statement对象</h1><h2 id="1-创建Statement对象"><a href="#1-创建Statement对象" class="headerlink" title="1. 创建Statement对象"></a>1. 创建Statement对象</h2><p>在使用<code>Statement</code>对象执行 SQL 语句之前，需要使用<code>Connection</code>对象的<code>createStatement()</code>方法创建一个<code>Statement</code>对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  stmt = conn.createStatement( );</span><br><span class="line">  . . .</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在创建<code>Statement</code>对象后，可以使用它来执行一个 SQL 语句，它有三个执行方法可以执行：</p>
+<ul>
+<li><code>boolean execute (String SQL)</code>： 如果可以检索到<code>ResultSet</code>对象，则返回一个布尔值<code>true</code>; 否则返回<code>false</code>。使用此方法执行 SQL DDL 语句或需要使用真正的动态 SQL，可使用于执行创建数据库，创建表的 SQL 语句等等。</li>
+<li><code>int executeUpdate (String SQL)</code>：返回受 SQL 语句执行影响的行数。使用此方法执行预期会影响多行的 SQL 语句，例如:<code>INSERT，UPDATE</code>或<code>DELETE</code>语句。</li>
+<li><code>ResultSet executeQuery(String SQL)</code>：返回一个<code>ResultSet</code>对象。 当您希望获得结果集时，请使用此方法，就像使用<code>SELECT</code>语句一样。</li>
+</ul>
+<h2 id="2-关闭Statement对象"><a href="#2-关闭Statement对象" class="headerlink" title="2. 关闭Statement对象"></a>2. 关闭Statement对象</h2><p>就像关闭一个<code>Connection</code>对象一样，以保存数据库资源一样，由于同样的原因，还应该关闭<code>Statement</code>对象。</p>
+<p>一个简单的调用<code>close()</code>方法将执行该工作。如果先关闭<code>Connection</code>对象，它也会关闭<code>Statement</code>对象。但是，应该始终显式关闭<code>Statement</code>对象，以确保正确的清理顺序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  stmt = conn.createStatement();</span><br><span class="line">  . . .</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  stmt.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="PreparedStatement对象"><a href="#PreparedStatement对象" class="headerlink" title="PreparedStatement对象"></a>PreparedStatement对象</h1><p><code>PreparedStatement</code>接口扩展了<code>Statement</code>接口，它添加了比<code>Statement</code>对象更好一些优点的功能。此语句可以动态地提供&#x2F;接受参数。</p>
+<h2 id="1-创建PreparedStatement对象"><a href="#1-创建PreparedStatement对象" class="headerlink" title="1 创建PreparedStatement对象"></a>1 创建PreparedStatement对象</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="type">String</span> <span class="variable">SQL</span> <span class="operator">=</span> <span class="string">&quot;Update Employees SET age = ? WHERE id = ?&quot;</span>;</span><br><span class="line">  pstmt = conn.prepareStatement(SQL);</span><br><span class="line">  pstmt.setInt(<span class="number">1</span>, <span class="number">16</span>);</span><br><span class="line">  pstmt.setInt(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">  <span class="type">int</span> <span class="variable">rows</span> <span class="operator">=</span> stmt.executeUpdate();</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JDBC 中的所有参数都由<code>?</code>符号作为占位符，这被称为参数标记。在执行SQL语句之前，必须为每个参数(占位符)提供值。</p>
+<p><code>setXXX()</code>方法将值绑定到参数，其中<code>XXX</code>表示要绑定到输入参数的值的 Java 数据类型。如果忘记提供绑定值，则将会抛出一个<code>SQLException</code>。</p>
+<p>每个参数标记是它其顺序位置引用。第一个标记表示位置1，下一个位置2等等。</p>
+<p>所有<code>Statement</code>对象与数据库交互的方法<code>execute()</code>，<code>executeQuery()</code>和<code>executeUpdate()</code>也可以用于<code>PreparedStatement</code>对象。 但是，这些方法被修改为可以使用输入参数的 SQL 语句。</p>
+<h2 id="2-关闭PreparedStatement对象"><a href="#2-关闭PreparedStatement对象" class="headerlink" title="2. 关闭PreparedStatement对象"></a>2. 关闭PreparedStatement对象</h2><p>就像关闭<code>Statement</code>对象一样，由于同样的原因，也应该关闭<code>PreparedStatement</code>对象。</p>
+<p>简单的调用<code>close()</code>方法将执行关闭。如果先关闭<code>Connection</code>对象，它也会关闭<code>PreparedStatement</code>对象。但是，应该始终显式关闭<code>PreparedStatement</code>对象，以确保以正确顺序清理资源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="type">String</span> <span class="variable">SQL</span> <span class="operator">=</span> <span class="string">&quot;Update Employees SET age = ? WHERE id = ?&quot;</span>;</span><br><span class="line">  pstmt = conn.prepareStatement(SQL);</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  pstmt.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="CallableStatement对象"><a href="#CallableStatement对象" class="headerlink" title="CallableStatement对象"></a>CallableStatement对象</h1><p>类似<code>Connection</code>对象创建<code>Statement</code>和<code>PreparedStatement</code>对象一样，它还可以使用同样的方式创建<code>CallableStatement</code>对象，该对象将用于执行对数据库存储过程的调用。</p>
+<h2 id="1-创建CallableStatement对象"><a href="#1-创建CallableStatement对象" class="headerlink" title="1. 创建CallableStatement对象"></a>1. 创建CallableStatement对象</h2><p>假设需要执行以下 MySQL 存储过程</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $$</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span> IF <span class="keyword">EXISTS</span> `EMP`.`getEmpName` $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> `EMP`.`getEmpName` </span><br><span class="line">  (<span class="keyword">IN</span> EMP_ID <span class="type">INT</span>, <span class="keyword">OUT</span> EMP_FIRST <span class="type">VARCHAR</span>(<span class="number">255</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">first</span> <span class="keyword">INTO</span> EMP_FIRST</span><br><span class="line">  <span class="keyword">FROM</span> Employees</span><br><span class="line">  <span class="keyword">WHERE</span> ID <span class="operator">=</span> EMP_ID;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
+<p>存在三种类型的参数：<code>IN，OUT</code>和<code>INOUT</code>。<code>PreparedStatement</code>对象只使用<code>IN</code>参数。<code>CallableStatement</code>对象可以使用上面三个参数类型。</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">IN</td>
+<td align="center">创建SQL语句时其参数值是未知的。 使用 setXXX() 方法将值绑定到IN参数</td>
+</tr>
+<tr>
+<td align="center">OUT</td>
+<td align="center">由SQL语句返回的参数值。可以使用 getXXX() 方法从OUT参数中检索值</td>
+</tr>
+<tr>
+<td align="center">INOUT</td>
+<td align="center">提供输入和输出值的参数。使用 setXXX() 方法绑定变量并使用 getXXX() 方法检索值</td>
+</tr>
+</tbody></table>
+<p>以下代码片段显示了如何使用<code>Connection.prepareCall()</code>方法根据上述存储过程来实例化一个<code>CallableStatement</code>对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">CallableStatement</span> <span class="variable">cstmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="type">String</span> <span class="variable">strSQL</span> <span class="operator">=</span> <span class="string">&quot;&#123;call getEmpName (?, ?)&#125;&quot;</span>;</span><br><span class="line">  cstmt = conn.prepareCall (SQL);</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>String</code>变量<code>strSQL</code>表示存储过程，带有两个参数占位符。</p>
+<p>使用<code>CallableStatement</code>对象就像使用<code>PreparedStatement</code>对象一样。 在执行语句之前，必须将值绑定到所有参数，否则将抛出一个<code>SQLException</code>异常。</p>
+<p>如果有<code>IN</code>参数，只需遵循适用于<code>PreparedStatement</code>对象的相同规则和技术; 使用与绑定的 Java 数据类型相对应的<code>setXXX()</code>方法。</p>
+<p>使用<code>OUT</code>和<code>INOUT</code>参数时，必须使用一个额外的<code>CallableStatement</code>对象方法<code>registerOutParameter()</code>。<code>registerOutParameter()</code>方法将 JDBC 数据类型绑定到存储过程并返回预期数据类型。</p>
+<p>当调用存储过程，可以使用适当的<code>getXXX()</code>方法从<code>OUT</code>参数中检索该值。此方法将检索到的 SQL 类型的值转换为对应的 Java 数据类型。</p>
+<h2 id="2-关闭CallableStatement对象"><a href="#2-关闭CallableStatement对象" class="headerlink" title="2. 关闭CallableStatement对象"></a>2. 关闭CallableStatement对象</h2><p>就像关闭其他<code>Statement</code>对象一样，由于同样的原因，还应该关闭<code>CallableStatement</code>对象。</p>
+<p>简单的调用<code>close()</code>方法将执行关闭<code>CallableStatement</code>对象。 如果先关闭<code>Connection</code>对象，它也会关闭<code>CallableStatement</code>对象。但是，应该始终显式关闭<code>CallableStatement</code>对象，以确保按正确顺序的清理资源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">CallableStatement</span> <span class="variable">cstmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="type">String</span> <span class="variable">SQL</span> <span class="operator">=</span> <span class="string">&quot;&#123;call getEmpName (?, ?)&#125;&quot;</span>;</span><br><span class="line">  cstmt = conn.prepareCall (SQL);</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">  . . .</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  cstmt.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="Statements示例"><a href="#Statements示例" class="headerlink" title="Statements示例"></a>Statements示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JDBCStatment</span> &#123;</span><br><span class="line">   <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/EMP&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//  Database credentials</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">   <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      stmt = conn.createStatement();</span><br><span class="line">      <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;UPDATE Employees set age=30 WHERE id=103&quot;</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Let us check if it returns a true Result Set or not.</span></span><br><span class="line">      <span class="type">Boolean</span> <span class="variable">ret</span> <span class="operator">=</span> stmt.execute(sql);</span><br><span class="line">      System.out.println(<span class="string">&quot;Return value is : &quot;</span> + ret.toString() );</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Let us update age of the record with ID = 103;</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">rows</span> <span class="operator">=</span> stmt.executeUpdate(sql);</span><br><span class="line">      System.out.println(<span class="string">&quot;Rows impacted : &quot;</span> + rows );</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Let us select all the records and display them.</span></span><br><span class="line">      sql = <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line">      <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 5: Extract data from result set</span></span><br><span class="line">      <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">         <span class="comment">//Retrieve by column name</span></span><br><span class="line">         <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">         <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">         <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">         <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">         <span class="comment">//Display values</span></span><br><span class="line">         System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">         System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">         System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">         System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//STEP 6: Clean-up environment</span></span><br><span class="line">      rs.close();</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(stmt!=<span class="literal">null</span>)</span><br><span class="line">            stmt.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se2)&#123;</span><br><span class="line">      &#125;<span class="comment">// nothing we can do</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">            conn.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">         se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">   &#125;<span class="comment">//end try</span></span><br><span class="line">   System.out.println(<span class="string">&quot;There are something wrong!&quot;</span>);</span><br><span class="line">&#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end JDBCStatment</span></span><br></pre></td></tr></table></figure>
+<h2 id="PreparedStatement示例"><a href="#PreparedStatement示例" class="headerlink" title="PreparedStatement示例"></a>PreparedStatement示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="comment">// detail at http://www.yiibai.com/jdbc/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JDBCPreparedStatement</span> &#123;</span><br><span class="line">   <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/EMP&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//  Database credentials</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">   <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="type">PreparedStatement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;UPDATE Employees set age=? WHERE id=?&quot;</span>;</span><br><span class="line">      stmt = conn.prepareStatement(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Bind values into the parameters.</span></span><br><span class="line">      stmt.setInt(<span class="number">1</span>, <span class="number">35</span>);  <span class="comment">// This would set age</span></span><br><span class="line">      stmt.setInt(<span class="number">2</span>, <span class="number">102</span>); <span class="comment">// This would set ID</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// Let us update age of the record with ID = 102;</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">rows</span> <span class="operator">=</span> stmt.executeUpdate();</span><br><span class="line">      System.out.println(<span class="string">&quot;Rows impacted : &quot;</span> + rows );</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Let us select all the records and display them.</span></span><br><span class="line">      sql = <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line">      <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 5: Extract data from result set</span></span><br><span class="line">      <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">         <span class="comment">//Retrieve by column name</span></span><br><span class="line">         <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">         <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">         <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">         <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">         <span class="comment">//Display values</span></span><br><span class="line">         System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">         System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">         System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">         System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//STEP 6: Clean-up environment</span></span><br><span class="line">      rs.close();</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(stmt!=<span class="literal">null</span>)</span><br><span class="line">            stmt.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se2)&#123;</span><br><span class="line">      &#125;<span class="comment">// nothing we can do</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">            conn.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">         se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">   &#125;<span class="comment">//end try</span></span><br><span class="line">   System.out.println(<span class="string">&quot;Goodbye!&quot;</span>);</span><br><span class="line">&#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end JDBCPreparedStatement</span></span><br></pre></td></tr></table></figure>
+<h2 id="CallableStatement示例"><a href="#CallableStatement示例" class="headerlink" title="CallableStatement示例"></a>CallableStatement示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JDBCCallableStatement</span> &#123;</span><br><span class="line">   <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/EMP&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//  Database credentials</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">   <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="type">CallableStatement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;&#123;call getEmpName (?, ?)&#125;&quot;</span>;</span><br><span class="line">      stmt = conn.prepareCall(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Bind IN parameter first, then bind OUT parameter</span></span><br><span class="line">      <span class="type">int</span> <span class="variable">empID</span> <span class="operator">=</span> <span class="number">102</span>;</span><br><span class="line">      stmt.setInt(<span class="number">1</span>, empID); <span class="comment">// This would set ID as 102</span></span><br><span class="line">      <span class="comment">// Because second parameter is OUT so register it</span></span><br><span class="line">      stmt.registerOutParameter(<span class="number">2</span>, java.sql.Types.VARCHAR);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Use execute method to run stored procedure.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Executing stored procedure...&quot;</span> );</span><br><span class="line">      stmt.execute();</span><br><span class="line"></span><br><span class="line">      <span class="comment">//Retrieve employee name with getXXX method</span></span><br><span class="line">      <span class="type">String</span> <span class="variable">empName</span> <span class="operator">=</span> stmt.getString(<span class="number">2</span>);</span><br><span class="line">      System.out.println(<span class="string">&quot;Emp Name with ID:&quot;</span> + </span><br><span class="line">               empID + <span class="string">&quot; is &quot;</span> + empName);</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">   &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(stmt!=<span class="literal">null</span>)</span><br><span class="line">            stmt.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se2)&#123;</span><br><span class="line">      &#125;<span class="comment">// nothing we can do</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">            conn.close();</span><br><span class="line">      &#125;<span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">         se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">   &#125;<span class="comment">//end try</span></span><br><span class="line">   System.out.println(<span class="string">&quot;Goodbye!&quot;</span>);</span><br><span class="line">&#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end JDBCExample</span></span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/03/06/java/JDBC/JDBC%20Statements/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDBC/" rel="tag">JDBC</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/03/07/%E5%89%8D%E7%AB%AF/css/%E6%95%85%E9%9A%9C%E9%A3%8E%E6%A0%BC%E6%96%87%E5%AD%97%E5%8A%A8%E7%94%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            故障风格文字动画
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/05/java/JDBC/JDBC%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JDBC 数据库连接</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

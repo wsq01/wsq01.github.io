@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS代码片段(Math、Date) |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/进阶/JS代码片段(Math、Date)"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS代码片段(Math、Date)
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/10/02/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Math%E3%80%81Date)/" class="article-date">
+  <time datetime="2019-10-02T07:11:41.000Z" itemprop="datePublished">2019-10-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h1><h2 id="average"><a href="#average" class="headerlink" title="average"></a>average</h2><p>返回两个或两个以上数字的的平均值。<br>使用<code>Array.reduce()</code>将每个值累加到初始值0的累加器， 除以数组长度<code>length</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">average</span> = (<span class="params">...nums</span>) =&gt; nums.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> acc + val, <span class="number">0</span>) / nums.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">average</span>(...[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// 2</span></span><br><span class="line"><span class="title function_">average</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<h2 id="averageBy"><a href="#averageBy" class="headerlink" title="averageBy"></a>averageBy</h2><p>使用提供的函数将每个元素映射到一个值后，返回一个数组的平均值。<br>使用<code>Array.map()</code>将每个元素映射到由<code>fn</code>返回的值，<code>Array.reduce()</code>将每个值累加到累加器，用0作为累加器的初始值，再除以数组的<code>length</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">averageBy</span> = (<span class="params">arr, fn</span>) =&gt;</span><br><span class="line">  arr.<span class="title function_">map</span>(<span class="keyword">typeof</span> fn === <span class="string">&#x27;function&#x27;</span> ? fn : <span class="function"><span class="params">val</span> =&gt;</span> val[fn]).<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> acc + val, <span class="number">0</span>) /</span><br><span class="line">  arr.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">averageBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="function"><span class="params">o</span> =&gt;</span> o.<span class="property">n</span>); <span class="comment">// 5</span></span><br><span class="line"><span class="title function_">averageBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="string">&#x27;n&#x27;</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
+<h2 id="clampNumber"><a href="#clampNumber" class="headerlink" title="clampNumber"></a>clampNumber</h2><p>返回由边界值<code>a</code>和<code>b</code>限定范围内的<code>num</code>。<br>如果<code>num</code>在限定范围内，则返回<code>num</code>。 否则，返回范围内最接近的数字。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">clampNumber</span> = (<span class="params">num, a, b</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(num, <span class="title class_">Math</span>.<span class="title function_">max</span>(a, b)), <span class="title class_">Math</span>.<span class="title function_">min</span>(a, b));</span><br><span class="line"></span><br><span class="line"><span class="title function_">clampNumber</span>(<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>); <span class="comment">// 3</span></span><br><span class="line"><span class="title function_">clampNumber</span>(<span class="number">1</span>, -<span class="number">1</span>, -<span class="number">5</span>); <span class="comment">// -1</span></span><br></pre></td></tr></table></figure>
+<h2 id="digitize"><a href="#digitize" class="headerlink" title="digitize"></a>digitize</h2><p>将数字转换为数字数组。<br>将数字转换为字符串，使用展开运算符 (<code>...</code>) 构建一个数组。 使用<code>Array.map()</code>和<code>parseInt()</code>将每个值转换为整数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">digitize</span> = n =&gt; [...<span class="string">`<span class="subst">$&#123;n&#125;</span>`</span>].<span class="title function_">map</span>(<span class="function"><span class="params">i</span> =&gt;</span> <span class="built_in">parseInt</span>(i));</span><br><span class="line"></span><br><span class="line"><span class="title function_">digitize</span>(<span class="number">123</span>); <span class="comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="distance"><a href="#distance" class="headerlink" title="distance"></a>distance</h2><p>返回两点之间的欧氏距离。<br>使用<code>Math.hypot()</code>计算两点之间的欧氏距离( <code>Euclidean distance</code>)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">distance</span> = (<span class="params">x0, y0, x1, y1</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">hypot</span>(x1 - x0, y1 - y0);</span><br><span class="line"></span><br><span class="line"><span class="title function_">distance</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// 2.23606797749979</span></span><br></pre></td></tr></table></figure>
+<h2 id="factorial"><a href="#factorial" class="headerlink" title="factorial"></a>factorial</h2><p>计算一个数字的阶乘。<br>使用递归。如果<code>n</code>小于或等于1 ，则返回1 。否则返回<code>n</code>和<code>n - 1</code>的阶乘。如果<code>n</code>是负数，则会引发异常。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">factorial</span> = n =&gt;</span><br><span class="line">  n &lt; <span class="number">0</span></span><br><span class="line">    ? (<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Negative numbers are not allowed!&#x27;</span>);</span><br><span class="line">    &#125;)()</span><br><span class="line">    : n &lt;= <span class="number">1</span></span><br><span class="line">      ? <span class="number">1</span></span><br><span class="line">      : n * <span class="title function_">factorial</span>(n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">factorial</span>(<span class="number">6</span>); <span class="comment">// 720</span></span><br></pre></td></tr></table></figure>
+<h2 id="fibonacci"><a href="#fibonacci" class="headerlink" title="fibonacci"></a>fibonacci</h2><p>生成一个包含斐波纳契数组，直到该数组有第<code>n</code>元素。<br>创建一个指定长度的空数组，初始化前两个值( 0和1 )。使用<code>Array.reduce()</code>向数组中添加值，该值是最后两个值的和，前两个值除外。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">fibonacci</span> = n =&gt;</span><br><span class="line">  <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n &#125;).<span class="title function_">reduce</span>(</span><br><span class="line">    <span class="function">(<span class="params">acc, val, i</span>) =&gt;</span> acc.<span class="title function_">concat</span>(i &gt; <span class="number">1</span> ? acc[i - <span class="number">1</span>] + acc[i - <span class="number">2</span>] : i),</span><br><span class="line">    []</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="title function_">fibonacci</span>(<span class="number">6</span>); <span class="comment">// [0, 1, 1, 2, 3, 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="gcd"><a href="#gcd" class="headerlink" title="gcd"></a>gcd</h2><p>计算两个或两个以上数字&#x2F;数字数组的最大公约数。<br>内部的<code>_gcd</code>函数使用递归。基本情况是，当<code>y</code>等于0的情况下，返回<code>x</code>。否则，返回<code>y</code>的最大公约数和<code>x / y</code>的其余数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">gcd</span> = (<span class="params">...arr</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">_gcd</span> = (<span class="params">x, y</span>) =&gt; (!y ? x : <span class="title function_">gcd</span>(y, x % y));</span><br><span class="line">  <span class="keyword">return</span> [...arr].<span class="title function_">reduce</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> <span class="title function_">_gcd</span>(a, b));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">gcd</span>(<span class="number">8</span>, <span class="number">36</span>); <span class="comment">// 4</span></span><br><span class="line"><span class="title function_">gcd</span>(...[<span class="number">12</span>, <span class="number">8</span>, <span class="number">32</span>]); <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+<h2 id="geometricProgression"><a href="#geometricProgression" class="headerlink" title="geometricProgression"></a>geometricProgression</h2><p>初始化一个包含指定范围中数字的数组，包含<code>start</code>和<code>end</code>，两个元素之间的比例是<code>step</code>（后一个数是前一个数的<code>step</code>倍）。 如果<code>step</code>等于1则返回一个错误。<br>使用<code>Array.from()</code>，<code>Math.log()</code>和<code>Math.floor()</code>来创建一个所需长度的数组，使用<code>Array.map()</code>来填充所需的值。省略第二个参数<code>start</code>，使用默认值1。省略第三个参数<code>step</code>，使用默认值2。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">geometricProgression</span> = (<span class="params">end, start = <span class="number">1</span>, step = <span class="number">2</span></span>) =&gt;</span><br><span class="line">  <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">log</span>(end / start) / <span class="title class_">Math</span>.<span class="title function_">log</span>(step)) + <span class="number">1</span> &#125;).<span class="title function_">map</span>(</span><br><span class="line">    <span class="function">(<span class="params">v, i</span>) =&gt;</span> start * step ** i</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="title function_">geometricProgression</span>(<span class="number">256</span>); <span class="comment">// [1, 2, 4, 8, 16, 32, 64, 128, 256]</span></span><br><span class="line"><span class="title function_">geometricProgression</span>(<span class="number">256</span>, <span class="number">3</span>); <span class="comment">// [3, 6, 12, 24, 48, 96, 192]</span></span><br><span class="line"><span class="title function_">geometricProgression</span>(<span class="number">256</span>, <span class="number">1</span>, <span class="number">4</span>); <span class="comment">// [1, 4, 16, 64, 256]</span></span><br></pre></td></tr></table></figure>
+<h2 id="inRange"><a href="#inRange" class="headerlink" title="inRange"></a>inRange</h2><p>检查给定的数字是否在给定范围内。<br>使用算术比较来检查给定的数字是否在指定的范围内。如果没有指定第三个参数<code>end</code>，则范围被认为是从0到<code>start</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">inRange</span> = (<span class="params">n, start, end = <span class="literal">null</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (end &amp;&amp; start &gt; end) [end, start] = [start, end];</span><br><span class="line">  <span class="keyword">return</span> end == <span class="literal">null</span> ? n &gt;= <span class="number">0</span> &amp;&amp; n &lt; start : n &gt;= start &amp;&amp; n &lt; end;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">inRange</span>(<span class="number">3</span>, <span class="number">2</span>, <span class="number">5</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">inRange</span>(<span class="number">3</span>, <span class="number">4</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">inRange</span>(<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">inRange</span>(<span class="number">3</span>, <span class="number">2</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isDivisible"><a href="#isDivisible" class="headerlink" title="isDivisible"></a>isDivisible</h2><p>检查第一个数字参数是否可被第二个数字整除。<br>使用模运算符(<code>%</code>)来检查余数是否等于0 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isDivisible</span> = (<span class="params">dividend, divisor</span>) =&gt; dividend % divisor === <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isDivisible</span>(<span class="number">6</span>, <span class="number">3</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isEven"><a href="#isEven" class="headerlink" title="isEven"></a>isEven</h2><p>如果给定的数字是偶数，则返回<code>true</code>，否则返回<code>false</code>。<br>使用模运算符(<code>%</code>)来检查数字是奇数还是偶数。如果数字是偶数，则返回<code>true</code>，如果是奇数，则返回<code>false</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isEven</span> = num =&gt; num % <span class="number">2</span> === <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isEven</span>(<span class="number">3</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isPrime"><a href="#isPrime" class="headerlink" title="isPrime"></a>isPrime</h2><p>检查提供的整数是否为素数。<br>检查数字从2到给定数字的平方根。如果它们中的任何一个可以整除给定的数字，则返回<code>false</code>，否则返回<code>true</code>，除非数字小于2。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isPrime</span> = num =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> boundary = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">sqrt</span>(num));</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">2</span>; i &lt;= boundary; i++) <span class="keyword">if</span> (num % i === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> num &gt;= <span class="number">2</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isPrime</span>(<span class="number">11</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="lcm"><a href="#lcm" class="headerlink" title="lcm"></a>lcm</h2><p>返回两个或两个以上数字的最小公倍数。<br>使用最大公约数（GCD）公式和<code>lcm(x,y) = x * y / gcd(x,y)</code>来确定最小公倍数。 GCD公式使用递归。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">lcm</span> = (<span class="params">...arr</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">gcd</span> = (<span class="params">x, y</span>) =&gt; (!y ? x : <span class="title function_">gcd</span>(y, x % y));</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">_lcm</span> = (<span class="params">x, y</span>) =&gt; (x * y) / <span class="title function_">gcd</span>(x, y);</span><br><span class="line">  <span class="keyword">return</span> [...arr].<span class="title function_">reduce</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> <span class="title function_">_lcm</span>(a, b));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">lcm</span>(<span class="number">12</span>, <span class="number">7</span>); <span class="comment">// 84</span></span><br><span class="line"><span class="title function_">lcm</span>(...[<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">// 60</span></span><br></pre></td></tr></table></figure>
+<h2 id="maxBy"><a href="#maxBy" class="headerlink" title="maxBy"></a>maxBy</h2><p>使用提供的函数将每个元素映射到一个值后，然后返回数组的最大值。<br>使用<code>Array.map()</code>将每个元素映射到由<code>fn</code>，然后用<code>Math.max()</code>返回的值来获取最大值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">maxBy</span> = (<span class="params">arr, fn</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">max</span>(...arr.<span class="title function_">map</span>(<span class="keyword">typeof</span> fn === <span class="string">&#x27;function&#x27;</span> ? fn : <span class="function"><span class="params">val</span> =&gt;</span> val[fn]));</span><br><span class="line"></span><br><span class="line"><span class="title function_">maxBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="function"><span class="params">o</span> =&gt;</span> o.<span class="property">n</span>); <span class="comment">// 8</span></span><br><span class="line"><span class="title function_">maxBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="string">&#x27;n&#x27;</span>); <span class="comment">// 8</span></span><br></pre></td></tr></table></figure>
+<h2 id="median"><a href="#median" class="headerlink" title="median"></a>median</h2><p>返回数字数组的中值。<br>找到数字数组的中间值，使用 <code>Array.sort()</code>对值进行排序。 如果<code>length</code>是奇数，则返回中间值数字，否则返回两个中间值数值的平均值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">median</span> = arr =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> mid = <span class="title class_">Math</span>.<span class="title function_">floor</span>(arr.<span class="property">length</span> / <span class="number">2</span>),</span><br><span class="line">    nums = [...arr].<span class="title function_">sort</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b);</span><br><span class="line">  <span class="keyword">return</span> arr.<span class="property">length</span> % <span class="number">2</span> !== <span class="number">0</span> ? nums[mid] : (nums[mid - <span class="number">1</span>] + nums[mid]) / <span class="number">2</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">median</span>([<span class="number">5</span>, <span class="number">6</span>, <span class="number">50</span>, <span class="number">1</span>, -<span class="number">5</span>]); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
+<h2 id="minBy"><a href="#minBy" class="headerlink" title="minBy"></a>minBy</h2><p>使用提供的函数将每个元素映射到一个值后，然后返回数组的最小值。<br>使用<code>Array.map()</code>将每个元素映射到由<code>fn</code>，然后用<code>Math.min()</code>返回的值来获取最小值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">minBy</span> = (<span class="params">arr, fn</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">min</span>(...arr.<span class="title function_">map</span>(<span class="keyword">typeof</span> fn === <span class="string">&#x27;function&#x27;</span> ? fn : <span class="function"><span class="params">val</span> =&gt;</span> val[fn]));</span><br><span class="line"></span><br><span class="line"><span class="title function_">minBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="function"><span class="params">o</span> =&gt;</span> o.<span class="property">n</span>); <span class="comment">// 2</span></span><br><span class="line"><span class="title function_">minBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="string">&#x27;n&#x27;</span>); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<h2 id="percentile"><a href="#percentile" class="headerlink" title="percentile"></a>percentile</h2><p>使用百分比表示给定数组中有多少个数字小于或等于给定值。<br>使用<code>Array.reduce()</code>来计算有多少个数字小于等于该值，并用百分比表示。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">percentile</span> = (<span class="params">arr, val</span>) =&gt;</span><br><span class="line">  (<span class="number">100</span> * arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, v</span>) =&gt;</span> acc + (v &lt; val ? <span class="number">1</span> : <span class="number">0</span>) + (v === val ? <span class="number">0.5</span> : <span class="number">0</span>), <span class="number">0</span>)) / arr.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">percentile</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>], <span class="number">6</span>); <span class="comment">// 55</span></span><br></pre></td></tr></table></figure>
+<h2 id="powerset"><a href="#powerset" class="headerlink" title="powerset"></a>powerset</h2><p>返回给定数组的<code>powerset</code>(幂集)。<br>使用<code>Array.reduce()</code>与<code>Array.map()</code>结合来遍历元素，并将其组合成一个包含所有排列组合的数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">powerset</span> = arr =&gt; arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">a, v</span>) =&gt;</span> a.<span class="title function_">concat</span>(a.<span class="title function_">map</span>(<span class="function"><span class="params">r</span> =&gt;</span> [v].<span class="title function_">concat</span>(r))), [[]]);</span><br><span class="line"></span><br><span class="line"><span class="title function_">powerset</span>([<span class="number">1</span>, <span class="number">2</span>]); <span class="comment">// [[], [1], [2], [2, 1]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="randomIntArrayInRange"><a href="#randomIntArrayInRange" class="headerlink" title="randomIntArrayInRange"></a>randomIntArrayInRange</h2><p>返回指定范围内<code>n</code>个随机整数的数组。<br>使用<code>array.from()</code>创建一个特定长度的空数组<code>math.random()</code>，生成一个随机数并将其映射到所需的范围，使用<code>math.floor()</code>将其设置为整数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">randomIntArrayInRange</span> = (<span class="params">min, max, n = <span class="number">1</span></span>) =&gt;</span><br><span class="line">  <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: n &#125;, <span class="function">() =&gt;</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (max - min + <span class="number">1</span>)) + min);</span><br><span class="line"></span><br><span class="line"><span class="title function_">randomIntArrayInRange</span>(<span class="number">12</span>, <span class="number">35</span>, <span class="number">10</span>); <span class="comment">// [ 34, 14, 27, 17, 30, 27, 20, 26, 21, 14 ]</span></span><br></pre></td></tr></table></figure>
+<h2 id="randomIntegerInRange"><a href="#randomIntegerInRange" class="headerlink" title="randomIntegerInRange"></a>randomIntegerInRange</h2><p>返回指定范围内的随机整数。<br>使用<code>Math.random()</code>生成一个随机数并将其映射到所需的范围，使用<code>Math.floor()</code>使其成为一个整数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">randomIntegerInRange</span> = (<span class="params">min, max</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (max - min + <span class="number">1</span>)) + min;</span><br><span class="line"></span><br><span class="line"><span class="title function_">randomIntegerInRange</span>(<span class="number">0</span>, <span class="number">5</span>); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<h2 id="randomNumberInRange"><a href="#randomNumberInRange" class="headerlink" title="randomNumberInRange"></a>randomNumberInRange</h2><p>返回指定范围内的一个随机数。<br>使用<code>Math.random()</code>生成一个随机值，使用乘法将其映射到所需的范围。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">randomNumberInRange</span> = (<span class="params">min, max</span>) =&gt; <span class="title class_">Math</span>.<span class="title function_">random</span>() * (max - min) + min;</span><br><span class="line"></span><br><span class="line"><span class="title function_">randomNumberInRange</span>(<span class="number">2</span>, <span class="number">10</span>); <span class="comment">// 6.0211363285087005</span></span><br></pre></td></tr></table></figure>
+<h2 id="round"><a href="#round" class="headerlink" title="round"></a>round</h2><p>将数字四舍五入到指定的小数位数。<br>使用<code>Math.round()</code>和模板字面量将数字四舍五入为指定的小数位数。 省略第二个参数<code>decimals</code>，数字将被四舍五入到一个整数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">round</span> = (<span class="params">n, decimals = <span class="number">0</span></span>) =&gt; <span class="title class_">Number</span>(<span class="string">`<span class="subst">$&#123;<span class="built_in">Math</span>.round(<span class="string">`<span class="subst">$&#123;n&#125;</span>e<span class="subst">$&#123;decimals&#125;</span>`</span>)&#125;</span>e-<span class="subst">$&#123;decimals&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">round</span>(<span class="number">1.005</span>, <span class="number">2</span>); <span class="comment">// 1.01</span></span><br></pre></td></tr></table></figure>
+<h2 id="sum"><a href="#sum" class="headerlink" title="sum"></a>sum</h2><p>返回两个或两个以上数字&#x2F;数字数组中元素之和。<br>使用<code>Array.reduce()</code>将每个值添加到累加器，并且累加器初始值为0。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">sum</span> = (<span class="params">...arr</span>) =&gt; [...arr].<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> acc + val, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>); <span class="comment">// 10</span></span><br><span class="line"><span class="title function_">sum</span>(...[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<h2 id="sumBy"><a href="#sumBy" class="headerlink" title="sumBy"></a>sumBy</h2><p>使用提供的函数将每个元素映射到一个值之后，然后返回数组的和。<br>使用<code>Array.map()</code>将每个元素映射到由<code>fn</code>返回的值，<code>Array.reduce()</code>将每个值添加到一个累加器，并且累加器初始值为0。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">sumBy</span> = (<span class="params">arr, fn</span>) =&gt;</span><br><span class="line">  arr.<span class="title function_">map</span>(<span class="keyword">typeof</span> fn === <span class="string">&#x27;function&#x27;</span> ? fn : <span class="function"><span class="params">val</span> =&gt;</span> val[fn]).<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, val</span>) =&gt;</span> acc + val, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">sumBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="function"><span class="params">o</span> =&gt;</span> o.<span class="property">n</span>); <span class="comment">// 20</span></span><br><span class="line"><span class="title function_">sumBy</span>([&#123; <span class="attr">n</span>: <span class="number">4</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">2</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">8</span> &#125;, &#123; <span class="attr">n</span>: <span class="number">6</span> &#125;], <span class="string">&#x27;n&#x27;</span>); <span class="comment">// 20</span></span><br></pre></td></tr></table></figure>
+<h2 id="toSafeInteger"><a href="#toSafeInteger" class="headerlink" title="toSafeInteger"></a>toSafeInteger</h2><p>将值转换为安全整数。<br>使用<code>Math.max()</code>和<code>Math.min()</code>来找到最接近的安全值。 使用<code>Math.round()</code>转换为一个整数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">toSafeInteger</span> = num =&gt;</span><br><span class="line">  <span class="title class_">Math</span>.<span class="title function_">round</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(num, <span class="title class_">Number</span>.<span class="property">MAX_SAFE_INTEGER</span>), <span class="title class_">Number</span>.<span class="property">MIN_SAFE_INTEGER</span>));</span><br><span class="line"></span><br><span class="line"><span class="title function_">toSafeInteger</span>(<span class="string">&#x27;3.2&#x27;</span>); <span class="comment">// 3</span></span><br><span class="line"><span class="title function_">toSafeInteger</span>(<span class="title class_">Infinity</span>); <span class="comment">// 9007199254740991</span></span><br></pre></td></tr></table></figure>
+<h1 id="Date"><a href="#Date" class="headerlink" title="Date"></a>Date</h1><h2 id="formatDuration"><a href="#formatDuration" class="headerlink" title="formatDuration"></a>formatDuration</h2><p>返回给定毫秒数的可读格式。<br>用适当的值来划分<code>ms</code>，以获得<code>day，hour，minute，second</code>和<code>millisecond</code>的适当值。通过<code>Array.filter()</code>使用<code>Object.entries()</code>只保留非零值。使用<code>Array.map()</code>为每个值创建字符串，并且适当复数化。使用<code>String.join(&#39;, &#39;)</code>将这些值组合成一个字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">formatDuration</span> = ms =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (ms &lt; <span class="number">0</span>) ms = -ms;</span><br><span class="line">  <span class="keyword">const</span> time = &#123;</span><br><span class="line">    <span class="attr">day</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(ms / <span class="number">86400000</span>),</span><br><span class="line">    <span class="attr">hour</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(ms / <span class="number">3600000</span>) % <span class="number">24</span>,</span><br><span class="line">    <span class="attr">minute</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(ms / <span class="number">60000</span>) % <span class="number">60</span>,</span><br><span class="line">    <span class="attr">second</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(ms / <span class="number">1000</span>) % <span class="number">60</span>,</span><br><span class="line">    <span class="attr">millisecond</span>: <span class="title class_">Math</span>.<span class="title function_">floor</span>(ms) % <span class="number">1000</span></span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(time)</span><br><span class="line">    .<span class="title function_">filter</span>(<span class="function"><span class="params">val</span> =&gt;</span> val[<span class="number">1</span>] !== <span class="number">0</span>)</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function">(<span class="params">[key, val]</span>) =&gt;</span> <span class="string">`<span class="subst">$&#123;val&#125;</span> <span class="subst">$&#123;key&#125;</span><span class="subst">$&#123;val !== <span class="number">1</span> ? <span class="string">&#x27;s&#x27;</span> : <span class="string">&#x27;&#x27;</span>&#125;</span>`</span>)</span><br><span class="line">    .<span class="title function_">join</span>(<span class="string">&#x27;, &#x27;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">formatDuration</span>(<span class="number">1001</span>); <span class="comment">// &#x27;1 second, 1 millisecond&#x27;</span></span><br><span class="line"><span class="title function_">formatDuration</span>(<span class="number">34325055574</span>); </span><br><span class="line"><span class="comment">// &#x27;397 days, 6 hours, 44 minutes, 15 seconds, 574 milliseconds&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="getColonTimeFromDate"><a href="#getColonTimeFromDate" class="headerlink" title="getColonTimeFromDate"></a>getColonTimeFromDate</h2><p>从日期对象返回格式为<code>hh:mm:ss</code>的字符串。<br>使用<code>date.prototype.toTimeString()</code>和<code>string.prototype.slice()</code>获取给定日期对象的<code>hh:mm:ss</code>部分。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getColonTimeFromDate</span> = date =&gt; date.<span class="title function_">toTimeString</span>().<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">getColonTimeFromDate</span>(<span class="keyword">new</span> <span class="title class_">Date</span>()); <span class="comment">// &quot;08:38:00&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="getDaysDiffBetweenDates"><a href="#getDaysDiffBetweenDates" class="headerlink" title="getDaysDiffBetweenDates"></a>getDaysDiffBetweenDates</h2><p>返回两个日期之间相差的天数。<br>计算<code>Date</code>对象之间的差异(以天为单位)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getDaysDiffBetweenDates</span> = (<span class="params">dateInitial, dateFinal</span>) =&gt;</span><br><span class="line">  (dateFinal - dateInitial) / (<span class="number">1000</span> * <span class="number">3600</span> * <span class="number">24</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">getDaysDiffBetweenDates</span>(<span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&#x27;2017-12-13&#x27;</span>), <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="string">&#x27;2017-12-22&#x27;</span>)); <span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<h2 id="isSameDate"><a href="#isSameDate" class="headerlink" title="isSameDate"></a>isSameDate</h2><p>判断两个日期是否相同</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isSameDate</span> = (<span class="params">dateA, dateB</span>) =&gt; dateA.<span class="title function_">toISOString</span>() === dateB.<span class="title function_">toISOString</span>();</span><br><span class="line"></span><br><span class="line"><span class="title function_">isSameDate</span>(<span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">20</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isBeforeDate"><a href="#isBeforeDate" class="headerlink" title="isBeforeDate"></a>isBeforeDate</h2><p>检查一个日期是否在另一个日期之前。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isBeforeDate</span> = (<span class="params">dateA, dateB</span>) =&gt; dateA &lt; dateB;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isBeforeDate</span>(<span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">21</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isAfterDate"><a href="#isAfterDate" class="headerlink" title="isAfterDate"></a>isAfterDate</h2><p>检查一个日期是否在另一个日期之后。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isAfterDate</span> = (<span class="params">dateA, dateB</span>) =&gt; dateA &gt; dateB;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isAfterDate</span>(<span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">21</span>), <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2010</span>, <span class="number">10</span>, <span class="number">20</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isWeekend"><a href="#isWeekend" class="headerlink" title="isWeekend"></a>isWeekend</h2><p>判断特定的日期是否是周六日</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isWeekend</span> = (<span class="params">t = <span class="keyword">new</span> <span class="built_in">Date</span>()</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> t.<span class="title function_">getDay</span>() % <span class="number">6</span> === <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isWeekend</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="isWeekday"><a href="#isWeekday" class="headerlink" title="isWeekday"></a>isWeekday</h2><p>判断是否是工作日</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isWeekday</span> = (<span class="params">t = <span class="keyword">new</span> <span class="built_in">Date</span>()</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> t.<span class="title function_">getDay</span>() % <span class="number">6</span> !== <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isWeekday</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="tomorrow"><a href="#tomorrow" class="headerlink" title="tomorrow"></a>tomorrow</h2><p>以字符串形式返回明天日期表示。<br>使用<code>new Date()</code>获取今天的日期，加上86400000秒（24小时），使用<code>Date.toISOString()</code>将<code>Date</code>对象转换为字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">tomorrow</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">  t.<span class="title function_">setDate</span>(t.<span class="title function_">getDate</span>() + <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> t.<span class="title function_">toISOString</span>().<span class="title function_">split</span>(<span class="string">&#x27;T&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">tomorrow</span>(); <span class="comment">// 2020-10-18</span></span><br></pre></td></tr></table></figure>
+<h2 id="yesterday"><a href="#yesterday" class="headerlink" title="yesterday"></a>yesterday</h2><p>返回昨天的日期。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">yesterday</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> t = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">  t.<span class="title function_">setDate</span>(t.<span class="title function_">getDate</span>() - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> t.<span class="title function_">toISOString</span>().<span class="title function_">split</span>(<span class="string">&#x27;T&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">yesterday</span>() <span class="comment">// // 2020-10-17</span></span><br></pre></td></tr></table></figure>
+<h2 id="maxDate"><a href="#maxDate" class="headerlink" title="maxDate"></a>maxDate</h2><p>返回给定日期中的最大日期。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">maxDate</span> = dates =&gt; <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="title class_">Math</span>.<span class="title function_">max</span>(...dates));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> array = [</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2017</span>, <span class="number">4</span>, <span class="number">13</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2018</span>, <span class="number">2</span>, <span class="number">12</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2016</span>, <span class="number">0</span>, <span class="number">10</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2016</span>, <span class="number">0</span>, <span class="number">9</span>)</span><br><span class="line">];</span><br><span class="line"><span class="title function_">maxDate</span>(array); <span class="comment">// 2018-03-11T22:00:00.000Z</span></span><br></pre></td></tr></table></figure>
+<h2 id="minDate"><a href="#minDate" class="headerlink" title="minDate"></a>minDate</h2><p>返回给定日期中的最小日期</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">minDate</span> = dates =&gt; <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="title class_">Math</span>.<span class="title function_">min</span>(...dates));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> array = [</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2017</span>, <span class="number">4</span>, <span class="number">13</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2018</span>, <span class="number">2</span>, <span class="number">12</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2016</span>, <span class="number">0</span>, <span class="number">10</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">Date</span>(<span class="number">2016</span>, <span class="number">0</span>, <span class="number">9</span>)</span><br><span class="line">];</span><br><span class="line"><span class="title function_">minDate</span>(array); <span class="comment">// 2016-01-08T22:00:00.000Z</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/10/02/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Math%E3%80%81Date)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/10/05/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Object%E3%80%81Function)/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS代码片段(Object、Function)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/09/09/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%20%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS防抖和节流</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

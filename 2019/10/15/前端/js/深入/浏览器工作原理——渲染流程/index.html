@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>浏览器工作原理——渲染流程 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/深入/浏览器工作原理——渲染流程"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  浏览器工作原理——渲染流程
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time datetime="2019-10-15T06:01:04.000Z" itemprop="datePublished">2019-10-15</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>通常，我们编写好 HTML、CSS、JavaScript 等文件，经过浏览器就会显示出漂亮的页面。</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img1.png" class="" title="渲染流程示意图">
+
+<p>从图中可以看出，左边输入的是 HTML、CSS、JavaScript 数据，这些数据经过中间渲染模块的处理，最终输出为屏幕上的像素。</p>
+<p>由于渲染机制过于复杂，所以渲染模块在执行过程中会被划分为很多子阶段，输入的 HTML 经过这些子阶段，最后输出像素。我们把这样的一个处理流程叫做渲染流水线，其大致流程如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img2.png" class="" title="渲染流水线示意图">
+
+<p>按照渲染的时间顺序，流水线可分为如下几个子阶段：构建 DOM 树、样式计算、布局阶段、分层、绘制、分块、光栅化和合成。在每个阶段的过程中，你应该重点关注以下三点内容：</p>
+<ul>
+<li>开始每个子阶段都有其输入的内容；</li>
+<li>然后每个子阶段有其处理过程；</li>
+<li>最终每个子阶段会生成输出内容。</li>
+</ul>
+<p>理解了这三部分内容，能让你更加清晰地理解每个子阶段。</p>
+<h1 id="构建-DOM-树"><a href="#构建-DOM-树" class="headerlink" title="构建 DOM 树"></a>构建 DOM 树</h1><p>为什么要构建 DOM 树呢？这是因为浏览器无法直接理解和使用 HTML，所以需要将 HTML 转换为浏览器能够理解的结构——DOM 树。</p>
+<p>DOM 树的构建过程：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img3.png" class="" title="DOM 树构建过程示意图">
+
+<p>从图中可以看出，构建 DOM 树的输入内容是一个非常简单的 HTML 文件，然后经由 HTML 解析器解析，最终输出树状结构的 DOM。</p>
+<p>为了更加直观地理解 DOM 树，你可以打开 Chrome 的开发者工具，选择<code>Console</code>标签来打开控制台，然后在控制台里面输入<code>document</code>后回车，这样你就能看到一个完整的 DOM 树结构。</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img4.png" class="" title="DOM 可视化">
+
+<p>图中的<code>document</code>就是 DOM 结构，DOM 和 HTML 内容几乎是一样的，但是和 HTML 不同的是，DOM 是保存在内存中的树状结构，可以通过 JavaScript 来查询或修改其内容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&quot;p&quot;</span>)[<span class="number">0</span>].<span class="property">innerText</span> = <span class="string">&quot;black&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这行代码的作用是把第一个<code>&lt;p&gt;</code>标签的内容修改为<code>black</code>。</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img5.png" class="" title="通过 JavaScript 修改 DOM">
+
+<p>从图中可以看出，在执行了一段修改第一个<code>&lt;p&gt;</code>标签的 JavaScript 代码后，DOM 的第一个<code>p</code>节点的内容成功被修改，同时页面中的内容也被修改了。</p>
+<p>现在我们已经生成 DOM 树了，但是 DOM 节点的样式我们依然不知道，要让 DOM 节点拥有正确的样式，这就需要样式计算了。</p>
+<h1 id="样式计算"><a href="#样式计算" class="headerlink" title="样式计算"></a>样式计算</h1><p>样式计算的目的是为了计算出 DOM 节点中每个元素的具体样式，这个阶段大体可分为三步来完成。</p>
+<h2 id="1-把-CSS-转换为浏览器能够理解的结构"><a href="#1-把-CSS-转换为浏览器能够理解的结构" class="headerlink" title="1. 把 CSS 转换为浏览器能够理解的结构"></a>1. 把 CSS 转换为浏览器能够理解的结构</h2><img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img6.png" class="" title="HTML 加载 CSS 的三种方式">
+
+<p>从图中可以看出，CSS 样式来源主要有三种：</p>
+<ul>
+<li>通过<code>link</code>引用的外部 CSS 文件</li>
+<li><code>&lt;style&gt;</code>标记内的 CSS</li>
+<li>元素的<code>style</code>属性内嵌的 CSS</li>
+</ul>
+<p>和 HTML 文件一样，浏览器也是无法直接理解这些纯文本的 CSS 样式，所以当渲染引擎接收到 CSS 文本时，会执行一个转换操作，将 CSS 文本转换为浏览器可以理解的结构——<code>styleSheets</code>。</p>
+<p>在 Chrome 控制台中中输入<code>document.styleSheets</code>，然后就看到如下图所示的结构：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img7.png" class="" title="styleSheets">
+
+<p>从图中可以看出，这个样式表包含了很多种样式，已经把那三种来源的样式都包含进去了。渲染引擎会把获取到的 CSS 文本全部转换为<code>styleSheets</code>结构中的数据，并且该结构同时具备了查询和修改功能，这会为后面的样式操作提供基础。</p>
+<h2 id="2-转换样式表中的属性值，使其标准化"><a href="#2-转换样式表中的属性值，使其标准化" class="headerlink" title="2. 转换样式表中的属性值，使其标准化"></a>2. 转换样式表中的属性值，使其标准化</h2><p>现在我们已经把现有的 CSS 文本转化为浏览器可以理解的结构了，那么接下来就要对其进行属性值的标准化操作。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">font-size</span>: <span class="number">2em</span> &#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">color</span>:blue;&#125;</span><br><span class="line"><span class="selector-tag">span</span>  &#123;<span class="attribute">display</span>: none&#125;</span><br><span class="line"><span class="selector-tag">div</span> &#123;<span class="attribute">font-weight</span>: bold&#125;</span><br><span class="line"><span class="selector-tag">div</span>  <span class="selector-tag">p</span> &#123;<span class="attribute">color</span>:green;&#125;</span><br><span class="line"><span class="selector-tag">div</span> &#123;<span class="attribute">color</span>:red; &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到上面的 CSS 文本中有很多属性值，如<code>2em、blue、bold</code>，这些类型数值不容易被渲染引擎理解，所以需要将所有值转换为渲染引擎容易理解的、标准化的计算值，这个过程就是属性值标准化。</p>
+<p>那标准化后的属性值是什么样子的？</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img8.png" class="" title="标准化属性值">
+
+<p>从图中可以看到，<code>2em</code>被解析成了<code>32px</code>，<code>red</code>被解析成了<code>rgb(255,0,0)</code>，<code>bold</code>被解析成了 700……</p>
+<h2 id="3-计算出-DOM-树中每个节点的具体样式"><a href="#3-计算出-DOM-树中每个节点的具体样式" class="headerlink" title="3. 计算出 DOM 树中每个节点的具体样式"></a>3. 计算出 DOM 树中每个节点的具体样式</h2><p>现在样式的属性已被标准化了，接下来就需要计算 DOM 树中每个节点的样式属性了，这就涉及到 CSS 的继承规则和层叠规则了。</p>
+<p>首先是 CSS 继承。CSS 继承就是每个 DOM 节点都包含有父节点的样式。我们可以结合具体例子，看下面这样一张样式表是如何应用到 DOM 节点上的。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123; <span class="attribute">font-size</span>: <span class="number">20px</span> &#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">color</span>:blue;&#125;</span><br><span class="line"><span class="selector-tag">span</span>  &#123;<span class="attribute">display</span>: none&#125;</span><br><span class="line"><span class="selector-tag">div</span> &#123;<span class="attribute">font-weight</span>: bold;<span class="attribute">color</span>:red&#125;</span><br><span class="line"><span class="selector-tag">div</span>  <span class="selector-tag">p</span> &#123;<span class="attribute">color</span>:green;&#125;</span><br></pre></td></tr></table></figure>
+<p>这张样式表最终应用到 DOM 节点的效果如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img9.png" class="" title="计算后 DOM 的样式">
+
+<p>从图中可以看出，所有子节点都继承了父节点样式。比如<code>body</code>节点的<code>font-size</code>属性是 20，那<code>body</code>节点下面的所有节点的<code>font-size</code>都等于 20。</p>
+<p>打开 Chrome 的<code>开发者工具</code>，选择第一个<code>element</code>标签，再选择<code>style</code>子标签，你会看到如下界面：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img10.png" class="" title="样式的继承过程界面">
+
+<p>这个界面展示的信息大致可描述为如下。<br>首先，可以选择要查看的元素的样式（位于图中的区域 2 中），在图中的第 1 个区域中点击对应的元素元素，就可以了下面的区域查看该元素的样式了。比如这里我们选择的元素是<code>&lt;p&gt;</code>标签，位于<code>html.body.div.</code>这个路径下面。</p>
+<p>其次，可以从样式来源（位于图中的区域 3 中）中查看样式的具体来源信息，看看是来源于样式文件，还是来源于<code>UserAgent</code>样式表。这里需要特别提下<code>UserAgent</code>样式，它是浏览器提供的一组默认样式，如果你不提供任何样式，默认使用的就是<code>UserAgent</code>样式。</p>
+<p>最后，可以通过区域 2 和区域 3 来查看样式继承的具体过程。</p>
+<p>以上就是 CSS 继承的一些特性，样式计算过程中，会根据 DOM 节点的继承关系来合理计算节点样式。</p>
+<p>样式计算过程中的第二个规则是样式层叠。层叠是 CSS 的一个基本特征，它是一个定义了如何合并来自多个源的属性值的算法。它在 CSS 处于核心地位，CSS 的全称“层叠样式表”正是强调了这一点。</p>
+<p>总之，样式计算阶段的目的是为了计算出 DOM 节点中每个元素的具体样式，在计算过程中需要遵守 CSS 的继承和层叠两个规则。这个阶段最终输出的内容是每个 DOM 节点的样式，并被保存在<code>ComputedStyle</code>的结构内。</p>
+<p>如果你想了解每个 DOM 元素最终的计算样式，可以打开 Chrome 的开发者工具，选择第一个<code>element</code>标签，然后再选择<code>Computed</code>子标签，如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img11.png" class="" title="DOM 元素最终计算的样式">
+
+<p>上图红色方框中显示了<code>html.body.div.p</code>标签的<code>ComputedStyle</code>的值。你想要查看哪个元素，点击左边对应的标签就可以了。</p>
+<h1 id="布局阶段"><a href="#布局阶段" class="headerlink" title="布局阶段"></a>布局阶段</h1><p>现在，我们有 DOM 树和 DOM 树中元素的样式，但这还不足以显示页面，因为我们还不知道 DOM 元素的几何位置信息。那么接下来就需要计算出 DOM 树中可见元素的几何位置，我们把这个计算过程叫做布局。</p>
+<p>Chrome 在布局阶段需要完成两个任务：创建布局树和布局计算。</p>
+<h2 id="1-创建布局树"><a href="#1-创建布局树" class="headerlink" title="1. 创建布局树"></a>1. 创建布局树</h2><p>你可能注意到了 DOM 树还含有很多不可见的元素，比如<code>head</code>标签，还有使用了<code>display:none</code>属性的元素。所以在显示之前，我们还要额外地构建一棵只包含可见元素布局树。</p>
+<p>我们结合下图来看看布局树的构造过程：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img12.png" class="" title="布局树构造过程示意图">
+
+<p>从上图可以看出，DOM 树中所有不可见的节点都没有包含到布局树中。</p>
+<p>为了构建布局树，浏览器大体上完成了下面这些工作：</p>
+<ul>
+<li>遍历 DOM 树中的所有可见节点，并把这些节点加到布局中；</li>
+<li>而不可见的节点会被布局树忽略掉，如<code>head</code>标签下面的全部内容，再比如<code>body.p.span</code>这个元素，因为它的属性包含<code>dispaly:none</code>，所以这个元素也没有被包进布局树。</li>
+</ul>
+<h2 id="2-布局计算"><a href="#2-布局计算" class="headerlink" title="2. 布局计算"></a>2. 布局计算</h2><p>现在我们有了一棵完整的布局树。那么接下来，就要计算布局树节点的坐标位置了。</p>
+<p>在执行布局操作的时候，会把布局运算的结果重新写回布局树中，所以布局树既是输入内容也是输出内容，这是布局阶段一个不合理的地方，因为在布局阶段并没有清晰地将输入内容和输出内容区分开来。针对这个问题，Chrome 团队正在重构布局代码，下一代布局系统叫<code>LayoutNG</code>，试图更清晰地分离输入和输出，从而让新设计的布局算法更加简单。</p>
+<h1 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h1><p>现在我们有了布局树，而且每个元素的具体位置信息都计算出来了，那么接下来是不是就要开始着手绘制页面了？答案依然是否定的。</p>
+<p>因为页面中有很多复杂的效果，如一些复杂的 3D 变换、页面滚动，或者使用<code>z-indexing</code>做<code>z</code>轴排序等，为了更加方便地实现这些效果，渲染引擎还需要为特定的节点生成专用的图层，并生成一棵对应的图层树（<code>LayerTree</code>）。正是这些图层叠加在一起构成了最终的页面图像。</p>
+<p>打开 Chrome 的开发者工具，选择<code>Layers</code>标签，就可以可视化页面的分层情况，如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img13.png" class="" title="渲染引擎给页面多图层示意图">
+
+<p>从上图可以看出，渲染引擎给页面分了很多图层，这些图层按照一定顺序叠加在一起，就形成了最终的页面。</p>
+<p>现在你知道了浏览器的页面实际上被分成了很多图层，这些图层叠加后合成了最终的页面。下面我们再来看看这些图层和布局树节点之间的关系，如图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img14.png" class="" title="布局树和图层树关系示意图">
+
+<p>通常情况下，并不是布局树的每个节点都包含一个图层，如果一个节点没有对应的层，那么这个节点就从属于父节点的图层。如上图中的<code>span</code>标签没有专属图层，那么它们就从属于它们的父节点图层。但不管怎样，最终每一个节点都会直接或者间接地从属于一个层。</p>
+<p>那么需要满足什么条件，渲染引擎才会为特定的节点创建新的层呢？通常满足下面两点中任意一点的元素就可以被提升为单独的一个图层。</p>
+<p>第一点，拥有层叠上下文属性的元素会被提升为单独的一层。</p>
+<p>页面是个二维平面，但是层叠上下文能够让 HTML 元素具有三维概念，这些 HTML 元素按照自身属性的优先级分布在垂直于这个二维平面的<code>z</code>轴上。你可以结合下图来直观感受下：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img15.png" class="" title="层叠上下文示意图">
+
+<p>从图中可以看出，明确定位属性的元素、定义透明属性的元素、使用 CSS 滤镜的元素等，都拥有层叠上下文属性。</p>
+<p>第二点，需要剪裁（<code>clip</code>）的地方也会被创建为图层。</p>
+<p>不过首先你需要了解什么是剪裁，结合下面的 HTML 代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">overflow</span>:auto;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">background</span>: gray;</span></span><br><span class="line"><span class="language-css">  &#125; </span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>所以元素有了层叠上下文的属性或者需要被剪裁，那么就会被提升成为单独一层，你可以参看下图：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>从上图我们可以看到，document 层上有 A 和 B 层，而 B 层之上又有两个图层。这些图层组织在一起也是一颗树状结构。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>图层树是基于布局树来创建的，为了找出哪些元素需要在哪些层中，渲染引擎会遍历布局树来创建层树（Update LayerTree）。<span class="tag">&lt;/<span class="name">p</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在这里我们把<code>div</code>的大小限定为<code>200 * 200</code>像素，而<code>div</code>里面的文字内容比较多，文字所显示的区域肯定会超出<code>200 * 200</code>的面积，这时候就产生了剪裁，渲染引擎会把裁剪文字内容的一部分用于显示在<code>div</code>区域，下图是运行时的执行结果：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img16.png" class="" title="层叠上下文剪裁执行结果示意图">
+
+<p>出现这种裁剪情况的时候，渲染引擎会为文字部分单独创建一个层，如果出现滚动条，滚动条也会被提升为单独的层。你可以参考下图：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img17.png" class="" title="被裁剪的内容会出现在单独一层">
+
+<p>所以说，元素有了层叠上下文的属性或者需要被剪裁，满足这任意一点，就会被提升成为单独一层。</p>
+<h1 id="图层绘制"><a href="#图层绘制" class="headerlink" title="图层绘制"></a>图层绘制</h1><p>在完成图层树的构建之后，渲染引擎会对图层树中的每个图层进行绘制，那么接下来我们看看渲染引擎是怎么实现图层绘制的？</p>
+<p>试想一下，如果给你一张纸，让你先把纸的背景涂成蓝色，然后在中间位置画一个红色的圆，最后再在圆上画个绿色三角形。你会怎么操作呢？</p>
+<p>通常，你会把你的绘制操作分解为三步：</p>
+<ul>
+<li>绘制蓝色背景；</li>
+<li>在中间绘制一个红色的圆；</li>
+<li>再在圆上绘制绿色三角形。</li>
+</ul>
+<p>渲染引擎实现图层的绘制与之类似，会把一个图层的绘制拆分成很多小的绘制指令，然后再把这些指令按照顺序组成一个待绘制列表，如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img18.png" class="" title="绘制列表">
+
+<p>从图中可以看出，绘制列表中的指令其实非常简单，就是让其执行一个简单的绘制操作，比如绘制粉色矩形或者黑色的线等。而绘制一个元素通常需要好几条绘制指令，因为每个元素的背景、前景、边框都需要单独的指令去绘制。所以在图层绘制阶段，输出的内容就是这些待绘制列表。</p>
+<p>你也可以打开开发者工具的<code>Layers</code>标签，选择<code>document</code>层，来实际体验下绘制列表，如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img19.png" class="" title="一个图层的绘制列表">
+
+<p>在该图中，区域 1 就是<code>document</code>的绘制列表，拖动区域 2 中的进度条可以重现列表的绘制过程。</p>
+<h1 id="栅格化（raster）操作"><a href="#栅格化（raster）操作" class="headerlink" title="栅格化（raster）操作"></a>栅格化（raster）操作</h1><p>绘制列表只是用来记录绘制顺序和绘制指令的列表，而实际上绘制操作是由渲染引擎中的合成线程来完成的。你可以结合下图来看下渲染主线程和合成线程之间的关系：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img20.png" class="" title="渲染进程中的合成线程和主线程">
+
+<p>如上图所示，当图层的绘制列表准备好之后，主线程会把该绘制列表提交给合成线程，那么接下来合成线程是怎么工作的呢？</p>
+<p>那我们得先来看看什么是视口，你可以参看下图：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img21.png" class="" title="视口">
+
+<p>通常一个页面可能很大，但是用户只能看到其中的一部分，我们把用户可以看到的这个部分叫做视口（<code>viewport</code>）。</p>
+<p>在有些情况下，有的图层可以很大，比如有的页面你使用滚动条要滚动好久才能滚动到底部，但是通过视口，用户只能看到页面的很小一部分，所以在这种情况下，要绘制出所有图层内容的话，就会产生太大的开销，而且也没有必要。</p>
+<p>基于这个原因，合成线程会将图层划分为图块，这些图块的大小通常是<code>256x256</code>或者<code>512x512</code>，如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img22.png" class="" title="图层被划分为图块示意图">
+
+<p>然后合成线程会按照视口附近的图块来优先生成位图，实际生成位图的操作是由栅格化来执行的。所谓栅格化，是指将图块转换为位图。而图块是栅格化执行的最小单位。渲染进程维护了一个栅格化的线程池，所有的图块栅格化都是在线程池内执行的，运行方式如下图所示：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img23.png" class="" title="合成线程提交图块给栅格化线程池">
+
+<p>通常，栅格化过程都会使用 GPU 来加速生成，使用 GPU 生成位图的过程叫快速栅格化，或者 GPU 栅格化，生成的位图被保存在 GPU 内存中。</p>
+<p>GPU 操作是运行在 GPU 进程中，如果栅格化操作使用了 GPU，那么最终生成位图的操作是在 GPU 中完成的，这就涉及到了跨进程操作。具体形式你可以参考下图：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img24.png" class="" title="GPU 栅格化">
+
+<p>从图中可以看出，渲染进程把生成图块的指令发送给 GPU，然后在 GPU 中执行生成图块的位图，并保存在 GPU 的内存中。</p>
+<h1 id="合成和显示"><a href="#合成和显示" class="headerlink" title="合成和显示"></a>合成和显示</h1><p>一旦所有图块都被光栅化，合成线程就会生成一个绘制图块的命令——<code>DrawQuad</code>，然后将该命令提交给浏览器进程。</p>
+<p>浏览器进程里面有一个叫<code>viz</code>的组件，用来接收合成线程发过来的<code>DrawQuad</code>命令，然后根据<code>DrawQuad</code>命令，将其页面内容绘制到内存中，最后再将内存显示在屏幕上。</p>
+<p>到这里，经过这一系列的阶段，编写好的 HTML、CSS、JavaScript 等文件，经过浏览器就会显示出漂亮的页面了。</p>
+<h1 id="渲染流水线大总结"><a href="#渲染流水线大总结" class="headerlink" title="渲染流水线大总结"></a>渲染流水线大总结</h1><p>我们现在已经分析完了整个渲染流程，从 HTML 到 DOM、样式计算、布局、图层、绘制、光栅化、合成和显示。用一张图来总结下这整个渲染流程：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img25.png" class="" title="完整的渲染流水线示意图">
+
+<p>结合上图，一个完整的渲染流程大致可总结为如下：</p>
+<ul>
+<li>渲染进程将 HTML 内容转换为能够读懂的DOM 树结构。</li>
+<li>渲染引擎将 CSS 样式表转化为浏览器可以理解的<code>styleSheets</code>，计算出 DOM 节点的样式。</li>
+<li>创建布局树，并计算元素的布局信息。</li>
+<li>对布局树进行分层，并生成分层树。</li>
+<li>为每个图层生成绘制列表，并将其提交到合成线程。</li>
+<li>合成线程将图层分成图块，并在光栅化线程池中将图块转换成位图。</li>
+<li>合成线程发送绘制图块命令<code>DrawQuad</code>给浏览器进程。</li>
+<li>浏览器进程根据<code>DrawQuad</code>消息生成页面，并显示到显示器上。</li>
+</ul>
+<h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><p>有了上面介绍渲染流水线的基础，我们再来看看三个和渲染流水线相关的概念——“重排”“重绘”和“合成”。</p>
+<h2 id="1-更新了元素的几何属性（重排）"><a href="#1-更新了元素的几何属性（重排）" class="headerlink" title="1. 更新了元素的几何属性（重排）"></a>1. 更新了元素的几何属性（重排）</h2><img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img26.png" class="" title="更新元素的几何属性">
+
+<p>从上图可以看出，如果你通过 JavaScript 或者 CSS 修改元素的几何位置属性，例如改变元素的宽度、高度等，那么浏览器会触发重新布局，解析之后的一系列子阶段，这个过程就叫重排。无疑，重排需要更新完整的渲染流水线，所以开销也是最大的。</p>
+<h2 id="2-更新元素的绘制属性（重绘）"><a href="#2-更新元素的绘制属性（重绘）" class="headerlink" title="2. 更新元素的绘制属性（重绘）"></a>2. 更新元素的绘制属性（重绘）</h2><p>比如通过 JavaScript 更改某些元素的背景颜色，渲染流水线会怎样调整呢？你可以参考下图：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img27.png" class="" title="更新元素背景">
+
+<p>从图中可以看出，如果修改了元素的背景颜色，那么布局阶段将不会被执行，因为并没有引起几何位置的变换，所以就直接进入了绘制阶段，然后执行之后的一系列子阶段，这个过程就叫重绘。相较于重排操作，重绘省去了布局和分层阶段，所以执行效率会比重排操作要高一些。</p>
+<h2 id="3-直接合成阶段"><a href="#3-直接合成阶段" class="headerlink" title="3. 直接合成阶段"></a>3. 直接合成阶段</h2><p>那如果你更改一个既不要布局也不要绘制的属性，会发生什么变化呢？渲染引擎将跳过布局和绘制，只执行后续的合成操作，我们把这个过程叫做合成。具体流程参考下图：</p>
+<img src="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/img28.png" class="" title="避开重排和重绘">
+
+<p>在上图中，我们使用了 CSS 的<code>transform</code>来实现动画效果，这可以避开重排和重绘阶段，直接在非主线程上执行合成动画操作。这样的效率是最高的，因为是在非主线程上合成，并没有占用主线程的资源，另外也避开了布局和绘制两个子阶段，所以相对于重绘和重排，合成能大大提升绘制效率。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/" rel="tag">浏览器工作原理与实践</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/10/15/vue/vue%20router%E8%BF%9B%E9%98%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            vue router进阶
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/10/14/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E5%AF%BC%E8%88%AA%E6%B5%81%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">浏览器工作原理——导航流程</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

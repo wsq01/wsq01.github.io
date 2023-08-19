@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Java 数组 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/基础/Java数组"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java 数组
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/11/java/%E5%9F%BA%E7%A1%80/Java%E6%95%B0%E7%BB%84/" class="article-date">
+  <time datetime="2020-09-11T03:13:52.000Z" itemprop="datePublished">2020-09-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="一维数组"><a href="#一维数组" class="headerlink" title="一维数组"></a>一维数组</h1><p>当数组中每个元素都只带有一个下标时，这种数组就是“一维数组”。一维数组实质上是一组相同类型数据的线性集合，是数组中最简单的一种数组。</p>
+<p>数组是引用数据类型，引用数据类型在使用之前一定要做两件事情：声明和初始化。</p>
+<h2 id="创建一维数组"><a href="#创建一维数组" class="headerlink" title="创建一维数组"></a>创建一维数组</h2><p>为了在程序中使用一个数组，必须声明一个引用该数组的变量，并指明整个变量可以引用的数组类型。声明一维数组的语法格式为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type[] arrayName;    <span class="comment">// 数据类型[] 数组名;</span></span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line">type arrayName[];    <span class="comment">// 数据类型 数组名[];</span></span><br></pre></td></tr></table></figure>
+<p>Java 更推荐采用第一种声明格式，因为第一种格式不仅具有更好的语意，而且具有更好的可读性。</p>
+<p>以上两种格式都可以声明一个数组，其中的数据类型既可以是基本数据类型，也可以是引用数据类型。数组名可以是任意合法的变量名。声明数组就是要告诉计算机该数组中数据的类型是什么。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] score;    <span class="comment">// 存储学生的成绩，类型为整型</span></span><br><span class="line"><span class="type">double</span>[] price;    <span class="comment">// 存储商品的价格，类型为浮点型</span></span><br><span class="line">String[] name;    <span class="comment">// 存储商品名称，类型为字符串型</span></span><br></pre></td></tr></table></figure>
+<p>在声明数组时不需要规定数组的长度：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int score[10];    // 这是错误的</span><br></pre></td></tr></table></figure>
+<h2 id="分配空间"><a href="#分配空间" class="headerlink" title="分配空间"></a>分配空间</h2><p>声明了数组，只是得到了一个存放数组的变量，并没有为数组元素分配内存空间，不能使用。因此要为数组分配内存空间，这样数组的每一个元素才有一个空间进行存储。</p>
+<p>简单地说，分配空间就是要告诉计算机在内存中为它分配几个连续的位置来存储数据。可以使用<code>new</code>关键字来给数组分配空间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[size];    <span class="comment">// 数组名 = new 数据类型[数组长度];</span></span><br></pre></td></tr></table></figure>
+<p>其中，数组长度就是数组中能存放的元素个数，显然应该为大于 0 的整数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">score = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">10</span>];</span><br><span class="line">price = <span class="keyword">new</span> <span class="title class_">double</span>[<span class="number">30</span>];</span><br><span class="line">name = <span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">20</span>];</span><br></pre></td></tr></table></figure>
+<p>这里的<code>score</code>是已经声明过的<code>int[]</code>类型的变量，当然也可以在声明数组时就给它分配空间：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type[] arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[size];    <span class="comment">// 数据类型[] 数组名 = new 数据类型[数组长度];</span></span><br></pre></td></tr></table></figure>
+<p>例如，声明并分配一个长度为 5 的<code>int</code>类型数组<code>arr</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] arr = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+<p>执行后<code>arr</code>数组在内存中的格式如图所示。</p>
+<img src="/2020/09/11/java/%E5%9F%BA%E7%A1%80/Java%E6%95%B0%E7%BB%84/1.jpg" class="" title="一维数组的内存格式">
+
+<blockquote>
+<p>注意：一旦声明了数组的大小，就不能再修改。这里的数组长度也是必需的，不能少。</p>
+</blockquote>
+<p>尽管数组可以存储一组基本数据类型的元素，但是数组整体属于引用数据类型。当声明一个数组变量时，其实是创建了一个类型为“数据类型<code>[]</code>”（如<code>int[]、double[]、String[]</code>）的数组对象，它具有的方法和属性：</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clone()</td>
+<td align="center">Object</td>
+</tr>
+<tr>
+<td align="center">equals(Object obj)</td>
+<td align="center">boolean</td>
+</tr>
+<tr>
+<td align="center">getClass()</td>
+<td align="center">Class&lt;?&gt;</td>
+</tr>
+<tr>
+<td align="center">hashCode()</td>
+<td align="center">int</td>
+</tr>
+<tr>
+<td align="center">notify()</td>
+<td align="center">void</td>
+</tr>
+<tr>
+<td align="center">notify All()</td>
+<td align="center">void</td>
+</tr>
+<tr>
+<td align="center">toString()</td>
+<td align="center">String</td>
+</tr>
+<tr>
+<td align="center">wait()</td>
+<td align="center">void</td>
+</tr>
+<tr>
+<td align="center">wait(long timeout)</td>
+<td align="center">void</td>
+</tr>
+<tr>
+<td align="center">wait(long timeout,int nanos)</td>
+<td align="center">void</td>
+</tr>
+<tr>
+<td align="center">length</td>
+<td align="center">int</td>
+</tr>
+</tbody></table>
+<h2 id="初始化一维数组"><a href="#初始化一维数组" class="headerlink" title="初始化一维数组"></a>初始化一维数组</h2><p>Java 语言中数组必须先初始化，然后才可以使用。所谓初始化，就是为数组的数组元素分配内存空间，并为每个数组元素赋初始值。</p>
+<p>能不能只分配内存空间，不赋初始值呢？</p>
+<p>不行，一旦为数组的每个数组元素分配了内存空间，每个内存空间里存储的内容就是该数组元素的值，即使这个内存空间存储的内容为空，这个空也是一个值（<code>null</code>）。不管以哪种方式来初始化数组，只要为数组元素分配了内存空间，数组元素就具有了初始值。初始值的获得有两种形式，一种由系统自动分配，另一种由程序员指定。</p>
+<p>数组在初始化数组的同时，可以指定数组的大小，也可以分别初始化数组中的每一个元素。初始化数组有以下 3 种方式。</p>
+<h3 id="1-使用-new-指定数组大小后进行初始化"><a href="#1-使用-new-指定数组大小后进行初始化" class="headerlink" title="1.使用 new 指定数组大小后进行初始化"></a>1.使用 new 指定数组大小后进行初始化</h3><p>使用<code>new</code>关键字创建数组，在创建时指定数组的大小。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type[] arrayName = <span class="keyword">new</span> <span class="title class_">int</span>[size];</span><br></pre></td></tr></table></figure>
+<p>创建数组之后，元素的值并不确定，需要为每一个数组的元素进行赋值，其下标从 0 开始。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">5</span>];</span><br><span class="line">number[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">number[<span class="number">1</span>] = <span class="number">2</span>;</span><br><span class="line">number[<span class="number">2</span>] = <span class="number">3</span>;</span><br><span class="line">number[<span class="number">3</span>] = <span class="number">5</span>;</span><br><span class="line">number[<span class="number">4</span>] = <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+<p>如果只指定了数组的长度，那么系统将负责为这些数组元素分配初始值。指定初始值时，系统按如下规则分配初始值。</p>
+<ul>
+<li>数组元素的类型是基本类型中的整数类型（<code>byte、short、int</code>和<code>long</code>），则数组元素的值是 0。</li>
+<li>数组元素的类型是基本类型中的浮点类型（<code>float、double</code>），则数组元素的值是 0.0。</li>
+<li>数组元素的类型是基本类型中的字符类型（<code>char</code>），则数组元素的值是<code>\u0000</code>。</li>
+<li>数组元素的类型是基本类型中的布尔类型（<code>boolean</code>），则数组元素的值是<code>false</code>。</li>
+<li>数组元素的类型是引用类型（类、接口和数组），则数组元素的值是<code>null</code>。</li>
+</ul>
+<h3 id="2-使用-new-指定数组元素的值"><a href="#2-使用-new-指定数组元素的值" class="headerlink" title="2.使用 new 指定数组元素的值"></a>2.使用 new 指定数组元素的值</h3><p>使用上述方式初始化数组时，只有在为元素赋值时才确定值。可以不使用上述方式，而是在初始化时就已经确定值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type[] arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[]&#123;值 <span class="number">1</span>,值 <span class="number">2</span>,值 <span class="number">3</span>,值 <span class="number">4</span>,• • •,值 n&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意：不要在进行数组初始化时，既指定数组的长度，也为每个数组元素分配初始值，这样会造成代码错误。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = <span class="keyword">new</span> <span class="title class_">int</span> [<span class="number">5</span>] &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,​<span class="number">5</span>&#125;; <span class="comment">// 错误</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-直接指定数组元素的值"><a href="#3-直接指定数组元素的值" class="headerlink" title="3.直接指定数组元素的值"></a>3.直接指定数组元素的值</h3><p>在上述两种方式的语法中，<code>type</code>可以省略，如果已经声明数组变量，那么直接使用这两种方式进行初始化。如果不想使用上述两种方式，那么可以不使用<code>new</code>直接指定数组元素的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type[] arrayName = &#123;值 <span class="number">1</span>,值 <span class="number">2</span>,值 <span class="number">3</span>,...,值 n&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>使用这种方式时，数组的声明和初始化操作要同步，即不能省略数组变量的类型。如下的代码就是错误的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number;</span><br><span class="line">number = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="获取单个元素"><a href="#获取单个元素" class="headerlink" title="获取单个元素"></a>获取单个元素</h2><p>获取单个元素是指获取数组中的一个元素。获取单个元素的方法非常简单，指定元素所在数组的下标即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arrayName[index];</span><br></pre></td></tr></table></figure>
+<p>其中，<code>arrayName</code>表示数组变量，<code>index</code>表示下标，下标为 0 表示获取第一个元素，下标为<code>array.length-1</code>表示获取最后一个元素。当指定的下标值超出数组的总长度时，会拋出<code>ArraylndexOutOfBoundsException</code>异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>&#125;;</span><br><span class="line">System.out.println(<span class="string">&quot;获取第一个元素：&quot;</span>+number[<span class="number">0</span>]);</span><br><span class="line">System.out.println(<span class="string">&quot;获取最后一个元素：&quot;</span>+number[number.length-<span class="number">1</span>]);</span><br><span class="line">System.out.println(<span class="string">&quot;获取第6个元素：&quot;</span>+number[<span class="number">5</span>]);</span><br><span class="line"><span class="comment">//输出结果：</span></span><br><span class="line"><span class="comment">//获取第一个元素：1</span></span><br><span class="line"><span class="comment">//获取最后一个元素：8</span></span><br><span class="line"><span class="comment">//java.lang.ArrayIndexOutOfBoundsException: 5</span></span><br></pre></td></tr></table></figure>
+<h2 id="获取全部元素"><a href="#获取全部元素" class="headerlink" title="获取全部元素"></a>获取全部元素</h2><p>利用<code>for</code>循环语句遍历<code>number</code>数组中的全部元素，并将元素的值输出。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] number = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">8</span>&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;number.length;i++) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;第&quot;</span>+(i+<span class="number">1</span>)+<span class="string">&quot;个元素的值是：&quot;</span>+number[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了使用<code>for</code>语句，还可以使用<code>foreach</code>遍历数组中的元素，并将元素的值输出。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> val:number) &#123;</span><br><span class="line">  System.out.print(<span class="string">&quot;元素的值依次是：&quot;</span>+val+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="二维数组"><a href="#二维数组" class="headerlink" title="二维数组"></a>二维数组</h1><h2 id="创建二维数组"><a href="#创建二维数组" class="headerlink" title="创建二维数组"></a>创建二维数组</h2><p>在 Java 中二维数组被看作数组的数组，即二维数组为一个特殊的一维数组，其每个元素又是一个一维数组。Java 并不直接支持二维数组，但是允许定义数组元素是一维数组的一维数组，以达到同样的效果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type arrayName[][];    <span class="comment">// 数据类型 数组名[][];</span></span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line">type[][] arrayName;    <span class="comment">// 数据类型[][] 数组名;</span></span><br></pre></td></tr></table></figure>
+<p>其中，<code>type</code>表示二维数组的类型，<code>arrayName</code>表示数组名称，第一个中括号表示行，第二个中括号表示列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[][] age;</span><br><span class="line"><span class="type">char</span>[][] sex;</span><br></pre></td></tr></table></figure>
+<h2 id="初始化二维数组"><a href="#初始化二维数组" class="headerlink" title="初始化二维数组"></a>初始化二维数组</h2><p>二维数组可以初始化，和一维数组一样，可以通过 3 种方式来指定元素的初始值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type[][] arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[][]&#123;值 <span class="number">1</span>,值 <span class="number">2</span>,值 <span class="number">3</span>,…,值 n&#125;;    <span class="comment">// 在定义时初始化</span></span><br><span class="line">type[][] arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[size1][size2];    <span class="comment">// 给定空间，在赋值</span></span><br><span class="line">type[][] arrayName = <span class="keyword">new</span> <span class="title class_">type</span>[size][];    <span class="comment">// 数组第二维长度为空，可变化</span></span><br></pre></td></tr></table></figure>
+<p>使用第一种方式声明<code>int</code>类型的二维数组，然后初始化该二维数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[][] temp = <span class="keyword">new</span> <span class="title class_">int</span>[][]&#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">3</span>,<span class="number">4</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<p>上述代码创建了一个二行二列的二维数组<code>temp</code>，并对数组中的元素进行了初始化。</p>
+<img src="/2020/09/11/java/%E5%9F%BA%E7%A1%80/Java%E6%95%B0%E7%BB%84/2.jpg" class="" title="二维数组内存结构">
+
+<p>使用第二种方式声明<code>int</code>类型的二维数组，然后初始化该二维数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[][] temp = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>][<span class="number">2</span>];</span><br></pre></td></tr></table></figure>
+<p>使用第三种方式声明<code>int</code>类型的二维数组，并且初始化数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[][] temp = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>][];</span><br></pre></td></tr></table></figure>
+<h2 id="获取单个元素-1"><a href="#获取单个元素-1" class="headerlink" title="获取单个元素"></a>获取单个元素</h2><p>当需要获取二维数组中元素的值时，也可以使用下标来表示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arrayName[i-1][j-1];</span><br></pre></td></tr></table></figure>
+<p>其中，<code>arrayName</code>表示数组名称，<code>i</code>表示数组的行数，<code>j</code>表示数组的列数。例如，要获取第二行第二列元素的值，应该使用<code>temp[1][1]</code>来表示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">  <span class="type">double</span>[][] class_score = &#123;&#123;<span class="number">10.0</span>,<span class="number">99</span>,<span class="number">99</span>&#125;,&#123;<span class="number">100</span>,<span class="number">98</span>,<span class="number">97</span>&#125;,&#123;<span class="number">100</span>,<span class="number">100</span>,<span class="number">99.5</span>&#125;,&#123;<span class="number">99.5</span>,<span class="number">99</span>,<span class="number">98.5</span>&#125;&#125;;</span><br><span class="line">  System.out.println(<span class="string">&quot;第二行第二列元素的值：&quot;</span>+class_score[<span class="number">1</span>][<span class="number">1</span>]);</span><br><span class="line">  System.out.println(<span class="string">&quot;第四行第一列元素的值：&quot;</span>+class_score[<span class="number">3</span>][<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出结果如下：</span></span><br><span class="line">第二行第二列元素的值：<span class="number">98.0</span></span><br><span class="line">第四行第一列元素的值：<span class="number">99.5</span></span><br></pre></td></tr></table></figure>
+<h2 id="获取全部元素-1"><a href="#获取全部元素-1" class="headerlink" title="获取全部元素"></a>获取全部元素</h2><p>在一维数组中直接使用数组的<code>length</code>属性获取数组元素的个数。而在二维数组中，直接使用<code>length</code>属性获取的是数组的行数，在指定的索引后加上<code>length</code>（如<code>array[0].length</code>）表示的是该行拥有多少个元素，即列数。</p>
+<p>如果要获取二维数组中的全部元素，最简单、最常用的办法就是使用<code>for</code>语句。在一维数组全部输出时，我们使用一层<code>for</code>循环，而二维数组要想全部输出，则使用嵌套<code>for</code>循环（2 层<code>for</code>循环）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">  <span class="type">double</span>[][] class_score = &#123; &#123; <span class="number">100</span>, <span class="number">99</span>, <span class="number">99</span> &#125;, &#123; <span class="number">100</span>, <span class="number">98</span>, <span class="number">97</span> &#125;, &#123; <span class="number">100</span>, <span class="number">100</span>, <span class="number">99.5</span> &#125;, &#123; <span class="number">99.5</span>, <span class="number">99</span>, <span class="number">98.5</span> &#125; &#125;;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; class_score.length; i++) &#123; <span class="comment">// 遍历行</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; class_score[i].length; j++) &#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;class_score[&quot;</span> + i + <span class="string">&quot;][&quot;</span> + j + <span class="string">&quot;]=&quot;</span> + class_score[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码使用嵌套<code>for</code>循环语句输出二维数组。在输出二维数组时，第一个<code>for</code>循环语句表示以行进行循环，第二个<code>for</code>循环语句表示以列进行循环，这样就实现了获取二维数组中每个元素的值的功能。</p>
+<p><code>for each</code>循环语句不能自动处理二维数组的每一个元素。它是按照行，也就是一维数组处理的。要想访问二维教组<code>a</code>的所有元素， 需要使用两个嵌套的循环：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">double</span>[] row : a) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">double</span> value : row) &#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">double</span>[][] class_score = &#123; &#123; <span class="number">100</span>, <span class="number">99</span>, <span class="number">99</span> &#125;, &#123; <span class="number">100</span>, <span class="number">98</span>, <span class="number">97</span> &#125;, &#123; <span class="number">100</span>, <span class="number">100</span>, <span class="number">99.5</span> &#125;, &#123; <span class="number">99.5</span>, <span class="number">99</span>, <span class="number">98.5</span> &#125; &#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">double</span>[] row : class_score) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">double</span> value : row) &#123;</span><br><span class="line">            System.out.println(value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>提示：要想快速地打印一个二维数组的数据元素列表，可以调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Arrays.deepToString(arrayName));</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(Arrays.deepToString(class_score));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出格式为：</span></span><br><span class="line"><span class="comment">// [[100.0, 99.0, 99.0], [100.0, 98.0, 97.0], [100.0, 100.0, 99.5], [99.5, 99.0, 98.5]]</span></span><br></pre></td></tr></table></figure>
+<h1 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h1><p>除了一维数组和二维数组外，Java 中还支持更多维的数组，如三维数组、四维数组和五维数组等，它们都属于多维数组。想要提高数组的维数，只要在声明数组时将索引与中括号再加一组即可，所以三维数组的声明为<code>int score[][][]</code>，而四维数组为<code>int score[][][][]</code>，以此类推。</p>
+<p>三维数组有三个层次，可以将三维数组理解为一个一维数组，其内容的每个元素都是二维数组。依此类推，可以获取任意维数的数组。</p>
+<h1 id="不规则数组"><a href="#不规则数组" class="headerlink" title="不规则数组"></a>不规则数组</h1><p>规则的 4×3 二维数组有 12 个元素，而不规则数组就不一定了。如下代码静态初始化了一个不规则数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> intArray[][] = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;, &#123;<span class="number">11</span>&#125;, &#123;<span class="number">21</span>,<span class="number">22</span>,<span class="number">23</span>&#125;, &#123;<span class="number">31</span>,<span class="number">32</span>,<span class="number">33</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<p>动态初始化不规则数组比较麻烦，不能使用<code>new int[4][3]</code>语句，而是先初始化高维数组，然后再分别逐个初始化低维数组。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> intArray[][] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">4</span>][]; <span class="comment">//先初始化高维数组为4</span></span><br><span class="line"><span class="comment">// 逐一初始化低维数组</span></span><br><span class="line">intArray[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>];</span><br><span class="line">intArray[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">1</span>];</span><br><span class="line">intArray[<span class="number">2</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];</span><br><span class="line">intArray[<span class="number">3</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+<p>提示：下标越界异常（<code>ArrayIndexOutOfBoundsException</code>）是试图访问不存在的下标时引发的。例如一个一维<code>array</code>数组如果有 10 个元素，那么表达式<code>array[10]</code>就会发生下标越界异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> intArray[][] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">4</span>][]; <span class="comment">// 先初始化高维数组为4</span></span><br><span class="line">        <span class="comment">// 逐一初始化低维数组</span></span><br><span class="line">        intArray[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>];</span><br><span class="line">        intArray[<span class="number">1</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">1</span>];</span><br><span class="line">        intArray[<span class="number">2</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];</span><br><span class="line">        intArray[<span class="number">3</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];</span><br><span class="line">        <span class="comment">// for循环遍历</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; intArray.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; intArray[i].length; j++) &#123;</span><br><span class="line">                intArray[i][j] = i + j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// for-each循环遍历</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span>[] row : intArray) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> column : row) &#123;</span><br><span class="line">                System.out.print(column);</span><br><span class="line">                <span class="comment">// 在元素之间添加制表符，</span></span><br><span class="line">                System.out.print(<span class="string">&#x27;\t&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 一行元素打印完成后换行</span></span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(intArray[<span class="number">0</span>][<span class="number">2</span>]); <span class="comment">// 发生运行期错误</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/11/java/%E5%9F%BA%E7%A1%80/Java%E6%95%B0%E7%BB%84/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/13/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E4%BD%BF%E7%94%A8%E5%B9%BF%E6%92%AD%E4%BF%A1%E9%81%93/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            数据链路层——使用广播信道
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E2%80%94%E2%80%94%E7%82%B9%E5%AF%B9%E7%82%B9%E5%8D%8F%E8%AE%AEPPP/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数据链路层——点对点协议PPP</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

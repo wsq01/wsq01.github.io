@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Linux文件和目录管理 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Linux/文件和目录管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Linux文件和目录管理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/08/15/Linux/%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2021-08-15T08:24:15.000Z" itemprop="datePublished">2021-08-15</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">34 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="文件系统的层次结构"><a href="#文件系统的层次结构" class="headerlink" title="文件系统的层次结构"></a>文件系统的层次结构</h1><p>在 Linux 操作系统中，所有的文件和目录都被组织成以一个根节点“&#x2F;”开始的倒置的树状结构。</p>
+<img src="/2021/08/15/Linux/%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86/1.gif" class="" title="Linux 系统文件和目录组织示意图">
+
+<p>文件系统的最顶层是由根目录开始的，系统使用“&#x2F;”来表示根目录，在根目录之下的既可以是目录，也可以是文件，而每一个目录中又可以包含（子）目录或文件。如此反复就可以构成一个庞大的文件系统。</p>
+<h1 id="命令基本格式"><a href="#命令基本格式" class="headerlink" title="命令基本格式"></a>命令基本格式</h1><h2 id="命令提示符"><a href="#命令提示符" class="headerlink" title="命令提示符"></a>命令提示符</h2><p>登录系统后，第一眼看到的内容是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+<p>这就是 Linux 系统的命令提示符。那么，这个提示符的含义是什么呢？</p>
+<ul>
+<li><code>[]</code>：这是提示符的分隔符号，没有特殊含义。</li>
+<li><code>root</code>：显示的是当前的登录用户。</li>
+<li><code>@</code>：分隔符号，没有特殊含义。</li>
+<li><code>localhost</code>：当前系统的简写主机名（完整主机名是<code>localhost.localdomain</code>）。</li>
+<li><code>~</code>：代表用户当前所在的目录，此例中用户当前所在的目录是家目录。</li>
+<li><code>#</code>：命令提示符，Linux 用这个符号标识登录的用户权限等级。如果是超级用户，提示符就是 #；如果是普通用户，提示符就是<code>$</code>。</li>
+</ul>
+<p>Linux 系统是纯字符界面，用户登录后，要有一个初始登录的位置，这个初始登录位置就称为用户的主目录：</p>
+<ul>
+<li>超级用户的主目录：<code>/root</code>。</li>
+<li>普通用户的主目录：<code>/home/用户名</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cd /usr/local</span><br><span class="line">[root@localhost local]#</span><br></pre></td></tr></table></figure>
+<p>如果切换用户所在目录，那么命令提示符中的会变成用户当前所在目录的最后一个目录（不显示完整的所在目录<code>/usr/ local</code>，只显示最后一个目录<code>local</code>)。</p>
+<h2 id="命令的基本格式"><a href="#命令的基本格式" class="headerlink" title="命令的基本格式"></a>命令的基本格式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# 命令[选项][参数]</span><br></pre></td></tr></table></figure>
+<p>命令格式中的<code>[]</code>代表可选项，也就是有些命令可以不写选项或参数，也能执行。</p>
+<h3 id="1-选项的作用"><a href="#1-选项的作用" class="headerlink" title="1.选项的作用"></a>1.选项的作用</h3><p>Linux 的选项又分为短格式选项（<code>-l</code>）和长格式选项（<code>--all</code>）。短格式选项是英文的简写，用一个减号调用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls -l</span></span><br></pre></td></tr></table></figure>
+<p>而长格式选项是英文完整单词，一般用两个减号调用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls --all</span></span><br></pre></td></tr></table></figure>
+<p>一般情况下，短格式选项是长格式选项的缩写，也就是一个短格式选项会有对应的长格式选项。当然也有例外，比如<code>ls</code>命令的短格式选项<code>-l</code>就没有对应的长格式选项。</p>
+<h3 id="2-参数的作用"><a href="#2-参数的作用" class="headerlink" title="2.参数的作用"></a>2.参数的作用</h3><p>参数是命令的操作对象，一般文件、目录、用户和进程等可以作为参数被命令操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls -l anaconda-ks.cfg</span></span><br><span class="line">-rw-------.1 root root 1207 1 月 14 18:18 anaconda-ks.cfg</span><br></pre></td></tr></table></figure>
+<p>命令一般都需要加入参数，用于指定命令操作的对象是谁。如果可以省略参数，则一般都有默认参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls</span></span><br><span class="line">anaconda-ks.cfg install.log install.log.syslog</span><br></pre></td></tr></table></figure>
+<p>这个<code>ls</code>命令后面没有指定参数，默认参数是当前所在位置，所以会显示当前目录下的文件名。</p>
+<p>总结一下：命令的选项用于调整命令功能，而命令的参数是这个命令的操作对象。</p>
+<h1 id="cd命令：切换目录"><a href="#cd命令：切换目录" class="headerlink" title="cd命令：切换目录"></a>cd命令：切换目录</h1><p><code>cd</code>命令，是<code>Change Directory</code>的缩写，用来切换工作目录。</p>
+<p>Linux 命令按照来源方式，可分为两种，分别是 Shell 内置命令和外部命令。内置命令是没有执行文件的；而外部命令是由程序员单独开发的，所以会有命令的执行文件。<code>cd</code>命令是一个 Shell 内置命令，所以<code>cd</code>命令没有执行文件所在路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd [相对路径或绝对路径]</span></span><br></pre></td></tr></table></figure>
+<p><code>cd</code>命令后面可以跟一些特殊符号，表达固定的含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">特殊符号</th>
+<th align="center">作 用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">~</td>
+<td align="center">代表当前登录用户的主目录</td>
+</tr>
+<tr>
+<td align="center">~用户名</td>
+<td align="center">表示切换至指定用户的主目录</td>
+</tr>
+<tr>
+<td align="center">-</td>
+<td align="center">代表上次所在目录</td>
+</tr>
+<tr>
+<td align="center">.</td>
+<td align="center">代表当前目录</td>
+</tr>
+<tr>
+<td align="center">..</td>
+<td align="center">代表上级目录</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost vbird]<span class="comment"># cd ~</span></span><br><span class="line"><span class="comment">#表示回到自己的主目录，对于 root 用户，其主目录为 /root</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd</span></span><br><span class="line"><span class="comment">#没有加上任何路径，也代表回到当前登录用户的主目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd ~vbird</span></span><br><span class="line"><span class="comment">#代表切换到 vbird 这个用户的主目录，亦即 /home/vbird</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd ..</span></span><br><span class="line"><span class="comment">#表示切换到目前的上一级目录，亦即是 /root 的上一级目录的意思；</span></span><br><span class="line">[root@localhost /]<span class="comment"># cd -</span></span><br><span class="line"><span class="comment">#表示回到刚刚的那个目录</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是，在 Linux 系统中，根目录确实存在<code>.</code>（当前目录）以及<code>..</code>（当前目录的父目录）两个目录，但由于根目录是最顶级目录，因此根目录的<code>..</code>和<code>.</code>的属性和权限完全一致，也就是说，根目录的父目录是自身。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h3 id="1-cd-的用法"><a href="#1-cd-的用法" class="headerlink" title="1. cd - 的用法"></a>1. cd - 的用法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/src</span></span><br><span class="line"><span class="comment">#进入/usr/local/src目录</span></span><br><span class="line">[root@localhost src]<span class="comment"># cd -</span></span><br><span class="line">/root</span><br><span class="line">[root@localhost ~]<span class="comment">#</span></span><br><span class="line"><span class="comment">#&quot;cd -&quot;命令回到进入 src 目录之前的主目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd -</span></span><br><span class="line">/usr/local/src</span><br><span class="line">[root@localhost src]<span class="comment">#</span></span><br><span class="line"><span class="comment">#再执行一遍&quot;cd -&quot;命令，又回到了 /usr/local/src 目录</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-cd-和-cd-的用法"><a href="#2-cd-和-cd-的用法" class="headerlink" title="2. cd . 和 cd .. 的用法"></a>2. cd . 和 cd .. 的用法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /usr/local/src</span></span><br><span class="line"><span class="comment">#进入测试目录</span></span><br><span class="line">[root@localhost src]<span class="comment"># cd ..</span></span><br><span class="line"><span class="comment">#进入上级目录</span></span><br><span class="line">[root@localhost <span class="built_in">local</span>]<span class="comment"># pwd</span></span><br><span class="line">/usr/local</span><br><span class="line"><span class="comment">#pwd是査看当前所在目录的命令，可以看到我们进入了上级目录 /usr/local</span></span><br><span class="line">[root@localhost <span class="built_in">local</span>]<span class="comment"># cd .</span></span><br><span class="line"><span class="comment">#进入当前目录</span></span><br><span class="line">[root@localhost <span class="built_in">local</span>]<span class="comment"># pwd</span></span><br><span class="line">/usr/local</span><br><span class="line"><span class="comment">#这个命令不会有目录的改变，只是告诉大家&quot;.&quot;代表当前目录</span></span><br></pre></td></tr></table></figure>
+<h1 id="pwd命令：显示当前路径"><a href="#pwd命令：显示当前路径" class="headerlink" title="pwd命令：显示当前路径"></a>pwd命令：显示当前路径</h1><p>由于 Linux 文件系统中有许多目录，当用户执行一条 Linux 命令又没有指定该命令或参数所在的目录时，Linux 系统就会首先在当前目录（目前的工作目录）搜寻这个命令或它的参数。因此，用户在执行命令之前，常常需要确定目前所在的工作目录，即当前目录。</p>
+<p><code>pwd</code>命令，是<code>Print Working Directory</code> （打印工作目录）的缩写，功能是显示用户当前所处的工作目录的绝对路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># pwd</span></span><br></pre></td></tr></table></figure>
+<p><code>whoami</code>命令用于确定当前登陆的用户。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[demo@localhost ~]<span class="comment"># whoami</span></span><br><span class="line">demo</span><br><span class="line">[demo@localhost ~]<span class="comment"># pwd</span></span><br><span class="line">/home/demo</span><br></pre></td></tr></table></figure>
+<p>以上代码表明，当前登陆 Linux 系统的是用户<code>demo</code>，当前所在目录为<code>demo</code>的主目录<code>/home/demo</code>。</p>
+<p>注意，在<code>[demo@localhost ~]#</code>这一部分中，虽然也显示出当前所在的目录（例如<code>~</code>表示主目录），但此位置只会列出整个路径中最后的那一个目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cd /var/mail</span></span><br><span class="line">[root@localhost mail]<span class="comment"># pwd</span></span><br><span class="line">/var/mail</span><br></pre></td></tr></table></figure>
+<p>不同的目录中，目录名是可以重复的，因此，仅通过<code>[root@localhost mail]</code>中的<code>mail</code>，根本无法判断其所在的具体位置，而使用<code>pwd</code>命令，可以输出当前所在目录的完整路径。</p>
+<h1 id="ls命令：查看目录下文件"><a href="#ls命令：查看目录下文件" class="headerlink" title="ls命令：查看目录下文件"></a>ls命令：查看目录下文件</h1><p><code>ls</code>命令，<code>list</code>的缩写，其主要功能是显示当前目录下的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls [选项] 目录名称</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-a</td>
+<td align="center">显示全部的文件，包括隐藏文件（开头为 . 的文件）也一起罗列出来，这是最常用的选项之一。</td>
+</tr>
+<tr>
+<td align="center">-A</td>
+<td align="center">显示全部的文件，连同隐藏文件，但不包括 . 与 .. 这两个目录。</td>
+</tr>
+<tr>
+<td align="center">-d</td>
+<td align="center">仅列出目录本身，而不是列出目录内的文件数据。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">ls 默认会以文件名排序，使用 -f 选项会直接列出结果，而不进行排序。</td>
+</tr>
+<tr>
+<td align="center">-F</td>
+<td align="center">在文件或目录名后加上文件类型的指示符号，例如，* 代表可运行文件，&#x2F; 代表目录，&#x3D; 代表 socket 文件，</td>
+</tr>
+<tr>
+<td align="center">-h</td>
+<td align="center">以人们易读的方式显示文件或目录大小，如 1KB、234MB、2GB 等。</td>
+</tr>
+<tr>
+<td align="center">-i</td>
+<td align="center">显示 inode 节点信息。</td>
+</tr>
+<tr>
+<td align="center">-l</td>
+<td align="center">使用长格式列出文件和目录信息。</td>
+</tr>
+<tr>
+<td align="center">-n</td>
+<td align="center">以 UID 和 GID 分别代替文件用户名和群组名显示出来。</td>
+</tr>
+<tr>
+<td align="center">-r</td>
+<td align="center">将排序结果反向输出，比如，若原本文件名由小到大，反向则为由大到小。</td>
+</tr>
+<tr>
+<td align="center">-R</td>
+<td align="center">连同子目录内容一起列出来，等於将该目录下的所有文件都显示出来。</td>
+</tr>
+<tr>
+<td align="center">-S</td>
+<td align="center">以文件容量大小排序，而不是以文件名排序。</td>
+</tr>
+<tr>
+<td align="center">-t</td>
+<td align="center">以时间排序，而不是以文件名排序。</td>
+</tr>
+<tr>
+<td align="center">–full-time</td>
+<td align="center">以完整时间模式 （包含年、月、日、时、分）输出</td>
+</tr>
+</tbody></table>
+<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>当<code>ls</code>命令不使用任何选项时，默认只会显示非隐藏文件的名称，并以文件名进行排序，同时会根据文件的具体类型给文件名配色（蓝色显示目录，白色显示一般文件）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@www ~]<span class="comment"># ls -al ~</span></span><br><span class="line">total 156</span><br><span class="line">drwxr-x---  4 root root  4096 Sep 24 00:07 .</span><br><span class="line">drwxr-xr-x 23 root root  4096 Sep 22 12:09 ..</span><br><span class="line">-rw-------  1 root root  1474 Sep  4 18:27 anaconda-ks.cfg</span><br><span class="line">-rw-------  1 root root   955 Sep 24 00:08 .bash_history</span><br><span class="line">-rw-r--r--  1 root root    24 Jan  6  2007 .bash_logout</span><br><span class="line">-rw-r--r--  1 root root   191 Jan  6  2007 .bash_profile</span><br><span class="line">-rw-r--r--  1 root root   176 Jan  6  2007 .bashrc</span><br><span class="line">drwx------  3 root root  4096 Sep  5 10:37 .gconf</span><br><span class="line">-rw-r--r--  1 root root 42304 Sep  4 18:26 install.log</span><br><span class="line">-rw-r--r--  1 root root  5661 Sep  4 18:25 install.log.syslog</span><br></pre></td></tr></table></figure>
+<p>通过使用<code>-a</code>，你会看到以<code>.</code>为开头的几个文件，以及目录文件<code>（.）、（..）、.gconf</code>等等，这些都是隐藏的目录和文件。</p>
+<p>不仅如此，这里的<code>ls</code>命令还使用了<code>-l</code>选项，因此才显示出了文件的详细信息，此选项显示的这 7 列的含义分别是：</p>
+<ul>
+<li>第一列：规定了不同的用户对文件所拥有的权限。</li>
+<li>第二列：引用计数，文件的引用计数代表该文件的硬链接个数，而目录的引用计数代表该目录有多少个一级子目录。</li>
+<li>第三列：所有者，也就是这个文件属于哪个用户。默认所有者是文件的建立用户。</li>
+<li>第四列：所属组，默认所属组是文件建立用户的有效组，一般情况下就是建立用户的所在组。</li>
+<li>第五列：大小，默认单位是字节。</li>
+<li>第六列：文件修改时间，文件状态修改时间或文件数据修改时间都会更改这个时间，注意这个时间不是文件的创建时间。</li>
+<li>第七列：文件名或目录名。</li>
+</ul>
+<h3 id="2-查看某个目录的详细信息"><a href="#2-查看某个目录的详细信息" class="headerlink" title="2.查看某个目录的详细信息"></a>2.查看某个目录的详细信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost usr]<span class="comment"># ls -l /usr/</span></span><br><span class="line">总用量44</span><br><span class="line">dr-xr-xr-x.  2 root root 20480 8月   4 19:11 bin</span><br><span class="line">drwxr-xr-x.  2 root root     6 4月  11 2018 etc</span><br><span class="line">drwxr-xr-x.  2 root root     6 4月  11 2018 games</span><br><span class="line">drwxr-xr-x. 34 root root  8192 8月   4 19:11 include</span><br><span class="line">drwxr-xr-x.  3 root root    60 8月   3 17:27 java</span><br><span class="line">dr-xr-xr-x. 28 root root  4096 8月   4 19:11 lib</span><br><span class="line">dr-xr-xr-x. 41 root root 28672 8月   4 19:11 lib64</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这个命令会显示目录下的内容，而不会显示这个目录本身的详细信息。如果想显示目录本身的信息，就必须加入<code>-d</code>选项。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls -ld /root/</span></span><br><span class="line">drwxr-xr-x. 15 root root 180 8月   3 17:58 /usr/</span><br></pre></td></tr></table></figure>
+<h1 id="mkdir命令：创建目录（文件夹）"><a href="#mkdir命令：创建目录（文件夹）" class="headerlink" title="mkdir命令：创建目录（文件夹）"></a>mkdir命令：创建目录（文件夹）</h1><p><code>mkdir</code>命令，是<code>make directories</code>的缩写，用于创建新目录，此命令所有用户都可以使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir [-mp] 目录名</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-m</code>选项用于手动配置所创建目录的权限，而不再使用默认权限。</li>
+<li><code>-p</code>选项递归创建所有目录，以创建<code>/home/test/demo</code>为例，在默认情况下，你需要一层一层的创建各个目录，而使用<code>-p</code>选项，则系统会自动帮你创建<code>/home、/home/test</code>以及<code>/home/test/demo</code>。</li>
+</ul>
+<h2 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a>示例</h2><h3 id="1-建立目录"><a href="#1-建立目录" class="headerlink" title="1.建立目录"></a>1.建立目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#mkdir cangls</span></span><br><span class="line">[root@localhost ~]<span class="comment">#ls</span></span><br><span class="line">anaconda-ks.cfg cangls install.log install.log.syslog</span><br></pre></td></tr></table></figure>
+<p>注意，我们在建立目录的时候使用的是相对路径，所以这个目录被建立到当前目录下。</p>
+<h3 id="2-使用-p-选项递归建立目录"><a href="#2-使用-p-选项递归建立目录" class="headerlink" title="2.使用 -p 选项递归建立目录"></a>2.使用 -p 选项递归建立目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir lm/movie/jp/cangls</span></span><br><span class="line"><span class="built_in">mkdir</span>:无法创建目录<span class="string">&quot;lm/movie/jp/cangls&quot;</span>:没有那个文件或目录</span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir -p lm/movie/jp/cangls</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ls</span></span><br><span class="line">anaconda-ks.cfg cangls install.log install.log.syslog lm</span><br><span class="line">[root@localhost ~]<span class="comment"># ls lm/</span></span><br><span class="line">movie</span><br><span class="line"><span class="comment">#这里只查看一级子目录，其实后续的jp目录、cangls目录都已经建立</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-使用-m-选项自定义目录权限"><a href="#3-使用-m-选项自定义目录权限" class="headerlink" title="3.使用 -m 选项自定义目录权限"></a>3.使用 -m 选项自定义目录权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir -m 711 test2</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ls -l</span></span><br><span class="line">drwxr-xr-x  3 root  root 4096 Jul 18 12:50 <span class="built_in">test</span></span><br><span class="line">drwxr-xr-x  3 root  root 4096 Jul 18 12:53 test1</span><br><span class="line">drwx--x--x  2 root  root 4096 Jul 18 12:54 test2</span><br></pre></td></tr></table></figure>
+<h1 id="rmdir命令：删除空目录"><a href="#rmdir命令：删除空目录" class="headerlink" title="rmdir命令：删除空目录"></a>rmdir命令：删除空目录</h1><p>和<code>mkdir</code>命令（创建空目录）恰好相反，<code>rmdir</code>（<code>remove empty directories</code>的缩写）命令用于删除空目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rmdir [-p] 目录名</span></span><br></pre></td></tr></table></figure>
+<p><code>-p</code>选项用于递归删除空目录。</p>
+<h2 id="示例-3"><a href="#示例-3" class="headerlink" title="示例"></a>示例</h2><h3 id="1-1"><a href="#1-1" class="headerlink" title="1"></a>1</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#rmdir cangls</span></span><br></pre></td></tr></table></figure>
+<p>命令后面加目录名称即可，但命令执行成功与否，取决于要删除目录是否是空目录，因为<code>rmdir</code>命令只能删除空目录。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p><code>rmdir</code>命令可以使用<code>-p</code>选项递归删除目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rmdir -p lm/movie/jp/cangls</span></span><br></pre></td></tr></table></figure>
+<p>注意，此方式先删除最低一层地目录（这里先删除<code>cangls</code>），然后逐层删除上级目录，删除时也需要保证各级目录是空目录。</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p><code>rmdir</code>命令的作用十分有限，因为只能刪除空目录，所以一旦目录中有内容，就会报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost <span class="comment"># mkdir test</span></span><br><span class="line"><span class="comment">#建立测试目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># touch test/boduo</span></span><br><span class="line">[root@localhost ~]<span class="comment"># touch test/longze</span></span><br><span class="line"><span class="comment">#在测试目录中建立两个文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rmdir test</span></span><br><span class="line"><span class="built_in">rmdir</span>:删除<span class="string">&quot;test&quot;</span>失败：目录非空</span><br></pre></td></tr></table></figure>
+<h1 id="touch命令：创建文件及修改文件时间戳"><a href="#touch命令：创建文件及修改文件时间戳" class="headerlink" title="touch命令：创建文件及修改文件时间戳"></a>touch命令：创建文件及修改文件时间戳</h1><p><code>touch</code>命令不光可以用来创建文件（当指定操作文件不存在时，该命令会在当前位置建立一个空文件），此命令更重要的功能是修改文件的时间参数（但当文件存在时，会修改此文件的时间参数）。</p>
+<p>Linux 系统中，每个文件主要拥有 3 个时间参数（通过<code>stat</code>命令进行查看），分别是文件的访问时间、数据修改时间以及状态修改时间：</p>
+<ul>
+<li>访问时间（<code>Access Time</code>，简称<code>atime</code>）：只要文件的内容被读取，访问时间就会更新。例如，使用<code>cat</code>命令可以查看文件的内容，此时文件的访问时间就会发生改变。</li>
+<li>数据修改时间（<code>Modify Time</code>，简称<code>mtime</code>）：当文件的内容数据发生改变，此文件的数据修改时间就会跟着相应改变。</li>
+<li>状态修改时间（<code>Change Time</code>，简称<code>ctime</code>）：当文件的状态发生变化，就会相应改变这个时间。比如说，如果文件的权限或者属性发生改变，此时间就会相应改变。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# touch [选项] 文件名</span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<ul>
+<li><code>-a</code>：只修改文件的访问时间；</li>
+<li><code>-c</code>：仅修改文件的时间参数（3 个时间参数都改变），如果文件不存在，则不建立新文件。</li>
+<li><code>-d</code>：后面可以跟欲修订的日期，而不用当前的日期，即把文件的<code>atime</code>和<code>mtime</code>时间改为指定的时间。</li>
+<li><code>-m</code>：只修改文件的数据修改时间。</li>
+<li><code>-t</code>：命令后面可以跟欲修订的时间，而不用目前的时间，时间书写格式为<code>YYMMDDhhmm</code>。</li>
+</ul>
+<p>可以看到，<code>touch</code>命令可以只修改文件的访问时间，也可以只修改文件的数据修改时间，但是不能只修改文件的状态修改时间。因为，不论是修改访问时间，还是修改文件的数据时间，对文件来讲，状态都会发生改变，即状态修改时间会随之改变（更新为操作当前文件的真正时间）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#touch bols</span></span><br><span class="line"><span class="comment">#建立名为 bols 的空文件</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#ll --time=atime bols</span></span><br><span class="line"><span class="comment">#查看文件的访问时间</span></span><br><span class="line">-rw-r--r-- 1 root root 0 Sep 25 21:23 bols</span><br><span class="line"><span class="comment">#文件上次的访问时间为 9 月 25 号 21：23</span></span><br><span class="line">[root@localhost ~]<span class="comment">#touch bols</span></span><br><span class="line">[root@localhost ~]<span class="comment">#ll --time=atime bols</span></span><br><span class="line">-rw-r--r-- 1 root root 0 May 15 16:36 bols</span><br><span class="line"><span class="comment">#而如果文件已经存在，则也不会报错，只是会修改文件的访问时间。</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch -d &quot;2017-05-04 15:44&quot; bols</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll bols; ll --time=atime bols; ll --time=ctime bols</span></span><br><span class="line">-rw-r--r-- 1 root root 0 May 4 2017 bols</span><br><span class="line">-rw-r--r-- 1 root root 0 May 4 2017 bols</span><br><span class="line">-rw-r--r-- 1 root root 0 Sep 25 21:40 bols</span><br><span class="line"><span class="comment">#ctime不会变为设定时间，但更新为当前服务器的时间</span></span><br></pre></td></tr></table></figure>
+<h1 id="ln命令：建立链接（硬链接和软链接）文件"><a href="#ln命令：建立链接（硬链接和软链接）文件" class="headerlink" title="ln命令：建立链接（硬链接和软链接）文件"></a>ln命令：建立链接（硬链接和软链接）文件</h1><p>如果要想说清楚<code>ln</code>命令，则必须先解释下<code>ext</code>文件系统（Linux 文件系统）是如何工作的。分区的格式化就是写入文件系统，Linux 目前使用的是<code>ext4</code>文件系统。<code>ext4</code>文件系统：</p>
+<img src="/2021/08/15/Linux/%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86/1.jpg" class="" title="ext4 文件系统示意图">
+
+<p><code>ext4</code>文件系统会把分区主要分为两大部分：小部分用于保存文件的<code>inode</code> (<code>i</code>节点）信息；剩余的大部分用于保存<code>block</code>信息。</p>
+<p><code>inode</code>的默认大小为<code>128 Byte</code>，用来记录文件的权限（<code>r、w、x</code>）、文件的所有者和属组、文件的大小、文件的状态改变时间（<code>ctime</code>）、文件的最近一次读取时间（<code>atime</code>）、文件的最近一次修改时间（<code>mtime</code>）、文件的数据真正保存的<code>block</code>编号。每个文件需要占用一个<code>inode</code>。<code>inode</code>中是不记录文件名的，那是因为文件名记录在文件所在目录的<code>block</code>中。</p>
+<p><code>block</code>的大小可以是<code>1KB、2KB、4KB</code>，默认为<code>4KB</code>。<code>block</code>用于实际的数据存储，如果一个<code>block</code>放不下数据，则可以占用多个<code>block</code>。例如，有一个<code>10KB</code>的文件需要存储，则会占用 3 个<code>block</code>，虽然最后一个<code>block</code>不能占满，但也不能再放入其他文件的数据。这 3 个<code>block</code>有可能是连续的，也有可能是分散的。</p>
+<p>由此，我们可以知道以下 2 个重要的信息：</p>
+<ul>
+<li>每个文件都独自占用一个<code>inode</code>，文件内容由<code>inode</code>的记录来指向；</li>
+<li>如果想要读取文件内容，就必须借助目录中记录的文件名找到该文件的<code>inode</code>，才能成功找到文件内容所在的<code>block</code>块；</li>
+</ul>
+<p><code>ln</code>命令用于给文件创建链接，根据 Linux 系统存储文件的特点，链接的方式分为以下 2 种：</p>
+<ul>
+<li>软链接：类似于 Windows 系统中给文件创建快捷方式，即产生一个特殊的文件，该文件用来指向另一个文件，此链接方式同样适用于目录。</li>
+<li>硬链接：文件的基本信息都存储在<code>inode</code>中，而硬链接指的就是给一个文件的<code>inode</code>分配多个文件名，通过任何一个文件名，都可以找到此文件的<code>inode</code>，从而读取该文件的数据信息。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ln [选项] 源文件 目标文件</span></span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<ul>
+<li><code>-s</code>：建立软链接文件。如果不加<code>-s</code>选项，则建立硬链接文件；</li>
+<li><code>-f</code>：强制。如果目标文件已经存在，则删除目标文件后再建立链接文件；</li>
+</ul>
+<h2 id="示例-4"><a href="#示例-4" class="headerlink" title="示例"></a>示例</h2><h3 id="1-创建硬链接"><a href="#1-创建硬链接" class="headerlink" title="1.创建硬链接"></a>1.创建硬链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch cangls</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ln /root/cangls /tmp</span></span><br><span class="line"><span class="comment">#建立硬链接文件，目标文件没有写文件名，会和原名一致</span></span><br><span class="line"><span class="comment">#也就是/tmp/cangls 是硬链接文件</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-创建软链接"><a href="#2-创建软链接" class="headerlink" title="2.创建软链接"></a>2.创建软链接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch bols</span></span><br><span class="line">[root@localhost ~]<span class="comment"># In -s /root/bols /tmp</span></span><br><span class="line"><span class="comment">#建立软链接文件</span></span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是，软链接文件的源文件必须写成绝对路径，而不能写成相对路径（硬链接没有这样的要求）；否则软链接文件会报错。</p>
+<h1 id="cp命令：复制文件和目录"><a href="#cp命令：复制文件和目录" class="headerlink" title="cp命令：复制文件和目录"></a>cp命令：复制文件和目录</h1><p><code>cp</code>命令，主要用来复制文件和目录，同时借助某些选项，还可以实现复制整个目录，以及比对两文件的新旧而予以升级等功能。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cp [选项] 源文件 目标文件</span></span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<ul>
+<li><code>-a</code>：相当于<code>-d、-p、-r</code>选项的集合；</li>
+<li><code>-d</code>：如果源文件为软链接（对硬链接无效），则复制出的目标文件也为软链接；</li>
+<li><code>-i</code>：询问，如果目标文件已经存在，则会询问是否覆盖；</li>
+<li><code>-l</code>：把目标文件建立为源文件的硬链接文件，而不是复制源文件；</li>
+<li><code>-s</code>：把目标文件建立为源文件的软链接文件，而不是复制源文件；</li>
+<li><code>-p</code>：复制后目标文件保留源文件的属性（包括所有者、所属组、权限和时间）；</li>
+<li><code>-r</code>：递归复制，用于复制目录；</li>
+<li><code>-u</code>：若目标文件比源文件有差异，则使用该选项可以更新目标文件，此选项可用于对文件的升级和备用。</li>
+</ul>
+<p>需要注意的是，源文件可以有多个，但这种情况下，目标文件必须是目录才可以。<br>这里的软链接，类似于 Windows 系统中的快捷方式，而硬链接则是透过文件系统的<code>inode</code>号产生一个新的文件名。无论是复制软链接还是硬链接，都不是复制源文件。</p>
+<h2 id="示例-5"><a href="#示例-5" class="headerlink" title="示例"></a>示例</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#建立源文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># touch cangls</span></span><br><span class="line"><span class="comment">#把源文件不改名复制到 /tmp/ 目录下</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp cangls /tmp/</span></span><br><span class="line"><span class="comment">#改名复制</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp cangls /tmp/bols</span></span><br></pre></td></tr></table></figure>
+<p>如果复制的目标位置已经存在同名的文件，则会提示是否覆盖，因为<code>cp</code>命令默认执行的是<code>cp -i</code>的别名：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cp cangls /tmp/</span></span><br><span class="line"><span class="built_in">cp</span>:是否覆盖<span class="string">&quot;/tmp/cangls&quot;</span>?y</span><br><span class="line"><span class="comment">#目标位置有同名文件，所以会提示是否覆盖</span></span><br></pre></td></tr></table></figure>
+<p>复制目录只需使用<code>-r</code>选项即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#建立测试目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir movie</span></span><br><span class="line"><span class="comment">#目录原名复制</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp -r /root/movie/ /tmp/</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ln -s /root/cangls /tmp/cangls_slink</span></span><br><span class="line"><span class="comment">#建立一个测试软链接文件/tmp/cangls_slink</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll /tmp/cangls_slink</span></span><br><span class="line">lrwxrwxrwx 1 root root 12 6 月 14 05:53 /tmp/cangls_slink -&gt; /root/cangls</span><br><span class="line"><span class="comment">#源文件本身就是一个软链接文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp /tmp/cangls_slink /tmp/cangls_t1</span></span><br><span class="line"><span class="comment">#复制软链接文件，但是不加&quot;-d&quot;选项</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp -d /tmp/cangls_slink /tmp/cangls_t2</span></span><br><span class="line"><span class="comment">#复制软链接文件，加入&quot;-d&quot;选项</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll /tmp/cangls_t1 /tmp/cangls_t2</span></span><br><span class="line">-rw-r--r-- 1 root root 0 6月 14 05:56 /tmp/cangls_t1</span><br><span class="line"><span class="comment">#会发现不加&quot;-d&quot;选项，实际复制的是软链接的源文件，而不是软链接文件</span></span><br><span class="line">lrwxrwxrwx 1 root root 12 6 月 14 05:56/tmp/ cangls_t2-&gt; /root/cangls</span><br><span class="line"><span class="comment">#而如果加入了&quot;-d&quot;选项，则会复制软链接文件</span></span><br></pre></td></tr></table></figure>
+<p>这个例子说明，如果在复制软链接文件时不使用<code>-d</code>选项，则<code>cp</code>命令复制的是源文件，而不是软链接文件；只有加入了<code>-d</code>选项，才会复制软链接文件。请大家注意，<code>-d</code>选项对硬链接是无效的。</p>
+<p>我们发现，在执行复制命令后，目标文件的时间会变成复制命令的执行时间，而不是源文件的时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cp /var/lib/mlocate/mlocate.db /tmp/</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll /var/lib/mlocate/mlocate.db</span></span><br><span class="line">-rw-r-----1 root slocate2328027 6月 14 02:08/var/lib/mlocate/mlocate.db</span><br><span class="line"><span class="comment">#注意源文件的时间和所属组</span></span><br><span class="line">[root@localhost ~]<span class="comment">#ll /tmp/mlocate.db</span></span><br><span class="line">-rw-r----- 1 root root2328027 6 月 14 06:05/tmp/mlocate.db</span><br><span class="line"><span class="comment">#由于复制命令由root用户执行，所以目标文件的所属组为了root，而且时间也变成了复制命令的执行时间</span></span><br></pre></td></tr></table></figure>
+<p>而当我们执行备份、日志备份的时候，这些文件的时间可能是一个重要的参数，这就需执行<code>-p</code>选项了。这个选项会保留源文件的属性，包括所有者、所属组和时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用&quot;-p&quot;选项</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp -p /var/lib/mlocate/mlocate.db /tmp/mlocate.db_2</span></span><br><span class="line"></span><br><span class="line">[root@localhost ~]<span class="comment"># ll /var/lib/mlocate/mlocate.db /tmp/mlocate.db_2</span></span><br><span class="line">-rw-r----- root slocate 2328027 6月 14 02:08 /tmp/mlocate.db_2</span><br><span class="line">-rw-r----- root slocate 2328027 6月 14 02:08 /var/lib/mlocate/mlocate.db</span><br><span class="line"><span class="comment">#源文件和目标文件的所有属性都一致，包括时间</span></span><br></pre></td></tr></table></figure>
+<p>当我们使用<code>-a</code>选项时，目标文件和源文件的所有属性都一致，包括源文件的所有者，所属组、时间和软链接性。使用<code>-a</code>选项来取代<code>-d、-p、-r</code>选项更加方便。</p>
+<p>我们如果使用<code>-l</code>选项，则目标文件会被建立为源文件的硬链接；而如果使用了<code>-s</code>选项，则目标文件会被建立为源文件的软链接。</p>
+<p>这两个选项和<code>&quot;-d&quot;</code>选项是不同的，<code>&quot;d&quot;</code>选项要求源文件必须是软链接，目标文件才会复制为软链接；而<code>-l</code>和<code>-s</code>选项的源文件只需是普通文件，目标文件就可以直接复制为硬链接和软链接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch bols</span></span><br><span class="line"><span class="comment">#建立测试文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll -i bols</span></span><br><span class="line">262154-rw-r--r-- 1 root root 0 6月 14 06:26 bols</span><br><span class="line"><span class="comment">#源文件只是一个普通文件，而不是软链接文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp -l /root/bols /tmp/bols_h</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cp -s /root/bols /tmp/bols_s</span></span><br><span class="line"><span class="comment">#使用&quot;-l&quot; 和&quot;-s&quot;选项复制</span></span><br><span class="line">[root@localhost ~]<span class="comment"># ll -i /tmp/bols_h /tmp/bols_s</span></span><br><span class="line">262154-rw-r--r-- 2root root 0 6 月 14 06:26/tmp/bols_h</span><br><span class="line"><span class="comment">#目标文件 /tmp/bols_h 为源文件的硬链接文件</span></span><br><span class="line">932113 lrwxrwxrwx 1 root root 10 6 月 14 06:27/tmp/bols_s -&gt; /root/bols</span><br><span class="line"><span class="comment">#目标文件 /tmp/bols_s 为源文件的软链接文件</span></span><br></pre></td></tr></table></figure>
+<h1 id="rm命令：删除文件或目录"><a href="#rm命令：删除文件或目录" class="headerlink" title="rm命令：删除文件或目录"></a>rm命令：删除文件或目录</h1><p><code>rm</code>是强大的删除命令，它可以永久性地删除文件系统中指定的文件或目录。在使用<code>rm</code>命令删除文件或目录时，系统不会产生任何提示信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rm[选项] 文件或目录</span></span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<ul>
+<li><code>-f</code>：强制删除（<code>force</code>），和<code>-i</code>选项相反，使用<code>-f</code>，系统将不再询问，而是直接删除目标文件或目录。</li>
+<li><code>-i</code>：和<code>-f</code>正好相反，在删除文件或目录之前，系统会给出提示信息，使用<code>-i</code>可以有效防止不小心删除有用的文件或目录。</li>
+<li><code>-r</code>：递归删除，主要用于删除目录，可删除指定目录及包含的所有内容，包括所有的子目录和文件。</li>
+</ul>
+<h2 id="示例-6"><a href="#示例-6" class="headerlink" title="示例"></a>示例</h2><h3 id="1-基本用法"><a href="#1-基本用法" class="headerlink" title="1.基本用法"></a>1.基本用法</h3><p><code>rm</code>命令如果任何选项都不加，则默认执行的是”<code>rm -i</code>文件名”，也就是在删除一个文件之前会先询问是否删除。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch cangls</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm cangls</span></span><br><span class="line"><span class="built_in">rm</span>:是否删除普通空文件<span class="string">&quot;cangls&quot;</span>?y</span><br><span class="line"><span class="comment">#删除前会询问是否删除</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-删除目录。"><a href="#2-删除目录。" class="headerlink" title="2.删除目录。"></a>2.删除目录。</h3><p>如果需要删除目录，则需要使用<code>-r</code>选项。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir -p /test/lm/movie/jp</span></span><br><span class="line"><span class="comment">#递归建立测试目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm /test</span></span><br><span class="line"><span class="built_in">rm</span>:无法删除<span class="string">&quot;/test/&quot;</span>: 是一个目录</span><br><span class="line"><span class="comment">#如果不加&quot;-r&quot;选项，则会报错</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm -r /test</span></span><br><span class="line"><span class="built_in">rm</span>:是否进入目录<span class="string">&quot;/test&quot;</span>?y</span><br><span class="line"><span class="built_in">rm</span>:是否进入目录<span class="string">&quot;/test/lm/movie&quot;</span>?y</span><br><span class="line"><span class="built_in">rm</span>:是否删除目录<span class="string">&quot;/test/lm/movie/jp&quot;</span>?y</span><br><span class="line"><span class="built_in">rm</span>:是否删除目录<span class="string">&quot;/test/lm/movie&quot;</span>?y</span><br><span class="line"><span class="built_in">rm</span>:是否删除目录<span class="string">&quot;/test/lm&quot;</span>?y</span><br><span class="line"><span class="built_in">rm</span>:是否删除目录<span class="string">&quot;/test&quot;</span>?y</span><br><span class="line"><span class="comment">#会分别询问是否进入子目录、是否删除子目录</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-强制删除"><a href="#3-强制删除" class="headerlink" title="3.强制删除"></a>3.强制删除</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir -p /test/lm/movie/jp</span></span><br><span class="line"><span class="comment">#重新建立测试目录</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm -rf /test</span></span><br><span class="line"><span class="comment">#强制删除，一了百了</span></span><br></pre></td></tr></table></figure>
+<p>加入了强制功能之后，删除就会变得很简单，但是需要注意，数据强制删除之后无法恢复，除非依赖第三方的数据恢复工具。但要注意，数据恢复很难恢复完整的数据。</p>
+<p>虽然<code>-rf</code>选项是用来删除目录的，但是删除文件也不会报错。所以，为了使用方便，一般不论是删除文件还是删除目录，都会直接使用<code>-rf</code>选项。</p>
+<h1 id="mv命令：移动文件或改名"><a href="#mv命令：移动文件或改名" class="headerlink" title="mv命令：移动文件或改名"></a>mv命令：移动文件或改名</h1><p><code>mv</code>命令（<code>move</code>的缩写），既可以在不同的目录之间移动文件或目录，也可以对文件和目录进行重命名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mv [选项] 源文件 目标文件</span></span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<ul>
+<li><code>-f</code>：强制覆盖，如果目标文件已经存在，则不询问，直接强制覆盖；</li>
+<li><code>-i</code>：交互移动，如果目标文件已经存在，则询问用户是否覆盖（默认选项）；</li>
+<li><code>-n</code>：如果目标文件已经存在，则不会覆盖移动，而且不询问用户；</li>
+<li><code>-v</code>：显示文件或目录的移动过程；</li>
+<li><code>-u</code>：若目标文件已经存在，但两者相比，源文件更新，则会对目标文件进行升级；</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mv cangls /tmp</span></span><br><span class="line"><span class="comment">#移动之后，源文件会被删除，类似剪切</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mkdir movie</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mv movie/ /tmp</span></span><br><span class="line"><span class="comment">#也可以移动目录。和 rm、cp 不同的是，mv 移动目录不需要加入 &quot;-r&quot; 选项</span></span><br></pre></td></tr></table></figure>
+<p>如果移动的目标位置已经存在同名的文件，则同样会提示是否覆盖，因为<code>mv</code>命令默认执行的也是<code>mv -i</code>的别名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># touch cangls</span></span><br><span class="line"><span class="comment">#重新建立文件</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mv cangls /tmp</span></span><br><span class="line"><span class="built_in">mv</span>:是否覆盖<span class="string">&quot;tmp/cangls&quot;</span>？y</span><br><span class="line"><span class="comment">#由于 /tmp 目录下已经存在 cangls 文件，所以会提示是否覆盖，需要手工输入 y 覆盖移动</span></span><br></pre></td></tr></table></figure>
+<p>如果源文件和目标文件在同一目录中，那就是改名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#把 bols 改名为 lmls</span></span><br><span class="line">[root@localhost ~]<span class="comment"># mv bols lmls</span></span><br></pre></td></tr></table></figure>
+<p>目录也可以按照同样的方法改名。</p>
+<h1 id="Linux命令的执行过程"><a href="#Linux命令的执行过程" class="headerlink" title="Linux命令的执行过程"></a>Linux命令的执行过程</h1><p>Linux 命令的执行过程分为如下 4 个步骤：</p>
+<h2 id="1-判断路径"><a href="#1-判断路径" class="headerlink" title="1. 判断路径"></a>1. 判断路径</h2><p>判断用户是否以绝对路径或相对路径的方式输入命令（如<code>/bin/ls</code>），如果是的话直接执行。</p>
+<h2 id="2-检查别名"><a href="#2-检查别名" class="headerlink" title="2. 检查别名"></a>2. 检查别名</h2><p>Linux 系统会检查用户输入的命令是否为“别名命令”。要知道，通过<code>alias</code>命令是可以给现有命令自定义别名的，即用一个自定义的命令名称来替换原本的命令名称。</p>
+<p>例如，我们经常使用的<code>rm</code>命令，其实就是<code>rm -i</code>这个整体的别名：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># alias rm</span></span><br><span class="line"><span class="built_in">alias</span> <span class="built_in">rm</span>=<span class="string">&#x27;rm -i&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这使得当使用<code>rm</code>命令删除指定文件时，Linux 系统会要求我们再次确认是否执行删除操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># rm a.txt &lt;-- 假定当前目录中已经存在 a.txt 文件</span></span><br><span class="line"><span class="built_in">rm</span>: remove regular file <span class="string">&#x27;a.txt&#x27;</span>? y &lt;-- 手动输入 y，即确定删除</span><br><span class="line">[root@localhost ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>这里可以使用<code>unalias</code>命令，将 Linux 系统设置的<code>rm</code>别名删除掉：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># alias rm</span></span><br><span class="line"><span class="built_in">alias</span> <span class="built_in">rm</span>=<span class="string">&#x27;rm -i&#x27;</span></span><br><span class="line">[root@localhost ~]<span class="comment"># unalias rm</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm a.txt</span></span><br><span class="line">[root@localhost ~]<span class="comment"># &lt;--直接删除，不再询问</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-判断是内部命令还是外部命令"><a href="#3-判断是内部命令还是外部命令" class="headerlink" title="3. 判断是内部命令还是外部命令"></a>3. 判断是内部命令还是外部命令</h2><p>Linux命令行解释器（又称为 shell）会判断用户输入的命令是内部命令还是外部命令。其中，内部命令指的是解释器内部的命令，会被直接执行；而用户通常输入的命令都是外部命令，这些命令交给步骤四继续处理。</p>
+<p>内部命令由 Shell 自带，会随着系统启动，可以直接从内存中读取；而外部命令仅是在系统中有对应的可执行文件，执行时需要读取该文件。</p>
+<p>判断一个命令属于内部命令还是外部命令，可以使用<code>type</code>命令实现。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># type pwd</span></span><br><span class="line"><span class="built_in">pwd</span> is a shell <span class="built_in">builtin</span> &lt;-- <span class="built_in">pwd</span>是内部命令</span><br><span class="line">[root@localhost ~]<span class="comment"># type top</span></span><br><span class="line">top is /usr/bin/top &lt;-- top是外部命令</span><br></pre></td></tr></table></figure>
+<h2 id="4-查找外部命令对应的可执行文件"><a href="#4-查找外部命令对应的可执行文件" class="headerlink" title="4. 查找外部命令对应的可执行文件"></a>4. 查找外部命令对应的可执行文件</h2><p>当用户执行的是外部命令时，系统会在指定的多个路径中查找该命令的可执行文件，而定义这些路径的变量，就称为<code>PATH</code>环境变量，其作用就是告诉 Shell 待执行命令的可执行文件可能存放的位置，也就是说，Shell 会在<code>PATH</code>变量包含的多个路径中逐个查找，直到找到为止（如果找不到，Shell 会提供用户“找不到此命令”）。</p>
+<h1 id="Linux环境变量"><a href="#Linux环境变量" class="headerlink" title="Linux环境变量"></a>Linux环境变量</h1><p>在 Linux 系统中，环境变量是用来定义系统运行环境的一些参数，比如每个用户不同的家目录、邮件存放位置等。</p>
+<p>值得一提的是，Linux 系统中环境变量的名称一般都是大写的，这是一种约定俗成的规范。</p>
+<p>我们可以使用<code>env</code>命令来查看到 Linux 系统中所有的环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># env</span></span><br><span class="line">ORBIT_SOCKETDIR=/tmp/orbit-root</span><br><span class="line">HOSTNAME=livecd.centos</span><br><span class="line">GIO_LAUNCHED_DESKTOP_FILE_PID=2065</span><br><span class="line">TERM=xterm</span><br><span class="line">shell =/bin/bash</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>非常重要的环境变量：</p>
+<table>
+<thead>
+<tr>
+<th align="center">环境变量名称</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">HOME</td>
+<td align="center">用户的主目录（也称家目录）</td>
+</tr>
+<tr>
+<td align="center">SHELL</td>
+<td align="center">用户使用的 Shell 解释器名称</td>
+</tr>
+<tr>
+<td align="center">PATH</td>
+<td align="center">定义命令行解释器搜索用户执行命令的路径</td>
+</tr>
+<tr>
+<td align="center">EDITOR</td>
+<td align="center">用户默认的文本解释器</td>
+</tr>
+<tr>
+<td align="center">RANDOM</td>
+<td align="center">生成一个随机数字</td>
+</tr>
+<tr>
+<td align="center">LANG</td>
+<td align="center">系统语言、语系名称</td>
+</tr>
+<tr>
+<td align="center">HISTSIZE</td>
+<td align="center">输出的历史命令记录条数</td>
+</tr>
+<tr>
+<td align="center">HISTFILESIZE</td>
+<td align="center">保存的历史命令记录条数</td>
+</tr>
+<tr>
+<td align="center">PS1</td>
+<td align="center">ash解释器的提示符</td>
+</tr>
+<tr>
+<td align="center">MAIL</td>
+<td align="center">邮件保存路径</td>
+</tr>
+</tbody></table>
+<p>Linux 作为一个多用户多任务的操作系统，能够为每个用户提供独立的、合适的工作运行环境，因此，一个相同的环境变量会因为用户身份的不同而具有不同的值。</p>
+<p>例如，使用下述命令来查看<code>HOME</code>变量在不同用户身份下都有哪些值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># echo $HOME</span></span><br><span class="line">/root</span><br><span class="line">[root@localhost ~]<span class="comment"># su - user1 &lt;--切换到 user1 用户身份</span></span><br><span class="line">[user1@localhost ~]$ <span class="built_in">echo</span> <span class="variable">$HOME</span></span><br><span class="line">/home/user1</span><br></pre></td></tr></table></figure>
+<p>其实，环境变量是由固定的变量名与用户或系统设置的变量值两部分组成的，我们完全可以自行创建环境变量来满足工作需求。例如，设置一个名称为<code>WORKDIR</code>的环境变量，方便用户更轻松地进入一个层次较深的目录，执行命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># mkdir /home/work1</span></span><br><span class="line">[root@localhost ~]<span class="comment"># WORKDIR=/home/work1</span></span><br><span class="line">[root@localhost ~]<span class="comment"># cd $WORKDIR</span></span><br><span class="line">[root@localhost work1]<span class="comment"># pwd</span></span><br><span class="line">/home/work1</span><br></pre></td></tr></table></figure>
+<p>但是，这样的环境变量不具有全局性，作用范围也有限，默认情况下不能被其他用户使用。如果工作需要，可以使用<code>export</code>命令将其提升为全局环境变量，这样其他用户就可以使用它了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost work1]<span class="comment"># su user1 &lt;-- 切换到 user1，发现无法使用 WORKDIR 自定义变量</span></span><br><span class="line">[user1@localhost ~]$ <span class="built_in">cd</span> <span class="variable">$WORKDIR</span></span><br><span class="line">[user1@localhost ~]$ <span class="built_in">echo</span> <span class="variable">$WORKDIR</span></span><br><span class="line"></span><br><span class="line">[user1@localhost ~]$ <span class="built_in">exit</span> &lt;--退出user1身份</span><br><span class="line">[root@localhost work1]<span class="comment"># export WORKDIR</span></span><br><span class="line">[root@localhost work1]<span class="comment"># su user1</span></span><br><span class="line">[user1@localhost ~]$ <span class="built_in">cd</span> <span class="variable">$WORKDIR</span></span><br><span class="line">[user1@localhost work1]$ <span class="built_in">pwd</span></span><br><span class="line">/home/work1</span><br></pre></td></tr></table></figure>
+<h2 id="PATH-环境变量及作用"><a href="#PATH-环境变量及作用" class="headerlink" title="PATH 环境变量及作用"></a>PATH 环境变量及作用</h2><p><code>which</code>命令，它用于查找某个命令所在的绝对路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># which rm</span></span><br><span class="line">/bin/rm</span><br><span class="line">[root@localhost ~]<span class="comment"># which rmdir</span></span><br><span class="line">/bin/rmdir</span><br><span class="line">[root@localhost ~]<span class="comment"># which ls</span></span><br><span class="line"><span class="built_in">alias</span> <span class="built_in">ls</span>=<span class="string">&#x27;ls --color=auto&#x27;</span></span><br><span class="line">        /bin/ls</span><br></pre></td></tr></table></figure>
+<p>注意，<code>ls</code>是一个相对特殊的命令，它使用<code>alias</code>命令做了别名，也就是说，我们常用的<code>ls</code>实际上执行的是<code>ls --color=auto</code>。</p>
+<p>通过使用<code>which</code>命令，可以查找各个外部命令（和 shell 内置命令相对）所在的绝对路径。为什么前面在使用<code>rm、rmdir、ls</code>等命令时，无论当前位于哪个目录，都可以直接使用，而无需指明命令的执行文件所在的位置（绝对路径）呢？其实，这是<code>PATH</code>环境变量在起作用。</p>
+<p>首先，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># echo $PATH</span></span><br><span class="line">/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/root/bin</span><br></pre></td></tr></table></figure>
+<p>这里的<code>echo</code>命令用来输出<code>PATH</code>环境变量的值（这里的<code>$</code>是<code>PATH</code>的前缀符号），<code>PATH</code>环境变量的内容是由一堆目录组成的，各目录之间用冒号“:”隔开。当执行某个命令时，Linux 会依照<code>PATH</code>中包含的目录依次搜寻该命令的可执行文件，一旦找到，即正常执行；反之，则提示无法找到该命令。</p>
+<p>如果在<code>PATH</code>包含的目录中，有多个目录都包含某命令的可执行文件，那么会执行先搜索到的可执行文件。</p>
+<p>从执行结果中可以看到，<code>/bin</code>目录已经包含在<code>PATH</code>环境变量中，因此在使用类似<code>rm、rmdir、ls</code>等命令时，即便直接使用其命令名，Linux 也可以找到该命令。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/08/15/Linux/%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/08/17/Linux/%E6%89%93%E5%8C%85%EF%BC%88%E5%BD%92%E6%A1%A3%EF%BC%89%E5%92%8C%E5%8E%8B%E7%BC%A9/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Linux打包（归档）和压缩
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/07/19/java/SpringMVC/Spring%20MVC%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E5%8C%96/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SpringMVC 数据格式化</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

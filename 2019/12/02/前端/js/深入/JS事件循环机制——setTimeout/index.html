@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS事件循环机制——setTimeout |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/深入/JS事件循环机制——setTimeout"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS事件循环机制——setTimeout
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/12/02/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94setTimeout/" class="article-date">
+  <time datetime="2019-12-02T09:15:13.000Z" itemprop="datePublished">2019-12-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="浏览器怎么实现-setTimeout"><a href="#浏览器怎么实现-setTimeout" class="headerlink" title="浏览器怎么实现 setTimeout"></a>浏览器怎么实现 setTimeout</h1><p>我们知道渲染进程中所有运行在主线程上的任务都需要先添加到消息队列，然后事件循环系统再按照顺序执行消息队列中的任务。下面我们来看看那些典型的事件：</p>
+<ul>
+<li>当接收到 HTML 文档数据，渲染引擎就会将“解析 DOM”事件添加到消息队列中，</li>
+<li>当用户改变了 Web 页面的窗口大小，渲染引擎就会将“重新布局”的事件添加到消息队列中。</li>
+<li>当触发了 JavaScript 引擎垃圾回收机制，渲染引擎会将“垃圾回收”任务添加到消息队列中。</li>
+<li>同样，如果要执行一段异步 JavaScript 代码，也是需要将执行任务添加到消息队列中。</li>
+</ul>
+<p>以上列举的只是一小部分事件，这些事件被添加到消息队列之后，事件循环系统就会按照消息队列中的顺序来执行事件。</p>
+<p>所以说要执行一段异步任务，需要先将任务添加到消息队列中。不过通过定时器设置回调函数有点特别，它们需要在指定的时间间隔内被调用，但消息队列中的任务是按照顺序执行的，所以为了保证回调函数能在指定时间内执行，你不能将定时器的回调函数直接添加到消息队列中。</p>
+<p>那么该怎么设计才能让定时器设置的回调事件在规定时间内被执行呢？</p>
+<p>在 Chrome 中除了正常使用的消息队列之外，还有另外一个消息队列，这个队列中维护了需要延迟执行的任务列表，包括了定时器和 Chromium 内部一些需要延迟执行的任务。所以当通过 JavaScript 创建一个定时器时，渲染进程会将该定时器的回调任务添加到延迟队列中。</p>
+<p>源码中延迟执行队列的定义如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DelayedIncomingQueue delayed_incoming_queue;</span><br></pre></td></tr></table></figure>
+<p>当通过 JavaScript 调用<code>setTimeout</code>设置回调函数的时候，渲染进程将会创建一个回调任务，包含了回调函数<code>showName</code>、当前发起时间、延迟执行时间，其模拟代码如下所示：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">DelayTask</span> &#123;</span><br><span class="line">  int64 id；</span><br><span class="line">  CallBackFunction cbf;</span><br><span class="line">  <span class="type">int</span> start_time;</span><br><span class="line">  <span class="type">int</span> delay_time;</span><br><span class="line">&#125;;</span><br><span class="line">DelayTask timerTask;</span><br><span class="line">timerTask.cbf = showName;</span><br><span class="line">timerTask.start_time = <span class="built_in">getCurrentTime</span>(); <span class="comment">// 获取当前时间</span></span><br><span class="line">timerTask.delay_time = <span class="number">200</span>;<span class="comment">// 设置延迟执行时间</span></span><br></pre></td></tr></table></figure>
+<p>创建好回调任务之后，再将该任务添加到延迟执行队列中，代码如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delayed_incoming_queue.push(timerTask)；</span><br></pre></td></tr></table></figure>
+<p>现在通过定时器发起的任务就被保存到延迟队列中了，那接下来我们再来看看消息循环系统是怎么触发延迟队列的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ProcessTimerTask</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 从 delayed_incoming_queue 中取出已经到期的定时器任务</span></span><br><span class="line">  <span class="comment">// 依次执行这些任务</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">TaskQueue task_queue；</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ProcessTask</span><span class="params">()</span></span>;</span><br><span class="line"><span class="type">bool</span> keep_running = <span class="literal">true</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MainTherad</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="comment">// 执行消息队列中的任务</span></span><br><span class="line">    Task task = task_queue.<span class="built_in">takeTask</span>();</span><br><span class="line">    <span class="built_in">ProcessTask</span>(task);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 执行延迟队列中的任务</span></span><br><span class="line">    <span class="built_in">ProcessDelayTask</span>()</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span>(!keep_running) <span class="comment">// 如果设置了退出标志，那么直接退出线程循环</span></span><br><span class="line">        <span class="keyword">break</span>; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面代码可以看出来，我们添加了一个<code>ProcessDelayTask</code>函数，该函数是专门用来处理延迟执行任务的。这里我们要重点关注它的执行时机，在上段代码中，处理完消息队列中的一个任务之后，就开始执行<code>ProcessDelayTask</code>函数。<code>ProcessDelayTask</code>函数会根据发起时间和延迟时间计算出到期的任务，然后依次执行这些到期的任务。等到期的任务执行完成之后，再继续下一个循环过程。通过这样的方式，一个完整的定时器就实现了。</p>
+<p>设置一个定时器，JavaScript 引擎会返回一个定时器的 ID。那通常情况下，当一个定时器的任务还没有被执行的时候，也是可以取消的，具体方法是调用<code>clearTimeout</code>函数，并传入需要取消的定时器的 ID。如下面代码所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clearTimeout(timer_id)</span><br></pre></td></tr></table></figure>
+<p>其实浏览器内部实现取消定时器的操作也是非常简单的，就是直接从<code>delayed_incoming_queue</code>延迟队列中，通过 ID 查找到对应的任务，然后再将其从队列中删除掉就可以了。</p>
+<h1 id="使用-setTimeout-的一些注意事项"><a href="#使用-setTimeout-的一些注意事项" class="headerlink" title="使用 setTimeout 的一些注意事项"></a>使用 setTimeout 的一些注意事项</h1><h2 id="1-如果当前任务执行时间过久，会影响延迟到期定时器任务的执行"><a href="#1-如果当前任务执行时间过久，会影响延迟到期定时器任务的执行" class="headerlink" title="1. 如果当前任务执行时间过久，会影响延迟到期定时器任务的执行"></a>1. 如果当前任务执行时间过久，会影响延迟到期定时器任务的执行</h2><p>在使用<code>setTimeout</code>的时候，有很多因素会导致回调函数执行比设定的预期值要久，其中一个就是当前任务执行时间过久从而导致定时器设置的任务被延后执行。我们先看下面这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;bar&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(bar, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5000</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> i = <span class="number">5</span>+<span class="number">8</span>+<span class="number">8</span>+<span class="number">8</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">foo</span>()</span><br></pre></td></tr></table></figure>
+<p>这段代码中，在执行<code>foo</code>函数的时候使用<code>setTimeout</code>设置了一个 0 延时的回调任务，设置好回调任务后，<code>foo</code>函数会继续执行 5000 次<code>for</code>循环。</p>
+<p>通过<code>setTimeout</code>设置的回调任务被放入了消息队列中并且等待下一次执行，这里并不是立即执行的；要执行消息队列中的下个任务，需要等待当前的任务执行完成，由于当前这段代码要执行 5000 次的<code>for</code>循环，所以当前这个任务的执行时间会比较久一点。这势必会影响到下个任务的执行时间。</p>
+<p>你也可以打开<code>Performance</code>来看看其执行过程，如下图所示：</p>
+
+
+<p>从图中可以看到，执行<code>foo</code>函数所消耗的时长是 500 毫秒，这也就意味着通过<code>setTimeout</code>设置的任务会被推迟到 500 毫秒以后再去执行，而设置<code>setTimeout</code>的回调延迟时间是 0。</p>
+<h2 id="2-如果-setTimeout-存在嵌套调用，那么系统会设置最短时间间隔为-4-毫秒"><a href="#2-如果-setTimeout-存在嵌套调用，那么系统会设置最短时间间隔为-4-毫秒" class="headerlink" title="2. 如果 setTimeout 存在嵌套调用，那么系统会设置最短时间间隔为 4 毫秒"></a>2. 如果 setTimeout 存在嵌套调用，那么系统会设置最短时间间隔为 4 毫秒</h2><p>也就是说在定时器函数里面嵌套调用定时器，也会延长定时器的执行时间，可以先看下面的这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">cb</span>(<span class="params"></span>) &#123; <span class="built_in">setTimeout</span>(cb, <span class="number">0</span>); &#125;</span><br><span class="line"><span class="built_in">setTimeout</span>(cb, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>你还是可以通过<code>Performance</code>来记录下这段代码的执行过程，如下图所示：</p>
+
+
+<p>上图中的竖线就是定时器的函数回调过程，从图中可以看出，前面五次调用的时间间隔比较小，嵌套调用超过五次以上，后面每次的调用最小时间间隔是 4 毫秒。之所以出现这样的情况，是因为在 Chrome 中，定时器被嵌套调用 5 次以上，系统会判断该函数方法被阻塞了，如果定时器的调用时间间隔小于 4 毫秒，那么浏览器会将每次调用的时间间隔设置为 4 毫秒。</p>
+<p>所以，一些实时性较高的需求就不太适合使用<code>setTimeout</code>了，比如你用<code>setTimeout</code>来实现 JavaScript 动画就不是一个很好的主意。</p>
+<h2 id="3-未激活的页面，setTimeout-执行最小间隔是-1000-毫秒"><a href="#3-未激活的页面，setTimeout-执行最小间隔是-1000-毫秒" class="headerlink" title="3. 未激活的页面，setTimeout 执行最小间隔是 1000 毫秒"></a>3. 未激活的页面，setTimeout 执行最小间隔是 1000 毫秒</h2><p>除了前面的 4 毫秒延迟，还有一个很容易被忽略的地方，那就是未被激活的页面中定时器最小值大于 1000 毫秒，也就是说，如果标签不是当前的激活标签，那么定时器最小的时间间隔是 1000 毫秒，目的是为了优化后台页面的加载损耗以及降低耗电量。这一点你在使用定时器的时候要注意。</p>
+<h2 id="4-延时执行时间有最大值"><a href="#4-延时执行时间有最大值" class="headerlink" title="4. 延时执行时间有最大值"></a>4. 延时执行时间有最大值</h2><p>除了要了解定时器的回调函数时间比实际设定值要延后之外，还有一点需要注意下，那就是 Chrome、Safari、Firefox 都是以 32 个<code>bit</code>来存储延时值的，<code>32bit</code>最大只能存放的数字是 2147483647 毫秒，这就意味着，如果<code>setTimeout</code>设置的延迟值大于 2147483647 毫秒（大约 24.8 天）时就会溢出，这导致定时器会被立即执行。你可以运行下面这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">showName</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot; test &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> timerID = <span class="built_in">setTimeout</span>(showName,<span class="number">2147483648</span>);<span class="comment">// 会被理解调用执行</span></span><br></pre></td></tr></table></figure>
+<p>运行后可以看到，这段代码是立即被执行的。但如果将延时值修改为小于 2147483647 毫秒的某个值，那么执行时就没有问题了。</p>
+<h2 id="5-使用-setTimeout-设置的回调函数中的-this-不符合直觉"><a href="#5-使用-setTimeout-设置的回调函数中的-this-不符合直觉" class="headerlink" title="5. 使用 setTimeout 设置的回调函数中的 this 不符合直觉"></a>5. 使用 setTimeout 设置的回调函数中的 this 不符合直觉</h2><p>如果被<code>setTimeout</code>推迟执行的回调函数是某个对象的方法，那么该方法中的<code>this</code>关键字将指向全局环境，而不是定义时所在的那个对象。你可以看下面这段代码的执行结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name= <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">MyObj</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">showName</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="title class_">MyObj</span>.<span class="property">showName</span>, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<p>这里输出的是 1，因为这段代码在编译的时候，执行上下文中的<code>this</code>会被设置为全局<code>window</code>，如果是严格模式，会被设置为<code>undefined</code>。</p>
+<p>那么该怎么解决这个问题呢？通常可以使用下面这两种方法。</p>
+<p>第一种是将<code>MyObj.showName</code>放在匿名函数中执行，如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 箭头函数</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title class_">MyObj</span>.<span class="title function_">showName</span>()</span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br><span class="line"><span class="comment">// 或者 function 函数</span></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">MyObj</span>.<span class="title function_">showName</span>();</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<p>第二种是使用<code>bind</code>方法，将<code>showName</code>绑定在<code>MyObj</code>上面，代码如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">setTimeout</span>(<span class="title class_">MyObj</span>.<span class="property">showName</span>.<span class="title function_">bind</span>(<span class="title class_">MyObj</span>), <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>首先，为了支持定时器的实现，浏览器增加了延时队列。<br>其次，由于消息队列排队和一些系统级别的限制，通过<code>setTimeout</code>设置的回调任务并非总是可以实时地被执行，这样就不能满足一些实时性要求较高的需求了。<br>最后，在定时器中使用过程中，还存在一些陷阱，需要你多加注意。</p>
+<p>函数<code>setTimeout</code>在时效性上面有很多先天的不足，所以对于一些时间精度要求比较高的需求，应该有针对性地采取一些其他的方案。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/12/02/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94setTimeout/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" rel="tag">JS事件循环机制</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/12/03/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94XMLHttpRequest/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS事件循环机制——XMLHttpRequest
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/12/01/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS事件循环机制——消息队列和事件循环</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

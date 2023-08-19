@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Bash 脚本入门 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Shell/Bash脚本入门"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Bash 脚本入门
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/09/Shell/Bash%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2023-07-09T03:24:14.000Z" itemprop="datePublished">2023-07-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Bash-脚本入门"><a href="#Bash-脚本入门" class="headerlink" title="Bash 脚本入门"></a>Bash 脚本入门</h1><p>脚本（<code>script</code>）就是包含一系列命令的一个文本文件。Shell 读取这个文件，依次执行里面的所有命令，就好像这些命令直接输入到命令行一样。所有能够在命令行完成的任务，都能够用脚本完成。</p>
+<p>脚本的好处是可以重复使用，也可以指定在特定场合自动调用，比如系统启动或关闭时自动执行脚本。</p>
+<h2 id="Shebang-行"><a href="#Shebang-行" class="headerlink" title="Shebang 行"></a>Shebang 行</h2><p>脚本的第一行通常是指定解释器，即这个脚本必须通过什么解释器执行。这一行以<code>#!</code>字符开头，这个字符称为<code>Shebang</code>，所以这一行就叫做<code>Shebang</code>行。</p>
+<p><code>#!</code>后面就是脚本解释器的位置，Bash 脚本的解释器一般是<code>/bin/sh</code>或<code>/bin/bash</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br></pre></td></tr></table></figure>
+<p><code>#!</code>与脚本解释器之间有没有空格，都是可以的。</p>
+<p>如果 Bash 解释器不放在目录<code>/bin</code>，脚本就无法执行了。为了保险，可以写成下面这样。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br></pre></td></tr></table></figure>
+<p>上面命令使用<code>env</code>命令（这个命令总是在<code>/usr/bin</code>目录），返回 Bash 可执行文件的位置。</p>
+<p><code>Shebang</code>行不是必需的，但是建议加上这行。如果缺少该行，就需要手动将脚本传给解释器。举例来说，脚本是<code>script.sh</code>，有<code>Shebang</code>行的时候，可以直接调用执行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./script.sh</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>script.sh</code>是脚本文件名。脚本通常使用<code>.sh</code>后缀名，不过这不是必需的。</p>
+<p>如果没有<code>Shebang</code>行，就只能手动将脚本传给解释器来执行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ /bin/sh ./script.sh</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ bash ./script.sh</span><br></pre></td></tr></table></figure>
+<h2 id="执行权限和路径"><a href="#执行权限和路径" class="headerlink" title="执行权限和路径"></a>执行权限和路径</h2><p>只要指定了<code>Shebang</code>行的脚本，可以直接执行。这有一个前提条件，就是脚本需要有执行权限。可以使用下面的命令，赋予脚本执行权限。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给所有用户执行权限</span></span><br><span class="line">$ <span class="built_in">chmod</span> +x script.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 给所有用户读权限和执行权限</span></span><br><span class="line">$ <span class="built_in">chmod</span> +rx script.sh</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ <span class="built_in">chmod</span> 755 script.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只给脚本拥有者读权限和执行权限</span></span><br><span class="line">$ <span class="built_in">chmod</span> u+rx script.sh</span><br></pre></td></tr></table></figure>
+<p>脚本的权限通常设为 755（拥有者有所有权限，其他人有读和执行权限）或者 700（只有拥有者可以执行）。</p>
+<p>除了执行权限，脚本调用时，一般需要指定脚本的路径（比如<code>path/script.sh</code>）。如果将脚本放在环境变量<code>$PATH</code>指定的目录中，就不需要指定路径了。因为 Bash 会自动到这些目录中，寻找是否存在同名的可执行文件。</p>
+<p>建议在主目录新建一个<code>~/bin</code>子目录，专门存放可执行脚本，然后把<code>~/bin</code>加入<code>$PATH</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:~/bin</span><br></pre></td></tr></table></figure>
+<p>上面命令改变环境变量<code>$PATH</code>，将<code>~/bin</code>添加到<code>$PATH</code>的末尾。可以将这一行加到<code>~/.bashrc</code>文件里面，然后重新加载一次<code>.bashrc</code>，这个配置就可以生效了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>以后不管在什么目录，直接输入脚本文件名，脚本就会执行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ script.sh</span><br></pre></td></tr></table></figure>
+<p>上面命令没有指定脚本路径，因为<code>script.sh</code>在<code>$PATH</code>指定的目录中。</p>
+<h2 id="env-命令"><a href="#env-命令" class="headerlink" title="env 命令"></a>env 命令</h2><p><code>env</code>命令总是指向<code>/usr/bin/env</code>文件，或者说，这个二进制文件总是在目录<code>/usr/bin</code>。</p>
+<p><code>#!/usr/bin/env NAME</code>这个语法的意思是，让 Shell 查找<code>$PATH</code>环境变量里面第一个匹配的<code>NAME</code>。如果你不知道某个命令的具体路径，或者希望兼容其他用户的机器，这样的写法就很有用。</p>
+<p><code>/usr/bin/env bash</code>的意思就是，返回<code>bash</code>可执行文件的位置，前提是<code>bash</code>的路径是在<code>$PATH</code>里面。其他脚本文件也可以使用这个命令。比如 Node.js 脚本的<code>Shebang</code>行，可以写成下面这样。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br></pre></td></tr></table></figure>
+<p><code>env</code>命令的参数如下。</p>
+<ul>
+<li><code>-i, --ignore-environment</code>：不带环境变量启动。</li>
+<li><code>-u, --unset=NAME</code>：从环境变量中删除一个变量。</li>
+<li><code>--help</code>：显示帮助。</li>
+<li><code>--version</code>：输出版本信息。</li>
+</ul>
+<p>下面是一个例子，新建一个不带任何环境变量的 Shell。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">env</span> -i /bin/sh</span><br></pre></td></tr></table></figure>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>Bash 脚本中，<code>#</code>表示注释，可以放在行首，也可以放在行尾。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本行是注释</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;Hello World!&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;Hello World!&#x27;</span> <span class="comment"># 井号后面的部分也是注释</span></span><br></pre></td></tr></table></figure>
+<p>建议在脚本开头，使用注释说明当前脚本的作用，这样有利于日后的维护。</p>
+<h2 id="脚本参数"><a href="#脚本参数" class="headerlink" title="脚本参数"></a>脚本参数</h2><p>调用脚本的时候，脚本文件名后面可以带有参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ script.sh word1 word2 word3</span><br></pre></td></tr></table></figure>
+<p>脚本文件内部，可以使用特殊变量，引用这些参数。</p>
+<ul>
+<li><code>$0</code>：脚本文件名，即<code>script.sh</code>。</li>
+<li><code>$1~$9</code>：对应脚本的第一个参数到第九个参数。</li>
+<li><code>$#</code>：参数的总数。</li>
+<li><code>$@</code>：全部的参数，参数之间使用空格分隔。</li>
+<li><code>$*</code>：全部的参数，参数之间使用变量<code>$IFS</code>值的第一个字符分隔，默认为空格，但是可以自定义。</li>
+</ul>
+<p>如果脚本的参数多于 9 个，那么第 10 个参数可以用<code>$&#123;10&#125;</code>的形式引用，以此类推。</p>
+<p>注意，如果命令是<code>command -o foo bar</code>，那么<code>-o</code>是<code>$1</code>，<code>foo</code>是<code>$2</code>，<code>bar</code>是<code>$3</code>。</p>
+<p>下面是一个脚本内部读取命令行参数的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># script.sh</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;全部参数：&quot;</span> <span class="variable">$@</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;命令行参数数量：&quot;</span> <span class="variable">$#</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;$0 = &#x27;</span> <span class="variable">$0</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;$1 = &#x27;</span> <span class="variable">$1</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;$2 = &#x27;</span> <span class="variable">$2</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;$3 = &#x27;</span> <span class="variable">$3</span></span><br></pre></td></tr></table></figure>
+<p>执行结果如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ./script.sh a b c</span><br><span class="line">全部参数：a b c</span><br><span class="line">命令行参数数量：3</span><br><span class="line"><span class="variable">$0</span> =  script.sh</span><br><span class="line"><span class="variable">$1</span> =  a</span><br><span class="line"><span class="variable">$2</span> =  b</span><br><span class="line"><span class="variable">$3</span> =  c</span><br></pre></td></tr></table></figure>
+<p>用户可以输入任意数量的参数，利用<code>for</code>循环，可以读取每一个参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>如果多个参数放在双引号里面，视为一个参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./script.sh &quot;a b&quot;</span><br></pre></td></tr></table></figure>
+<p>上面例子中，Bash 会认为<code>&quot;a b&quot;</code>是一个参数，<code>$1</code>会返回<code>a b</code>。注意，返回时不包括双引号。</p>
+<h2 id="shift-命令"><a href="#shift-命令" class="headerlink" title="shift 命令"></a>shift 命令</h2><p><code>shift</code>命令可以改变脚本参数，每次执行都会移除脚本当前的第一个参数（<code>$1</code>），使得后面的参数向前一位，即<code>$2</code>变成<code>$1、$3</code>变成<code>$2、$4</code>变成<code>$3</code>，以此类推。</p>
+<p><code>while</code>循环结合<code>shift</code>命令，也可以读取每一个参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;一共输入了 <span class="variable">$#</span> 个参数&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> != <span class="string">&quot;&quot;</span> ]; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;剩下 <span class="variable">$#</span> 个参数&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;参数：<span class="variable">$1</span>&quot;</span></span><br><span class="line">  <span class="built_in">shift</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>shift</code>命令每次移除当前第一个参数，从而通过<code>while</code>循环遍历所有参数。</p>
+<p><code>shift</code>命令可以接受一个整数作为参数，指定所要移除的参数个数，默认为 1。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shift 3</span><br></pre></td></tr></table></figure>
+<p>上面的命令移除前三个参数，原来的<code>$4</code>变成<code>$1</code>。</p>
+<h2 id="getopts-命令"><a href="#getopts-命令" class="headerlink" title="getopts 命令"></a>getopts 命令</h2><p><code>getopts</code>命令用在脚本内部，可以解析复杂的脚本命令行参数，通常与<code>while</code>循环一起使用，取出脚本所有的带有前置连词线（-）的参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">getopts</span> optstring name</span><br></pre></td></tr></table></figure>
+<p>它带有两个参数。第一个参数<code>optstring</code>是字符串，给出脚本所有的连词线参数。比如，某个脚本可以有三个配置项参数<code>-l、-h、-a</code>，其中只有<code>-a</code>可以带有参数值，而<code>-l</code>和<code>-h</code>是开关参数，那么<code>getopts</code>的第一个参数写成<code>lha:</code>，顺序不重要。注意，<code>a</code>后面有一个冒号，表示该参数带有参数值，getopts规定带有参数值的配置项参数，后面必须带有一个冒号（:）。<code>getopts</code>的第二个参数<code>name</code>是一个变量名，用来保存当前取到的配置项参数，即<code>l、h</code>或<code>a</code>。</p>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="built_in">getopts</span> <span class="string">&#x27;lha:&#x27;</span> OPTION; <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">case</span> <span class="string">&quot;<span class="variable">$OPTION</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">    l)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;linuxconfig&quot;</span></span><br><span class="line">      ;;</span><br><span class="line"></span><br><span class="line">    h)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;h stands for h&quot;</span></span><br><span class="line">      ;;</span><br><span class="line"></span><br><span class="line">    a)</span><br><span class="line">      avalue=<span class="string">&quot;<span class="variable">$OPTARG</span>&quot;</span></span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;The value provided is <span class="variable">$OPTARG</span>&quot;</span></span><br><span class="line">      ;;</span><br><span class="line">    ?)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;script usage: <span class="subst">$(basename $0)</span> [-l] [-h] [-a somevalue]&quot;</span> &gt;&amp;2</span><br><span class="line">      <span class="built_in">exit</span> 1</span><br><span class="line">      ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">shift</span> <span class="string">&quot;<span class="subst">$(($OPTIND - 1)</span>)&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>while</code>循环不断执行<code>getopts &#39;lha:&#39; OPTION</code>命令，每次执行就会读取一个连词线参数（以及对应的参数值），然后进入循环体。变量<code>OPTION</code>保存的是，当前处理的那一个连词线参数（即<code>l、h</code>或<code>a</code>）。如果用户输入了没有指定的参数（比如<code>-x</code>），那么<code>OPTION</code>等于<code>?</code>。循环体内使用<code>case</code>判断，处理这四种不同的情况。</p>
+<p>如果某个连词线参数带有参数值，比如<code>-a foo</code>，那么处理<code>a</code>参数的时候，环境变量<code>$OPTARG</code>保存的就是参数值。</p>
+<p>注意，只要遇到不带连词线的参数，<code>getopts</code>就会执行失败，从而退出<code>while</code>循环。比如，<code>getopts</code>可以解析<code>command -l foo</code>，但不可以解析<code>command foo -l</code>。另外，多个连词线参数写在一起的形式，比如<code>command -lh</code>，<code>getopts</code>也可以正确处理。</p>
+<p>变量<code>$OPTIND</code>在<code>getopts</code>开始执行前是 1，然后每次执行就会加 1。等到退出<code>while</code>循环，就意味着连词线参数全部处理完毕。这时，<code>$OPTIND - 1</code>就是已经处理的连词线参数个数，使用<code>shift</code>命令将这些参数移除，保证后面的代码可以用<code>$1、$2</code>等处理命令的主参数。</p>
+<h2 id="配置项参数终止符-–"><a href="#配置项参数终止符-–" class="headerlink" title="配置项参数终止符 –"></a>配置项参数终止符 –</h2><p>-和–开头的参数，会被 Bash 当作配置项解释。但是，有时它们不是配置项，而是实体参数的一部分，比如文件名叫做<code>-f</code>或<code>--file</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> -f</span><br><span class="line">$ <span class="built_in">cat</span> --file</span><br></pre></td></tr></table></figure>
+<p>上面命令的原意是输出文件<code>-f</code>和<code>--file</code>的内容，但是会被 Bash 当作配置项解释。</p>
+<p>这时就可以使用配置项参数终止符–，它的作用是告诉 Bash，在它后面的参数开头的-和–不是配置项，只能当作实体参数解释。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> -- -f</span><br><span class="line">$ <span class="built_in">cat</span> -- --file</span><br></pre></td></tr></table></figure>
+<p>上面命令可以正确展示文件<code>-f</code>和<code>--file</code>的内容，因为它们放在–的后面，开头的-和–就不再当作配置项解释了。</p>
+<p>如果要确保某个变量不会被当作配置项解释，就要在它前面放上参数终止符–。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -- $myPath</span><br></pre></td></tr></table></figure>
+<p>上面示例中，–强制变量$myPath只能当作实体参数（即路径名）解释。如果变量不是路径名，就会报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ myPath=<span class="string">&quot;-l&quot;</span></span><br><span class="line">$ <span class="built_in">ls</span> -- <span class="variable">$myPath</span></span><br><span class="line"><span class="built_in">ls</span>: 无法访问<span class="string">&#x27;-l&#x27;</span>: 没有那个文件或目录</span><br></pre></td></tr></table></figure>
+<p>上面例子中，变量<code>myPath</code>的值为 -l，不是路径。但是，–强制<code>$myPath</code>只能作为路径解释，导致报错“不存在该路径”。</p>
+<p>下面是另一个实际的例子，如果想在文件里面搜索<code>--hello</code>，这时也要使用参数终止符–。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grep -- <span class="string">&quot;--hello&quot;</span> example.txt</span><br></pre></td></tr></table></figure>
+<p>上面命令在example.txt文件里面，搜索字符串–hello。这个字符串是–开头，如果不用参数终止符，grep命令就会把–hello当作配置项参数，从而报错。</p>
+<h2 id="exit-命令"><a href="#exit-命令" class="headerlink" title="exit 命令"></a>exit 命令</h2><p>exit命令用于终止当前脚本的执行，并向 Shell 返回一个退出值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ exit</span><br></pre></td></tr></table></figure>
+<p>上面命令中止当前脚本，将最后一条命令的退出状态，作为整个脚本的退出状态。</p>
+<p><code>exit</code>命令后面可以跟参数，该参数就是退出状态。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 退出值为0（成功）</span></span><br><span class="line">$ <span class="built_in">exit</span> 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出值为1（失败）</span></span><br><span class="line">$ <span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure>
+<p>退出时，脚本会返回一个退出值。脚本的退出值，0表示正常，1表示发生错误，2表示用法不对，126表示不是可执行脚本，127表示命令没有发现。如果脚本被信号N终止，则退出值为128 + N。简单来说，只要退出值非0，就认为执行出错。</p>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ $(<span class="built_in">id</span> -u) != <span class="string">&quot;0&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;根用户才能执行当前脚本&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>上面的例子中，<code>id -u</code>命令返回用户的 ID，一旦用户的 ID 不等于 0（根用户的 ID），脚本就会退出，并且退出码为 1，表示运行失败。</p>
+<p><code>exit</code>与<code>return</code>命令的差别是，<code>return</code>命令是函数的退出，并返回一个值给调用者，脚本依然执行。<code>exit</code>是整个脚本的退出，如果在函数之中调用<code>exit</code>，则退出函数，并终止脚本执行。</p>
+<h2 id="命令执行结果"><a href="#命令执行结果" class="headerlink" title="命令执行结果"></a>命令执行结果</h2><p>命令执行结束后，会有一个返回值。0表示执行成功，非0（通常是1）表示执行失败。环境变量$?可以读取前一个命令的返回值。</p>
+<p>利用这一点，可以在脚本中对命令执行结果进行判断。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /path/to/somewhere</span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;$?&quot;</span> = <span class="string">&quot;0&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">rm</span> *</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;无法切换目录！&quot;</span> 1&gt;&amp;2</span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>cd /path/to/somewhere</code>这个命令如果执行成功（返回值等于0），就删除该目录里面的文件，否则退出脚本，整个脚本的返回值变为 1，表示执行失败。</p>
+<p>由于<code>if</code>可以直接判断命令的执行结果，执行相应的操作，上面的脚本可以改写成下面的样子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">cd</span> /path/to/somewhere; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">rm</span> *</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Could not change directory! Aborting.&quot;</span> 1&gt;&amp;2</span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>更简洁的写法是利用两个逻辑运算符&amp;&amp;（且）和||（或）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一步执行成功，才会执行第二步</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/somewhere &amp;&amp; <span class="built_in">rm</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一步执行失败，才会执行第二步</span></span><br><span class="line"><span class="built_in">cd</span> /path/to/somewhere || <span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure>
+<h2 id="source-命令"><a href="#source-命令" class="headerlink" title="source 命令"></a>source 命令</h2><p><code>source</code>命令用于执行一个脚本，通常用于重新加载一个配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ source .bashrc</span><br></pre></td></tr></table></figure>
+<p><code>source</code>命令最大的特点是在当前 Shell 执行脚本，不像直接执行脚本时，会新建一个子 Shell。所以，<code>source</code>命令执行脚本时，不需要<code>export</code>变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># test.sh</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$foo</span></span><br></pre></td></tr></table></figure>
+<p>上面脚本输出<code>$foo</code>变量的值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当前 Shell 新建一个变量 foo</span></span><br><span class="line">$ foo=1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印输出 1</span></span><br><span class="line">$ <span class="built_in">source</span> test.sh</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印输出空字符串</span></span><br><span class="line">$ bash test.sh</span><br></pre></td></tr></table></figure>
+<p>上面例子中，当前 Shell 的变量<code>foo</code>并没有<code>export</code>，所以直接执行无法读取，但是<code>source</code>执行可以读取。</p>
+<p><code>source</code>命令的另一个用途，是在脚本内部加载外部库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> ./lib.sh</span><br><span class="line">function_from_lib</span><br></pre></td></tr></table></figure>
+<p>上面脚本在内部使用<code>source</code>命令加载了一个外部库，然后就可以在脚本里面，使用这个外部库定义的函数。</p>
+<p><code>source</code>有一个简写形式，可以使用一个点（.）来表示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ . .bashrc</span><br></pre></td></tr></table></figure>
+<h2 id="别名，alias-命令"><a href="#别名，alias-命令" class="headerlink" title="别名，alias 命令"></a>别名，alias 命令</h2><p><code>alias</code>命令用来为一个命令指定别名，这样更便于记忆。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias NAME=DEFINITION</span><br></pre></td></tr></table></figure>
+<p>上面命令中，<code>NAME</code>是别名的名称，<code>DEFINITION</code>是别名对应的原始命令。注意，等号两侧不能有空格，否则会报错。</p>
+<p>一个常见的例子是为<code>grep</code>命令起一个search的别名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> search=grep</span><br></pre></td></tr></table></figure>
+<p><code>alias</code>也可以用来为长命令指定一个更短的别名。下面是通过别名定义一个<code>today</code>的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> today=<span class="string">&#x27;date +&quot;%A, %B %-d, %Y&quot;&#x27;</span></span><br><span class="line">$ today</span><br><span class="line">星期一, 一月 6, 2020</span><br></pre></td></tr></table></figure>
+<p><code>alias</code>定义的别名也可以接受参数，参数会直接传入原始命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> <span class="built_in">echo</span>=<span class="string">&#x27;echo It says: &#x27;</span></span><br><span class="line">$ <span class="built_in">echo</span> hello world</span><br><span class="line">It says: hello world</span><br></pre></td></tr></table></figure>
+<p>上面例子中，别名定义了<code>echo</code>命令的前两个参数，等同于修改了<code>echo</code>命令的默认行为。</p>
+<p>指定别名以后，就可以像使用其他命令一样使用别名。一般来说，都会把常用的别名写在<code>~/.bashrc</code>的末尾。另外，只能为命令定义别名，为其他部分（比如很长的路径）定义别名是无效的。</p>
+<p>直接调用<code>alias</code>命令，可以显示所有别名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span></span><br></pre></td></tr></table></figure>
+<p><code>unalias</code>命令可以解除别名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">unalias</span> lt</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/07/09/Shell/Bash%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bash/" rel="tag">Bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/14/Shell/Bash%20%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Bash 条件判断
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/07/Shell/Bash%20%E8%A1%8C%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Bash 行操作</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

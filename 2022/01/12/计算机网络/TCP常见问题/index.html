@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>TCP常见问题 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/TCP常见问题"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  TCP常见问题
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2022-01-12T03:49:21.000Z" itemprop="datePublished">2022-01-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">11.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">41 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="在-Linux-系统中查看-TCP-状态"><a href="#在-Linux-系统中查看-TCP-状态" class="headerlink" title="在 Linux 系统中查看 TCP 状态"></a>在 Linux 系统中查看 TCP 状态</h1><p>在 Linux 可以通过<code>netstat -napt</code>命令查看 TCP 的连接状态。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/9.png" class="">
+
+<h1 id="有⼀个-IP-的服务器监听了⼀个端口，它的-TCP-的最⼤连接数是多少？"><a href="#有⼀个-IP-的服务器监听了⼀个端口，它的-TCP-的最⼤连接数是多少？" class="headerlink" title="有⼀个 IP 的服务器监听了⼀个端口，它的 TCP 的最⼤连接数是多少？"></a>有⼀个 IP 的服务器监听了⼀个端口，它的 TCP 的最⼤连接数是多少？</h1><p>服务器通常固定在某个本地端口上监听，等待客户端的连接请求。因此，客户端 IP 和端口是可变的，其理论值计算公式如下: </p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/2.png" class="">
+
+<p>对 IPv4，客户端的 IP 数最多为 2 的 32 次方，客户端的端口数最多为 2 的 16 次方，也就是服务端单机最⼤ TCP 连接数，约为 2 的 48 次方。</p>
+<p>当然，服务端最⼤并发 TCP 连接数远不能达到理论上限。</p>
+<ul>
+<li>首先主要是⽂件描述符限制，Socket 都是⽂件，所以首先要通过<code>ulimit</code>配置⽂件描述符的数⽬；</li>
+<li>另⼀个是内存限制，每个 TCP 连接都要占用⼀定内存，操作系统的内存是有限的。</li>
+</ul>
+<h1 id="TCP-和-UDP-区别"><a href="#TCP-和-UDP-区别" class="headerlink" title="TCP 和 UDP 区别"></a>TCP 和 UDP 区别</h1><table>
+<thead>
+<tr>
+<th></th>
+<th>UDP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否连接</td>
+<td>无连接</td>
+<td>面向连接</td>
+</tr>
+<tr>
+<td>是否可靠</td>
+<td>不可靠传输，不使用流量控制和拥塞控制</td>
+<td>可靠传输，使用流量控制和拥塞控制</td>
+</tr>
+<tr>
+<td>连接对象个数</td>
+<td>支持一对一，一对多，多对一和多对多交互通信</td>
+<td>只能是一对一通信</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>面向报文</td>
+<td>面向字节流</td>
+</tr>
+<tr>
+<td>首部开销</td>
+<td>首部开销小，仅 8 字节</td>
+<td>首部最小 20 字节，最大 60 字节</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>适用于实时应用（IP 电话、视频会议、直播等）</td>
+<td>适用于要求可靠传输的应用，例如文件传输</td>
+</tr>
+</tbody></table>
+<h1 id="为什么-UDP-头部有「包长度」字段，而-TCP-头部则没有「包长度」字段呢？"><a href="#为什么-UDP-头部有「包长度」字段，而-TCP-头部则没有「包长度」字段呢？" class="headerlink" title="为什么 UDP 头部有「包长度」字段，而 TCP 头部则没有「包长度」字段呢？"></a>为什么 UDP 头部有「包长度」字段，而 TCP 头部则没有「包长度」字段呢？</h1><p>先说说 TCP 是如何计算负载数据长度：</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/4.png" class="">
+
+<p>其中 IP 总长度 和 IP 首部长度，在 IP 首部格式是已知的。TCP 首部长度，则是在 TCP 首部格式已知的，所以就可以求得 TCP 数据的长度。</p>
+<p>⼤家这时就奇怪了问：“ UDP 也是基于 IP 层的呀，那 UDP 的数据长度也可以通过这个公式计算呀？ 为何还要有「包长度」呢？”</p>
+<p>这么⼀问，确实感觉 UDP 「包长度」是冗余的。</p>
+<p>因为为了网络设备硬件设计和处理方便，首部长度需要是 4 字节的整数倍。</p>
+<p>如果去掉 UDP 「包长度」字段，那 UDP 首部长度就不是 4 字节的整数倍了，所以这可能是为了补全 UDP 首部长度是 4 字节的整数倍，才补充了「包长度」字段。</p>
+<h1 id="为什么客户端和服务端的初始序列号-ISN-是不相同的？"><a href="#为什么客户端和服务端的初始序列号-ISN-是不相同的？" class="headerlink" title="为什么客户端和服务端的初始序列号 ISN 是不相同的？"></a>为什么客户端和服务端的初始序列号 ISN 是不相同的？</h1><p>如果⼀个已经失效的连接被重用了，但是该旧连接的历史报⽂还残留在网络中，如果序列号相同，那么就⽆法分辨出该报⽂是不是历史报⽂，如果历史报⽂被新的连接接收了，则会产生数据错乱。</p>
+<p>所以，每次建立连接前重新初始化⼀个序列号主要是为了通信双方能够根据序号将不属于本连接的报⽂段丢弃。</p>
+<p>另⼀方⾯是为了安全性，防止⿊客伪造的相同序列号的 TCP 报⽂被对方接收。</p>
+<h1 id="既然-IP-层会分片，为什么-TCP-层还需要-MSS-呢？"><a href="#既然-IP-层会分片，为什么-TCP-层还需要-MSS-呢？" class="headerlink" title="既然 IP 层会分片，为什么 TCP 层还需要 MSS 呢？"></a>既然 IP 层会分片，为什么 TCP 层还需要 MSS 呢？</h1><img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/14.jpg" class="">
+
+<p>MTU：一个网络包的最大长度，以太网中一般为 1500 字节；</p>
+<p>MSS：除去 IP 和 TCP 头部之后，一个网络包所能容纳的 TCP 数据的最大长度；</p>
+<p>如果在 TCP 的整个报文（头部 + 数据）交给 IP 层进行分片，会有什么异常呢？</p>
+<p>当 IP 层有一个超过 MTU 大小的数据（TCP 头部 + TCP 数据）要发送，那么 IP 层就要进行分片，把数据分片成若干片，保证每一个分片都小于 MTU。把一份 IP 数据报进行分片以后，由目标主机的 IP 层来进行重新组装后，再交给上一层 TCP 传输层。</p>
+<p>这看起来井然有序，但这存在隐患，当如果一个 IP 分片丢失，整个 IP 报文的所有分片都得重传。</p>
+<p>因为 IP 层本身没有超时重传机制，它由传输层的 TCP 来负责超时和重传。</p>
+<p>当接收方发现 TCP 报文（头部 + 数据）的某一片丢失后，则不会响应 ACK 给对方，那么发送方的 TCP 在超时后，就会重发「整个 TCP 报文（头部 + 数据）」。</p>
+<p>因此，可以得知由 IP 层进行分片传输，是非常没有效率的。</p>
+<p>所以，为了达到最佳的传输效能 TCP 协议在建立连接的时候通常要协商双方的 MSS 值，当 TCP 层发现数据超过 MSS 时，则就先会进行分片，当然由它形成的 IP 包的长度也就不会大于 MTU ，自然也就不用 IP 分片了。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/15.jpg" class="">
+
+<p>经过 TCP 层分片后，如果一个 TCP 分片丢失后，进行重发时也是以 MSS 为单位，而不用重传所有的分片，大大增加了重传的效率。</p>
+<h1 id="什么是-SYN-攻击？如何避免-SYN-攻击？"><a href="#什么是-SYN-攻击？如何避免-SYN-攻击？" class="headerlink" title="什么是 SYN 攻击？如何避免 SYN 攻击？"></a>什么是 SYN 攻击？如何避免 SYN 攻击？</h1><p>我们都知道 TCP 连接建立是需要三次握手，假设攻击者短时间伪造不同 IP 地址的 SYN 报文，服务端每接收到一个 SYN 报文，就进入SYN_RCVD 状态，但服务端发送出去的 ACK + SYN 报文，无法得到未知 IP 主机的 ACK 应答，久而久之就会占满服务端的 SYN 接收队列（未连接队列），使得服务器不能为正常用户服务。</p>
+<h2 id="避免-SYN-攻击方式一"><a href="#避免-SYN-攻击方式一" class="headerlink" title="避免 SYN 攻击方式一"></a>避免 SYN 攻击方式一</h2><p>其中一种解决方式是通过修改 Linux 内核参数，控制队列大小和当队列满时应做什么处理。</p>
+<p>当网卡接收数据包的速度大于内核处理的速度时，会有一个队列保存这些数据包。控制该队列的最大值如下参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.core.netdev_max_backlog</span><br></pre></td></tr></table></figure>
+<p>SYN_RCVD 状态连接的最大个数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_max_syn_backlog</span><br></pre></td></tr></table></figure>
+<p>超出处理能时，对新的 SYN 直接回报 RST，丢弃连接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_abort_on_overflow</span><br></pre></td></tr></table></figure>
+<h2 id="避免-SYN-攻击方式二"><a href="#避免-SYN-攻击方式二" class="headerlink" title="避免 SYN 攻击方式二"></a>避免 SYN 攻击方式二</h2><p>我们先来看下 Linux 内核的 SYN （未完成连接建立）队列与 Accpet （已完成连接建立）队列是如何工作的？</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/16.jpg" class="">
+
+<p>正常流程：</p>
+<ul>
+<li>当服务端接收到客户端的 SYN 报文时，会将其加入到内核的 SYN 队列；</li>
+<li>接着发送 SYN + ACK 给客户端，等待客户端回应 ACK 报文；</li>
+<li>服务端接收到 ACK 报文后，从 SYN 队列移除放入到<code>Accept</code>队列；</li>
+<li>应用通过调用<code>accpet()</code> socket 接口，从<code>Accept</code>队列取出连接。</li>
+</ul>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/17.jpg" class="">
+
+<p>应用程序过慢：</p>
+<ul>
+<li>如果应用程序过慢时，就会导致<code>Accept</code>队列被占满。</li>
+</ul>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/18.jpg" class="">
+
+<p>受到 SYN 攻击：</p>
+<ul>
+<li>如果不断受到 SYN 攻击，就会导致 SYN 队列被占满。</li>
+</ul>
+<p><code>tcp_syncookies</code>的方式可以应对 SYN 攻击的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_syncookies = 1</span><br></pre></td></tr></table></figure>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/19.jpg" class="">
+
+<ul>
+<li>当 SYN 队列满之后，后续服务器收到<code>SYN</code>包，不进入<code>SYN</code>队列；</li>
+<li>计算出一个 cookie 值，再以<code>SYN + ACK</code>中的序列号返回客户端，</li>
+<li>服务端接收到客户端的应答报文时，服务器会检查这个<code>ACK</code>包的合法性。如果合法，直接放入到<code>Accept</code>队列。</li>
+<li>最后应用通过调用<code>accpet()</code> socket 接口，从<code>Accept</code>队列取出的连接。</li>
+</ul>
+<h1 id="TIME-WAIT-过多有什么危害？"><a href="#TIME-WAIT-过多有什么危害？" class="headerlink" title="TIME_WAIT 过多有什么危害？"></a>TIME_WAIT 过多有什么危害？</h1><p>如果服务器有处于<code>TIME-WAIT</code>状态的 TCP，则说明是由服务器方主动发起的断开请求。</p>
+<p>过多的<code>TIME-WAIT</code>状态主要的危害有两种：</p>
+<ul>
+<li>第一是内存资源占用；</li>
+<li>第二是对端口资源的占用，一个 TCP 连接至少消耗一个本地端口；</li>
+</ul>
+<p>第二个危害是会造成严重的后果的，要知道，端口资源也是有限的，一般可以开启的端口为 32768～61000，也可以通过如下参数设置指定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.ip_local_port_range</span><br></pre></td></tr></table></figure>
+<p>如果发起连接一方的<code>TIME_WAIT</code>状态过多，占满了所有端口资源，则会导致无法创建新连接。</p>
+<p>客户端受端口资源限制：</p>
+<p>客户端<code>TIME_WAIT</code>过多，就会导致端口资源被占用，因为端口就65536个，被占满就会导致无法创建新的连接。</p>
+<p>服务端受系统资源限制：</p>
+<p>由于一个四元组表示 TCP 连接，理论上服务端可以建立很多连接，服务端确实只监听一个端口 但是会把连接扔给处理线程，所以理论上监听的端口可以继续监听。但是线程池处理不了那么多一直不断的连接了。所以当服务端出现大量<code>TIME_WAIT</code>时，系统资源被占满时，会导致处理不过来新的连接。</p>
+<h1 id="如何优化-TIME-WAIT？"><a href="#如何优化-TIME-WAIT？" class="headerlink" title="如何优化 TIME_WAIT？"></a>如何优化 TIME_WAIT？</h1><p>这里给出优化<code>TIME-WAIT</code>的几个方式，都是有利有弊：</p>
+<ul>
+<li>打开<code>net.ipv4.tcptwreuse</code>和<code>net.ipv4.tcp_timestamps</code>选项；</li>
+<li><code>net.ipv4.tcpmaxtw_buckets</code></li>
+<li>程序中使用<code>SO_LINGER</code>，应用强制使用 RST 关闭。</li>
+</ul>
+<h2 id="方式一：net-ipv4-tcptwreuse和tcp-timestamps"><a href="#方式一：net-ipv4-tcptwreuse和tcp-timestamps" class="headerlink" title="方式一：net.ipv4.tcptwreuse和tcp_timestamps"></a>方式一：<code>net.ipv4.tcptwreuse</code>和<code>tcp_timestamps</code></h2><p>如下的 Linux 内核参数开启后，则可以复用处于<code>TIME_WAIT</code>的<code>socket</code>为新的连接所用。</p>
+<p>有一点需要注意的是，<code>tcptwreuse</code>功能只能用客户端（连接发起方），因为开启了该功能，在调用<code>connect()</code>函数时，内核会随机找一个<code>time_wait</code>状态超过 1 秒的连接给新的连接复用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br></pre></td></tr></table></figure>
+<p>使用这个选项，还有一个前提，需要打开对 TCP 时间戳的支持，即</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_timestamps=1（默认即为 1）</span><br></pre></td></tr></table></figure>
+<p>这个时间戳的字段是在 TCP 头部的「选项」里，用于记录 TCP 发送方的当前时间戳和从对端接收到的最新时间戳。</p>
+<p>由于引入了时间戳，我们在前面提到的 2MSL 问题就不复存在了，因为重复的数据包会因为时间戳过期被自然丢弃。</p>
+<h2 id="方式二：net-ipv4-tcpmaxtw-buckets"><a href="#方式二：net-ipv4-tcpmaxtw-buckets" class="headerlink" title="方式二：net.ipv4.tcpmaxtw_buckets"></a>方式二：net.ipv4.tcpmaxtw_buckets</h2><p>这个值默认为 18000，当系统中处于<code>TIMEWAIT</code>的连接一旦超过这个值时，系统就会将后面的<code>TIMEWAIT</code>连接状态重置。</p>
+<p>这个方法过于暴力，而且治标不治本，带来的问题远比解决的问题多，不推荐使用。</p>
+<h2 id="方式三：程序中使用-SO-LINGER"><a href="#方式三：程序中使用-SO-LINGER" class="headerlink" title="方式三：程序中使用 SO_LINGER"></a>方式三：程序中使用 SO_LINGER</h2><p>我们可以通过设置<code>socket</code>选项，来设置调用<code>close</code>关闭连接行为。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct linger so_linger;</span><br><span class="line">so_linger.l_onoff = 1;</span><br><span class="line">so_linger.l_linger = 0;</span><br><span class="line">setsockopt(s, SOL_SOCKET, SO_LINGER, &amp;so_linger,sizeof(so_linger));</span><br></pre></td></tr></table></figure>
+<p>如果<code>l_onoff</code>为非 0，且<code>l_linger</code>值为 0，那么调用<code>close</code>后，会立该发送一个<code>RST</code>标志给对端，该 TCP 连接将跳过四次挥手，也就跳过了<code>TIME_WAIT</code>状态，直接关闭。</p>
+<p>但这为跨越<code>TIME_WAIT</code>状态提供了一个可能，不过是一个非常危险的行为，不值得提倡。</p>
+<h1 id="如果已经建立了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建立了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建立了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建立了连接，但是客户端突然出现故障了怎么办？</h1><p>TCP 有一个机制是保活机制。这个机制的原理是这样的：<br>定义一个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作用，每隔一个时间间隔，发送一个探测报文，该探测报文包含的数据非常少，如果连续几个探测报文都没有得到响应，则认为当前的 TCP 连接已经死亡，系统内核将错误信息通知给上层应用程序。</p>
+<p>在 Linux 内核可以有对应的参数可以设置保活时间、保活探测的次数、保活探测的时间间隔，以下都为默认值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_time=7200</span><br><span class="line">net.ipv4.tcp_keepalive_intvl=75  </span><br><span class="line">net.ipv4.tcp_keepalive_probes=9</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>tcpkeepalivetime=7200</code>：表示保活时间是 7200 秒（2小时），也就 2 小时内如果没有任何连接相关的活动，则会启动保活机制</li>
+<li><code>tcpkeepaliveintvl=75</code>：表示每次检测间隔 75 秒；</li>
+<li><code>tcpkeepaliveprobes=9</code>：表示检测 9 次无响应，认为对方是不可达的，从而中断本次的连接。</li>
+</ul>
+<p>也就是说在 Linux 系统中，最少需要经过2小时11分15秒才可以发现一个死亡连接。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/23.jpg" class="">
+
+<p>这个时间是有点长的，我们也可以根据实际的需求，对以上的保活相关的参数进行设置。</p>
+<p>如果开启了 TCP 保活，需要考虑以下几种情况：<br>第一种，对端程序是正常工作的。当 TCP 保活的探测报文发送给对端, 对端会正常响应，这样 TCP 保活时间会被重置，等待下一个 TCP 保活时间的到来。</p>
+<p>第二种，对端程序崩溃并重启。当 TCP 保活的探测报文发送给对端后，对端是可以响应的，但由于没有该连接的有效信息，会产生一个 RST 报文，这样很快就会发现 TCP 连接已经被重置。</p>
+<p>第三种，是对端程序崩溃，或对端由于其他原因导致报文不可达。当 TCP 保活的探测报文发送给对端后，石沉大海，没有响应，连续几次，达到保活探测次数后，TCP 会报告该 TCP 连接已经死亡。</p>
+<h1 id="Socket-编程"><a href="#Socket-编程" class="headerlink" title="Socket 编程"></a>Socket 编程</h1><p>针对 TCP 应该如何 Socket 编程？</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/24.jpg" class="">
+
+<ul>
+<li>服务端和客户端初始化<code>socket</code>，得到文件描述符；</li>
+<li>服务端调用<code>bind</code>，将绑定在 IP 地址和端口;</li>
+<li>服务端调用<code>listen</code>，进行监听；</li>
+<li>服务端调用<code>accept</code>，等待客户端连接；</li>
+<li>客户端调用<code>connect</code>，向服务器端的地址和端口发起连接请求；</li>
+<li>服务端<code>accept</code>返回用于传输的<code>socket</code>的文件描述符；</li>
+<li>客户端调用<code>write</code>写入数据；服务端调用<code>read</code> 读取数据；</li>
+<li>客户端断开连接时，会调用<code>close</code>，那么服务端<code>read</code>读取数据的时候，就会读取到了 EOF，待处理完数据后，服务端调用<code>close</code>，表示连接关闭。</li>
+</ul>
+<p>这里需要注意的是，服务端调用<code>accept</code>时，连接成功了会返回一个已完成连接的<code>socket</code>，后续用来传输数据。</p>
+<p>所以，监听的<code>socket</code>和真正用来传送数据的<code>socket</code>，是两个<code>socket</code>，一个叫作监听<code>socket</code>，一个叫作已完成连接<code>socket</code>。</p>
+<p>成功连接建立之后，双方开始通过<code>read</code>和<code>write</code>函数来读写数据，就像往一个文件流里面写东西一样。</p>
+<h2 id="listen-时候参数-backlog-的意义？"><a href="#listen-时候参数-backlog-的意义？" class="headerlink" title="listen 时候参数 backlog 的意义？"></a>listen 时候参数 backlog 的意义？</h2><p>Linux内核中会维护两个队列：</p>
+<ul>
+<li>未完成连接队列（SYN 队列）：接收到一个 SYN 建立连接请求，处于 SYN_RCVD 状态；</li>
+<li>已完成连接队列（Accpet 队列）：已完成 TCP 三次握手过程，处于 ESTABLISHED 状态；</li>
+</ul>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/25.jpg" class="">
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int listen (int socketfd, int backlog)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数一<code>socketfd</code>为<code>socketfd</code>文件描述符</li>
+<li>参数二<code>backlog</code>，这参数在历史版本有一定的变化</li>
+</ul>
+<p>在早期 Linux 内核<code>backlog</code>是 SYN 队列大小，也就是未完成的队列大小。</p>
+<p>在 Linux 内核 2.2 之后，<code>backlog</code>变成<code>accept</code>队列，也就是已完成连接建立的队列长度，所以现在通常认为<code>backlog</code>是<code>accept</code>队列。</p>
+<p>但是上限值是内核参数<code>somaxconn</code>的大小，也就说<code>accpet</code>队列长度 &#x3D; <code>min(backlog, somaxconn)</code>。</p>
+<h2 id="accept-发生在三次握手的哪一步？"><a href="#accept-发生在三次握手的哪一步？" class="headerlink" title="accept 发生在三次握手的哪一步？"></a>accept 发生在三次握手的哪一步？</h2><p>我们先看看客户端连接服务端时，发送了什么？</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/26.jpg" class="">
+
+<ul>
+<li>客户端的协议栈向服务器端发送了 SYN 包，并告诉服务器端当前发送序列号<code>client_isn</code>，客户端进入 SYNSENT 状态；</li>
+<li>服务器端的协议栈收到这个包之后，和客户端进行 ACK 应答，应答的值为<code>client_isn+1</code>，表示对 SYN 包<code>client_isn</code>的确认，同时服务器也发送一个 SYN 包，告诉客户端当前我的发送序列号为<code>server_isn</code>，服务器端进入 SYNRCVD 状态；<br>客户端协议栈收到 ACK 之后，使得应用程序从<code>connect</code>调用返回，表示客户端到服务器端的单向连接建立成功，客户端的状态为 ESTABLISHED，同时客户端协议栈也会对服务器端的 SYN 包进行应答，应答数据为 <code>server_isn+1</code>；</li>
+<li>应答包到达服务器端后，服务器端协议栈使得<code>accept</code>阻塞调用返回，这个时候服务器端到客户端的单向连接也建立成功，服务器端也进入 ESTABLISHED 状态。</li>
+</ul>
+<p>从上面的描述过程，我们可以得知客户端<code>connect</code>成功返回是在第二次握手，服务端<code>accept</code>成功返回是在三次握手成功之后。</p>
+<h2 id="客户端调用-close-了，断开的流程是什么？"><a href="#客户端调用-close-了，断开的流程是什么？" class="headerlink" title="客户端调用 close 了，断开的流程是什么？"></a>客户端调用 close 了，断开的流程是什么？</h2><p>我们看看客户端主动调用了 close，会发生什么？</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/27.jpg" class="">
+
+<ul>
+<li>客户端调用<code>close</code>，表明客户端没有数据需要发送了，则此时会向服务端发送<code>FIN</code>报文，进入<code>FINWAIT1</code>状态；</li>
+<li>服务端接收到了<code>FIN</code>报文，TCP 协议栈会为<code>FIN</code>包插入一个文件结束符<code>EOF</code>到接收缓冲区中，应用程序可以通过<code>read</code>调用来感知这个<code>FIN</code>包。这个<code>EOF</code>会被放在已排队等候的其他已接收的数据之后，这就意味着服务端需要处理这种异常情况，因为<code>EOF</code>表示在该连接上再无额外数据到达。此时，服务端进入<code>CLOSE_WAIT</code>状态；</li>
+<li>接着，当处理完数据后，自然就会读到<code>EOF</code>，于是也调用<code>close</code>关闭它的套接字，这会使得客户端会发出一个<code>FIN</code>包，之后处于<code>LAST_ACK</code>状态；</li>
+<li>客户端接收到服务端的<code>FIN</code>包，并发送<code>ACK</code>确认包给服务端，此时客户端将进入<code>TIME_WAIT</code>状态；</li>
+<li>服务端收到<code>ACK</code>确认包后，就进入了最后的<code>CLOSE</code>状态；</li>
+<li>客户端经过 2MSL 时间之后，也进入<code>CLOSE</code>状态。</li>
+</ul>
+<h1 id="TCP-四次挥手，可以变成三次吗？"><a href="#TCP-四次挥手，可以变成三次吗？" class="headerlink" title="TCP 四次挥手，可以变成三次吗？"></a>TCP 四次挥手，可以变成三次吗？</h1><p>TCP 四次挥手中，能不能把第二次的 ACK 报文， 放到第三次<code>FIN</code>报文一起发送？</p>
+<p>虽然我们在学习 TCP 挥手时，学到的是需要四次来完成 TCP 挥手，但是在一些情况下，TCP 四次挥手是可以变成 TCP 三次挥手的。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/31.png" class="">
+
+<h2 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a>TCP 四次挥手</h2><p>TCP 四次挥手的过程如下：</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/32.png" class="">
+
+<p>具体过程：</p>
+<ul>
+<li>客户端主动调用关闭连接的函数，于是就会发送<code>FIN</code>报文，这个<code>FIN</code>报文代表客户端不会再发送数据了，进入<code>FIN_WAIT_1</code>状态；</li>
+<li>服务端收到了<code>FIN</code>报文，然后马上回复一个<code>ACK</code>确认报文，此时服务端进入<code>CLOSE_WAIT</code>状态。在收到<code>FIN</code>报文的时候，TCP 协议栈会为<code>FIN</code>包插入一个文件结束符<code>EOF</code>到接收缓冲区中，服务端应用程序可以通过<code>read</code>调用来感知这个<code>FIN</code>包，这个<code>EOF</code>会被放在已排队等候的其他已接收的数据之后，所以必须要得继续<code>read</code>接收缓冲区已接收的数据；</li>
+<li>接着，当服务端在<code>read</code>数据的时候，最后自然就会读到<code>EOF</code>，接着<code>read()</code>就会返回 0，这时服务端应用程序如果有数据要发送的话，就发完数据后才调用关闭连接的函数，如果服务端应用程序没有数据要发送的话，可以直接调用关闭连接的函数，这时服务端就会发一个<code>FIN</code>包，这个<code>FIN</code>报文代表服务端不会再发送数据了，之后处于<code>LAST_ACK</code>状态；</li>
+<li>客户端接收到服务端的<code>FIN</code>包，并发送<code>ACK</code>确认包给服务端，此时客户端将进入<code>TIME_WAIT</code>状态；</li>
+<li>服务端收到<code>ACK</code>确认包后，就进入了最后的<code>CLOSE</code>状态；</li>
+<li>客户端经过<code>2MSL</code>时间之后，也进入<code>CLOSE</code>状态；</li>
+</ul>
+<p>你可以看到，每个方向都需要一个<code>FIN</code>和一个<code>ACK</code>，因此通常被称为四次挥手。</p>
+<h2 id="为什么-TCP-挥手需要四次呢？"><a href="#为什么-TCP-挥手需要四次呢？" class="headerlink" title="为什么 TCP 挥手需要四次呢？"></a>为什么 TCP 挥手需要四次呢？</h2><p>服务器收到客户端的<code>FIN</code>报文时，内核会马上回一个<code>ACK</code>应答报文，但是服务端应用程序可能还有数据要发送，所以并不能马上发送<code>FIN</code>报文，而是将发送<code>FIN</code>报文的控制权交给服务端应用程序：</p>
+<ul>
+<li>如果服务端应用程序有数据要发送的话，就发完数据后，才调用关闭连接的函数；</li>
+<li>如果服务端应用程序没有数据要发送的话，可以直接调用关闭连接的函数，</li>
+</ul>
+<p>从上面过程可知，是否要发送第三次挥手的控制权不在内核，而是在被动关闭方（服务端）的应用程序，因为应用程序可能还有数据要发送，由应用程序决定什么时候调用关闭连接的函数，当调用了关闭连接的函数，内核就会发送<code>FIN</code>报文了，所以服务端的<code>ACK</code>和<code>FIN</code>一般都会分开发送。</p>
+<p><code>FIN</code>报文一定得调用关闭连接的函数，才会发送吗？</p>
+<p>不一定。</p>
+<p>如果进程退出了，不管是不是正常退出，还是异常退出（如进程崩溃），内核都会发送<code>FIN</code>报文，与对方完成四次挥手。</p>
+<h2 id="粗暴关闭-vs-优雅关闭"><a href="#粗暴关闭-vs-优雅关闭" class="headerlink" title="粗暴关闭 vs 优雅关闭"></a>粗暴关闭 vs 优雅关闭</h2><p>其实关闭的连接的函数有两种函数：</p>
+<ul>
+<li><code>close</code>函数，同时<code>socket</code>关闭发送方向和读取方向，也就是<code>socket</code>不再有发送和接收数据的能力。如果有多进程&#x2F;多线程共享同一个<code>socket</code>，如果有一个进程调用了<code>close</code>关闭只是让<code>socket</code>引用计数 -1，并不会导致<code>socket</code>不可用，同时也不会发出<code>FIN</code>报文，其他进程还是可以正常读写该<code>socket</code>，直到引用计数变为 0，才会发出 FIN 报文。</li>
+<li><code>shutdown</code>函数，可以指定<code>socket</code>只关闭发送方向而不关闭读取方向，也就是<code>socket</code>不再有发送数据的能力，但是还是具有接收数据的能力。如果有多进程&#x2F;多线程共享同一个<code>socket</code>，<code>shutdown</code>则不管引用计数，直接使得该<code>socket</code>不可用，然后发出<code>FIN</code>报文，如果有别的进程企图使用该<code>socket</code>，将会受到影响。</li>
+</ul>
+<p>如果客户端是用<code>close</code>函数来关闭连接，那么在 TCP 四次挥手过程中，如果收到了服务端发送的数据，由于客户端已经不再具有发送和接收数据的能力，所以客户端的内核会回<code>RST</code>报文给服务端，然后内核会释放连接，这时就不会经历完成的 TCP 四次挥手，所以我们常说，调用<code>close</code>是粗暴的关闭。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/33.png" class="">
+
+<p>当服务端收到 RST 后，内核就会释放连接，当服务端应用程序再次发起读操作或者写操作时，就能感知到连接已经被释放了：</p>
+<ul>
+<li>如果是读操作，则会返回 RST 的报错，也就是我们常见的<code>Connection reset by peer</code>。</li>
+<li>如果是写操作，那么程序会产生<code>SIGPIPE</code>信号，应用层代码可以捕获并处理信号，如果不处理，则默认情况下进程会终止，异常退出。</li>
+</ul>
+<p>相对的，<code>shutdown</code>函数因为可以指定只关闭发送方向而不关闭读取方向，所以即使在 TCP 四次挥手过程中，如果收到了服务端发送的数据，客户端也是可以正常读取到该数据的，然后就会经历完整的 TCP 四次挥手，所以我们常说，调用<code>shutdown</code>是优雅的关闭。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/34.png" class="">
+
+<p>但是注意，<code>shutdown</code>函数也可以指定「只关闭读取方向，而不关闭发送方向」，但是这时候内核是不会发送<code>FIN</code>报文的，因为发送<code>FIN</code>报文是意味着我方将不再发送任何数据，而<code>shutdown</code>如果指定「不关闭发送方向」，就意味着<code>socket</code>还有发送数据的能力，所以内核就不会发送<code>FIN</code>。</p>
+<h2 id="什么情况会出现三次挥手？"><a href="#什么情况会出现三次挥手？" class="headerlink" title="什么情况会出现三次挥手？"></a>什么情况会出现三次挥手？</h2><p>当被动关闭方（上图的服务端）在 TCP 挥手过程中，「没有数据要发送」并且「开启了 TCP 延迟确认机制」，那么第二和第三次挥手就会合并传输，这样就出现了三次挥手。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/31.png" class="">
+
+<p>然后因为 TCP 延迟确认机制是默认开启的，所以导致我们抓包时，看见三次挥手的次数比四次挥手还多。</p>
+<h2 id="TCP-延迟确认机制"><a href="#TCP-延迟确认机制" class="headerlink" title="TCP 延迟确认机制"></a>TCP 延迟确认机制</h2><p>当发送没有携带数据的<code>ACK</code>，它的网络效率也是很低的，因为它也有 40 个字节的 IP 头 和 TCP 头，但却没有携带数据报文。 为了解决<code>ACK</code>传输效率低问题，所以就衍生出了 TCP 延迟确认。 TCP 延迟确认的策略：</p>
+<ul>
+<li>当有响应数据要发送时，<code>ACK</code>会随着响应数据一起立刻发送给对方</li>
+<li>当没有响应数据要发送时，<code>ACK</code>将会延迟一段时间，以等待是否有响应数据可以一起发送</li>
+<li>如果在延迟等待发送<code>ACK</code>期间，对方的第二个数据报文又到达了，这时就会立刻发送<code>ACK</code></li>
+</ul>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/35.png" class="">
+
+<p>延迟等待的时间是在 Linux 内核中定义的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define TCP_DELACK_MAX((unsigned)(HZ/5)) # 最大延迟确认时间</span><br><span class="line">#define TCP_DELACK_MN((unsigned)(HZ/25)) # 最小延迟确认时间</span><br></pre></td></tr></table></figure>
+<p>关键就需要 HZ 这个数值大小，HZ 是跟系统的时钟频率有关，每个操作系统都不一样，在我的 Linux 系统中 HZ 大小是 250，如下图：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/config-5.15.0-69-generic | grep &#x27;^CONFIG_HZ=&#x27;</span><br><span class="line"></span><br><span class="line">CONFIG_HZ=250</span><br></pre></td></tr></table></figure>
+<p>知道了 HZ 的大小，那么就可以算出：</p>
+<ul>
+<li>最大延迟确认时间是 50 ms （250&#x2F;5）</li>
+<li>最短延迟确认时间是 10 ms （250&#x2F;25）</li>
+</ul>
+<p>怎么关闭 TCP 延迟确认机制？</p>
+<p>如果要关闭 TCP 延迟确认机制，可以在<code>Socket</code>设置里启用<code>TCP_QUICKACK</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 1 表示开启 TCP_QUICKACK，即关闭 TCP 延迟确认机制</span><br><span class="line">int value = 1;</span><br><span class="line">setsockopt(socketfd, IPPROTO_TCP, TCP_QUICKACK, (char*)&amp; value, sizeof(int));</span><br></pre></td></tr></table></figure>
+<h1 id="拔掉网线后，-原本的-TCP-连接还存在吗？"><a href="#拔掉网线后，-原本的-TCP-连接还存在吗？" class="headerlink" title="拔掉网线后， 原本的 TCP 连接还存在吗？"></a>拔掉网线后， 原本的 TCP 连接还存在吗？</h1><p>TCP 连接在 Linux 内核中是一个名为<code>struct socket</code>的结构体，该结构体的内容包含 TCP 连接的状态等信息。当拔掉网线的时候，操作系统并不会变更该结构体的任何内容，所以 TCP 连接的状态也不会发生改变。</p>
+<p>拔掉网线这个动作并不会影响 TCP 连接的状态。</p>
+<p>接下来，要看拔掉网线后，双方做了什么动作。</p>
+<p>所以， 针对这个问题，要分场景来讨论：</p>
+<ul>
+<li>拔掉网线后，有数据传输；</li>
+<li>拔掉网线后，没有数据传输；</li>
+</ul>
+<h2 id="拔掉网线后，有数据传输"><a href="#拔掉网线后，有数据传输" class="headerlink" title="拔掉网线后，有数据传输"></a>拔掉网线后，有数据传输</h2><p>在客户端拔掉网线后，服务端向客户端发送的数据报文会得不到任何的响应，在等待一定时长后，服务端就会触发超时重传机制，重传未得到响应的数据报文。</p>
+<p>如果在服务端重传报文的过程中，客户端刚好把网线插回去了，由于拔掉网线并不会改变客户端的 TCP 连接状态，并且还是处于<code>ESTABLISHED</code>状态，所以这时客户端是可以正常接收服务端发来的数据报文的，然后客户端就会回 ACK 响应报文。</p>
+<p>此时，客户端和服务端的 TCP 连接依然存在的，就感觉什么事情都没有发生。</p>
+<p>但是，如果如果在服务端重传报文的过程中，客户端一直没有将网线插回去，服务端超时重传报文的次数达到一定阈值后，内核就会判定出该 TCP 有问题，然后通过 Socket 接口告诉应用程序该 TCP 连接出问题了，于是服务端的 TCP 连接就会断开。</p>
+<p>而等客户端插回网线后，如果客户端向服务端发送了数据，由于服务端已经没有与客户端相同四元祖的 TCP 连接了，因此服务端内核就会回复 RST 报文，客户端收到后就会释放该 TCP 连接。</p>
+<p>此时，客户端和服务端的 TCP 连接都已经断开了。</p>
+<p>那 TCP 的数据报文具体重传几次呢？</p>
+<p>在 Linux 系统中，提供了一个叫<code>tcp_retries2</code>配置项，默认值是 15，如下图：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /proc/sys/net/ipv4/tcp_retries2</span></span><br><span class="line">15</span><br></pre></td></tr></table></figure>
+<p>这个内核参数是控制，在 TCP 连接建立的情况下，超时重传的最大次数。</p>
+<p>不过 tcp_retries2 设置了 15 次，并不代表 TCP 超时重传了 15 次才会通知应用程序终止该 TCP 连接，内核还会基于「最大超时时间」来判定。</p>
+<p>每一轮的超时时间都是倍数增长的，比如第一次触发超时重传是在 2s 后，第二次则是在 4s 后，第三次则是 8s 后，以此类推。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/40.png" class="">
+
+<p>内核会根据 tcp_retries2 设置的值，计算出一个最大超时时间。</p>
+<p>在重传报文且一直没有收到对方响应的情况时，先达到「最大重传次数」或者「最大超时时间」这两个的其中一个条件后，就会停止重传，然后就会断开 TCP 连接。</p>
+<h2 id="拔掉网线后，没有数据传输"><a href="#拔掉网线后，没有数据传输" class="headerlink" title="拔掉网线后，没有数据传输"></a>拔掉网线后，没有数据传输</h2><p>针对拔掉网线后，没有数据传输的场景，还得看是否开启了 TCP keepalive 机制 （TCP 保活机制）。</p>
+<p>如果没有开启 TCP keepalive 机制，在客户端拔掉网线后，并且双方都没有进行数据传输，那么客户端和服务端的 TCP 连接将会一直保持存在。</p>
+<p>而如果开启了 TCP keepalive 机制，在客户端拔掉网线后，即使双方都没有进行数据传输，在持续一段时间后，TCP 就会发送探测报文：</p>
+<p>如果对端是正常工作的。当 TCP 保活的探测报文发送给对端, 对端会正常响应，这样 TCP 保活时间会被重置，等待下一个 TCP 保活时间的到来。<br>如果对端主机崩溃，或对端由于其他原因导致报文不可达。当 TCP 保活的探测报文发送给对端后，石沉大海，没有响应，连续几次，达到保活探测次数后，TCP 会报告该 TCP 连接已经死亡。<br>所以，TCP 保活机制可以在双方没有数据交互的情况，通过探测报文，来确定对方的 TCP 连接是否存活。</p>
+<p>TCP keepalive 机制具体是怎么样的？</p>
+<p>这个机制的原理是这样的：</p>
+<p>定义一个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作用，每隔一个时间间隔，发送一个探测报文，该探测报文包含的数据非常少，如果连续几个探测报文都没有得到响应，则认为当前的 TCP 连接已经死亡，系统内核将错误信息通知给上层应用程序。</p>
+<p>在 Linux 内核可以有对应的参数可以设置保活时间、保活探测的次数、保活探测的时间间隔，以下都为默认值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_time=7200</span><br><span class="line">net.ipv4.tcp_keepalive_intvl=75  </span><br><span class="line">net.ipv4.tcp_keepalive_probes=9</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>tcp_keepalive_time=7200</code>：表示保活时间是 7200 秒（2小时），也就 2 小时内如果没有任何连接相关的活动，则会启动保活机制</li>
+<li><code>tcp_keepalive_intvl=75</code>：表示每次检测间隔 75 秒；</li>
+<li><code>tcp_keepalive_probes=9</code>：表示检测 9 次无响应，认为对方是不可达的，从而中断本次的连接。</li>
+</ul>
+<p>也就是说在 Linux 系统中，最少需要经过 2 小时 11 分 15 秒才可以发现一个「死亡」连接。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/41.png" class="">
+
+<p>注意，应用程序若想使用 TCP 保活机制需要通过 socket 接口设置 SO_KEEPALIVE 选项才能够生效，如果没有设置，那么就无法使用 TCP 保活机制。</p>
+<p>TCP keepalive 机制探测的时间也太长了吧？</p>
+<p>对的，是有点长。</p>
+<p>TCP keepalive  是 TCP 层（内核态） 实现的，它是给所有基于 TCP 传输协议的程序一个兜底的方案。</p>
+<p>实际上，我们应用层可以自己实现一套探测机制，可以在较短的时间内，探测到对方是否存活。</p>
+<p>比如，web 服务软件一般都会提供<code>keepalive_timeout</code>参数，用来指定 HTTP 长连接的超时时间。如果设置了 HTTP 长连接的超时时间是 60 秒，web 服务软件就会启动一个定时器，如果客户端在完后一个 HTTP 请求后，在 60 秒内都没有再发起新的请求，定时器的时间一到，就会触发回调函数来释放该连接。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/42.png" class="">
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>客户端拔掉网线后，并不会直接影响 TCP 连接状态。所以，拔掉网线后，TCP 连接是否还会存在，关键要看拔掉网线之后，有没有进行数据传输。</p>
+<p>有数据传输的情况：</p>
+<ul>
+<li>在客户端拔掉网线后，如果服务端发送了数据报文，那么在服务端重传次数没有达到最大值之前，客户端就插回了网线，那么双方原本的 TCP 连接还是能正常存在，就好像什么事情都没有发生。</li>
+<li>在客户端拔掉网线后，如果服务端发送了数据报文，在客户端插回网线之前，服务端重传次数达到了最大值时，服务端就会断开 TCP 连接。等到客户端插回网线后，向服务端发送了数据，因为服务端已经断开了与客户端相同四元组的 TCP 连接，所以就会回 RST 报文，客户端收到后就会断开 TCP 连接。至此， 双方的 TCP 连接都断开了。</li>
+</ul>
+<p>没有数据传输的情况：</p>
+<ul>
+<li>如果双方都没有开启 TCP keepalive 机制，那么在客户端拔掉网线后，如果客户端一直不插回网线，那么客户端和服务端的 TCP 连接状态将会一直保持存在。</li>
+<li>如果双方都开启了 TCP keepalive 机制，那么在客户端拔掉网线后，如果客户端一直不插回网线，TCP keepalive 机制会探测到对方的 TCP 连接没有存活，于是就会断开 TCP 连接。而如果在 TCP 探测期间，客户端插回了网线，那么双方原本的 TCP 连接还是能正常存在。</li>
+</ul>
+<p>除了客户端拔掉网线的场景，还有客户端「宕机和杀死进程」的两种场景。</p>
+<p>第一个场景，客户端宕机这件事跟拔掉网线是一样无法被服务端的感知的，所以如果在没有数据传输，并且没有开启 TCP keepalive 机制时，，服务端的 TCP 连接将会一直处于<code>ESTABLISHED</code>连接状态，直到服务端重启进程。</p>
+<p>所以，我们可以得知一个点。在没有使用 TCP 保活机制，且双方不传输数据的情况下，一方的 TCP 连接处在<code>ESTABLISHED</code>状态时，并不代表另一方的 TCP 连接还一定是正常的。</p>
+<p>第二个场景，杀死客户端的进程后，客户端的内核就会向服务端发送<code>FIN</code>报文，与客户端进行四次挥手。</p>
+<p>所以，即使没有开启 TCP keepalive，且双方也没有数据交互的情况下，如果其中一方的进程发生了崩溃，这个过程操作系统是可以感知的到的，于是就会发送 FIN 报文给对方，然后与对方进行 TCP 四次挥手。</p>
+<h1 id="服务端挂了，客户端的-TCP-连接还在吗？"><a href="#服务端挂了，客户端的-TCP-连接还在吗？" class="headerlink" title="服务端挂了，客户端的 TCP 连接还在吗？"></a>服务端挂了，客户端的 TCP 连接还在吗？</h1><p>如果「服务端挂掉」指的是「服务端进程崩溃」，那么服务端的进程在发生崩溃的时候，内核会发送 FIN 报文，与客户端进行四次挥手。</p>
+<p>但是，如果「服务端挂掉」指的是「服务端主机宕机」，那么是不会发生四次挥手的，具体后续会发生什么？还要看客户端会不会发送数据？</p>
+<ul>
+<li>如果客户端会发送数据，由于服务端已经不存在，客户端的数据报文会超时重传，当重传次数达到一定阈值后，会断开 TCP 连接；</li>
+<li>如果客户端一直不会发送数据，再看客户端有没有开启 TCP keepalive 机制？</li>
+<li>如果有开启，客户端在一段时间后，检测到服务端的 TCP 连接已经不存在，则会断开自身的 TCP 连接；</li>
+<li>如果没有开启，客户端的 TCP 连接会一直存在，并不会断开。</li>
+</ul>
+<h2 id="服务端进程崩溃，客户端会发生什么？"><a href="#服务端进程崩溃，客户端会发生什么？" class="headerlink" title="服务端进程崩溃，客户端会发生什么？"></a>服务端进程崩溃，客户端会发生什么？</h2><p>TCP 的连接信息是由内核维护的，所以当服务端的进程崩溃后，内核需要回收该进程的所有 TCP 连接资源，于是内核会发送第一次挥手<code>FIN</code>报文，后续的挥手过程也都是在内核完成，并不需要进程的参与，所以即使服务端的进程退出了，还是能与客户端完成 TCP 四次挥手的过程。</p>
+<p>使用<code>kill -9</code>命令来模拟进程崩溃的情况，发现在<code>kill</code>掉进程后，服务端会发送<code>FIN</code>报文，与客户端进行四次挥手。</p>
+<h2 id="服务端主机宕机后，客户端会发生什么？"><a href="#服务端主机宕机后，客户端会发生什么？" class="headerlink" title="服务端主机宕机后，客户端会发生什么？"></a>服务端主机宕机后，客户端会发生什么？</h2><p>当服务端的主机突然断电了，这种情况就是属于服务端主机宕机了。</p>
+<p>当服务端的主机发生了宕机，是没办法和客户端进行四次挥手的，所以在服务端主机发生宕机的那一时刻，客户端是没办法立刻感知到服务端主机宕机了，只能在后续的数据交互中来感知服务端的连接已经不存在了。</p>
+<p>因此，我们要分三种情况来讨论：</p>
+<ul>
+<li>服务端主机宕机后，客户端会发送数据；</li>
+<li>服务端主机宕机后，客户端一直不会发送数据；</li>
+<li>服务端主机宕机后，然后马上重启了服务端，重启完成后，如果这时客户端发送了数据</li>
+</ul>
+<h3 id="服务端主机宕机后，如果客户端会发送数据"><a href="#服务端主机宕机后，如果客户端会发送数据" class="headerlink" title="服务端主机宕机后，如果客户端会发送数据"></a>服务端主机宕机后，如果客户端会发送数据</h3><p>在服务端主机宕机后，客户端发送了数据报文，由于得不到响应，在等待一定时长后，客户端就会触发超时重传机制，重传未得到响应的数据报文。</p>
+<p>当重传次数达到达到一定阈值后，内核就会判定出该 TCP 连接有问题，然后通过<code>Socket</code>接口告诉应用程序该 TCP 连接出问题了，于是客户端的 TCP 连接就会断开。</p>
+<p>那 TCP 的数据报文具体重传几次呢？</p>
+<p>在 Linux 系统中，提供了一个叫<code>tcp_retries2</code>配置项，默认值是 15：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /proc/sys/net/ipv4/tcp_retries2</span></span><br><span class="line">15</span><br></pre></td></tr></table></figure>
+<p>这个内核参数是控制在 TCP 连接建立的情况下，超时重传的最大次数。</p>
+<p>不过<code>tcp_retries2</code>设置了 15 次，并不代表 TCP 超时重传了 15 次才会通知应用程序终止该 TCP 连接，内核会根据<code>tcp_retries2</code>设置的值，计算出一个<code>timeout</code>（如果<code>tcp_retries2=15</code>，那么计算得到的<code>timeout = 924600 ms</code>），如果重传间隔超过这个<code>timeout</code>，则认为超过了阈值，就会停止重传，然后就会断开 TCP 连接。</p>
+<p>在发生超时重传的过程中，每一轮的超时时间（RTO）都是倍数增长的，比如如果第一轮 RTO 是 200ms，那么第二轮 RTO 是 400ms，第三轮 RTO 是 800ms，以此类推。</p>
+<p>而 RTO 是基于 RTT（一个包的往返时间） 来计算的，如果 RTT 较大，那么计算出来的 RTO 就越大，那么经过几轮重传后，很快就达到了上面的<code>timeout</code>值了。</p>
+<p>举个例子，如果<code>tcp_retries2=15</code>，那么计算得到的<code>timeout = 924600 ms</code>，如果重传总间隔时长达到了<code>timeout</code>就会停止重传，然后就会断开 TCP 连接：</p>
+<ul>
+<li>如果 RTT 比较小，那么 RTO 初始值就约等于下限 200ms，也就是第一轮的超时时间是 200ms，由于<code>timeout</code>总时长是 924600ms，表现出来的现象刚好就是重传了 15 次，超过了<code>timeout</code>值，从而断开 TCP 连接</li>
+<li>如果 RTT 比较大，假设 RTO 初始值计算得到的是 1000ms，也就是第一轮的超时时间是 1 秒，那么根本不需要重传 15 次，重传总间隔就会超过 924600ms。</li>
+</ul>
+<p>最小 RTO 和最大 RTO 是在 Linux 内核中定义好了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define TCP_RTO_MAX ((unsigned)(120*HZ))</span><br><span class="line">#define TCP_RTO_MIN ((unsigned)(HZ/5))</span><br></pre></td></tr></table></figure>
+<p>Linux 2.6+ 使用 1000 毫秒的 HZ，因此<code>TCP_RTO_MIN</code>约为 200 毫秒，<code>TCP_RTO_MAX</code>约为 120 秒。</p>
+<p>如果<code>tcp_retries</code>设置为 15，且 RTT 比较小，那么 RTO 初始值就约等于下限 200ms，这意味着它需要 924.6 秒才能将断开的 TCP 连接通知给上层（即应用程序），每一轮的 RTO 增长关系如下表格：</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/51.png" class="">
+
+<h3 id="服务端主机宕机后，如果客户端一直不发数据"><a href="#服务端主机宕机后，如果客户端一直不发数据" class="headerlink" title="服务端主机宕机后，如果客户端一直不发数据"></a>服务端主机宕机后，如果客户端一直不发数据</h3><p>在服务端主机发送宕机后，如果客户端一直不发送数据，那么还得看是否开启了<code>TCP keepalive</code>机制（TCP 保活机制）。</p>
+<p>如果没有开启<code>TCP keepalive</code>机制，在服务端主机发送宕机后，如果客户端一直不发送数据，那么客户端的 TCP 连接将一直保持存在，所以我们可以得知一个点，在没有使用 TCP 保活机制，且双方不传输数据的情况下，一方的 TCP 连接处在<code>ESTABLISHED</code>状态时，并不代表另一方的 TCP 连接还一定是正常的。</p>
+<p>而如果开启了<code>TCP keepalive</code>机制，在服务端主机发送宕机后，即使客户端一直不发送数据，在持续一段时间后，TCP 就会发送探测报文，探测服务端是否存活：</p>
+<ul>
+<li>如果对端是正常工作的。当 TCP 保活的探测报文发送给对端, 对端会正常响应，这样 TCP 保活时间会被重置，等待下一个 TCP 保活时间的到来。</li>
+<li>如果对端主机崩溃，或对端由于其他原因导致报文不可达。当 TCP 保活的探测报文发送给对端后，石沉大海，没有响应，连续几次，达到保活探测次数后，TCP 会报告该 TCP 连接已经死亡。</li>
+</ul>
+<p>所以，<code>TCP keepalive</code>机制可以在双方没有数据交互的情况，通过探测报文，来确定对方的 TCP 连接是否存活。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/52.png" class="">
+
+<p><code>TCP keepalive</code>机制机制的原理是这样的：</p>
+<p>定义一个时间段，在这个时间段内，如果没有任何连接相关的活动，TCP 保活机制会开始作用，每隔一个时间间隔，发送一个探测报文，该探测报文包含的数据非常少，如果连续几个探测报文都没有得到响应，则认为当前的 TCP 连接已经死亡，系统内核将错误信息通知给上层应用程序。</p>
+<p>在 Linux 内核可以有对应的参数可以设置保活时间、保活探测的次数、保活探测的时间间隔，以下都为默认值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_time=7200</span><br><span class="line">net.ipv4.tcp_keepalive_intvl=75  </span><br><span class="line">net.ipv4.tcp_keepalive_probes=9</span><br></pre></td></tr></table></figure>
+<p>每个参数的意思，具体如下：<br><code>tcp_keepalive_time=7200</code>：表示保活时间是 7200 秒（2小时），也就 2 小时内如果没有任何连接相关的活动，则会启动保活机制<br><code>tcp_keepalive_intvl=75</code>：表示每次检测间隔 75 秒；<br><code>tcp_keepalive_probes=9</code>：表示检测 9 次无响应，认为对方是不可达的，从而中断本次的连接。</p>
+<p>也就是说在 Linux 系统中，最少需要经过 2 小时 11 分 15 秒才可以发现一个「死亡」连接。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/53.png" class="">
+
+<p>注意，应用程序如果想使用 TCP 保活机制，需要通过<code>socket</code>接口设置<code>SO_KEEPALIVE</code>选项才能够生效，如果没有设置，那么就无法使用 TCP 保活机制。</p>
+<p><code>TCP keepalive</code>机制探测的时间是有点长。</p>
+<p><code>TCP keepalive</code>是 TCP 层（内核态） 实现的，它是给所有基于 TCP 传输协议的程序一个兜底的方案。</p>
+<p>实际上，我们应用层可以自己实现一套探测机制，可以在较短的时间内，探测到对方是否存活。</p>
+<p>比如，web 服务软件一般都会提供<code>keepalive_timeout</code>参数，用来指定 HTTP 长连接的超时时间。如果设置了 HTTP 长连接的超时时间是 60 秒，web 服务软件就会启动一个定时器，如果客户端在完后一个 HTTP 请求后，在 60 秒内都没有再发起新的请求，定时器的时间一到，就会触发回调函数来释放该连接。</p>
+<img src="/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/54.png" class="">
+
+<h3 id="服务端主机宕机后，然后马上重启了服务端，客户端发送了数据"><a href="#服务端主机宕机后，然后马上重启了服务端，客户端发送了数据" class="headerlink" title="服务端主机宕机后，然后马上重启了服务端，客户端发送了数据"></a>服务端主机宕机后，然后马上重启了服务端，客户端发送了数据</h3><p>如果服务端主机宕机后，然后马上重启了服务端，重启完成后，如果这时客户端发送了数据，由于服务端之前的连接信息已经不存在，所以会回<code>RST</code>报文给客户端，客户端收到<code>RST</code>报文后，就断开连接。</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>如果「服务端挂掉」指的是「服务端进程崩溃」，服务端的进程在发生崩溃的时候，内核会发送<code>FIN</code>报文，与客户端进行四次挥手。</p>
+<p>但是，如果「服务端挂掉」指的是「服务端主机宕机」，那么是不会发生四次挥手的，具体后续会发生什么？还要看客户端会不会发送数据？</p>
+<ul>
+<li>如果客户端会发送数据，由于服务端已经不存在，客户端的数据报文会超时重传，当重传总间隔时长达到一定阈值（内核会根据<code>tcp_retries2</code>设置的值计算出一个阈值）后，会断开 TCP 连接；</li>
+<li>如果客户端一直不会发送数据，再看客户端有没有开启<code>TCP keepalive</code>机制？</li>
+<li>如果有开启，客户端在一段时间没有进行数据交互时，会触发<code>TCP keepalive</code>机制，探测对方是否存在，如果探测到对方已经消亡，则会断开自身的 TCP 连接；</li>
+<li>如果没有开启，客户端的 TCP 连接会一直存在，并且一直保持在<code>ESTABLISHED</code>状态。</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/01/12/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/01/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            TCP 重传、滑动窗口、流量控制、拥塞控制
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/01/11/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">进程与线程</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

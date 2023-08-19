@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS执行机制——作用域链和闭包 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/深入/JS执行机制——作用域链和闭包"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS执行机制——作用域链和闭包
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/" class="article-date">
+  <time datetime="2019-11-06T06:51:08.000Z" itemprop="datePublished">2019-11-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>首先我们来看下面这段代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(myName)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> myName = <span class="string">&quot; 极客邦 &quot;</span></span><br><span class="line">  <span class="title function_">bar</span>()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line"><span class="title function_">foo</span>()</span><br></pre></td></tr></table></figure>
+<p>当这段代码执行到<code>bar</code>函数内部时，其调用栈的状态图如下所示：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img1.png" class="" title="执行 bar 函数时的调用栈">
+
+<p>从图中可以看出，全局执行上下文和<code>foo</code>函数的执行上下文中都包含变量<code>myName</code>，那<code>bar</code>函数里面<code>myName</code>的值到底该选择哪个呢？</p>
+<p>也许你的第一反应是按照调用栈的顺序来查找变量，查找方式如下：</p>
+<ol>
+<li>先查找栈顶是否存在<code>myName</code>变量，但是这里没有，所以接着往下查找<code>foo</code>函数中的变量。</li>
+<li>在<code>foo</code>函数中查找到了<code>myName</code>变量，这时候就使用<code>foo</code>函数中的<code>myName</code>。</li>
+</ol>
+<p>如果按照这种方式来查找变量，那么最终执行<code>bar</code>函数打印出来的结果就应该是“极客邦”。但实际情况并非如此，如果你试着执行上述代码，你会发现打印出来的结果是“极客时间”。为什么会是这种情况呢？要解释清楚这个问题，就需要先搞清楚作用域链。</p>
+<h1 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h1><p>其实在每个执行上下文的变量环境中，都包含了一个外部引用，用来指向外部的执行上下文，我们把这个外部引用称为<code>outer</code>。</p>
+<p>当一段代码使用了一个变量时，JavaScript 引擎首先会在“当前的执行上下文”中查找该变量，比如上面那段代码在查找<code>myName</code>变量时，如果在当前的变量环境中没有查找到，那么 JavaScript 引擎会继续在<code>outer</code>所指向的执行上下文中查找。为了直观理解，你可以看下面这张图：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img2.png" class="" title="带有外部引用的调用栈示意图">
+
+<p>从图中可以看出，<code>bar</code>函数和<code>foo</code>函数的<code>outer</code>都是指向全局上下文的，这也就意味着如果在<code>bar</code>函数或者<code>foo</code>函数中使用了外部变量，那么 JavaScript 引擎会去全局执行上下文中查找。我们把这个查找的链条就称为作用域链。</p>
+<p>现在你知道变量是通过作用域链来查找的了，不过还有一个疑问，<code>foo</code>函数调用的<code>bar</code>函数，那为什么<code>bar</code>函数的外部引用是全局执行上下文，而不是<code>foo</code>函数的执行上下文？</p>
+<p>要回答这个问题，还需要知道什么是词法作用域。这是因为在 JavaScript 执行过程中，其作用域链是由词法作用域决定的。</p>
+<h1 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h1><p>词法作用域就是指作用域是由代码中函数声明的位置来决定的，所以词法作用域是静态的作用域，通过它就能够预测代码在执行过程中如何查找标识符。</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img3.png" class="" title="词法作用域">
+
+<p>从图中可以看出，词法作用域就是根据代码的位置来决定的，其中<code>main</code>函数包含了<code>bar</code>函数，<code>bar</code>函数中包含了<code>foo</code>函数，因为 JavaScript 作用域链是由词法作用域决定的，所以整个词法作用域链的顺序是：<code>foo</code>函数作用域—&gt;<code>bar</code>函数作用域—&gt;<code>main</code>函数作用域—&gt; 全局作用域。</p>
+<p>了解了词法作用域以及 JavaScript 中的作用域链，我们再回过头来看看上面的那个问题：在开头那段代码中，<code>foo</code>函数调用了<code>bar</code>函数，那为什么<code>bar</code>函数的外部引用是全局执行上下文，而不是<code>foo</code>函数的执行上下文?</p>
+<p>这是因为根据词法作用域，<code>foo</code>和<code>bar</code>的上级作用域都是全局作用域，所以如果<code>foo</code>或者<code>bar</code>函数使用了一个它们没有定义的变量，那么它们会到全局作用域去查找。也就是说，词法作用域是代码阶段就决定好的，和函数是怎么调用的没有关系。</p>
+<h1 id="块级作用域中的变量查找"><a href="#块级作用域中的变量查找" class="headerlink" title="块级作用域中的变量查找"></a>块级作用域中的变量查找</h1><p>在编写代码的时候，如果你使用了一个在当前作用域中不存在的变量，这时 JavaScript 引擎就需要按照作用域链在其他作用域中查找该变量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> myName = <span class="string">&quot; 极客世界 &quot;</span></span><br><span class="line">  <span class="keyword">let</span> test1 = <span class="number">100</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> myName = <span class="string">&quot;Chrome 浏览器 &quot;</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(test)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> myName = <span class="string">&quot; 极客邦 &quot;</span></span><br><span class="line">  <span class="keyword">let</span> test = <span class="number">2</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> test = <span class="number">3</span></span><br><span class="line">    <span class="title function_">bar</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line"><span class="keyword">let</span> myAge = <span class="number">10</span></span><br><span class="line"><span class="keyword">let</span> test = <span class="number">1</span></span><br><span class="line"><span class="title function_">foo</span>()</span><br></pre></td></tr></table></figure>
+<p>要想得出其执行结果，那接下来我们就得站在作用域链和词法环境的角度来分析下其执行过程。</p>
+<p>ES6 是支持块级作用域的，当执行到代码块时，如果代码块中有<code>let</code>或者<code>const</code>声明的变量，那么变量就会存放到该函数的词法环境中。对于上面这段代码，当执行到<code>bar</code>函数内部的<code>if</code>语句块时，其调用栈的情况如下图所示：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img4.png" class="" title="块级作用域中是如何查找变量的">
+
+<p>现在是执行到<code>bar</code>函数的<code>if</code>语块之内，需要打印出来变量<code>test</code>，那么就需要查找到<code>test</code>变量的值，其查找过程我已经在上图中使用序号 1、2、3、4、5 标记出来了。</p>
+<p>首先是在<code>bar</code>函数的执行上下文中查找，但因为<code>bar</code>函数的执行上下文中没有定义<code>test</code>变量，所以根据词法作用域的规则，下一步就在<code>bar</code>函数的外部作用域中查找，也就是全局作用域。</p>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> myName = <span class="string">&quot; 极客时间 &quot;</span></span><br><span class="line">  <span class="keyword">let</span> test1 = <span class="number">1</span></span><br><span class="line">  <span class="keyword">const</span> test2 = <span class="number">2</span></span><br><span class="line">  <span class="keyword">var</span> innerBar = &#123;</span><br><span class="line">    <span class="attr">getName</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(test1)</span><br><span class="line">      <span class="keyword">return</span> myName</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">setName</span>:<span class="keyword">function</span>(<span class="params">newName</span>)&#123;</span><br><span class="line">      myName = newName</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> innerBar</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bar = <span class="title function_">foo</span>()</span><br><span class="line">bar.<span class="title function_">setName</span>(<span class="string">&quot; 极客邦 &quot;</span>)</span><br><span class="line">bar.<span class="title function_">getName</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(bar.<span class="title function_">getName</span>())</span><br></pre></td></tr></table></figure>
+<p>首先我们看看当执行到<code>foo</code>函数内部的<code>return innerBar</code>这行代码时调用栈的情况，你可以参考下图：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img5.png" class="" title="执行到 return bar 时候的调用栈">
+
+<p>从上面的代码可以看出，<code>innerBar</code>是一个对象，包含了<code>getName</code>和<code>setName</code>的两个方法（通常我们把对象内部的函数称为方法）。你可以看到，这两个方法都是在<code>foo</code>函数内部定义的，并且这两个方法内部都使用了<code>myName</code>和<code>test1</code>两个变量。</p>
+<p>根据词法作用域的规则，内部函数<code>getName</code>和<code>setName</code>总是可以访问它们的外部函数<code>foo</code>中的变量，所以当<code>innerBar</code>对象返回给全局变量<code>bar</code>时，虽然<code>foo</code>函数已经执行结束，但是<code>getName</code>和<code>setName</code>函数依然可以使用<code>foo</code>函数中的变量<code>myName</code>和<code>test1</code>。所以当<code>foo</code>函数执行完成之后，其整个调用栈的状态如下图所示：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img6.png" class="" title="闭包的产生过程">
+
+<p>从上图可以看出，<code>foo</code>函数执行完成之后，其执行上下文从栈顶弹出了，但是由于返回的<code>setName</code>和<code>getName</code>方法中使用了<code>foo</code>函数内部的变量<code>myName</code>和<code>test1</code>，所以这两个变量依然保存在内存中。这像极了<code>setName</code>和<code>getName</code>方法背的一个专属背包，无论在哪里调用了<code>setName</code>和<code>getName</code>方法，它们都会背着这个<code>foo</code>函数的专属背包。</p>
+<p>之所以是专属背包，是因为除了<code>setName</code>和<code>getName</code>函数之外，其他任何地方都是无法访问该背包的，我们就可以把这个背包称为<code>foo</code>函数的闭包。</p>
+<p>现在我们终于可以给闭包一个正式的定义了。在 JavaScript 中，根据词法作用域的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包。比如外部函数是<code>foo</code>，那么这些变量的集合就称为<code>foo</code>函数的闭包。</p>
+<p>那这些闭包是如何使用的呢？当执行到<code>bar.setName</code>方法中的<code>myName = &quot;极客邦&quot;</code>这句代码时，JavaScript 引擎会沿着“当前执行上下文–&gt;<code>foo</code>函数闭包–&gt; 全局执行上下文”的顺序来查找<code>myName</code>变量，你可以参考下面的调用栈状态图：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img7.png" class="" title="执行 bar 时调用栈状态">
+
+<p>从图中可以看出，<code>setName</code>的执行上下文中没有<code>myName</code>变量，<code>foo</code>函数的闭包中包含了变量<code>myName</code>，所以调用<code>setName</code>时，会修改<code>foo</code>闭包中的<code>myName</code>变量的值。</p>
+<p>同样的流程，当调用<code>bar.getName</code>的时候，所访问的变量<code>myName</code>也是位于<code>foo</code>函数闭包中的。</p>
+<p>你也可以通过“开发者工具”来看看闭包的情况，打开 Chrome 的“开发者工具”，在<code>bar</code>函数任意地方打上断点，然后刷新页面，可以看到如下内容：</p>
+<img src="/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/img8.png" class="" title="开发者工具中的闭包展示">
+
+<p>从图中可以看出来，当调用<code>bar.getName</code>的时候，右边<code>Scope</code>项就体现出了作用域链的情况：<code>Local</code>就是当前的<code>getName</code>函数的作用域，<code>Closure(foo)</code>是指<code>foo</code>函数的闭包，最下面的<code>Global</code>就是指全局作用域，从<code>Local–&gt;Closure(foo)–&gt;Global</code>就是一个完整的作用域链。</p>
+<p>所以说，你以后也可以通过<code>Scope</code>来查看实际代码作用域链的情况，这样调试代码也会比较方便。</p>
+<h1 id="闭包是怎么回收的"><a href="#闭包是怎么回收的" class="headerlink" title="闭包是怎么回收的"></a>闭包是怎么回收的</h1><p>如果闭包使用不正确，会很容易造成内存泄漏的，关注闭包是如何回收的能让你正确地使用闭包。</p>
+<p>通常，如果引用闭包的函数是一个全局变量，那么闭包会一直存在直到页面关闭；但如果这个闭包以后不再使用的话，就会造成内存泄漏。</p>
+<p>如果引用闭包的函数是个局部变量，等函数销毁后，在下次 JavaScript 引擎执行垃圾回收时，判断闭包这块内容如果已经不再被使用了，那么 JavaScript 引擎的垃圾回收器就会回收这块内存。</p>
+<p>所以在使用闭包的时候，你要尽量注意一个原则：如果该闭包会一直使用，那么它可以作为全局变量而存在；但如果使用频率不高，而且占用内存又比较大的话，那就尽量让它成为一个局部变量。</p>
+<p>其实闭包是如何回收的还牵涉到了 JavaScript 的垃圾回收机制。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/11/06/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE%E5%92%8C%E9%97%AD%E5%8C%85/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" rel="tag">JS执行机制</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/11/07/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94this/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS执行机制——this
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/11/05/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/JS%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%9D%97%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS执行机制——块级作用域</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

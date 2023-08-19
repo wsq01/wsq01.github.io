@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL数据库备份与恢复 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-MySQL/MySQL数据库备份与恢复"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL数据库备份与恢复
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/06/03/MySQL/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D/" class="article-date">
+  <time datetime="2020-06-03T09:11:23.000Z" itemprop="datePublished">2020-06-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="备份类型"><a href="#备份类型" class="headerlink" title="备份类型"></a>备份类型</h1><p>备份是以防万一的一种必要手段，在出现硬件损坏或非人为的因素而导致数据丢失时，可以使用备份恢复数据，以将损失降低到最小程度，因此备份是必须的。备份可以分为以下几个类型。</p>
+<p>根据备份的方法（是否需要数据库离线）可以将备份分为：</p>
+<ul>
+<li>热备（<code>Hot Backup</code>）</li>
+<li>冷备（<code>Cold Backup</code>）</li>
+<li>温备（<code>Warm Backup</code>）</li>
+</ul>
+<p>热备份可以在数据库运行中直接备份，对正在运行的数据库操作没有任何的影响，数据库的读写操作可以正常执行。这种方式也称为<code>Online Backup</code>（在线备份）。</p>
+<p>冷备份必须在数据库停止的情况下进行备份，数据库的读写操作不能执行。这种备份最为简单，一般只需要复制相关的数据库物理文件即可。这种方式也称为<code>Offline Backup</code>（离线备份）。</p>
+<p>温备份同样是在数据库运行中进行的，但是会对当前数据库的操作有所影响，备份时仅支持读操作，不支持写操作。</p>
+<p>按照备份后文件的内容，热备份又可以分为：逻辑备份、裸文件备份。</p>
+<p>在 MySQL 数据库中，逻辑备份是指备份出的文件内容是可读的，一般是文本内容。内容一般是由一条条 SQL 语句，或者是表内实际数据组成。如<code>mysqldump</code>和<code>SELECT * INTO OUTFILE</code>的方法。这类方法的好处是可以观察导出文件的内容，一般适用于数据库的升级、迁移等工作。但其缺点是恢复的时间较长。</p>
+<p>裸文件备份是指复制数据库的物理文件，既可以在数据库运行中进行复制（如 ibbackup、xtrabackup 这类工具），也可以在数据库停止运行时直接复制数据文件。这类备份的恢复时间往往比逻辑备份短很多。</p>
+<p>按照备份数据库的内容来分，备份又可以分为：完全备份、部分备份。</p>
+<p>完全备份是指对数据库进行一个完整的备份，即备份整个数据库，如果数据较多会占用较大的时间和空间。</p>
+<p>部分备份是指备份部分数据库（例如，只备份一个表）。</p>
+<p>部分备份又分为：增量备份、差异备份。</p>
+<p>增量备份需要使用专业的备份工具。指的是在上次完全备份的基础上，对更改的数据进行备份。也就是说每次备份只会备份自上次备份之后到备份时间之内产生的数据。因此每次备份都比差异备份节约空间，但是恢复数据麻烦。</p>
+<p>差异备份指的是自上一次完全备份以来变化的数据。和增量备份相比，浪费空间，但恢复数据比增量备份简单。</p>
+<p>MySQL 中进行不同方式的备份还要考虑存储引擎是否支持，如 MyISAM 不支持热备，支持温备和冷备。而 InnoDB 支持热备、温备和冷备。</p>
+<p>一般情况下，我们需要备份的数据分为以下几种：</p>
+<ul>
+<li>表数据</li>
+<li>二进制日志、InnoDB 事务日志</li>
+<li>代码（存储过程、存储函数、触发器、事件调度器）</li>
+<li>服务器配置文件</li>
+</ul>
+<p>下面是几种常用的备份工具：</p>
+<ul>
+<li><code>mysqldump</code>：逻辑备份工具，适用于所有的存储引擎，支持温备、完全备份、部分备份、对于 InnoDB 存储引擎支持热备。</li>
+<li><code>cp、tar</code>等归档复制工具：物理备份工具，适用于所有的存储引擎、冷备、完全备份、部分备份。</li>
+<li><code>lvm2 snapshot</code>：借助文件系统管理工具进行备份。</li>
+<li><code>mysqlhotcopy</code>：名不副实的一个工具，仅支持 MyISAM 存储引擎。</li>
+<li><code>xtrabackup</code>：一款由 percona 提供的非常强大的 InnoDB&#x2F;XtraDB 热备工具，支持完全备份、增量备份。</li>
+</ul>
+<h1 id="冷备份"><a href="#冷备份" class="headerlink" title="冷备份"></a>冷备份</h1><p>冷备份可以称为<code>Offline Backup</code>（离线备份）。这种备份最为简单，一般只需要复制相关的数据库物理文件到另外的位置即可。</p>
+<p>由于 MySQL 服务器中的数据文件是基于磁盘的文本文件，所以最简单、最直接的备份操作，就是将数据文件直接复制出来。但是由于 MySQL 服务器的数据文件在运行时期，总是处于打开和使用状态，因此备份文件不一定有效。为了解决该问题，在复制数据文件时，需要先停止 MySQL 服务器。</p>
+<p>这样做的好处是可以保证数据库的完整性，备份过程简单且恢复速度相对快一些，但是关闭数据库会影响现有业务的进行。服务器停止运行期间，用户不能再继续访问网站。冷备一般用于不是很重要、非核心的业务上面。</p>
+<p>冷备份的优点如下：</p>
+<ul>
+<li>备份简单、快速，只要复制相关文件即可。</li>
+<li>备份文件易于在不同操作系统，不同 MySQL 版本上进行恢复。</li>
+<li>恢复相当简单，只需要把文件恢复到指定位置即可。</li>
+<li>恢复速度快，不需要执行任何 SQL 语句，也不需要重建索引。</li>
+<li>低度维护，高度安全。</li>
+</ul>
+<p>冷备份的缺点如下：</p>
+<ul>
+<li>备份过程中，数据库不能做其它的工作，且必须是关闭状态。</li>
+<li>InnoDB 存储引擎冷备的文件通常比逻辑文件大很多，因为表空间存放着很多其它的数据，如<code>undo</code>段，插入缓冲等信息。</li>
+<li>若磁盘空间有限，只能拷贝到磁带等其它外部存储设备上，速度会很慢。</li>
+<li>冷备也不总是可以轻易的跨平台。操作系统、MySQL 的版本、文件大小写敏感和浮点数格式都会成为问题。</li>
+</ul>
+<p>数据库的物理文件主要由数据库的数据文件、日志文件以及配置文件等组成。MySQL 系统有一些共有的日志文件和系统表的数据文件。每种存储引擎的物理文件也不一样。</p>
+<p>冷备的备份与恢复过程也很简单。仅仅需要如下几步：</p>
+<ol>
+<li>为了保证所备份数据的完整性，在停止 MySQL 数据库服务器之前，需要先执行 FLUSH TABLES 语句将所有数据写入到数据文件的文本文件里。</li>
+<li>停掉 MySQL 服务，命令（2种方式）如下：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin <span class="operator">-</span>uroot <span class="operator">-</span>proot shutdown</span><br><span class="line">NET <span class="keyword">START</span> mysql</span><br></pre></td></tr></table></figure></li>
+<li>备份过程就是复制整个数据目录到远程备份机或者本地磁盘上，Linux 和 Windows 命令如下：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Scp -r /data/mysql/ root@远程备份机ip:/新的目录</span><br><span class="line">Copy -r /data/mysql/ 本地新目录</span><br></pre></td></tr></table></figure>
+备份到本次磁盘也可以手动复制上述相关目录里的数据文件。</li>
+<li>恢复过程就更简单了，仅仅需要把已备份的数据目录替换原有的目录就可以了，最后重启 MySQL 服务。</li>
+</ol>
+<p>需要注意的是，通过复制数据文件这种方式实现数据恢复时，必须保证两个 MySQL 数据库的主版本号一致。只有两个 MySQL 数据库主版本号相同时，才能保证它们的数据文件类型是相同的。</p>
+<h1 id="冷备份所需物理文件"><a href="#冷备份所需物理文件" class="headerlink" title="冷备份所需物理文件"></a>冷备份所需物理文件</h1><h2 id="MyISAM存储引擎"><a href="#MyISAM存储引擎" class="headerlink" title="MyISAM存储引擎"></a>MyISAM存储引擎</h2><p>MyISAM 存储引擎的所有数据默认存放在<code>C:/ProgramData/MySQL/MySQL Server 5.7/Data</code>路径下，即配置文件（<code>my.ini</code>或<code>my.cnf</code>）中<code>datadir</code>参数的值。</p>
+<p>实际上不管我们使用的是 MyISAM 存储引擎还是其他存储引擎，每一个数据库都会在<code>datadir</code>目录下有一个文件夹（包括系统信息的数据库<code>mysql</code>也是一样）。</p>
+<p>在各个数据库中每一个 MyISAM 存储引擎的表都会有 3 个文件存在，即记录表结构元数据的<code>.frm</code>文件，存储表数据的<code>.MYD</code>文件，存储索引数据的<code>.MYI</code>文件。</p>
+<p>MyISAM 属于非事务性存储引擎，它没有自己的日志文件。所以 MyISAM 存储引擎的物理备份除了需要备份 MySQL 系统共有的物理文件之外，还需要备份上面的 3 种文件。</p>
+<h2 id="Innodb-存储引擎"><a href="#Innodb-存储引擎" class="headerlink" title="Innodb 存储引擎"></a>Innodb 存储引擎</h2><p>Innodb 存储引擎属于事务性存储引擎，存放数据的位置也可能与 MyISAM 存储引擎有所不同，这主要取决于 Innodb 的相关配置。</p>
+<p>指定 Innodb 存放数据和日志文件的位置参数为<code>innodb_data_home_dir、innodb_data_file_path</code>和<code>innodb_log_group_home_dir</code>。以及决定 Innodb 的表空间存储方式参数<code>innodb_file_per_table</code>，它决定 Innodb 是以共享表空间存放数据还是以独享表空间方式存储数据。</p>
+<p>如果使用的是共享表空间的存储方式，那么需要备份<code>innodb_data_home_dir</code>和<code>innodb_data_file_path</code>参数设定的所有数据文件，以及<code>datadir</code>中相应数据库目录下的所有 Innodb 存储引擎表的 <code>frm</code>文件。</p>
+<p>而如果使用的是独享表空间，那么除了需要备份上面共享表空间方式所需要备份的所有文件之外，我们还需要备份<code>datadir</code>中相应数据库目录下的所有<code>.idb</code>文件，该文件中存放的才是独享表空间方式下 Innodb 存储引擎表的数据。</p>
+<p>那么既然是使用独享表空间，为什么还要备份共享表空间“才使用到”的数据文件呢？其实这是很多人的一个共性误区，以为使用独享表空间的时候 Innodb 的所有信息就都存放在“datadir”所设定数据库目录下的“.ibd”文件中。实际上并不是这样的，“.ibd”文件中所存放的仅仅只是我们的表数据而已。</p>
+<p>大家都很清楚，Innodb 是事务性存储引擎，它需要<code>undo</code>和<code>redo</code>信息，而不管 Innodb 使用的是共享还是独享表空间的方式来存储数据。与事务相关的<code>undo</code>信息以及其他的一些元数据信息，都是存放在<code>innodb_data_home_dir</code>和<code>innodb_data_file_path</code>这两个参数所设定的数据文件中的。所以要想 Innodb 的物理备份有效，就必须备份<code>innodb_data_home_dir</code>和<code>innodb_data_file_path</code>参数所设定的数据文件。</p>
+<p>此外，除了上面所说的数据文件之外，Innodb 还有存放自己的<code>redo</code>信息和相关事务信息的日志文件在<code>innodb_log_group_home_dir</code>参数所设定的位置。所以要想 Innodb 物理备份能够有效使用，我们还必须要备份<code>innodb_log_group_home_dir</code>参数所设定的位置的所有日志文件。</p>
+<h1 id="热备份及恢复"><a href="#热备份及恢复" class="headerlink" title="热备份及恢复"></a>热备份及恢复</h1><p>与冷备份正好相反，热备份是在数据库处于运行状态时直接备份，不影响现有业务的正常进行。热备份又细分为逻辑备份和裸文件备份。</p>
+<h2 id="逻辑备份"><a href="#逻辑备份" class="headerlink" title="逻辑备份"></a>逻辑备份</h2><p>逻辑备份的最大优点就是对于各种存储引擎，都可以用同样的方法来备份。而冷备份则不同，不同的存储引擎的备份方法也各不相同。因此，对于不同存储引擎混合的数据库，用逻辑备份会更简单一些。</p>
+<p>逻辑备份可以说是最简单，也是目前中小型系统最常用的备份方法。逻辑备份主要有以下几种方法：</p>
+<ol>
+<li><code>mysqldump</code><br><code>mysqldump</code>是 MySQL 自带的逻辑备份工具。它的备份原理是通过协议连接到 MySQL 数据库，将需要备份的数据查询出来，然后将查询出的数据转换成对应的<code>INSERT</code>语句。当我们需要还原恢复这些数据时，只要执行这些<code>INSERT</code>语句，就能将对应的数据还原。所以有的资料也将这种备份方式称为<code>INSERT</code>备份。</li>
+</ol>
+<p>恢复数据时可以使用<code>mysql -uroot -p &lt;backup.sql</code>直接调用备份文件执行所有命令，将数据完全恢复到备份时候的状态。如果已经连接上了 MySQL 服务器，那么可以通过<code>source /path/backup.sql</code>来进行恢复。<br>2. <code>SELECT INTO…OUTFILE</code><br><code>SELECT INTO…OUTFILE</code>语句可以把表数据导出到一个文本文件中，且能将数据库中的表数据以特定分隔符进行分隔后记录在文本文件中，以达到逻辑备份的效果。</p>
+<p>这种备份方式与<code>mysqldump</code>方法相比，使用的存储空间更小，数据格式更加清晰明确，编辑方便。但是这种方法只能导出或导入数据的内容，不包括表的结构，如果表的结构文件损坏，则必须先恢复原来的表的结构。而且这种方法不能在同一个备份文件中存在多个表的备份数据，增加了文件维护和恢复的成本。</p>
+<p>这种备份方法恢复起来会稍微麻烦一点，需要一个表一个表通过相关命令来进行恢复。当然如果是通过脚本来实现自动多表恢复也是比较方便的。恢复方法有 2 个，一个是通过 MySQL 的<code>LOAD DATA INFILE</code>命令来恢复数据，另一种方法就是通过 MySQL 提供的使用工具 mysqlimport 来进行恢复。<br>3. <code>mydumper</code><br><code>mydumper</code>是针对 MySQL 数据库备份的一个轻量级第三方的开源工具，备份方式为逻辑备份。它支持多线程，备份速度远高于原生态的<code>mysqldump</code>以及其它众多优异特性。与其配套的相应恢复数据为<code>myloader</code>工具。</p>
+<p>我们可以看出所谓的逻辑备份就是备份 SQL 语句，然后恢复数据时执行备份 SQL，从而实现数据库数据的重现。逻辑备份完成后所形成的文件都可以直接编辑。</p>
+<p>逻辑备份的作用如下：</p>
+<ul>
+<li>通过逻辑备份，我们可以仅仅恢复备份中的部分数据而不需要全部恢复。不会影响不相关的数据；</li>
+<li>通过全库的逻辑备份，我们可以在新的 MySQL 环境下完全重建出一个与备份时完全一样的数据库，并且不受平台类型限制；</li>
+<li>通过特定条件的逻辑备份，我们可以将某些特定数据轻松迁移（或者同步）到其它的 MySQL 或另外的数据库环境。</li>
+</ul>
+<h2 id="裸文件备份"><a href="#裸文件备份" class="headerlink" title="裸文件备份"></a>裸文件备份</h2><p>裸文件备份主要在底层复制数据文件，所以备份速度要比逻辑备份更快。</p>
+<p>我们利用 Percona 公司发布的一个 XtraBackup 热备份工具来完成裸文件备份，据官方介绍它是世界上唯一一款开源的能够对 InnoDB 和 XtraDB 数据库进行热备的工具。</p>
+<p>它的优点就是备份与恢复过程的速度很快，安全可靠，而且在备份过程中不会缩表，不影响现有业务。但它目前还是不能对表结构文件和其它非事务类型的表进行备份。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/06/03/MySQL/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/06/05/MySQL/MySQL%E6%97%A5%E5%BF%97/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL 日志
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/31/MySQL/MySQL%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL 用户管理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

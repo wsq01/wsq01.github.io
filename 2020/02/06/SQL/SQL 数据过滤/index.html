@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>SQL 数据过滤 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-SQL/SQL 数据过滤"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SQL 数据过滤
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/02/06/SQL/SQL%20%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4/" class="article-date">
+  <time datetime="2020-02-06T08:23:03.000Z" itemprop="datePublished">2020-02-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">6 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h1><p>在 SQL 中，我们可以使用<code>WHERE</code>子句对条件进行筛选，在此之前，你需要了解<code>WHERE</code>子句中的比较运算符。这些比较运算符的含义你可以参见下面这张表格：</p>
+<table>
+<thead>
+<tr>
+<th align="center">含义</th>
+<th align="center">运算符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">等于、小于、大于、不等于</td>
+<td align="center"><code>=、&lt;、&gt;、!=</code></td>
+</tr>
+<tr>
+<td align="center">不等于</td>
+<td align="center"><code>&lt;&gt;</code>或<code>!=</code></td>
+</tr>
+<tr>
+<td align="center">小于等于</td>
+<td align="center"><code>&lt;=</code>或<code>!&gt;</code></td>
+</tr>
+<tr>
+<td align="center">大于等于</td>
+<td align="center"><code>&gt;=</code>或<code>!&lt;</code></td>
+</tr>
+<tr>
+<td align="center">在指定的两个数值之间</td>
+<td align="center"><code>BETWEEN</code></td>
+</tr>
+<tr>
+<td align="center">为空值</td>
+<td align="center"><code>IS NULL</code></td>
+</tr>
+</tbody></table>
+<p>不同的 DBMS 支持的运算符可能是不同的，比如 Access 不支持（<code>!=</code>），不等于应该使用（<code>&lt;&gt;</code>）。在 MySQL 中，不支持（<code>!&gt;</code>）（<code>!&lt;</code>）等。</p>
+<p><code>WHERE</code>子句的基本格式是：<code>SELECT ……(列名) FROM ……(表名) WHERE ……(子句条件)</code></p>
+<p>比如我们想要查询所有最大生命值大于 6000 的英雄：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> hp_max <span class="operator">&gt;</span> <span class="number">6000</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">夏侯淳</td>
+<td align="center">7350</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">凯</td>
+<td align="center">6700</td>
+</tr>
+</tbody></table>
+<p>想要查询所有最大生命值在 5399 到 6811 之间的英雄：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> hp_max <span class="keyword">BETWEEN</span> <span class="number">5399</span> <span class="keyword">AND</span> <span class="number">6811</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">芈月</td>
+<td align="center">6164</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">百里守约</td>
+<td align="center">5611</td>
+</tr>
+</tbody></table>
+<p>需要注意的是<code>hp_max</code>可以取值到最小值和最大值，即 5399 和 6811。</p>
+<p>我们也可以对<code>heros</code>表中的<code>hp_max</code>字段进行空值检查。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> hp_max <span class="keyword">IS</span> <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+<p>运行结果为空，说明<code>heros</code>表中的<code>hp_max</code>字段没有存在空值的数据行。</p>
+<h1 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h1><p>如果我们存在多个<code>WHERE</code>条件子句，可以使用逻辑运算符：</p>
+<table>
+<thead>
+<tr>
+<th align="center">含义</th>
+<th align="center">逻辑运算符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">并且</td>
+<td align="center"><code>AND</code></td>
+</tr>
+<tr>
+<td align="center">或者</td>
+<td align="center"><code>OR</code></td>
+</tr>
+<tr>
+<td align="center">在指定条件范围内</td>
+<td align="center"><code>IN</code></td>
+</tr>
+<tr>
+<td align="center">非</td>
+<td align="center"><code>NOT</code></td>
+</tr>
+</tbody></table>
+<p>我们还是通过例子来看下这些逻辑运算符的使用，同样采用<code>heros</code>这张表的数据查询。</p>
+<p>假设想要筛选最大生命值大于 6000，最大法力大于 1700 的英雄，然后按照最大生命值和最大法力值之和从高到低进行排序。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max, mp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> hp_max <span class="operator">&gt;</span> <span class="number">6000</span> <span class="keyword">AND</span> mp_max <span class="operator">&gt;</span> <span class="number">1700</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (hp_max<span class="operator">+</span>mp_max) <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+<th align="center">hp_max</th>
+<th align="center">mp_max</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">廉颇</td>
+<td align="center">9328</td>
+<td align="center">1708</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">孙尚香</td>
+<td align="center">6014</td>
+<td align="center">1756</td>
+</tr>
+</tbody></table>
+<p>如果<code>AND</code>和<code>OR</code>同时存在<code>WHERE</code>子句中会是怎样的呢？假设我们想要查询最大生命值加最大法力值大于 8000 的英雄，或者最大生命值大于 6000 并且最大法力值大于 1700 的英雄。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max, mp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> (hp_max<span class="operator">+</span>mp_max) <span class="operator">&gt;</span> <span class="number">8000</span> <span class="keyword">OR</span> hp_max <span class="operator">&gt;</span> <span class="number">6000</span> <span class="keyword">AND</span> mp_max <span class="operator">&gt;</span> <span class="number">1700</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (hp_max<span class="operator">+</span>mp_max) <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>这次的条件查询多出来了 10 个英雄，这是因为我们放宽了条件，允许最大生命值 + 最大法力值大于 8000 的英雄显示出来。另外你需要注意到，当<code>WHERE</code>子句中同时存在<code>OR</code>和<code>AND</code>的时候，<code>AND</code>执行的优先级会更高，也就是说 SQL 会优先处理<code>AND</code>操作符，然后再处理<code>OR</code>操作符。</p>
+<p>如果我们对这条查询语句<code>OR</code>两边的条件增加一个括号，结果会是怎样的呢？</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name, hp_max, mp_max <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> ((hp_max<span class="operator">+</span>mp_max) <span class="operator">&gt;</span> <span class="number">8000</span> <span class="keyword">OR</span> hp_max <span class="operator">&gt;</span> <span class="number">6000</span>) <span class="keyword">AND</span> mp_max </span><br></pre></td></tr></table></figure>
+<p>所以当<code>WHERE</code>子句中同时出现<code>AND</code>和<code>OR</code>操作符的时候，你需要考虑到执行的先后顺序，也就是两个操作符执行的优先级。一般来说<code>()</code>优先级最高，其次优先级是<code>AND</code>，然后是<code>OR</code>。</p>
+<p>如果我想要查询主要定位或者次要定位是法师或是射手的英雄，同时英雄的上线时间不在<code>2016-01-01</code>到<code>2017-01-01</code>之间。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：</span><br><span class="line"><span class="keyword">SELECT</span> name, role_main, role_assist, hp_max, mp_max, birthdate</span><br><span class="line"><span class="keyword">FROM</span> heros </span><br><span class="line"><span class="keyword">WHERE</span> (role_main <span class="keyword">IN</span> (<span class="string">&#x27;法师&#x27;</span>, <span class="string">&#x27;射手&#x27;</span>) <span class="keyword">OR</span> role_assist <span class="keyword">IN</span> (<span class="string">&#x27;法师&#x27;</span>, <span class="string">&#x27;射手&#x27;</span>)) </span><br><span class="line"><span class="keyword">AND</span> <span class="type">DATE</span>(birthdate) <span class="keyword">NOT</span> <span class="keyword">BETWEEN</span> <span class="string">&#x27;2016-01-01&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2017-01-01&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> (hp_max <span class="operator">+</span> mp_max) <span class="keyword">DESC</span></span><br></pre></td></tr></table></figure>
+<p>你能看到<code>WHERE</code>子句分成了两个部分。第一部分是关于主要定位和次要定位的条件过滤，使用的是<code>role_main in (&#39;法师&#39;, &#39;射手&#39;) OR role_assist in (&#39;法师&#39;, &#39;射手&#39;)</code>。这里用到了<code>IN</code>逻辑运算符，同时<code>role_main</code>和<code>role_assist</code>是<code>OR</code>（或）的关系。</p>
+<p>第二部分是关于上线时间的条件过滤。<code>NOT</code>代表否，因为我们要找到不在<code>2016-01-01</code>到<code>2017-01-01</code>之间的日期，因此用到了<code>NOT BETWEEN &#39;2016-01-01&#39; AND &#39;2017-01-01&#39;</code>。同时我们是在对日期类型数据进行检索，所以使用到了<code>DATE</code>函数，将字段<code>birthdate</code>转化为日期类型再进行比较。</p>
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+<th align="center">role_main</th>
+<th align="center">role_assist</th>
+<th align="center">hp_max</th>
+<th align="center">mp_max</th>
+<th align="center">birthdate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">张良</td>
+<td align="center">法师</td>
+<td align="center"></td>
+<td align="center">5799</td>
+<td align="center">1988</td>
+<td align="center">2015-10-26</td>
+</tr>
+<tr>
+<td align="center">貂蝉</td>
+<td align="center">法师</td>
+<td align="center">刺客</td>
+<td align="center">5611</td>
+<td align="center">1960</td>
+<td align="center">2015-12-15</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">芈月</td>
+<td align="center">法师</td>
+<td align="center">坦克</td>
+<td align="center">6164</td>
+<td align="center">100</td>
+<td align="center">2015-12-08</td>
+</tr>
+</tbody></table>
+<h1 id="使用通配符进行过滤"><a href="#使用通配符进行过滤" class="headerlink" title="使用通配符进行过滤"></a>使用通配符进行过滤</h1><p>刚才的条件过滤都是对已知值进行的过滤，还有一种情况是我们要检索文本中包含某个词的所有数据，这里就需要使用通配符。通配符就是我们用来匹配值的一部分的特殊字符。这里我们需要使用到<code>LIKE</code>操作符。</p>
+<p>如果我们想要匹配任意字符串出现的任意次数，需要使用（<code>%</code>）通配符。比如我们想要查找英雄名中包含“太”字的英雄都有哪些：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> <span class="string">&#x27;% 太 %&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">东皇太一</td>
+</tr>
+<tr>
+<td align="center">太乙真人</td>
+</tr>
+</tbody></table>
+<p>需要说明的是不同 DBMS 对通配符的定义不同，在 Access 中使用的是（<code>*</code>）而不是（<code>%</code>）。另外关于字符串的搜索可能是需要区分大小写的，比如<code>&#39;liu%&#39;</code>就不能匹配上<code>&#39;LIU BEI&#39;</code>。具体是否区分大小写还需要考虑不同的 DBMS 以及它们的配置。</p>
+<p>如果我们想要匹配单个字符，就需要使用下划线 (<code>_</code>) 通配符。（<code>%</code>）和（<code>_</code>）的区别在于，（<code>%</code>）代表一个或多个字符，而（<code>_</code>）只代表一个字符。比如我们想要查找英雄名除了第一个字以外，包含“太”字的英雄有哪些。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SQL</span>：<span class="keyword">SELECT</span> name <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> <span class="string">&#x27;_% 太 %&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>因为太乙真人的太是第一个字符，而<code>_%太%</code>中的太不是在第一个字符，所以匹配不到“太乙真人”，只可以匹配上“东皇太一”。</p>
+<p>同样需要说明的是，在 Access 中使用（<code>?</code>）来代替（<code>_</code>），而且在 DB2 中是不支持通配符（<code>_</code>）的，因此你需要在使用的时候查阅相关的 DBMS 文档。</p>
+<p>通配符还是很有用的，尤其是在进行字符串匹配的时候。不过在实际操作过程中，还是尽量少用通配符，因为它需要消耗数据库更长的时间来进行匹配。即使你对<code>LIKE</code>检索的字段进行了索引，索引的价值也可能会失效。如果要让索引生效，那么<code>LIKE</code>后面就不能以（<code>%</code>）开头，比如使用<code>LIKE &#39;%太%&#39;或LIKE &#39;%太&#39;</code>的时候就会对全表进行扫描。如果使用<code>LIKE &#39;太%&#39;</code>，同时检索的字段进行了索引的时候，则不会进行全表扫描。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/02/06/SQL/SQL%20%E6%95%B0%E6%8D%AE%E8%BF%87%E6%BB%A4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/02/07/SQL/SQL%20%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SQL 函数
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/02/05/SQL/SQL%20%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SQL 检索数据</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

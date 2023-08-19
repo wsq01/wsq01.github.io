@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Linux文本处理 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Linux/文本处理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Linux文本处理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/01/18/Linux/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2022-01-18T08:13:15.000Z" itemprop="datePublished">2022-01-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">10 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="cat命令：连接文件并打印输出到标准输出设备"><a href="#cat命令：连接文件并打印输出到标准输出设备" class="headerlink" title="cat命令：连接文件并打印输出到标准输出设备"></a>cat命令：连接文件并打印输出到标准输出设备</h1><p><code>cat</code>命令可以用来显示文本文件的内容，也可以把几个文件内容附加到另一个文件中，即连接合并文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat [选项] 文件名</span></span><br><span class="line">或者</span><br><span class="line">[root@localhost ~]<span class="comment"># cat 文件1 文件2 &gt; 文件3</span></span><br></pre></td></tr></table></figure>
+<p>这两种格式中，前者用于显示文件的内容；而后者用于连接合并文件。</p>
+<p><code>cat</code>命令常用选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-A</td>
+<td align="center">相当于 -vET 选项的整合，用于列出所有隐藏符号；</td>
+</tr>
+<tr>
+<td align="center">-E</td>
+<td align="center">列出每行结尾的回车符 $；</td>
+</tr>
+<tr>
+<td align="center">-n</td>
+<td align="center">对输出的所有行进行编号；</td>
+</tr>
+<tr>
+<td align="center">-b</td>
+<td align="center">同 -n 不同，此选项表示只对非空行进行编号。</td>
+</tr>
+<tr>
+<td align="center">-T</td>
+<td align="center">把 Tab 键 ^I 显示出来；</td>
+</tr>
+<tr>
+<td align="center">-V</td>
+<td align="center">列出特殊字符；</td>
+</tr>
+<tr>
+<td align="center">-s</td>
+<td align="center">当遇到有连续 2 行以上的空白行时，就替换为 1 行的空白行。</td>
+</tr>
+</tbody></table>
+<p>注意，<code>cat</code>命令用于查看文件内容时，不论文件内容有多少，都会一次性显示。如果文件非常大，那么文件开头的内容就看不到了。不过 Linux 可以使用<code>PgUp+</code>上箭头组合键向上翻页，但是这种翻页是有极限的，如果文件足够长，那么还是无法看全文件的内容。因此，<code>cat</code>命令适合查看不太大的文件。</p>
+<p>如果使用<code>-A</code>选项，则相当于使用了<code>-vET</code>选项，可以查看文本中的所有隐藏符号，包括回车符（<code>$</code>）、Tab 键（<code>^I</code>）等。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat -A anaconda-ks.cfg</span></span><br><span class="line"><span class="comment"># Kickstart file automatically generated by anaconda.$</span></span><br><span class="line">$</span><br><span class="line">$</span><br><span class="line"><span class="comment">#version=DEVEL$</span></span><br><span class="line">install$</span><br><span class="line">cdrom$</span><br><span class="line">…省略部分内容…</span><br></pre></td></tr></table></figure>
+<p>将文件<code>file1.txt</code>和<code>file2.txt</code>的内容合并后输出到文件<code>file3.txt</code>中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost base]<span class="comment"># ls</span></span><br><span class="line">file1.txt    file2.txt</span><br><span class="line">[root@localhost base]<span class="comment"># cat file1.txt</span></span><br><span class="line">http://c.biancheng.net(file1.txt)</span><br><span class="line">[root@localhost base]<span class="comment"># cat file2.txt</span></span><br><span class="line">is great(file2.txt)</span><br><span class="line">[root@localhost base]<span class="comment"># cat file1.txt file2.txt &gt; file3.txt</span></span><br><span class="line">[root@localhost base]<span class="comment"># more file3.txt</span></span><br><span class="line"><span class="comment">#more 命令可查看文件中的内容</span></span><br><span class="line">http://c.biancheng.net(file1.txt)</span><br><span class="line">is great(file2.txt)</span><br><span class="line">[root@localhost base]<span class="comment"># ls</span></span><br><span class="line">file1.txt    file2.txt    file3.txt</span><br></pre></td></tr></table></figure>
+<h1 id="more命令：分屏显示文件内容"><a href="#more命令：分屏显示文件内容" class="headerlink" title="more命令：分屏显示文件内容"></a>more命令：分屏显示文件内容</h1><p><code>more</code>命令可以分页显示文本文件的内容，使用者可以逐页阅读文件中内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># more [选项] 文件名</span></span><br></pre></td></tr></table></figure>
+<p><code>more</code>命令选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-f</td>
+<td align="center">计算行数时，以实际的行数，而不是自动换行过后的行数。</td>
+</tr>
+<tr>
+<td align="center">-p</td>
+<td align="center">不以卷动的方式显示每一页，而是先清除屏幕后再显示内容。</td>
+</tr>
+<tr>
+<td align="center">-c</td>
+<td align="center">跟 -p 选项相似，不同的是先显示内容再清除其他旧资料。</td>
+</tr>
+<tr>
+<td align="center">-s</td>
+<td align="center">当遇到有连续两行以上的空白行时，就替换为一行的空白行。</td>
+</tr>
+<tr>
+<td align="center">-u</td>
+<td align="center">不显示下引号（根据环境变量 TERM 指定的终端而有所不同）。</td>
+</tr>
+<tr>
+<td align="center">+n</td>
+<td align="center">从第 n 行开始显示文件内容，n 代表数字。</td>
+</tr>
+<tr>
+<td align="center">-n</td>
+<td align="center">一次显示的行数，n 代表数字。</td>
+</tr>
+</tbody></table>
+<p><code>more</code>命令的执行会打开一个交互界面，因此有必要了解一些交互命令，常用的交互命令：</p>
+<table>
+<thead>
+<tr>
+<th align="center">交互指令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">h 或 ？</td>
+<td align="center">显示 more 命令交互命令帮助。</td>
+</tr>
+<tr>
+<td align="center">q 或 Q</td>
+<td align="center">退出 more。</td>
+</tr>
+<tr>
+<td align="center">v</td>
+<td align="center">在当前行启动一个编辑器。</td>
+</tr>
+<tr>
+<td align="center">:f</td>
+<td align="center">显示当前文件的文件名和行号。</td>
+</tr>
+<tr>
+<td align="center">!&lt;命令&gt; 或 :!&lt;命令&gt;</td>
+<td align="center">在子Shell中执行指定命令。</td>
+</tr>
+<tr>
+<td align="center">回车键</td>
+<td align="center">向下移动一行。</td>
+</tr>
+<tr>
+<td align="center">空格键</td>
+<td align="center">向下移动一页。</td>
+</tr>
+<tr>
+<td align="center">Ctrl+l</td>
+<td align="center">刷新屏幕。</td>
+</tr>
+<tr>
+<td align="center">&#x3D;</td>
+<td align="center">显示当前行的行号。</td>
+</tr>
+<tr>
+<td align="center">‘</td>
+<td align="center">转到上一次搜索开始的地方。</td>
+</tr>
+<tr>
+<td align="center">Ctrf+f</td>
+<td align="center">向下滚动一页。</td>
+</tr>
+<tr>
+<td align="center">.</td>
+<td align="center">重复上次输入的命令。</td>
+</tr>
+<tr>
+<td align="center">&#x2F;字符串</td>
+<td align="center">搜索指定的字符串。</td>
+</tr>
+<tr>
+<td align="center">d</td>
+<td align="center">向下移动半页。</td>
+</tr>
+<tr>
+<td align="center">b</td>
+<td align="center">向上移动一页。</td>
+</tr>
+</tbody></table>
+<p>用分页的方式显示<code>anaconda-ks.cfg</code>文件的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># more anaconda-ks.cfg</span></span><br><span class="line"><span class="comment"># Kickstart file automatically generated by anaconda.</span></span><br><span class="line"><span class="comment">#version=DEVEL</span></span><br><span class="line">install</span><br><span class="line">cdrom</span><br><span class="line">…省略部分内容…</span><br><span class="line">--More--(69%)</span><br><span class="line"><span class="comment">#在这里执行交互命令即可</span></span><br></pre></td></tr></table></figure>
+<p>显示文件<code>anaconda-ks.cfg</code>的内容，每 10 行显示一屏，同时清楚屏幕，使用以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># more -c -10 anaconda-ks.cfg</span></span><br><span class="line"><span class="comment">#省略输出内容。</span></span><br></pre></td></tr></table></figure>
+<h1 id="head命令：显示文件开头的内容"><a href="#head命令：显示文件开头的内容" class="headerlink" title="head命令：显示文件开头的内容"></a>head命令：显示文件开头的内容</h1><p><code>head</code>命令可以显示指定文件前若干行的文件内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># head [选项] 文件名</span></span><br></pre></td></tr></table></figure>
+<p><code>head</code>命令常用选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-n K</td>
+<td align="center">这里的 K 表示行数，该选项用来显示文件前 K 行的内容；如果使用 “-K” 作为参数，则表示除了文件最后 K 行外，显示剩余的全部内容。</td>
+</tr>
+<tr>
+<td align="center">-c K</td>
+<td align="center">这里的 K 表示字节数，该选项用来显示文件前 K 个字节的内容；如果使用 “-K”，则表示除了文件最后 K 字节的内容，显示剩余全部内容。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示文件名；注意，如不设置显示的具体行数，则默认显示 10 行的文本数据。</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># head anaconda-ks.cfg</span></span><br></pre></td></tr></table></figure>
+<p><code>head</code>命令默认显示文件的开头 10 行内容。如果想显示指定的行数，则只需使用<code>-n</code>选项即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># head -n 20 anaconda-ks.cfg</span></span><br></pre></td></tr></table></figure>
+<p>这是显示文件的开头 20 行内容，也可以直接写”-行数”：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># head -20 anaconda-ks.cfg</span></span><br></pre></td></tr></table></figure>
+<h1 id="less命令：查看文件内容"><a href="#less命令：查看文件内容" class="headerlink" title="less命令：查看文件内容"></a>less命令：查看文件内容</h1><p><code>less</code>命令的作用和<code>more</code>十分类似，都用来浏览文本文件中的内容，不同之处在于，使用<code>more</code>命令浏览文件内容时，只能不断向后翻看，而使用<code>less</code>命令浏览，既可以向后翻看，也可以向前翻看。</p>
+<p>不仅如此，为了方面用户浏览文本内容，<code>less</code>命令还提供了以下几个功能：</p>
+<ul>
+<li>使用光标键可以在文本文件中前后（左后）滚屏；</li>
+<li>用行号或百分比作为书签浏览文件；</li>
+<li>提供更加友好的检索、高亮显示等操作；</li>
+<li>兼容常用的字处理程序（如 Vim、Emacs）的键盘操作；</li>
+<li>阅读到文件结束时，<code>less</code>命令不会退出；</li>
+<li>屏幕底部的信息提示更容易控制使用，而且提供了更多的信息。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># less [选项] 文件名</span></span><br></pre></td></tr></table></figure>
+<p><code>less</code>命令选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">选项含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-N</td>
+<td align="center">显示每行的行号。</td>
+</tr>
+<tr>
+<td align="center">-S</td>
+<td align="center">行过长时将超出部分舍弃。</td>
+</tr>
+<tr>
+<td align="center">-e</td>
+<td align="center">当文件显示结束后，自动离开。</td>
+</tr>
+<tr>
+<td align="center">-g</td>
+<td align="center">只标志最后搜索到的关键同。</td>
+</tr>
+<tr>
+<td align="center">-Q</td>
+<td align="center">不使用警告音。</td>
+</tr>
+<tr>
+<td align="center">-i</td>
+<td align="center">忽略搜索时的大小写。</td>
+</tr>
+<tr>
+<td align="center">-m</td>
+<td align="center">显示类似 more 命令的百分比。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">强迫打开特殊文件，比如外围设备代号、目录和二进制文件。</td>
+</tr>
+<tr>
+<td align="center">-s</td>
+<td align="center">显示连续空行为一行。</td>
+</tr>
+<tr>
+<td align="center">-b</td>
+<td align="center">&lt;缓冲区大小&gt;	设置缓冲区的大小。</td>
+</tr>
+<tr>
+<td align="center">-o</td>
+<td align="center">&lt;文件名&gt;	将 less 输出的内容保存到指定文件中。</td>
+</tr>
+<tr>
+<td align="center">-x</td>
+<td align="center">&lt;数字&gt;	将【Tab】键显示为规定的数字空格。</td>
+</tr>
+</tbody></table>
+<p>在使用<code>less</code>命令查看文件内容的过程中，和<code>more</code>命令一样，也会进入交互界面，因此需要掌握一些常用的交互指令。</p>
+<table>
+<thead>
+<tr>
+<th align="center">交互指令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&#x2F;字符串</td>
+<td align="center">向下搜索“字符串”的功能。</td>
+</tr>
+<tr>
+<td align="center">?字符串</td>
+<td align="center">向上搜索“字符串”的功能。</td>
+</tr>
+<tr>
+<td align="center">n</td>
+<td align="center">重复*前一个搜索（与 &#x2F; 成 ? 有关）。</td>
+</tr>
+<tr>
+<td align="center">N</td>
+<td align="center">反向重复前一个搜索（与 &#x2F; 或 ? 有关）。</td>
+</tr>
+<tr>
+<td align="center">b</td>
+<td align="center">向上移动一页。</td>
+</tr>
+<tr>
+<td align="center">d</td>
+<td align="center">向下移动半页。</td>
+</tr>
+<tr>
+<td align="center">h 或 H</td>
+<td align="center">显示帮助界面。</td>
+</tr>
+<tr>
+<td align="center">q 或 Q</td>
+<td align="center">退出 less 命令。</td>
+</tr>
+<tr>
+<td align="center">y</td>
+<td align="center">向上移动一行。</td>
+</tr>
+<tr>
+<td align="center">空格键</td>
+<td align="center">向下移动一页。</td>
+</tr>
+<tr>
+<td align="center">回车键</td>
+<td align="center">向下移动一行。</td>
+</tr>
+<tr>
+<td align="center">【PgDn】键</td>
+<td align="center">向下移动一页。</td>
+</tr>
+<tr>
+<td align="center">【PgUp】键</td>
+<td align="center">向上移动一页。</td>
+</tr>
+<tr>
+<td align="center">Ctrl+f</td>
+<td align="center">向下移动一页。</td>
+</tr>
+<tr>
+<td align="center">Ctrl+b</td>
+<td align="center">向上移动一页。</td>
+</tr>
+<tr>
+<td align="center">Ctrl+d</td>
+<td align="center">向下移动一页。</td>
+</tr>
+<tr>
+<td align="center">Ctrl+u</td>
+<td align="center">向上移动半页。</td>
+</tr>
+<tr>
+<td align="center">j</td>
+<td align="center">向下移动一行。</td>
+</tr>
+<tr>
+<td align="center">k</td>
+<td align="center">向上移动一行。</td>
+</tr>
+<tr>
+<td align="center">G</td>
+<td align="center">移动至最后一行。</td>
+</tr>
+<tr>
+<td align="center">g</td>
+<td align="center">移动到第一行。</td>
+</tr>
+<tr>
+<td align="center">ZZ</td>
+<td align="center">退出 less 命令。</td>
+</tr>
+<tr>
+<td align="center">v</td>
+<td align="center">使用配置的编辑器编辑当前文件。</td>
+</tr>
+<tr>
+<td align="center">[</td>
+<td align="center">移动到本文档的上一个节点。</td>
+</tr>
+<tr>
+<td align="center">]</td>
+<td align="center">移动到本文档的下一个节点。</td>
+</tr>
+<tr>
+<td align="center">p</td>
+<td align="center">移动到同级的上一个节点。</td>
+</tr>
+<tr>
+<td align="center">u</td>
+<td align="center">向上移动半页。</td>
+</tr>
+</tbody></table>
+<p>使用<code>less</code>命令查看<code>/boot/grub/grub.cfg</code>文件中的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># less /boot/grub/grub.cfg</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#DO NOT EDIT THIS FILE</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#It is automatically generated by grub-mkconfig using templates from /etc/grub.d and settings from /etc/default/grub</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### BEGIN /etc/grub.d/00_header ###</span></span><br><span class="line"><span class="keyword">if</span> [ -s <span class="variable">$prefix</span>/grubenv ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">set</span> have_grubenv=<span class="literal">true</span></span><br><span class="line">  load_env</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">set</span> default=<span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;$ &#123;prev_saved_entry&#125;&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">set</span> saved_entry=<span class="string">&quot;<span class="variable">$&#123;prev_saved_entry&#125;</span>&quot;</span></span><br><span class="line">  save_env saved_entry</span><br><span class="line">  <span class="built_in">set</span> prev_saved_entry= save_env prev_saved_entry</span><br><span class="line">  <span class="built_in">set</span> boot_once=<span class="literal">true</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> savedefault &#123;</span><br><span class="line">  <span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;boot_once&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">:</span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>less</code>在屏幕底部显示一个冒号（<code>:</code>），等待用户输入命令，比如说，用户想向下翻一页，可以按空格键；如果想向上翻一页，可以按<code>b</code>键。</p>
+<h1 id="tail命令：显示文件结尾的内容"><a href="#tail命令：显示文件结尾的内容" class="headerlink" title="tail命令：显示文件结尾的内容"></a>tail命令：显示文件结尾的内容</h1><p><code>tail</code>命令和<code>head</code>命令正好相反，它用来查看文件末尾的数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tail [选项] 文件名</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-n K</td>
+<td align="center">这里的 K 指的是行数，该选项表示输出最后 K 行，在此基础上，如果使用 -n +K，则表示从文件的第 K 行开始输出。</td>
+</tr>
+<tr>
+<td align="center">-c K</td>
+<td align="center">这里的 K 指的是字节数，该选项表示输出文件最后 K 个字节的内容，在此基础上，使用 -c +K 则表示从文件第 K 个字节开始输出。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">输出文件变化后新增加的数据。</td>
+</tr>
+</tbody></table>
+<p>查看<code>/etc/passwd</code>文件最后 3 行的数据内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tail -n 3 /etc/passwd</span></span><br><span class="line">sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin</span><br><span class="line">oprofile:x:16:16:Special user account to be used by OProfile:/var/lib/oprofile:/sbin/nologin</span><br><span class="line">tcpdump:x:72:72::/:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>除此之外，还可以采用如下这种形式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tail -3 /etc/passwd</span></span><br><span class="line">sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin</span><br><span class="line">oprofile:x:16:16:Special user account to be used by OProfile:/var/lib/oprofile:/sbin/nologin</span><br><span class="line">tcpdump:x:72:72::/:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>可以看到，使用<code>tail -n 3 /etc/passwd</code>命令和<code>tail -3 /etc/passwd</code>的效果是一样的。</p>
+<p>查看<code>/etc/passwd</code>文件末尾 100 个字节的数据内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># tail -c 100 /etc/passwd</span></span><br><span class="line">cpdump:x:72:72::/:/sbin/nologin</span><br></pre></td></tr></table></figure>
+<p>监听文件的新増内容。可以使用<code>-f</code>选项来监听文件的新増内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment">#tail -f anaconda-ks.cfg</span></span><br><span class="line">@server-platform</span><br><span class="line">@server-policy</span><br><span class="line">pax</span><br><span class="line">oddjob</span><br><span class="line">sgpio</span><br><span class="line">certmonger</span><br><span class="line">pam_krb5</span><br><span class="line">krb5-workstation</span><br><span class="line">perl-DBD-SQLite</span><br><span class="line">%end</span><br><span class="line"><span class="comment">#光标不会退出文件，而会一直监听在文件的结尾处</span></span><br></pre></td></tr></table></figure>
+<p>这条命令会显示文件的最后 10 行内容，而且光标不会退出命令，每隔一秒会检查一下文件是否增加新的内容，如果增加就追加到原来的输出结果后面并显示。</p>
+<p>如果想终止输出，按<code>Ctrl+c</code>键中断<code>tail</code>命令即可。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/01/18/Linux/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/01/18/Docker/Docker%E5%85%A5%E9%97%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Docker入门
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/01/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">TCP 重传、滑动窗口、流量控制、拥塞控制</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

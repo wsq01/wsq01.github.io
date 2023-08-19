@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/Python异常处理机制"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2023/01/09/python/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time datetime="2023-01-09T07:49:47.016Z" itemprop="datePublished">2023-01-09</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">21 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>编写程序时遇到的错误可大致分为 2 类，分别为语法错误和运行时错误。</p>
+<h1 id="Python语法错误"><a href="#Python语法错误" class="headerlink" title="Python语法错误"></a>Python语法错误</h1><p>语法错误，也就是解析代码时出现的错误。当代码不符合 Python 语法规则时，Python解释器在解析时就会报出<code>SyntaxError</code>语法错误，与此同时还会明确指出最早探测到错误的语句。</p>
+<p>语法错误多是开发者疏忽导致的，属于真正意义上的错误，是解释器无法容忍的，因此，只有将程序中的所有语法错误全部纠正，程序才能执行。</p>
+<h1 id="Python运行时错误"><a href="#Python运行时错误" class="headerlink" title="Python运行时错误"></a>Python运行时错误</h1><p>运行时错误，即程序在语法上都是正确的，但在运行时发生了错误。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a = 1/0</span><br></pre></td></tr></table></figure>
+<p>上面这句代码的意思是“用 1 除以 0，并赋值给 a 。因为 0 作除数是没有意义的，所以运行后会产生如下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a = 1/0</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;pyshell#2&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    a = 1/0</span><br><span class="line">ZeroDivisionError: division by zero</span><br></pre></td></tr></table></figure>
+<p>以上运行输出结果中，前两段指明了错误的位置，最后一句表示出错的类型。在 Python 中，把这种运行时产生错误的情况叫做异常。这种异常情况还有很多，常见的几种异常情况：</p>
+<table>
+<thead>
+<tr>
+<th align="center">异常类型</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">AssertionError</td>
+<td align="center">当 assert 关键字后的条件为假时，程序运行会停止并抛出 AssertionError 异常</td>
+</tr>
+<tr>
+<td align="center">AttributeError</td>
+<td align="center">当试图访问的对象属性不存在时抛出的异常</td>
+</tr>
+<tr>
+<td align="center">IndexError</td>
+<td align="center">索引超出序列范围会引发此异常</td>
+</tr>
+<tr>
+<td align="center">KeyError</td>
+<td align="center">字典中查找一个不存在的关键字时引发此异常</td>
+</tr>
+<tr>
+<td align="center">NameError</td>
+<td align="center">尝试访问一个未声明的变量时，引发此异常</td>
+</tr>
+<tr>
+<td align="center">TypeError</td>
+<td align="center">不同类型数据之间的无效操作</td>
+</tr>
+<tr>
+<td align="center">ZeroDivisionError</td>
+<td align="center">除法运算中除数为 0 引发此异常</td>
+</tr>
+</tbody></table>
+<p>当一个程序发生异常时，代表该程序在执行时出现了非正常的情况，无法再执行下去。默认情况下，程序是要终止的。如果要避免程序退出，可以使用捕获异常的方式获取这个异常的名称，再通过其他的逻辑代码让程序继续运行，这种根据异常做出的逻辑处理叫作异常处理。</p>
+<h1 id="try-except异常处理"><a href="#try-except异常处理" class="headerlink" title="try except异常处理"></a>try except异常处理</h1><p>Python 中，用<code>try except</code>语句块捕获并处理异常：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">  可能产生异常的代码块</span><br><span class="line">except [ (Error1, Error2, ... ) [as e] ]:</span><br><span class="line">  处理异常的代码块1</span><br><span class="line">except [ (Error3, Error4, ... ) [as e] ]:</span><br><span class="line">  处理异常的代码块2</span><br><span class="line">except  [Exception]:</span><br><span class="line">  处理其它异常</span><br></pre></td></tr></table></figure>
+<p>该格式中，[] 括起来的部分可以使用，也可以省略。其中各部分的含义如下：</p>
+<ul>
+<li><code>(Error1, Error2,...) 、(Error3, Error4,...)</code>：其中，<code>Error1、Error2、Error3</code>和<code>Error4</code>都是具体的异常类型。显然，一个<code>except</code>块可以同时处理多种异常。</li>
+<li><code>[as e]</code>：作为可选参数，表示给异常类型起一个别名<code>e</code>，这样做的好处是方便在<code>except</code>块中调用异常类型。</li>
+<li><code>[Exception]</code>：作为可选参数，可以代指程序可能发生的所有异常情况，其通常用在最后一个<code>except</code>块。</li>
+</ul>
+<p>从<code>try except</code>的基本语法格式可以看出，<code>try</code>块有且仅有一个，但<code>except</code>代码块可以有多个，且每个<code>except</code>块都可以同时处理多种异常。<br>当程序发生不同的意外情况时，会对应特定的异常类型，Python 解释器会根据该异常类型选择对应的<code>except</code>块来处理该异常。</p>
+<p><code>try except</code>语句的执行流程如下：</p>
+<ul>
+<li>首先执行<code>try</code>中的代码块，如果执行过程中出现异常，系统会自动生成一个异常类型，并将该异常提交给 Python 解释器，此过程称为捕获异常。</li>
+<li>当 Python 解释器收到异常对象时，会寻找能处理该异常对象的<code>except</code>块，如果找到合适的<code>except</code>块，则把该异常对象交给该<code>except</code>块处理，这个过程被称为处理异常。如果 Python 解释器找不到处理异常的<code>except</code>块，则程序运行终止，Python 解释器也将退出。</li>
+</ul>
+<p>事实上，不管程序代码块是否处于<code>try</code>块中，甚至包括<code>except</code>块中的代码，只要执行该代码块时出现了异常，系统都会自动生成对应类型的异常。但是，如果此段程序没有用<code>try</code>包裹，又或者没有为该异常配置处理它的<code>except</code>块，则 Python 解释器将无法处理，程序就会停止运行；反之，如果程序发生的异常经<code>try</code>捕获并由<code>except</code>处理完成，则程序可以继续执行。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  a = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;输入被除数：&quot;</span>))</span><br><span class="line">  b = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;输入除数：&quot;</span>))</span><br><span class="line">  c = a / b</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;您输入的两个数相除的结果是：&quot;</span>, c )</span><br><span class="line"><span class="keyword">except</span> (ValueError, ArithmeticError):</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;程序发生了数字格式异常、算术异常之一&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> :</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;未知异常&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;程序继续运行&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入被除数：a</span><br><span class="line">程序发生了数字格式异常、算术异常之一</span><br><span class="line">程序继续运行</span><br></pre></td></tr></table></figure>
+<p>上面程序中，第 6 行代码使用了（<code>ValueError, ArithmeticError</code>）来指定所捕获的异常类型，这就表明该<code>except</code>块可以同时捕获这 2 种类型的异常；第 8 行代码只有<code>except</code>关键字，并未指定具体要捕获的异常类型，这种省略异常类的<code>except</code>语句也是合法的，它表示可捕获所有类型的异常，一般会作为异常捕获的最后一个<code>except</code>块。</p>
+<p>除此之外，由于<code>try</code>块中引发了异常，并被<code>except</code>块成功捕获，因此程序才可以继续执行，才有了“程序继续运行”的输出结果。</p>
+<h2 id="获取特定异常的有关信息"><a href="#获取特定异常的有关信息" class="headerlink" title="获取特定异常的有关信息"></a>获取特定异常的有关信息</h2><p>由于一个<code>except</code>可以同时处理多个异常，那么我们如何知道当前处理的到底是哪种异常呢？</p>
+<p>其实，每种异常类型都提供了如下几个属性和方法，通过调用它们，就可以获取当前处理异常类型的相关信息：</p>
+<ul>
+<li><code>args</code>：返回异常的错误编号和描述字符串；</li>
+<li><code>str(e)</code>：返回异常信息，但不包括异常信息的类型；</li>
+<li><code>repr(e)</code>：返回较全的异常信息，包括异常信息的类型。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="number">1</span>/<span class="number">0</span></span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">  <span class="comment"># 访问异常的错误编号和详细信息</span></span><br><span class="line">  <span class="built_in">print</span>(e.args)</span><br><span class="line">  <span class="built_in">print</span>(<span class="built_in">str</span>(e))</span><br><span class="line">  <span class="built_in">print</span>(<span class="built_in">repr</span>(e))</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(&#x27;division by zero&#x27;,)</span><br><span class="line">division by zero</span><br><span class="line">ZeroDivisionError(&#x27;division by zero&#x27;,)</span><br></pre></td></tr></table></figure>
+<p>从程序中可以看到，由于<code>except</code>可能接收多种异常，因此为了操作方便，可以直接给每一个进入到此<code>except</code>块的异常，起一个统一的别名 e。</p>
+<h1 id="try-except-else"><a href="#try-except-else" class="headerlink" title="try except else"></a>try except else</h1><p>在原本的<code>try except</code>结构的基础上，Python 异常处理机制还提供了一个<code>else</code>块，也就是原有<code>try except</code>语句的基础上再添加一个<code>else</code>块，即<code>try except else</code>结构。</p>
+<p>使用<code>else</code>包裹的代码，只有当<code>try</code>块没有捕获到任何异常时，才会得到执行；反之，如果<code>try</code>块捕获到异常，即便调用对应的<code>except</code>处理完异常，<code>else</code>块中的代码也不会得到执行。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  result = <span class="number">20</span> / <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&#x27;请输入除数:&#x27;</span>))</span><br><span class="line">  <span class="built_in">print</span>(result)</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;必须输入整数&#x27;</span>)</span><br><span class="line"><span class="keyword">except</span> ArithmeticError:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;算术错误，除数不能为 0&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;没有出现异常&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;继续执行&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到，在原有<code>try except</code>的基础上，我们为其添加了<code>else</code>块。现在执行该程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请输入除数:4</span><br><span class="line">5.0</span><br><span class="line">没有出现异常</span><br><span class="line">继续执行</span><br></pre></td></tr></table></figure>
+<p>如上所示，当我们输入正确的数据时，<code>try</code>块中的程序正常执行，Python 解释器执行完<code>try</code>块中的程序之后，会继续执行<code>else</code>块中的程序，继而执行后续的程序。</p>
+<p>既然 Python 解释器按照顺序执行代码，那么<code>else</code>块有什么存在的必要呢？直接将<code>else</code>块中的代码编写在<code>try except</code>块的后面，不是一样吗？</p>
+<p>当然不一样，现在再次执行上面的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请输入除数:a</span><br><span class="line">必须输入整数</span><br><span class="line">继续执行</span><br></pre></td></tr></table></figure>
+<p>可以看到，当我们试图进行非法输入时，程序会发生异常并被<code>try</code>捕获，Python 解释器会调用相应的<code>except</code>块处理该异常。但是异常处理完毕之后，Python 解释器并没有接着执行 <code>else</code>块中的代码，而是跳过<code>else</code>，去执行后续的代码。</p>
+<p>也就是说，<code>else</code>的功能，只有当<code>try</code>块捕获到异常时才能显现出来。在这种情况下，<code>else</code>块中的代码不会得到执行的机会。而如果我们直接把<code>else</code>块去掉，将其中的代码编写到<code>try except</code>的后面：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  result = <span class="number">20</span> / <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&#x27;请输入除数:&#x27;</span>))</span><br><span class="line">  <span class="built_in">print</span>(result)</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;必须输入整数&#x27;</span>)</span><br><span class="line"><span class="keyword">except</span> ArithmeticError:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;算术错误，除数不能为 0&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;没有出现异常&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;继续执行&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请输入除数:a</span><br><span class="line">必须输入整数</span><br><span class="line">没有出现异常</span><br><span class="line">继续执行</span><br></pre></td></tr></table></figure>
+<p>可以看到，如果不使用<code>else</code>块，<code>try</code>块捕获到异常并通过<code>except</code>成功处理，后续所有程序都会依次被执行。</p>
+<h1 id="try-except-finally：资源回收"><a href="#try-except-finally：资源回收" class="headerlink" title="try except finally：资源回收"></a>try except finally：资源回收</h1><p>Python 异常处理机制还提供了一个<code>finally</code>语句，通常用来为<code>try</code>块中的程序做扫尾清理工作。</p>
+<blockquote>
+<p>注意，和<code>else</code>语句不同，<code>finally</code>只要求和<code>try</code>搭配使用，而至于该结构中是否包含<code>except</code>以及<code>else</code>，对于<code>finally</code>不是必须的（<code>else</code>必须和<code>try except</code>搭配使用）。</p>
+</blockquote>
+<p>在整个异常处理机制中，<code>finally</code>语句的功能是：无论<code>try</code>块是否发生异常，最终都要进入<code>finally</code>语句，并执行其中的代码块。</p>
+<p>基于<code>finally</code>语句的这种特性，在某些情况下，当<code>try</code>块中的程序打开了一些物理资源（文件、数据库连接等）时，由于这些资源必须手动回收，而回收工作通常就放在<code>finally</code>块中。</p>
+<p>Python 垃圾回收机制，只能帮我们回收变量、类对象占用的内存，而无法自动完成类似关闭文件、数据库连接等这些的工作。</p>
+<p>回收这些物理资源，必须使用<code>finally</code>块吗？当然不是，但使用<code>finally</code>块是比较好的选择。首先，<code>try</code>块不适合做资源回收工作，因为一旦<code>try</code>块中的某行代码发生异常，则其后续的代码将不会得到执行；其次<code>except</code>和<code>else</code>也不适合，它们都可能不会得到执行。而<code>finally</code>块中的代码，无论<code>try</code>块是否发生异常，该块中的代码都会被执行。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  a = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入 a 的值:&quot;</span>))</span><br><span class="line">  <span class="built_in">print</span>(<span class="number">20</span>/a)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;发生异常！&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;执行 else 块中的代码&quot;</span>)   </span><br><span class="line"><span class="keyword">finally</span> :</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;执行 finally 块中的代码&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行此程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请输入 a 的值:4</span><br><span class="line">5.0</span><br><span class="line">执行 else 块中的代码</span><br><span class="line">执行 finally 块中的代码</span><br></pre></td></tr></table></figure>
+<p>可以看到，当<code>try</code>块中代码为发生异常时，<code>except</code>块不会执行，<code>else</code>块和<code>finally</code>块中的代码会被执行。</p>
+<p>再次运行程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请输入 a 的值:a</span><br><span class="line">发生异常！</span><br><span class="line">执行 finally 块中的代码</span><br></pre></td></tr></table></figure>
+<p>可以看到，当<code>try</code>块中代码发生异常时，<code>except</code>块得到执行，而<code>else</code>块中的代码将不执行，<code>finally</code>块中的代码仍然会被执行。</p>
+<p><code>finally</code>块的强大还远不止此，即便当<code>try</code>块发生异常，且没有合适和<code>except</code>处理异常时，<code>finally</code>块中的代码也会得到执行。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  <span class="comment">#发生异常</span></span><br><span class="line">  <span class="built_in">print</span>(<span class="number">20</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">finally</span> :</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;执行 finally 块中的代码&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">执行 finally 块中的代码</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;D:\python3.6\1.py&quot;, line 3, in &lt;module&gt;</span><br><span class="line">    print(20/0)</span><br><span class="line">ZeroDivisionError: division by zero</span><br></pre></td></tr></table></figure>
+<p>可以看到，当<code>try</code>块中代码发生异常，导致程序崩溃时，在崩溃前 Python 解释器也会执行<code>finally</code>块中的代码。</p>
+<h1 id="raise"><a href="#raise" class="headerlink" title="raise"></a>raise</h1><p>Python 允许我们在程序中手动设置异常，使用<code>raise</code>语句即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raise [exceptionName [(reason)]]</span><br></pre></td></tr></table></figure>
+<p>其中，用<code>[]</code>括起来的为可选参数，其作用是指定抛出的异常名称，以及异常信息的相关描述。如果可选参数全部省略，则<code>raise</code>会把当前错误原样抛出；如果仅省略 (<code>reason</code>)，则在抛出异常时，将不附带任何的异常描述信息。</p>
+<p>也就是说，<code>raise</code>语句有如下三种常用的用法：</p>
+<ul>
+<li><code>raise</code>：单独一个<code>raise</code>。该语句引发当前上下文中捕获的异常（比如在<code>except</code>块中），或默认引发<code>RuntimeError</code>异常。</li>
+<li><code>raise</code>异常类名称：<code>raise</code>后带一个异常类名称，表示引发执行类型的异常。</li>
+<li><code>raise</code>异常类名称(描述信息)：在引发指定类型的异常的同时，附带异常的描述信息。</li>
+</ul>
+<p>显然，每次执行<code>raise</code>语句，都只能引发一次执行的异常。首先，我们来测试一下以上 3 种 raise 的用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; raise</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;pyshell#1&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    raise</span><br><span class="line">RuntimeError: No active exception to reraise</span><br><span class="line">&gt;&gt;&gt; raise ZeroDivisionError</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;pyshell#0&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    raise ZeroDivisionError</span><br><span class="line">ZeroDivisionError</span><br><span class="line">&gt;&gt;&gt; raise ZeroDivisionError(&quot;除数不能为零&quot;)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&lt;pyshell#2&gt;&quot;, line 1, in &lt;module&gt;</span><br><span class="line">    raise ZeroDivisionError(&quot;除数不能为零&quot;)</span><br><span class="line">ZeroDivisionError: 除数不能为零</span><br></pre></td></tr></table></figure>
+<p>当然，我们手动让程序引发异常，很多时候并不是为了让其崩溃。事实上，<code>raise</code>语句引发的异常通常用<code>try except（else finally）</code>异常处理结构来捕获并进行处理。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  a = <span class="built_in">input</span>(<span class="string">&quot;输入一个数：&quot;</span>)</span><br><span class="line">  <span class="comment">#判断用户输入的是否为数字</span></span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">not</span> a.isdigit()):</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">&quot;a 必须是数字&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;引发异常：&quot;</span>,<span class="built_in">repr</span>(e))</span><br></pre></td></tr></table></figure>
+<p>程序运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入一个数：a</span><br><span class="line">引发异常： ValueError(&#x27;a 必须是数字&#x27;,)</span><br></pre></td></tr></table></figure>
+<p>可以看到，当用户输入的不是数字时，程序会进入 if 判断语句，并执行 raise 引发 ValueError 异常。但由于其位于 try 块中，因为 raise 抛出的异常会被 try 捕获，并由 except 块进行处理。</p>
+<p>因此，虽然程序中使用了 raise 语句引发异常，但程序的执行是正常的，手动抛出的异常并不会导致程序崩溃。</p>
+<h2 id="raise-不需要参数"><a href="#raise-不需要参数" class="headerlink" title="raise 不需要参数"></a>raise 不需要参数</h2><p>正如前面所看到的，在使用 raise 语句时可以不带参数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  a = <span class="built_in">input</span>(<span class="string">&quot;输入一个数：&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">not</span> a.isdigit()):</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">&quot;a 必须是数字&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;引发异常：&quot;</span>,<span class="built_in">repr</span>(e))</span><br><span class="line">  <span class="keyword">raise</span></span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入一个数：a</span><br><span class="line">引发异常： ValueError(&#x27;a 必须是数字&#x27;,)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;D:\python3.6\1.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">    raise ValueError(&quot;a 必须是数字&quot;)</span><br><span class="line">ValueError: a 必须是数字</span><br></pre></td></tr></table></figure>
+<p>这里重点关注位于<code>except</code>块中的<code>raise</code>，由于在其之前我们已经手动引发了<code>ValueError</code>异常，因此这里当再使用<code>raise</code>语句时，它会再次引发一次。</p>
+<p>当在没有引发过异常的程序使用无参的<code>raise</code>语句时，它默认引发的是<code>RuntimeError</code>异常。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  a = <span class="built_in">input</span>(<span class="string">&quot;输入一个数：&quot;</span>)</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">not</span> a.isdigit()):</span><br><span class="line">      <span class="keyword">raise</span></span><br><span class="line"><span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;引发异常：&quot;</span>,<span class="built_in">repr</span>(e))</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入一个数：a</span><br><span class="line">引发异常： RuntimeError(&#x27;No active exception to reraise&#x27;,)</span><br></pre></td></tr></table></figure>
+<h1 id="sys-exc-info-方法：获取异常信息"><a href="#sys-exc-info-方法：获取异常信息" class="headerlink" title="sys.exc_info()方法：获取异常信息"></a>sys.exc_info()方法：获取异常信息</h1><p>在实际调试程序的过程中，有时只获得异常的类型是远远不够的，还需要借助更详细的异常信息才能解决问题。</p>
+<p>捕获异常时，有 2 种方式可获得更多的异常信息，分别是：</p>
+<ul>
+<li>使用<code>sys</code>模块中的<code>exc_info</code>方法；</li>
+<li>使用<code>traceback</code>模块中的相关函数。</li>
+</ul>
+<p>模块<code>sys</code>中，有两个方法可以返回异常的全部信息，分别是<code>exc_info()</code>和<code>last_traceback()</code>，这两个函数有相同的功能和用法。</p>
+<p><code>exc_info()</code>方法会将当前的异常信息以元组的形式返回，该元组中包含 3 个元素，分别为<code>type、value</code>和<code>traceback</code>，它们的含义分别是：</p>
+<ul>
+<li><code>type</code>：异常类型的名称，它是<code>BaseException</code>的子类</li>
+<li><code>value</code>：捕获到的异常实例。</li>
+<li><code>traceback</code>：是一个<code>traceback</code>对象。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用 sys 模块之前，需使用 import 引入</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  x = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个被除数：&quot;</span>))</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;30除以&quot;</span>,x,<span class="string">&quot;等于&quot;</span>,<span class="number">30</span>/x)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">  <span class="built_in">print</span>(sys.exc_info())</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;其他异常...&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>当输入 0 时，程序运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请输入一个被除数：0</span><br><span class="line">(&lt;class &#x27;ZeroDivisionError&#x27;&gt;, ZeroDivisionError(&#x27;division by zero&#x27;,), &lt;traceback object at 0x000001FCF638DD48&gt;)</span><br><span class="line">其他异常...</span><br></pre></td></tr></table></figure>
+<p>输出结果中，第 2 行是抛出异常的全部信息，这是一个元组，有 3 个元素，第一个元素是一个<code>ZeroDivisionError</code>类；第 2 个元素是异常类型<code>ZeroDivisionError</code>类的一个实例；第 3 个元素为一个<code>traceback</code>对象。其中，通过前 2 个元素可以看出抛出的异常类型以及描述信息，对于第 3 个元素，是一个<code>traceback</code>对象，无法直接看出有关异常的信息，还需要对其做进一步处理。</p>
+<p>要查看<code>traceback</code>对象包含的内容，需要先引进<code>traceback</code>模块，然后调用<code>traceback</code>模块中的<code>print_tb</code>方法，并将<code>sys.exc_info()</code>输出的<code>traceback</code>对象作为参数参入。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用 sys 模块之前，需使用 import 引入</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment">#引入traceback模块</span></span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  x = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个被除数：&quot;</span>))</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;30除以&quot;</span>,x,<span class="string">&quot;等于&quot;</span>,<span class="number">30</span>/x)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">  <span class="comment">#print(sys.exc_info())</span></span><br><span class="line">  traceback.print_tb(sys.exc_info()[<span class="number">2</span>])</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;其他异常...&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>输入 0，程序运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请输入一个被除数：0</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\demo.py&quot;, line 7, in &lt;module&gt;</span><br><span class="line">    print(&quot;30除以&quot;,x,&quot;等于&quot;,30/x)</span><br><span class="line">其他异常...</span><br></pre></td></tr></table></figure>
+<p>可以看到，输出信息中包含了更多的异常信息，包括文件名、抛出异常的代码所在的行数、抛出异常的具体代码。</p>
+<h1 id="traceback模块：获取异常信息"><a href="#traceback模块：获取异常信息" class="headerlink" title="traceback模块：获取异常信息"></a>traceback模块：获取异常信息</h1><p>除了使用<code>sys.exc_info()</code>方法获取更多的异常信息之外，还可以使用<code>traceback</code>模块，该模块可以用来查看异常的传播轨迹，追踪异常触发的源头。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SelfException</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">  <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">  firstMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">firstMethod</span>():</span><br><span class="line">  secondMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">secondMethod</span>():</span><br><span class="line">  thirdMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">thirdMethod</span>():</span><br><span class="line">  <span class="keyword">raise</span> SelfException(<span class="string">&quot;自定义异常信息&quot;</span>)</span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+<p>运行上面程序，将会看到如下所示的结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\1.py&quot;, line 11, in &lt;module&gt;</span><br><span class="line">    main()</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\1.py&quot;, line 4, in main           &lt;--mian函数</span><br><span class="line">    firstMethod()</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\1.py&quot;, line 6, in firstMethod    &lt;--第三个</span><br><span class="line">    secondMethod()</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\1.py&quot;, line 8, in secondMethod   &lt;--第二个</span><br><span class="line">    thirdMethod()</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\1.py&quot;, line 10, in thirdMethod   &lt;--异常源头</span><br><span class="line">    raise SelfException(&quot;自定义异常信息&quot;)</span><br><span class="line">SelfException: 自定义异常信息</span><br></pre></td></tr></table></figure>
+<p>从输出结果可以看出，异常从<code>thirdMethod()</code>函数开始触发，传到<code>secondMethod()</code>函数，再传到<code>firstMethod()</code>函数，最后传到<code>main()</code>函数，在<code>main()</code>函数止，这个过程就是整个异常的传播轨迹。</p>
+<p>当应用程序运行时，经常会发生一系列函数或方法调用，从而形成“函数调用栈”。异常的传播则相反，只要异常没有被完全捕获（包括异常没有被捕获，或者异常被处理后重新引发了新异常），异常就从发生异常的函数或方法逐渐向外传播，首先传给该函数或方法的调用者，该函数或方法的调用者再传给其调用者，直至最后传到 Python 解释器，此时 Python 解释器会中止该程序，并打印异常的传播轨迹信息。</p>
+<p>其实，上面程序的运算结果显示的异常传播轨迹信息非常清晰，它记录了应用程序中执行停止的各个点。最后一行信息详细显示了异常的类型和异常的详细消息。从这一行向上，逐个记录了异常发生源头、异常依次传播所经过的轨迹，并标明异常发生在哪个文件、哪一行、哪个函数处。</p>
+<p>使用<code>traceback</code>模块查看异常传播轨迹，首先需要将<code>traceback</code>模块引入，该模块提供了如下两个常用方法：</p>
+<ul>
+<li><code>traceback.print_exc()</code>：将异常传播轨迹信息输出到控制台或指定文件中。</li>
+<li><code>format_exc()</code>：将异常传播轨迹信息转换成字符串。</li>
+</ul>
+<p>从上面方法看不出它们到底处理哪个异常的传播轨迹信息。实际上我们常用的<code>print_exc()</code>是<code>print_exc([limit[, file]])</code>省略了<code>limit、file</code>两个参数的形式。而<code>print_exc([limit[, file]])</code>的完整形式是<code>print_exception(etype, value, tb[,limit[, file]])</code>，在完整形式中，前面三个参数用于分别指定异常的如下信息：</p>
+<ul>
+<li><code>etype</code>：指定异常类型；</li>
+<li><code>value</code>：指定异常值；</li>
+<li><code>tb</code>：指定异常的<code>traceback</code>信息；</li>
+</ul>
+<p>当程序处于<code>except</code>块中时，该<code>except</code>块所捕获的异常信息可通过<code>sys</code>对象来获取，其中<code>sys.exc_type、sys.exc_value、sys.exc_traceback</code>就代表当前<code>except</code>块内的异常类型、异常值和异常传播轨迹。</p>
+<p>简单来说，<code>print_exc([limit[, file]])</code>相当于如下形式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print_exception(sys.exc_etype, sys.exc_value, sys.exc_tb[, limit[, file]])</span><br></pre></td></tr></table></figure>
+<p>也就是说，使用<code>print_exc([limit[, file]])</code>会自动处理当前<code>except</code>块所捕获的异常。该方法还涉及两个参数：</p>
+<ul>
+<li><code>limit</code>：用于限制显示异常传播的层数，比如函数<code>A</code>调用函数<code>B</code>，函数<code>B</code>发生了异常，如果指定<code>limit=1</code>，则只显示函数<code>A</code>里面发生的异常。如果不设置<code>limit</code>参数，则默认全部显示。</li>
+<li><code>file</code>：指定将异常传播轨迹信息输出到指定文件中。如果不指定该参数，则默认输出到控制台。</li>
+</ul>
+<p>借助于<code>traceback</code>模块的帮助，我们可以使用<code>except</code>块捕获异常，并在其中打印异常传播信息，包括把它输出到文件中。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入trackback模块</span></span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SelfException</span>(<span class="title class_ inherited__">Exception</span>): <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">  firstMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">firstMethod</span>():</span><br><span class="line">  secondMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">secondMethod</span>():</span><br><span class="line">  thirdMethod()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">thirdMethod</span>():</span><br><span class="line">  <span class="keyword">raise</span> SelfException(<span class="string">&quot;自定义异常信息&quot;</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">  main()</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">  <span class="comment"># 捕捉异常，并将异常传播信息输出控制台</span></span><br><span class="line">  traceback.print_exc()</span><br><span class="line">  <span class="comment"># 捕捉异常，并将异常传播信息输出指定文件中</span></span><br><span class="line">  traceback.print_exc(file=<span class="built_in">open</span>(<span class="string">&#x27;log.txt&#x27;</span>, <span class="string">&#x27;a&#x27;</span>))</span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/01/09/python/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/01/11/GIT/git%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            git基础
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/12/15/python/Python%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python类和对象</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

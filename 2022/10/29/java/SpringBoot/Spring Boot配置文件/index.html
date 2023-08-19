@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/SpringBoot/Spring Boot配置文件"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.749Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">15 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="导入Spring配置"><a href="#导入Spring配置" class="headerlink" title="导入Spring配置"></a>导入Spring配置</h1><p>默认情况下，Spring Boot 中是不包含任何的 Spring 配置文件的，即使我们手动添加 Spring 配置文件到项目中，也不会被识别。我们可以通过以下 2 种方式来导入 Spring 配置：</p>
+<ul>
+<li>使用<code>@ImportResource</code>注解加载 Spring 配置文件</li>
+<li>使用全注解方式加载 Spring 配置</li>
+</ul>
+<h2 id="ImportResource-导入-Spring-配置文件"><a href="#ImportResource-导入-Spring-配置文件" class="headerlink" title="@ImportResource 导入 Spring 配置文件"></a>@ImportResource 导入 Spring 配置文件</h2><p>在主启动类上使用<code>@ImportResource</code>注解可以导入一个或多个 Spring 配置文件，并使其中的内容生效。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.service;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.Person;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PersonService</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> Person <span class="title function_">getPersonInfo</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.service.impl;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.Person;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.service.PersonService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PersonServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">PersonService</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  <span class="keyword">private</span> Person person;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Person <span class="title function_">getPersonInfo</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> person;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在该项目的<code>resources</code>下添加一个名为<code>beans.xml</code>的 Spring 配置文件，配置代码如下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;persionService&quot;</span> <span class="attr">class</span>=<span class="string">&quot;net.biancheng.www.service.impl.PersonServiceImpl&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改该项目的单元测试类<code>HelloworldApplicationTests</code>，校验 IOC 容器是否已经<code>personService</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.Person;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HelloworldApplicationTests</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  Person person;</span><br><span class="line">  <span class="comment">//IOC 容器</span></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  ApplicationContext ioc;</span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testHelloService</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//校验 IOC 容器中是否包含组件 personService</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">b</span> <span class="operator">=</span> ioc.containsBean(<span class="string">&quot;personService&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (b) &#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;personService 已经添加到 IOC 容器中&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;personService 没添加到 IOC 容器中&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(person);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在主启动程序类上使用<code>@ImportResource</code>注解，将 Spring 配置文件<code>beans.xml</code>加载到项目中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.ImportResource;</span><br><span class="line"><span class="comment">//将 beans.xml 加载到项目中</span></span><br><span class="line"><span class="meta">@ImportResource(locations = &#123;&quot;classpath:/beans.xml&quot;&#125;)</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloworldApplication</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    SpringApplication.run(HelloworldApplication.class, args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>执行测试代码，结果如下图。</li>
+</ol>
+<img src="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/4.png" class="" title="使用 @ImportResource 注解加载 Spring 配置文件结果">
+
+<h2 id="全注解方式加载-Spring-配置"><a href="#全注解方式加载-Spring-配置" class="headerlink" title="全注解方式加载 Spring 配置"></a>全注解方式加载 Spring 配置</h2><p>全注解的方式加载 Spring 配置实现方式如下：</p>
+<ul>
+<li>使用<code>@Configuration</code>注解定义配置类，替换 Spring 的配置文件；</li>
+<li>配置类内部可以包含有一个或多个被<code>@Bean</code>注解的方法，这些方法会被<code>AnnotationConfigApplicationContext</code>或<code>AnnotationConfigWebApplicationContext</code>类扫描，构建<code>bean</code>定义（相当于 Spring 配置文件中的<code>&lt;bean&gt;&lt;/bean&gt;</code>标签），方法的返回值会以组件的形式添加到容器中，组件的<code>id</code>就是方法名。</li>
+</ul>
+<p>删除主启动类的<code>@ImportResource</code>注解，在<code>net.biancheng.www.config</code>包下添加一个名为<code>MyAppConfig</code>的配置类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.config;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.service.PersonService;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.service.impl.PersonServiceImpl;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Configuration</span> 注解用于定义一个配置类，相当于 Spring 的配置文件</span></span><br><span class="line"><span class="comment">* 配置类中包含一个或多个被 <span class="doctag">@Bean</span> 注解的方法，该方法相当于 Spring 配置文件中的 &lt;bean&gt; 标签定义的组件。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyAppConfig</span> &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 与 &lt;bean id=&quot;personService&quot; class=&quot;PersonServiceImpl&quot;&gt;&lt;/bean&gt; 等价</span></span><br><span class="line"><span class="comment">    * 该方法返回值以组件的形式添加到容器中</span></span><br><span class="line"><span class="comment">    * 方法名是组件 id（相当于 &lt;bean&gt; 标签的属性 id)</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> PersonService <span class="title function_">personService</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;在容器中添加了一个组件:peronService&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PersonServiceImpl</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行测试代码，执行结果如下图。</p>
+<img src="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/5.png" class="" title="全注解方式添加 Spring 配置">
+
+<h1 id="默认配置文件"><a href="#默认配置文件" class="headerlink" title="默认配置文件"></a>默认配置文件</h1><p>通常情况下，Spring Boot 在启动时会将<code>resources</code>目录下的<code>application.properties</code>或<code>apllication.yml</code>作为其默认配置文件，我们可以在该配置文件中对项目进行配置。</p>
+<p>Spring Boot 项目中可以存在多个<code>application.properties</code>或<code>apllication.yml</code>。</p>
+<p>Spring Boot 启动时会扫描以下 5 个位置的<code>application.properties</code>或<code>apllication.yml</code>文件，并将它们作为 Spring boot 的默认配置文件。</p>
+<ul>
+<li><code>file:./config/</code></li>
+<li><code>file:./config/*/</code></li>
+<li><code>file:./</code></li>
+<li><code>classpath:/config/</code></li>
+<li><code>classpath:/</code></li>
+</ul>
+<blockquote>
+<p>注：<code>file</code>: 指当前项目根目录；<code>classpath</code>: 指当前项目的类路径，即<code>resources</code>目录。</p>
+</blockquote>
+<p>以上所有位置的配置文件都会被加载，且它们优先级依次降低，序号越小优先级越高。其次，位于相同位置的<code>application.properties</code>的优先级高于<code>application.yml</code>。</p>
+<p>所有位置的文件都会被加载，高优先级配置会覆盖低优先级配置，形成互补配置，即：</p>
+<ul>
+<li>存在相同的配置内容时，高优先级的内容会覆盖低优先级的内容；</li>
+<li>存在不同的配置内容时，高优先级和低优先级的配置内容取并集。</li>
+</ul>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>创建一个名为<code>springbootdemo</code>的 Spring Boot 项目，并在当前项目根目录下、类路径下的<code>config</code>目录下、以及类路径下分别创建一个配置文件<code>application.yml</code>，该项目结构如下图。</p>
+<img src="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/1.png" class="" title="Spring Boot 项目配置文件位置">
+
+<p>项目根路径下配置文件<code>application.yml</code>配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#项目更目录下</span><br><span class="line">#上下文路径为 /abc</span><br><span class="line">server:</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /abc</span><br></pre></td></tr></table></figure>
+<p>项目类路径下<code>config</code>目录下配置文件<code>application.yml</code>配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#类路径下的 config 目录下</span><br><span class="line">#端口号为8084</span><br><span class="line">#上下文路径为 /helloWorld</span><br><span class="line">server:</span><br><span class="line">  port: 8084</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /helloworld</span><br></pre></td></tr></table></figure>
+<p>项目类路径下的<code>application.yml</code>配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#默认配置</span><br><span class="line">server:</span><br><span class="line">  port: 8080</span><br></pre></td></tr></table></figure>
+<p>创建一个名为<code>MyController</code>的类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyController</span> &#123;</span><br><span class="line">  <span class="meta">@ResponseBody</span></span><br><span class="line">  <span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello Spring Boot!&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动 Spring Boot，查看控制台输出。</p>
+<img src="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/2.png" class="" title="Spring Boot 项目启动控制台输出">
+
+<p>根据 Spring Boot 默认配置文件优先级进行分析：</p>
+<ul>
+<li>该项目中存在多个默认配置文件，其中根目录下<code>/config</code>目录下的配置文件优先级最高，因此项目的上下文路径为<code>/abc</code>；</li>
+<li>类路径（<code>classpath</code>）下<code>config</code>目录下的配置文件优先级高于类路径下的配置文件，因此该项目的端口号为<code>8084</code>；</li>
+<li>以上所有配置项形成互补，所以访问路径为<code>http://localhost:8084/abc</code>。</li>
+</ul>
+<h1 id="外部配置文件"><a href="#外部配置文件" class="headerlink" title="外部配置文件"></a>外部配置文件</h1><p>除了默认配置文件，Spring Boot 还可以加载一些位于项目外部的配置文件。我们可以通过如下 2 个参数，指定外部配置文件的路径：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring.config.location </span><br><span class="line">spring.config.additional-location </span><br></pre></td></tr></table></figure>
+<h2 id="spring-config-location"><a href="#spring-config-location" class="headerlink" title="spring.config.location"></a>spring.config.location</h2><p>我们可以先将 Spring Boot 项目打包成 JAR 文件，然后在命令行启动命令中，使用命令行参数 –spring.config.location，指定外部配置文件的路径。<br>java -jar {JAR}  –spring.config.location&#x3D;{外部配置文件全路径}</p>
+<p>需要注意的是，使用该参数指定配置文件后，会使项目默认配置文件（application.properties 或 application.yml ）失效，Spring Boot 将只加载指定的外部配置文件。<br>示例 1</p>
+<ol>
+<li>在本地目录 D:\myConfig 下，创建一个配置文件 my-application.yml，配置如下。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#指定配置文件</span><br><span class="line">server:</span><br><span class="line">  port: 8088</span><br></pre></td></tr></table></figure></li>
+<li>执行以下 mvn 命令，将 springbootdemo 项目打包成 JAR。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package</span><br></pre></td></tr></table></figure>
+命令执行结果如下图。</li>
+</ol>
+<p>Spring Boot  打包结果<br>图1：打包结果</p>
+<ol start="3">
+<li>打开命令行窗口，跳转到 JAR 文件所在目录，执行以下命令，其中 –spring.config.location 用于指定配置文件的新位置。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar springbootdemo-0.0.1-SNAPSHOT.jar  --spring.config.location=D:\myConfig\my-application.yml</span><br></pre></td></tr></table></figure>
+项目运行结果如下图。</li>
+</ol>
+<p>Spring Boot –spring.config.location 指定外部配置文件<br>图2：使用外部配置运行项目控制台输出</p>
+<p>从控制台输出可以看出：<br>服务器端口号从“8084”被修改为“8088”，表示外部配置文件已生效；<br>上下文路径则从“&#x2F;abc”被修改为默认值（‘ ’），表示项目内部的默认配置文件已失效。</p>
+<ol start="4">
+<li>使用浏览器访问 “<a target="_blank" rel="noopener" href="http://localhost:8088/test%E2%80%9D,%E7%BB%93%E6%9E%9C%E5%A6%82%E4%B8%8B%E5%9B%BE%E3%80%82">http://localhost:8088/test”,结果如下图。</a></li>
+</ol>
+<p>Spring Boot 指定外部配置文件访问结果<br>图3：spring.config.location 指定外部配置文件访问结果<br>spring.config.additional-location<br>我们还可以在 Spring Boot 启动时，使用命令行参数 –spring.config.additional-location 来加载外部配置文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar &#123;JAR&#125;  --spring.config.additional-location=&#123;外部配置文件全路径&#125;</span><br></pre></td></tr></table></figure>
+<p>但与 –spring.config.location 不同，–spring.config.additional-location 不会使项目默认的配置文件失效，使用该命令行参数添加的外部配置文件会与项目默认的配置文件共同生效，形成互补配置，且其优先级是最高的，比所有默认配置文件的优先级都高。<br>示例 2</p>
+<ol>
+<li>将 springbootdemo 打包为 JAR 文件，打开命令行窗口，跳转到该项目 JAR 所在目录下，执行以下命令启动该项目。<br>java -jar springbootdemo-0.0.1-SNAPSHOT.jar  –spring.config.additional-location&#x3D;D:\myConfig\my-application.yml</li>
+</ol>
+<p>结果如下图。</p>
+<p>图4：Spring Boot  spring.config.additional-location 指定外部配置文件项目启动结果</p>
+<p>注意：Maven 对项目进行打包时，位于项目根目录下的配置文件是无法被打包进项目的 JAR 包的，因此位于根目录下的默认配置文件无法在 JAR 中生效，即该项目将只加载指定的外部配置文件和项目类路径（classpath）下的默认配置文件，它们的加载优先级顺序为：</p>
+<p>spring.config.additional-location 指定的外部配置文件 my-application.yml<br>classpath:&#x2F;config&#x2F;application.yml<br>classpath:&#x2F;application.yml</p>
+<p>根据配置文件优先级分析可知：<br>以上三个配置文件中 my-application.yml 的优先级最高，因此该项目的服务器端口号为 “8088”；<br>只有 classpath:&#x2F;config&#x2F;application.yml 中配置了上下文路径（context-path），因此该项目的上下文路径为 “&#x2F;helloworld”；<br>基于以上配置分析，得出该项目访问路径为“<a target="_blank" rel="noopener" href="http://localhost:8088/helloWorld%E2%80%9D%E3%80%82">http://localhost:8088/helloWorld”。</a></p>
+<h1 id="配置加载顺序"><a href="#配置加载顺序" class="headerlink" title="配置加载顺序"></a>配置加载顺序</h1><p>Spring Boot 不仅可以通过配置文件进行配置，还可以通过环境变量、命令行参数等多种形式进行配置。这些配置都可以让开发人员在不修改任何代码的前提下，直接将一套 Spring Boot  应用程序在不同的环境中运行。</p>
+<h2 id="Spring-Boot-配置优先级"><a href="#Spring-Boot-配置优先级" class="headerlink" title="Spring Boot 配置优先级"></a>Spring Boot 配置优先级</h2><p>以下是常用的 Spring Boot 配置形式及其加载顺序（优先级由高到低）：</p>
+<ul>
+<li>命令行参数</li>
+<li>来自<code>java:comp/env</code>的 JNDI 属性</li>
+<li>Java 系统属性（<code>System.getProperties()</code>）</li>
+<li>操作系统环境变量</li>
+<li><code>RandomValuePropertySource</code>配置的<code>random.*</code>属性值</li>
+<li>配置文件（<code>YAML</code>文件、<code>Properties</code>文件）</li>
+<li><code>@Configuration</code>注解类上的<code>@PropertySource</code>指定的配置文件</li>
+<li>通过<code>SpringApplication.setDefaultProperties</code>指定的默认属性</li>
+</ul>
+<p>以上所有形式的配置都会被加载，当存在相同配置内容时，高优先级的配置会覆盖低优先级的配置；存在不同的配置内容时，高优先级和低优先级的配置内容取并集，共同生效，形成互补配置。</p>
+<h3 id="命令行参数"><a href="#命令行参数" class="headerlink" title="命令行参数"></a>命令行参数</h3><p>Spring Boot 中的所有配置，都可以通过命令行参数进行指定，其配置形式如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar &#123;Jar文件名&#125; --&#123;参数1&#125;=&#123;参数值1&#125; --&#123;参数2&#125;=&#123;参数值2&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在 springbootdemo  项目启动时，使用以下命令。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar springbootdemo-0.0.1-SNAPSHOT.jar --server.port=8081 --server.servlet.context-path=/bcb</span><br></pre></td></tr></table></figure>
+命令行参数说明如下：</li>
+</ol>
+<ul>
+<li><code>--server.port</code>：指定服务器端口号；</li>
+<li><code>--server.servlet.context-path</code>：指定上下文路径（项目的访问路径）。</li>
+</ul>
+<p>执行结果如下图。</p>
+<p>Spring Boot 指定命令行参数<br>图1：Spring Boot 指定命令行参数</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>Spring Boot 启动时，会自动加载 JAR 包内部及 JAR 包所在目录指定位置的配置文件（Properties 文件、YAML 文件），下图中展示了 Spring Boot 自动加载的配置文件的位置及其加载顺序，同一位置下，Properties 文件优先级高于 YAML 文件。</p>
+<p>Spring Boot 配置文件加载顺序</p>
+<p>图2：Spring Boot 配置文件加载位置及优先级</p>
+<p>图 2 说明如下：<br>&#x2F;myBoot：表示 JAR 包所在目录，目录名称自定义；<br>&#x2F;childDir：表示 JAR 包所在目录下 config 目录的子目录，目录名自定义；<br>JAR：表示 Spring Boot 项目打包生成的 JAR；<br>其余带有“&#x2F;”标识的目录的目录名称均不能修改。<br>红色数字：表示该配置文件的优先级，数字越小优先级越高。</p>
+<p>这些配置文件得优先级顺序，遵循以下规则：</p>
+<ul>
+<li>先加载 JAR 包外的配置文件，再加载 JAR 包内的配置文件；</li>
+<li>先加载<code>config</code>目录内的配置文件，再加载 config 目录外的配置文件；</li>
+<li>先加载<code>config</code>子目录下的配置文件，再加载 config 目录下的配置文件；</li>
+<li>先加载<code>appliction-&#123;profile&#125;.properties/yml</code>，再加载<code>application.properties/yml</code>；</li>
+<li>先加载<code>.properties</code>文件，再加载<code>.yml</code>文件。</li>
+</ul>
+<ol>
+<li>创建一个名为 mybootdemo 的 Spring Boot 项目，并在 src&#x2F;main&#x2F;resoources 下创建以下 4 个配置文件。</li>
+</ol>
+<ul>
+<li>applcation.yml：默认配置</li>
+<li>application-dev.yml：开发环境配置</li>
+<li>application-test.yml：测试环境配置</li>
+<li>application-prod.yml：生产环境配置</li>
+</ul>
+<p>1）在 applcation.yml 文件中，指定默认服务端口号（port）为 “8080”，上下文路径（context-path）为“&#x2F;mybootdemo”，并激活开发环境（dev）的 profile。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8080 #端口号</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /mybootdemo #上下文路径或项目访问路径</span><br><span class="line">spring:</span><br><span class="line">  profiles:</span><br><span class="line">    active: dev #激活开发环境配置</span><br></pre></td></tr></table></figure>
+<p>2）在 application-dev.yml 中，指定开发环境端口号为 “8081”，上下文路径为“&#x2F;in-dev”，配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8081 #开发环境端口号 8081</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /in-dev #开发环境上下文路径为 in-dev</span><br><span class="line">spring:</span><br><span class="line">  config:</span><br><span class="line">    activate:</span><br><span class="line">      on-profile: dev #开发环境</span><br></pre></td></tr></table></figure>
+<p>3）在 application-test.yml 中，指定测试环境端口号为 “8082”，上下文路径为“&#x2F;in-test”，配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#测试环境配置</span><br><span class="line">server:</span><br><span class="line">  port: 8082 #测试环境端口 8082</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /in-test #测试环境上下文路径 /in-test</span><br><span class="line">spring:</span><br><span class="line">  config:</span><br><span class="line">    activate:</span><br><span class="line">      on-profile: test</span><br></pre></td></tr></table></figure>
+<p>4）在 application-prod.yml 中，指定生产环境端口号为 “8083”，上下文路径为“&#x2F;in-prod”，配置如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#生产环境配置</span><br><span class="line">server:</span><br><span class="line">  port: 8083 #端口号</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /in-prod #上下文路径</span><br><span class="line">spring:</span><br><span class="line">  config:</span><br><span class="line">    activate:</span><br><span class="line">      on-profile: prod</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>执行以下 mvn 命令，将 mybootdemo 打包成 JAR，并将该 JAR 包移动到本次磁盘的某个目录下（例如 mySpringBoot 目录）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 JAR 包所在目录下创建 application.yml ，并设置上下文路径为“&#x2F;out-default”，并激活生产环境（prod）Profile。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#JAR 包外默认配置</span><br><span class="line">server:</span><br><span class="line">  servlet:</span><br><span class="line">    context-path: /out-default</span><br><span class="line">#切换配置</span><br><span class="line">spring:</span><br><span class="line">  profiles:</span><br><span class="line">    active: prod #激活开发环境配置</span><br></pre></td></tr></table></figure></li>
+<li><p>打开命令行窗口，跳转到 mySpringBoot 目录下，执行以下命令启动 Spring Boot。<br>java -jar mybootdemo-0.0.1-SNAPSHOT.jar<br>启动结果如下图。</p>
+</li>
+</ol>
+<p>图3：Spring Boot 使用 JAR 包外配置启动<br>示例分析：</p>
+<p>Spring Boot 在启动时会加载全部的 5 个配置文件，其中位于 JAR 包外的 application.yml 优先级最高；<br>在 JAR 包外的 application.yml 中，配置激活了生产环境（prod）Profile，即 JAR 包内部的 application-prod.yml 生效。此时，该项目中的配置文件优先级顺序为：JAR 包外 application.yml &gt; JAR 包内 application-prod.yml &gt;JAR 包内其他配置文件;<br>application-prod.yml 的配置内容会覆盖 JAR 包内所有其他配置文件的配置内容，即端口号（port）为“8083”，上下文路径（context-path）为“&#x2F;in-prod”;<br>JAR 包内的 application-prod.yml 中的上下文路径会被 JAR 包外的 application.yml 覆盖为“&#x2F;out-default”;<br>JAR 包内的 application-prod.yml 与 JAR 包外的 application.yml，形成互补配置，即，端口号为“8083”，上下文路径为“&#x2F;out-default”。</p>
+<h1 id="自动配置原理"><a href="#自动配置原理" class="headerlink" title="自动配置原理"></a>自动配置原理</h1> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/SpringBoot/Spring-Boot-Starter%E5%B8%B8%E7%94%A8%E4%BE%9D%E8%B5%96%E6%A8%A1%E5%9D%97/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/SpringBoot/Spring%20Boot%E6%8B%A6%E6%88%AA%E5%99%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

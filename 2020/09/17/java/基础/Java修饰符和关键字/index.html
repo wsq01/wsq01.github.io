@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Java 修饰符和关键字 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/基础/Java修饰符和关键字"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java 修饰符和关键字
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/17/java/%E5%9F%BA%E7%A1%80/Java%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%92%8C%E5%85%B3%E9%94%AE%E5%AD%97/" class="article-date">
+  <time datetime="2020-09-17T10:03:24.000Z" itemprop="datePublished">2020-09-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">17 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="访问控制修饰符"><a href="#访问控制修饰符" class="headerlink" title="访问控制修饰符"></a>访问控制修饰符</h1><p>在 Java 语言中提供了多个作用域修饰符，其中常用的有<code>public、private、protected、final、abstract、static、transient</code>和<code>volatile</code>，这些修饰符有类修饰符、变量修饰符和方法修饰符。</p>
+<p>通过使用访问控制修饰符来限制对对象私有属性的访问，可以获得 3 个重要的好处。</p>
+<ul>
+<li>防止对封装数据的未授权访问。</li>
+<li>有助于保证数据完整性。</li>
+<li>当类的私有实现细节必须改变时，可以限制发生在整个应用程序中的“连锁反应”。</li>
+</ul>
+<p>访问控制符是一组限定类、属性或方法是否可以被程序里的其他部分访问和调用的修饰符。类的访问控制符只能是空或者<code>public</code>，方法和属性的访问控制符有 4 个，分别是<code>public、 private、protected</code>和<code>friendly</code>，其中<code>friendly</code>是一种没有定义专门的访问控制符的默认情况。</p>
+<table>
+<thead>
+<tr>
+<th align="center">访问范围</th>
+<th align="center">private</th>
+<th align="center">friendly(默认)</th>
+<th align="center">protected</th>
+<th align="center">public</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">同一个类</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+</tr>
+<tr>
+<td align="center">同一包中的其他类</td>
+<td align="center">不可访问</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+</tr>
+<tr>
+<td align="center">不同包中的子类</td>
+<td align="center">不可访问</td>
+<td align="center">不可访问</td>
+<td align="center">可访问</td>
+<td align="center">可访问</td>
+</tr>
+<tr>
+<td align="center">不同包中的非子类</td>
+<td align="center">不可访问</td>
+<td align="center">不可访问</td>
+<td align="center">不可访问</td>
+<td align="center">可访问</td>
+</tr>
+</tbody></table>
+<ol>
+<li><code>private</code><br>用 private 修饰的类成员，只能被该类自身的方法访问和修改，而不能被任何其他类（包括该类的子类）访问和引用。因此，<code>private</code>修饰符具有最高的保护级别。</li>
+<li><code>friendly</code>（默认）<br>如果一个类没有访问控制符，说明它具有默认的访问控制特性。这种默认的访问控制权规定，该类只能被同一个包中的类访问和引用，而不能被其他包中的类使用，即使其他包中有该类的子类。这种访问特性又称为包访问性（<code>package private</code>）。<br>同样，类内的成员如果没有访问控制符，也说明它们具有包访问性，或称为友元（<code>friend</code>）。定义在同一个文件夹中的所有类属于一个包，所以前面的程序要把用户自定义的类放在同一个文件夹中（Java 项目默认的包），以便不加修饰符也能运行。</li>
+<li><code>protected</code><br>用保护访问控制符<code>protected</code>修饰的类成员可以被三种类所访问：该类自身、与它在同一个包中的其他类以及在其他包中的该类的子类。使用<code>protected</code>修饰符的主要作用，是允许其他包中它的子类来访问父类的特定属性和方法，否则可以使用默认访问控制符。</li>
+<li><code>public</code><br>当一个类被声明为<code>public</code>时，它就具有了被其他包中的类访问的可能性，只要包中的其他类在程序中使用<code>import</code>语句引入<code>public</code>类，就可以访问和引用这个类。<br>类中被设定为<code>public</code>的方法是这个类对外的接口部分，避免了程序的其他部分直接去操作类内的数据，实际就是数据封装思想的体现。每个 Java 程序的主类都必须是<code>public</code>类，也是基于相同的原因。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span> &#123;</span><br><span class="line">  <span class="comment">// 姓名，其访问权限为默认(friendly)</span></span><br><span class="line">  String name;</span><br><span class="line">  <span class="comment">// 定义私有变量，身份证号码</span></span><br><span class="line">  <span class="keyword">private</span> String idNumber;</span><br><span class="line">  <span class="comment">// 定义受保护变量，学号</span></span><br><span class="line">  <span class="keyword">protected</span> String no;</span><br><span class="line">  <span class="comment">// 定义共有变量，邮箱</span></span><br><span class="line">  <span class="keyword">public</span> String email;</span><br><span class="line">  <span class="comment">// 定义共有方法，显示学生信息</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">info</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span><span class="string">&quot;姓名：&quot;</span>+name+<span class="string">&quot;，身份证号码：&quot;</span>+idNumber+<span class="string">&quot;，学号：&quot;</span>+no+<span class="string">&quot;，邮箱：&quot;</span>+email;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentTest</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 创建Student类对象</span></span><br><span class="line">    <span class="type">Student</span> <span class="variable">stu</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">    <span class="comment">// 向Student类对象中的属性赋值</span></span><br><span class="line">    stu.name = <span class="string">&quot;zhht&quot;</span>;</span><br><span class="line">    <span class="comment">// stu.idNumber=&quot;043765290763137806&quot;;</span></span><br><span class="line">    <span class="comment">// 这是不允许的。提示stu.idNumber是不可见的，必须注释掉才可运行</span></span><br><span class="line">    stu.no = <span class="string">&quot;20lil01637&quot;</span>;</span><br><span class="line">    stu.email = <span class="string">&quot;zhht@qq.com&quot;</span>;</span><br><span class="line">    System.out.println(stu.info());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面的例子中可以看出，范围控制修饰符成功地限制了访问者访问不同修饰符的属性（成员变量），从而实现了数据的隐藏。</p>
+<h1 id="static关键字"><a href="#static关键字" class="headerlink" title="static关键字"></a>static关键字</h1><p>在类中，使用<code>static</code>修饰符修饰的属性（成员变量）称为静态变量，也可以称为类变量，常量称为静态常量，方法称为静态方法或类方法，它们统称为静态成员，归整个类所有。</p>
+<p>静态成员不依赖于类的特定实例，被类的所有实例共享，就是说<code>static</code>修饰的方法或者变量不需要依赖于对象来进行访问，只要这个类被加载，Java 虚拟机就可以根据类名找到它们。</p>
+<p>调用静态成员的语法形式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类名.静态成员</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li><code>static</code>修饰的成员变量和方法，从属于类。</li>
+<li>普通变量和方法从属于对象。</li>
+<li>静态方法不能调用非静态成员，编译会报错。</li>
+</ul>
+<h2 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h2><p>类的成员变量可以分为以下两种：</p>
+<ul>
+<li>静态变量（或称为类变量），指被<code>static</code>修饰的成员变量。</li>
+<li>实例变量，指没有被<code>static</code>修饰的成员变量。</li>
+</ul>
+<p>静态变量与实例变量的区别如下：</p>
+<ol>
+<li>静态变量</li>
+</ol>
+<ul>
+<li>运行时，Java 虚拟机只为静态变量分配一次内存，在加载类的过程中完成静态变量的内存分配。</li>
+<li>在类的内部，可以在任何方法内直接访问静态变量。</li>
+<li>在其他类中，可以通过类名访问该类中的静态变量。</li>
+</ul>
+<ol start="2">
+<li>实例变量</li>
+</ol>
+<ul>
+<li>每创建一个实例，Java 虚拟机就会为实例变量分配一次内存。</li>
+<li>在类的内部，可以在非静态方法中直接访问实例变量。</li>
+<li>在本类的静态方法或其他类中则需要通过类的实例对象进行访问。</li>
+</ul>
+<p>静态变量在类中的作用如下：</p>
+<ul>
+<li>静态变量可以被类的所有实例共享，因此静态变量可以作为实例之间的共享数据，增加实例之间的交互性。</li>
+<li>如果类的所有实例都包含一个相同的常量属性，则可以把这个属性定义为静态常量类型，从而节省内存空间。例如，在类中定义一个静态常量 PI。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="variable">PI</span> <span class="operator">=</span> <span class="number">3.14159256</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>创建一个带静态变量的类，然后在<code>main()</code>方法中访问该变量并输出结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticVar</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">str2</span> <span class="operator">=</span> <span class="string">&quot;World!&quot;</span>;</span><br><span class="line">    <span class="comment">// 直接访问str1</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">accessVar1</span> <span class="operator">=</span> str1+str2;</span><br><span class="line">    System.out.println(<span class="string">&quot;第 1 次访问静态变量，结果为：&quot;</span>+accessVar1);</span><br><span class="line">    <span class="comment">// 通过类名访问str1</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">accessVar2</span> <span class="operator">=</span> StaticVar.str1+str2;</span><br><span class="line">    System.out.println(<span class="string">&quot;第 2 次访问静态变量，结果为：&quot;</span>+accessVar2);</span><br><span class="line">    <span class="comment">// 通过对象svt1访问str1</span></span><br><span class="line">    <span class="type">StaticVar</span> <span class="variable">svt1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticVar</span>();</span><br><span class="line">    svt1.str1 = svt1.str1+str2;</span><br><span class="line">    <span class="type">String</span> <span class="variable">accessVar3</span> <span class="operator">=</span> svt1.str1;</span><br><span class="line">    System.out.println(<span class="string">&quot;第3次访向静态变量，结果为：&quot;</span>+accessVar3);</span><br><span class="line">    <span class="comment">// 通过对象svt2访问str1</span></span><br><span class="line">    <span class="type">StaticVar</span> <span class="variable">svt2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticVar</span>();</span><br><span class="line">    <span class="type">String</span> <span class="variable">accessVar4</span> <span class="operator">=</span> svt2.str1+str2;</span><br><span class="line">    System.out.println(<span class="string">&quot;第 4 次访问静态变量，结果为：&quot;</span>+accessVar4);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行该程序后的结果如下所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第 1 次访问静态变量，结果为：HelloWorld!</span><br><span class="line">第 2 次访问静态变量，结果为：HelloWorld!</span><br><span class="line">第 3 次访向静态变量，结果为：HelloWorld!</span><br><span class="line">第 4 次访问静态变量，结果为：HelloWorld!World!</span><br></pre></td></tr></table></figure>
+<p>从运行结果可以看出，在类中定义静态的属性（成员变量），在<code>main()</code>方法中可以直接访问，也可以通过类名访问，还可以通过类的实例对象来访问。</p>
+<p>注意：静态变量是被多个实例所共享的。</p>
+<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>与成员变量类似，成员方法也可以分为以下两种：</p>
+<ul>
+<li>静态方法（或称为类方法），指被<code>static</code>修饰的成员方法。</li>
+<li>实例方法，指没有被<code>static</code>修饰的成员方法。</li>
+</ul>
+<p>静态方法与实例方法的区别如下：</p>
+<ul>
+<li>静态方法不需要通过它所属的类的任何实例就可以被调用，因此在静态方法中不能使用<code>this</code>关键字，也不能直接访问所属类的实例变量和实例方法，但是可以直接访问所属类的静态变量和静态方法。另外，和<code>this</code>关键字一样，<code>super</code>关键字也与类的特定实例相关，所以在静态方法中也不能使用<code>super</code>关键字。</li>
+<li>在实例方法中可以直接访问所属类的静态变量、静态方法、实例变量和实例方法。</li>
+</ul>
+<p>创建一个带静态变量的类，添加几个静态方法对静态变量的值进行修改，然后在<code>main()</code>方法中调用静态方法并输出结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticMethod</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">1</span>;    <span class="comment">// 定义静态变量count</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">method1</span><span class="params">()</span> &#123;    </span><br><span class="line">    <span class="comment">// 实例方法method1</span></span><br><span class="line">    count++;    <span class="comment">// 访问静态变量count并赋值</span></span><br><span class="line">    System.out.println(<span class="string">&quot;在静态方法 method1()中的 count=&quot;</span>+count);    <span class="comment">// 打印count</span></span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">method2</span><span class="params">()</span> &#123;    </span><br><span class="line">    <span class="comment">// 静态方法method2</span></span><br><span class="line">    count += count;    <span class="comment">// 访问静态变量count并赋值</span></span><br><span class="line">    System.out.println(<span class="string">&quot;在静态方法 method2()中的 count=&quot;</span>+count);    <span class="comment">// 打印count</span></span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">PrintCount</span><span class="params">()</span> &#123;    </span><br><span class="line">    <span class="comment">// 静态方法PrintCount</span></span><br><span class="line">    count += <span class="number">2</span>;</span><br><span class="line">    System.out.println(<span class="string">&quot;在静态方法 PrintCount()中的 count=&quot;</span>+count);    <span class="comment">// 打印count</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">StaticMethod</span> <span class="variable">sft</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticMethod</span>();</span><br><span class="line">    <span class="comment">// 通过实例对象调用实例方法</span></span><br><span class="line">    System.out.println(<span class="string">&quot;method1() 方法返回值 intro1=&quot;</span>+sft.method1());</span><br><span class="line">    <span class="comment">// 直接调用静态方法</span></span><br><span class="line">    System.out.println(<span class="string">&quot;method2() 方法返回值 intro1=&quot;</span>+method2());</span><br><span class="line">    <span class="comment">// 通过类名调用静态方法，打印 count</span></span><br><span class="line">    StaticMethod.PrintCount();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行该程序后的结果如下所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在静态方法 method1()中的 count=2</span><br><span class="line">method1() 方法返回值 intro1=2</span><br><span class="line">在静态方法 method2()中的 count=4</span><br><span class="line">method2() 方法返回值 intro1=4</span><br><span class="line">在静态方法 PrintCount()中的 count=6</span><br></pre></td></tr></table></figure>
+<p>在该程序中，静态变量<code>count</code>作为实例之间的共享数据，因此在不同的方法中调用<code>count</code>，值是不一样的。从该程序中可以看出，在静态方法<code>method1()</code>和<code>PrintCount()</code>中是不可以调用非静态方法<code>method1()</code>的，而在<code>method1()</code>方法中可以调用静态方法<code>method2()</code>和<code>PrintCount()</code>。</p>
+<p>在访问非静态方法时，需要通过实例对象来访问，而在访问静态方法时，可以直接访问，也可以通过类名来访问，还可以通过实例化对象来访问。</p>
+<h2 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h2><p>静态代码块指 Java 类中的<code>static&#123; &#125;</code>代码块，主要用于初始化类，为类的静态变量赋初始值，提升程序性能。</p>
+<p>静态代码块的特点如下：</p>
+<ul>
+<li>静态代码块类似于一个方法，但它不可以存在于任何方法体中。</li>
+<li>静态代码块可以置于类中的任何地方，类中可以有多个静态初始化块。 </li>
+<li>Java 虚拟机在加载类时执行静态代码块，所以很多时候会将一些只需要进行一次的初始化操作都放在<code>static</code>代码块中进行。</li>
+<li>如果类中包含多个静态代码块，则 Java 虚拟机将按它们在类中出现的顺序依次执行它们，每个静态代码块只会被执行一次。</li>
+<li>静态代码块与静态方法一样，不能直接访问类的实例变量和实例方法，而需要通过类的实例对象来访问。</li>
+</ul>
+<p>编写一个 Java 类，在类中定义一个静态变量，然后使用静态代码块修改静态变量的值。最后在 main() 方法中进行测试和输出。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticCode</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">  &#123;</span><br><span class="line">    count++;</span><br><span class="line">    System.out.println(<span class="string">&quot;非静态代码块 count=&quot;</span> + count);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    count++;</span><br><span class="line">    System.out.println(<span class="string">&quot;静态代码块1 count=&quot;</span> + count);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    count++;</span><br><span class="line">    System.out.println(<span class="string">&quot;静态代码块2 count=&quot;</span> + count);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;*************** StaticCode1 执行 ***************&quot;</span>);</span><br><span class="line">    <span class="type">StaticCode</span> <span class="variable">sct1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticCode</span>();</span><br><span class="line">    System.out.println(<span class="string">&quot;*************** StaticCode2 执行 ***************&quot;</span>);</span><br><span class="line">    <span class="type">StaticCode</span> <span class="variable">sct2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticCode</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上述示例，为了说明静态代码块只被执行一次，特地添加了非静态代码块作为对比，并在主方法中创建了两个类的实例对象。上述示例的执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">静态代码块1 count=1</span><br><span class="line">静态代码块2 count=2</span><br><span class="line">*************** StaticCode1 执行 ***************</span><br><span class="line">非静态代码块 count=3</span><br><span class="line">*************** StaticCode2 执行 ***************</span><br><span class="line">非静态代码块 count=4</span><br></pre></td></tr></table></figure>
+<p>上述代码中<code>&#123; &#125;</code>代码块为非静态代码块，非静态代码块是在创建对象时自动执行的代码，不创建对象不执行该类的非静态代码块。代码域中定义的变量都是局部的，只有域中的代码可以调用。 </p>
+<h1 id="final修饰符"><a href="#final修饰符" class="headerlink" title="final修饰符"></a>final修饰符</h1><p><code>final</code>在 Java 中的意思是最终，表示对象是最终形态的，不可改变的意思。<code>final</code>应用于类、方法和变量时意义是不同的，但本质是一样的，都表示不可改变。</p>
+<p>使用<code>final</code>关键字声明类、变量和方法需要注意以下几点：</p>
+<ul>
+<li><code>final</code>用在变量的前面表示变量的值不可以改变，此时该变量可以被称为常量。</li>
+<li><code>final</code>用在方法的前面表示方法不可以被重写。</li>
+<li><code>final</code>用在类的前面表示该类不能有子类，即该类不可以被继承。</li>
+</ul>
+<h2 id="final-修饰变量"><a href="#final-修饰变量" class="headerlink" title="final 修饰变量"></a>final 修饰变量</h2><p><code>final</code>修饰的变量即成为常量，只能赋值一次，但是<code>final</code>所修饰局部变量和成员变量有所不同。</p>
+<ul>
+<li><code>final</code>修饰的局部变量必须使用之前被赋值一次才能使用。</li>
+<li><code>final</code>修饰的成员变量在声明时没有赋值的叫“空白<code>final</code>变量”。空白<code>final</code>变量必须在构造方法或静态代码块中初始化。</li>
+</ul>
+<blockquote>
+<p>注意：<code>final</code>修饰的变量不能被赋值这种说法是错误的，严格的说法是，<code>final</code>修饰的变量不可被改变，一旦获得了初始值，该<code>final</code>变量的值就不能被重新赋值。</p>
+</blockquote>
+<p>当使用<code>final</code>修饰基本类型变量时，不能对基本类型变量重新赋值，因此基本类型变量不能被改变。 但对于引用类型变量而言，它保存的仅仅是一个引用，final 只保证这个引用类型变量所引用的地址不会改变，即一直引用同一个对象，但这个对象完全可以发生改变。</p>
+<p>如果一个程序中的变量使用<code>public static final</code>声明，则此变量将称为全局变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static final String SEX= &quot;女&quot;;</span><br></pre></td></tr></table></figure>
+<h2 id="final修饰方法"><a href="#final修饰方法" class="headerlink" title="final修饰方法"></a>final修饰方法</h2><p><code>final</code>修饰的方法不可被重写，如果出于某些原因，不希望子类重写父类的某个方法，则可以使用<code>final</code>修饰该方法。</p>
+<p>Java 提供的<code>Object</code>类里就有一个<code>final</code>方法<code>getClass()</code>，因为 Java 不希望任何类重写这个方法，所以使用<code>final</code>把这个方法密封起来。但对于该类提供的<code>toString()</code>和<code>equals()</code>方法，都允许子类重写，因此没有使用<code>final</code>修饰它们。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FinalMethodTest</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sub</span> <span class="keyword">extends</span> <span class="title class_">FinalMethodTest</span> &#123;</span><br><span class="line">  <span class="comment">// 下面方法定义将出现编译错误，不能重写final方法</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面程序中父类是<code>FinalMethodTest</code>，该类里定义的<code>test()</code>方法是一个<code>final</code>方法，如果其子类试图重写该方法，将会引发编译错误。</p>
+<p>对于一个<code>private</code>方法，因为它仅在当前类中可见，其子类无法访问该方法，所以子类无法重写该方法——如果子类中定义一个与父类<code>private</code>方法有相同方法名、相同形参列表、相同返回值类型的方法，也不是方法重写，只是重新定义了一个新方法。因此，即使使用<code>final</code>修饰一个<code>private</code>访问权限的方法，依然可以在其子类中定义与该方法具有相同方法名、相同形参列表、相同返回值类型的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PrivateFinalMethodTest</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sub</span> <span class="keyword">extends</span> <span class="title class_">PrivateFinalMethodTest</span> &#123;</span><br><span class="line">  <span class="comment">// 下面的方法定义不会出现问题</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面程序没有任何问题，虽然子类和父类同样包含了同名的<code>void test()</code>方法，但子类并不是重写父类的方法，因此即使父类的<code>void test()</code>方法使用了<code>final</code>修饰，子类中依然可以定义<code>void test()</code>方法。</p>
+<p><code>final</code>修饰的方法仅仅是不能被重写，并不是不能被重载，因此下面程序完全没有问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FinalOverload</span> &#123;</span><br><span class="line">  <span class="comment">// final 修饰的方法只是不能被重写，完全可以被重载</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span>&#123;&#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">(String arg)</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="final修饰类"><a href="#final修饰类" class="headerlink" title="final修饰类"></a>final修饰类</h2><p><code>final</code>修饰的类不能被继承。当子类继承父类时，将可以访问到父类内部数据，并可通过重写父类方法来改变父类方法的实现细节，这可能导致一些不安全的因素。为了保证某个类不可被继承，则可以使用<code>final</code>修饰这个类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">SuperClass</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SubClass</span> <span class="keyword">extends</span> <span class="title class_">SuperClass</span> &#123;    <span class="comment">//编译错误</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="final-修饰符使用总结"><a href="#final-修饰符使用总结" class="headerlink" title="final 修饰符使用总结"></a>final 修饰符使用总结</h2><ol>
+<li><code>final</code>修饰类中的变量<br>表示该变量一旦被初始化便不可改变，这里不可改变的意思对基本类型变量来说是其值不可变，而对对象引用类型变量来说其引用不可再变。其初始化可以在两个地方：一是其定义处，也就是说在<code>final</code>变量定义时直接给其赋值；二是在构造方法中。这两个地方只能选其一，要么在定义时给值，要么在构造方法中给值，不能同时既在定义时赋值，又在构造方法中赋予另外的值。</li>
+<li><code>final</code>修饰类中的方法<br>说明这种方法提供的功能已经满足当前要求，不需要进行扩展，并且也不允许任何从此类继承的类来重写这种方法，但是继承仍然可以继承这个方法，也就是说可以直接使用。在声明类中，一个<code>final</code>方法只被实现一次。</li>
+<li><code>final</code>修饰类<br>表示该类是无法被任何其他类继承的，意味着此类在一个继承树中是一个叶子类，并且此类的设计已被认为很完美而不需要进行修改或扩展。</li>
+</ol>
+<p>对于<code>final</code>类中的成员，可以定义其为<code>final</code>，也可以不是<code>final</code>。而对于方法，由于所属类为<code>final</code>的关系，自然也就成了<code>final</code>型。也可以明确地给<code>final</code>类中的方法加上一个<code>final</code>，这显然没有意义。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/17/java/%E5%9F%BA%E7%A1%80/Java%E4%BF%AE%E9%A5%B0%E7%AC%A6%E5%92%8C%E5%85%B3%E9%94%AE%E5%AD%97/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/18/java/%E5%9F%BA%E7%A1%80/Java%E5%8C%85%EF%BC%88package%EF%BC%89/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java 包（package）
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/13/java/%E5%9F%BA%E7%A1%80/Java%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java 类和对象</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

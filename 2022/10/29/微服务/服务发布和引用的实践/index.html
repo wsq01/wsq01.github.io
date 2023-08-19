@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-微服务/服务发布和引用的实践"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" class="article-date">
+  <time datetime="2022-10-29T09:05:55.848Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="XML-配置方式的服务发布和引用流程"><a href="#XML-配置方式的服务发布和引用流程" class="headerlink" title="XML 配置方式的服务发布和引用流程"></a>XML 配置方式的服务发布和引用流程</h1><h2 id="1-服务提供者定义接口"><a href="#1-服务提供者定义接口" class="headerlink" title="1. 服务提供者定义接口"></a>1. 服务提供者定义接口</h2><p>服务提供者发布服务之前首先要定义接口，声明接口名、传递参数以及返回值类型，然后把接口打包成 JAR 包发布出去。</p>
+<p>比如下面这段代码，声明了接口<code>UserLastStatusService</code>，包含两个方法<code>getLastStatusId</code>和<code>getLastStatusIds</code>，传递参数一个是<code>long</code>值、一个是<code>long</code>数组，返回值一个是<code>long</code>值、一个是<code>map</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.weibo.api.common.status.service;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserLastStatusService</span> &#123;</span><br><span class="line">    * <span class="meta">@param</span> uids</span><br><span class="line">    * <span class="meta">@return</span></span><br><span class="line">    */</span><br><span class="line">  <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">getLastStatusId</span><span class="params">(<span class="type">long</span> uid)</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> uids</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="keyword">public</span> Map&lt;Long, Long&gt; <span class="title function_">getLastStatusIds</span><span class="params">(<span class="type">long</span>[] uids)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-服务提供者发布接口"><a href="#2-服务提供者发布接口" class="headerlink" title="2. 服务提供者发布接口"></a>2. 服务提供者发布接口</h2><p>服务提供者发布的接口是通过在服务发布配置文件中定义接口来实现的。</p>
+<p>下面是一个具体的服务发布配置文件<code>user-last-status.xml</code>，它定义了要发布的接口<code>userLastStatusLocalService</code>，对外暴露的协议是 Motan 协议，端口是 8882。并且针对两个方法<code>getLastStatusId</code>和<code>getLastStatusIds</code>，通过<code>requestTimeout=&quot;300&quot;</code>单独定义了超时时间是 300ms，通过<code>retries=&quot;0&quot;</code>单独定义了调用失败后重试次数为 0，也就是不重试。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> </span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:aop</span>=<span class="string">&quot;http://www.springframework.org/schema/aop&quot;</span> </span></span><br><span class="line"><span class="tag">     <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="string"><span class="tag">            http://www.springframework.org/schema/context/spring-context-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">&quot;</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">ref</span>=<span class="string">&quot;userLastStatusLocalService&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">requestTimeout</span>=<span class="string">&quot;50&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;2&quot;</span>    <span class="attr">interface</span>=<span class="string">&quot;com.weibo.api.common.status.service.UserLastStatusService&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">basicService</span>=<span class="string">&quot;serviceBasicConfig&quot;</span> <span class="attr">export</span>=<span class="string">&quot;motan:8882&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getLastStatusId&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getLastStatusIds&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">motan:service</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后服务发布者在进程启动的时候，会加载配置文件<code>user-last-status.xml</code>，把接口对外暴露出去。</p>
+<h2 id="3-服务消费者引用接口"><a href="#3-服务消费者引用接口" class="headerlink" title="3. 服务消费者引用接口"></a>3. 服务消费者引用接口</h2><p>服务消费者引用接口是通过在服务引用配置文件中定义要引用的接口，并把包含接口定义的 JAR 包引入到代码依赖中。</p>
+<p>下面我再以一个具体的服务引用配置文件<code>user-last-status-client.xml</code>来给你讲解，它定义服务消费者引用了接口<code>commonUserLastStatusService</code>，接口通信协议是 Motan。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> </span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:aop</span>=<span class="string">&quot;http://www.springframework.org/schema/aop&quot;</span> </span></span><br><span class="line"><span class="tag">     <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="string"><span class="tag">            http://www.springframework.org/schema/context/spring-context-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:protocol</span> <span class="attr">name</span>=<span class="string">&quot;motan&quot;</span> <span class="attr">default</span>=<span class="string">&quot;true&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;$&#123;service.loadbalance.name&#125;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">motan:basicReferer</span> <span class="attr">id</span>=<span class="string">&quot;userLastStatusServiceClientBasicConfig&quot;</span></span></span><br><span class="line"><span class="tag">               <span class="attr">protocol</span>=<span class="string">&quot;motan&quot;</span>  /&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!-- 导出接口 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">motan:referer</span> <span class="attr">id</span>=<span class="string">&quot;commonUserLastStatusService&quot;</span> <span class="attr">interface</span>=<span class="string">&quot;com.weibo.api.common.status.service.UserLastStatusService&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">basicReferer</span>=<span class="string">&quot;userLastStatusServiceClientBasicConfig&quot;</span> /&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后服务消费者在进程启动时，会加载配置文件<code>user-last-status-client.xml</code>来完成服务引用。</p>
+<p>服务发布和引用流程看似比较简单，但在实际使用过程中，还是有很多坑的，比如在实际项目中经常会遇到这个问题：一个服务包含了多个接口，可能有上行接口也可能有下行接口，每个接口都有超时控制以及是否重试等配置，如果有多个服务消费者引用这个服务，是不是每个服务消费者都必须在服务引用配置文件中定义？</p>
+<h1 id="服务发布和引用的那些坑"><a href="#服务发布和引用的那些坑" class="headerlink" title="服务发布和引用的那些坑"></a>服务发布和引用的那些坑</h1><p>在一个服务被多个服务消费者引用的情况下，由于业务经验的参差不齐，可能不同的服务消费者对服务的认知水平不一，比如某个服务可能调用超时了，最好可以重试来提供调用成功率。但可能有的服务消费者会忽视这一点，并没有在服务引用配置文件中配置接口调用超时重试的次数，因此最好是可以在服务发布的配置文件中预定义好类似超时重试次数，即使服务消费者没有在服务引用配置文件中定义，也能继承服务提供者的定义。这就是下面要讲的服务发布预定义配置。</p>
+<h2 id="1-服务发布预定义配置"><a href="#1-服务发布预定义配置" class="headerlink" title="1. 服务发布预定义配置"></a>1. 服务发布预定义配置</h2><p>以下面的服务发布配置文件<code>server.xml</code>为例，它提供了一个服务<code>contentSliceRPCService</code>，并且明确了其中三个方法的调用超时时间为 500ms 以及超时重试次数为 3。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">ref</span>=<span class="string">&quot;contentSliceRPCService&quot;</span>       <span class="attr">interface</span>=<span class="string">&quot;cn.sina.api.data.service.ContentSliceRPCService&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">basicService</span>=<span class="string">&quot;serviceBasicConfig&quot;</span> <span class="attr">export</span>=<span class="string">&quot;motan:8882&quot;</span> &gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;saveContent&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">retries</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;deleteContent&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">retries</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateContent&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">              <span class="attr">retries</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">motan:service</span>&gt;</span></span><br><span class="line">假设服务引用的配置文件 client.xml 的内容如下，那么服务消费者就会默认继承服务发布配置文件中设置的方法调用的超时时间以及超时重试次数。</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">motan:referer</span> <span class="attr">id</span>=<span class="string">&quot;contentSliceRPCService&quot;</span> <span class="attr">interface</span>=<span class="string">&quot;cn.sina.api.data.service.ContentSliceRPCService&quot;</span>     <span class="attr">basicReferer</span>=<span class="string">&quot;contentSliceClientBasicConfig&quot;</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">motan:referer</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>通过服务发布预定义配置可以解决多个服务消费者引用服务可能带来的配置复杂的问题，这样是不是最优的解决方案呢？</p>
+<p>实际上我还遇到过另外一种极端情况，一个服务提供者发布的服务有上百个方法，并且每个方法都有各自的超时时间、重试次数等信息。服务消费者引用服务时，完全继承了服务发布预定义的各项配置。这种情况下，服务提供者所发布服务的详细配置信息都需要存储在注册中心中，这样服务消费者才能在实际引用时从服务发布预定义配置中继承各种配置。</p>
+<p>这里就存在一种风险，当服务提供者发生节点变更，尤其是在网络频繁抖动的情况下，所有的服务消费者都会从注册中心拉取最新的服务节点信息，就包括了服务发布配置中预定的各项接口信息，这个信息不加限制的话可能达到 1M 以上，如果同时有上百个服务消费者从注册中心拉取服务节点信息，在注册中心机器部署为百兆带宽的情况下，很有可能会导致网络带宽打满的情况发生。</p>
+<p>面对这种情况，最好的办法是把服务发布端的详细服务配置信息转移到服务引用端，这样的话注册中心中就不需要存储服务提供者发布的详细服务配置信息了。这就是下面要讲的服务引用定义配置。</p>
+<h2 id="2-服务引用定义配置"><a href="#2-服务引用定义配置" class="headerlink" title="2. 服务引用定义配置"></a>2. 服务引用定义配置</h2><p>以下面的服务发布配置文件为例，它详细定义了服务 userInfoService 的各个方法的配置信息，比如超时时间和重试次数等。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">ref</span>=<span class="string">&quot;userInfoService&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;50&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;2&quot;</span>                   <span class="attr">interface</span>=<span class="string">&quot;cn.sina.api.user.service.UserInfoService&quot;</span> <span class="attr">basicService</span>=<span class="string">&quot;serviceBasicConfig&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateUserPortrait&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;modifyUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addUserTags&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;delUserTags&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;processUserCacheByNewMyTriggerQ&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;modifyObjectUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addObjectUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateObjectUserPortrait&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateObjectManager&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;add&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;deleteObjectManager&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttr&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttrList&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getAllUserAttr&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttr2&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;/<span class="name">motan:service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以像下面一样，把服务 userInfoService 的详细配置信息转移到服务引用配置文件中。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">motan:referer</span> <span class="attr">id</span>=<span class="string">&quot;userInfoService&quot;</span> <span class="attr">interface</span>=<span class="string">&quot;cn.sina.api.user.service.UserInfoService&quot;</span> <span class="attr">basicReferer</span>=<span class="string">&quot;userClientBasicConfig&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateUserPortrait&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;modifyUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addUserTags&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;delUserTags&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;processUserCacheByNewMyTriggerQ&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;modifyObjectUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;addObjectUserInfo&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateObjectUserPortrait&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;updateObjectManager&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;add&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;deleteObjectManager&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;0&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttr&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttrList&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getAllUserAttr&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">motan:method</span> <span class="attr">name</span>=<span class="string">&quot;getUserAttr2&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;300&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;1&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">motan:referer</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样的话，服务发布配置文件可以简化为下面这段代码，是不是信息精简了许多。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">motan:service</span> <span class="attr">ref</span>=<span class="string">&quot;userInfoService&quot;</span> <span class="attr">requestTimeout</span>=<span class="string">&quot;50&quot;</span> <span class="attr">retries</span>=<span class="string">&quot;2&quot;</span>                   <span class="attr">interface</span>=<span class="string">&quot;cn.sina.api.user.service.UserInfoService&quot;</span> <span class="attr">basicService</span>=<span class="string">&quot;serviceBasicConfig&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">motan:service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在进行类似的服务详细信息配置，由服务发布配置文件迁移到服务引用配置文件的过程时，尤其要注意迁移步骤问题，这就是接下来我要给你讲的服务配置升级问题。</p>
+<h2 id="3-服务配置升级"><a href="#3-服务配置升级" class="headerlink" title="3. 服务配置升级"></a>3. 服务配置升级</h2><p>由于引用服务的服务消费者众多，并且涉及多个部门，升级步骤就显得异常重要，通常可以按照下面步骤操作。</p>
+<p>各个服务消费者在服务引用配置文件中添加服务详细信息。</p>
+<p>服务提供者升级两台服务器，在服务发布配置文件中删除服务详细信息，并观察是否所有的服务消费者引用时都包含服务详细信息。</p>
+<p>如果都包含，说明所有服务消费者均完成升级，那么服务提供者就可以删除服务发布配置中的服务详细信息。</p>
+<p>如果有不包含服务详细信息的服务消费者，排查出相应的业务方进行升级，直至所有业务方完成升级。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>XML 配置方式的服务发布和引用的具体流程，简单来说就是服务提供者定义好接口，并且在服务发布配置文件中配置要发布的接口名，在进程启动时加载服务发布配置文件就可以对外提供服务了。而服务消费者通过在服务引用配置文件中定义相同的接口名，并且在服务引用配置文件中配置要引用的接口名，在进程启动时加载服务引用配置文件就可以引用服务了。</p>
+<p>在业务具体实践过程中可能会遇到引用服务的服务消费者众多，对业务的敏感度参差不齐的问题，所以在服务发布的时候，最好预定义好接口的各种配置。在服务规模不大，业务比较简单的时候，这样做比较合适。但是对于复杂业务，虽然服务发布时预定义好接口的各种配置，但在引用的服务消费者众多且同时访问的时候，可能会引起网络风暴。这种情况下，比较保险的方式是，把接口的各种配置放在服务引用配置文件里。</p>
+<p>在进行服务配置升级过程时，要考虑好步骤，在所有服务消费者完成升级之前，服务提供者还不能把服务的详细信息去掉，否则可能会导致没有升级的服务消费者引用异常。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E5%92%8C%E5%BC%95%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%9A%84%E6%89%8B%E6%AE%B5%E6%9C%89%E5%93%AA%E4%BA%9B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E5%B9%B3%E5%8F%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

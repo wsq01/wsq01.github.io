@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Python元组 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/Python元组"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Python元组
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/12/04/python/Python%E5%85%83%E7%BB%84/" class="article-date">
+  <time datetime="2022-12-04T07:18:21.000Z" itemprop="datePublished">2022-12-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">5 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>元组（<code>tuple</code>）是 Python 中另一个重要的序列结构，和列表类似，元组也是由一系列按特定顺序排序的元素组成。</p>
+<p>元组和列表的不同之处在于：</p>
+<ul>
+<li>列表的元素是可以更改的，包括修改元素值，删除和插入元素，所以列表是可变序列；</li>
+<li>而元组一旦被创建，它的元素就不可更改了，所以元组是不可变序列。</li>
+</ul>
+<p>元组也可以看做是不可变的列表，通常情况下，元组用于保存无需修改的内容。</p>
+<p>从形式上看，元组的所有元素都放在一对小括号( )中，相邻元素之间用逗号,分隔，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(element1, element2, ... , elementn)</span><br></pre></td></tr></table></figure>
+<p>其中<code>element1~elementn</code>表示元组中的各个元素，个数没有限制，只要是 Python 支持的数据类型就可以。</p>
+<p>从存储内容上看，元组可以存储整数、实数、字符串、列表、元组等任何类型的数据，并且在同一个元组中，元素的类型可以不同：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">&quot;www.baidu.com&quot;</span>, <span class="number">1</span>, [<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>], (<span class="string">&quot;abc&quot;</span>,<span class="number">3.0</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>( (<span class="string">&quot;www.baidu.com&quot;</span>,<span class="number">1</span>,[<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>],(<span class="string">&quot;abc&quot;</span>,<span class="number">3.0</span>)) ) <span class="comment"># &lt;class &#x27;tuple&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，元组是<code>tuple</code>类型。</p>
+<h1 id="Python创建元组"><a href="#Python创建元组" class="headerlink" title="Python创建元组"></a>Python创建元组</h1><p>Python 提供了两种创建元组的方法。</p>
+<h2 id="使用-直接创建"><a href="#使用-直接创建" class="headerlink" title="使用 ( ) 直接创建"></a>使用 ( ) 直接创建</h2><p>通过<code>( )</code>创建元组后，一般使用<code>=</code>将它赋值给某个变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tuplename = (element1, element2, ..., elementn)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>tuplename</code>表示变量名，<code>element1 ~ elementn</code>表示元组的元素。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">num = (<span class="number">7</span>, <span class="number">14</span>, <span class="number">21</span>, <span class="number">28</span>, <span class="number">35</span>)</span><br><span class="line">abc = ( <span class="string">&quot;Python&quot;</span>, <span class="number">19</span>, [<span class="number">1</span>,<span class="number">2</span>], (<span class="string">&#x27;c&#x27;</span>,<span class="number">2.0</span>) )</span><br></pre></td></tr></table></figure>
+<p>在 Python 中，元组通常都是使用一对小括号将所有元素包围起来的，但小括号不是必须的，只要将各元素用逗号隔开，Python 就会将其视为元组。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">course = <span class="string">&quot;小明&quot;</span>, <span class="string">&quot;xiaoming&quot;</span></span><br><span class="line"><span class="built_in">print</span>(course) <span class="comment"># (&#x27;小明&#x27;, &#x27;xiaoming&#x27;)</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的一点是，当创建的元组中只有一个字符串类型的元素时，该元素后面必须要加一个逗号<code>,</code>，否则 Python 解释器会将它视为字符串。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#最后加上逗号</span></span><br><span class="line">a =(<span class="string">&quot;cplus&quot;</span>,)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(a)) <span class="comment"># &lt;class &#x27;tuple&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># (&#x27;cplus&#x27;,)</span></span><br><span class="line"><span class="comment">#最后不加逗号</span></span><br><span class="line">b = (<span class="string">&quot;socket&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(b)) <span class="comment"># &lt;class &#x27;str&#x27;&gt;</span></span><br><span class="line"><span class="built_in">print</span>(b) <span class="comment"># socket</span></span><br></pre></td></tr></table></figure>
+<h2 id="使用tuple-函数创建元组"><a href="#使用tuple-函数创建元组" class="headerlink" title="使用tuple()函数创建元组"></a>使用tuple()函数创建元组</h2><p>除了使用<code>( )</code>创建元组外，Python 还提供了一个内置的函数<code>tuple()</code>，用来将其它数据类型转换为元组类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tuple(data)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>data</code>表示可以转化为元组的数据，包括字符串、元组、<code>range</code>对象等。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将字符串转换成元组</span></span><br><span class="line">tup1 = <span class="built_in">tuple</span>(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tup1) <span class="comment"># (&#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;)</span></span><br><span class="line"><span class="comment">#将列表转换成元组</span></span><br><span class="line">list1 = [<span class="string">&#x27;Python&#x27;</span>, <span class="string">&#x27;Java&#x27;</span>, <span class="string">&#x27;C++&#x27;</span>, <span class="string">&#x27;JavaScript&#x27;</span>]</span><br><span class="line">tup2 = <span class="built_in">tuple</span>(list1)</span><br><span class="line"><span class="built_in">print</span>(tup2) <span class="comment"># (&#x27;Python&#x27;, &#x27;Java&#x27;, &#x27;C++&#x27;, &#x27;JavaScript&#x27;)</span></span><br><span class="line"><span class="comment">#将字典转换成元组</span></span><br><span class="line">dict1 = &#123;<span class="string">&#x27;a&#x27;</span>:<span class="number">100</span>, <span class="string">&#x27;b&#x27;</span>:<span class="number">42</span>, <span class="string">&#x27;c&#x27;</span>:<span class="number">9</span>&#125;</span><br><span class="line">tup3 = <span class="built_in">tuple</span>(dict1)</span><br><span class="line"><span class="built_in">print</span>(tup3) <span class="comment"># (&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;)</span></span><br><span class="line"><span class="comment">#将区间转换成元组</span></span><br><span class="line">range1 = <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">6</span>)</span><br><span class="line">tup4 = <span class="built_in">tuple</span>(range1)</span><br><span class="line"><span class="built_in">print</span>(tup4) <span class="comment"># (1, 2, 3, 4, 5)</span></span><br><span class="line"><span class="comment">#创建空元组</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">tuple</span>()) <span class="comment"># ()</span></span><br></pre></td></tr></table></figure>
+<h1 id="访问元组元素"><a href="#访问元组元素" class="headerlink" title="访问元组元素"></a>访问元组元素</h1><p>和列表一样，我们可以使用索引（<code>Index</code>）访问元组中的某个元素（得到的是一个元素的值），也可以使用切片访问元组中的一组元素（得到的是一个新的子元组）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tuplename[i]</span><br></pre></td></tr></table></figure>
+<p>其中，<code>tuplename</code>表示元组名字，<code>i</code>表示索引值。元组的索引可以是正数，也可以是负数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tuplename[start : end : step]</span><br></pre></td></tr></table></figure>
+<p>其中，<code>start</code>表示起始索引，<code>end</code>表示结束索引，<code>step</code>表示步长。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">url = <span class="built_in">tuple</span>(<span class="string">&quot;http://c.biancheng.net/shell/&quot;</span>)</span><br><span class="line"><span class="comment">#使用索引访问元组中的某个元素</span></span><br><span class="line"><span class="built_in">print</span>(url[<span class="number">3</span>])  <span class="comment">#使用正数索引</span></span><br><span class="line"><span class="built_in">print</span>(url[-<span class="number">4</span>])  <span class="comment">#使用负数索引</span></span><br><span class="line"><span class="comment">#使用切片访问元组中的一组元素</span></span><br><span class="line"><span class="built_in">print</span>(url[<span class="number">9</span>: <span class="number">18</span>])  <span class="comment">#使用正数切片</span></span><br><span class="line"><span class="built_in">print</span>(url[<span class="number">9</span>: <span class="number">18</span>: <span class="number">3</span>])  <span class="comment">#指定步长</span></span><br><span class="line"><span class="built_in">print</span>(url[-<span class="number">6</span>: -<span class="number">1</span>])  <span class="comment">#使用负数切片</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p</span><br><span class="line">e</span><br><span class="line">(&#x27;b&#x27;, &#x27;i&#x27;, &#x27;a&#x27;, &#x27;n&#x27;, &#x27;c&#x27;, &#x27;h&#x27;, &#x27;e&#x27;, &#x27;n&#x27;, &#x27;g&#x27;)</span><br><span class="line">(&#x27;b&#x27;, &#x27;n&#x27;, &#x27;e&#x27;)</span><br><span class="line">(&#x27;s&#x27;, &#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;)</span><br></pre></td></tr></table></figure>
+<h1 id="修改元组"><a href="#修改元组" class="headerlink" title="修改元组"></a>修改元组</h1><p>元组是不可变序列，元组中的元素不能被修改，所以我们只能创建一个新的元组去替代旧的元组。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tup = (<span class="number">100</span>, <span class="number">0.5</span>, -<span class="number">36</span>, <span class="number">73</span>)</span><br><span class="line"><span class="built_in">print</span>(tup) <span class="comment"># (100, 0.5, -36, 73)</span></span><br><span class="line"><span class="comment">#对元组进行重新赋值</span></span><br><span class="line">tup = (<span class="string">&#x27;小明&#x27;</span>,<span class="string">&quot;xiaoming&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tup) <span class="comment"># (&#x27;小明&#x27;,&quot;xiaoming&quot;)</span></span><br></pre></td></tr></table></figure>
+<p>另外，还可以通过连接多个元组（使用+可以拼接元组）的方式向元组中添加新元素：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tup1 = (<span class="number">100</span>, <span class="number">0.5</span>, -<span class="number">36</span>, <span class="number">73</span>)</span><br><span class="line">tup2 = (<span class="number">3</span>+<span class="number">12j</span>, -<span class="number">54.6</span>, <span class="number">99</span>)</span><br><span class="line"><span class="built_in">print</span>(tup1+tup2) <span class="comment"># (100, 0.5, -36, 73, (3+12j), -54.6, 99)</span></span><br><span class="line"><span class="built_in">print</span>(tup1) <span class="comment"># (100, 0.5, -36, 73)</span></span><br><span class="line"><span class="built_in">print</span>(tup2) <span class="comment"># ((3+12j), -54.6, 99)</span></span><br></pre></td></tr></table></figure>
+<p>你看，使用<code>+</code>拼接元组以后，<code>tup1</code>和<code>tup2</code>的内容没法发生改变，这说明生成的是一个新的元组。</p>
+<h1 id="删除元组"><a href="#删除元组" class="headerlink" title="删除元组"></a>删除元组</h1><p>可以通过<code>del</code>关键字将其删除：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tup = (<span class="string">&#x27;百度&#x27;</span>, <span class="string">&quot;http://www.baidu.com/&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tup)</span><br><span class="line"><span class="keyword">del</span> tup</span><br><span class="line"><span class="built_in">print</span>(tup)</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(&#x27;百度&#x27;, &quot;http://www.baidu.com/&quot;)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">    File &quot;C:\Users\mozhiyan\Desktop\demo.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">        print(tup)</span><br><span class="line">NameError: name &#x27;tup&#x27; is not defined</span><br></pre></td></tr></table></figure>
+<p>Python 自带垃圾回收功能，会自动销毁不用的元组，所以一般不需要通过<code>del</code>来手动删除。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/12/04/python/Python%E5%85%83%E7%BB%84/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/12/05/python/Python%E5%AD%97%E5%85%B8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Python字典
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/12/03/python/Python%E5%88%97%E8%A1%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python列表</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Docker入门 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Docker/Docker入门"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Docker入门
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/01/18/Docker/Docker%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2022-01-18T08:24:41.000Z" itemprop="datePublished">2022-01-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Docker/">Docker</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">11.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">45 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h1><h2 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h2><h3 id="使用-yum-安装"><a href="#使用-yum-安装" class="headerlink" title="使用 yum 安装"></a>使用 yum 安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 安装需要的软件包， yum-utils 提供yum-config-manager功能</span><br><span class="line">$ yum install -y yum-utils</span><br><span class="line">// 添加yum软件源</span><br><span class="line">// 阿里云的</span><br><span class="line">$ yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">// 或ustc的</span><br><span class="line">$ yum-config-manager --add-repo http://mirrors.ustc.edu.cn/docker- ce/linux/centos/docker-ce.repo</span><br><span class="line">// 安装docker，出现输入的界面都按 y</span><br><span class="line">$ yum install -y docker-ce</span><br><span class="line">// 启动docker，刚下载会自动运行不用再启动</span><br><span class="line">$ systemctl enable docker</span><br><span class="line">$ systemctl start docker</span><br><span class="line">// 测试docker是否安装成功</span><br><span class="line">$ docker -v</span><br></pre></td></tr></table></figure>
+<h2 id="镜像加速器"><a href="#镜像加速器" class="headerlink" title="镜像加速器"></a>镜像加速器</h2><p>国内从 Docker Hub 拉取镜像有时会遇到困难，此时可以配置镜像加速器。</p>
+<ul>
+<li>阿里云加速器(点击管理控制台 -&gt; 登录账号(淘宝账号) -&gt; 右侧镜像工具 -&gt; 镜像加速器 -&gt; 复制加速器地址)</li>
+<li>网易云加速器<code>https://hub-mirror.c.163.com</code></li>
+<li>百度云加速器<code>https://mirror.baidubce.com</code></li>
+<li>ustc镜像加速器<code>https://docker.mirrors.ustc.edu.cn</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 编辑文件/etc/docker/daemon.json</span><br><span class="line">$ mkdir /etc/docker</span><br><span class="line">$ vi /etc/docker/daemon.json</span><br><span class="line">// 在文件中加入下面内容</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://docker.mirrors.ustc.edu.cn&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">// 重新启动服务</span><br><span class="line">$ systemctl daemon-reload</span><br><span class="line">$ systemctl restart docker</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="使用镜像"><a href="#使用镜像" class="headerlink" title="使用镜像"></a>使用镜像</h1><p>Docker 运行容器前需要本地存在对应的镜像，如果本地不存在该镜像，Docker 会从镜像仓库下载该镜像。</p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>可以通过<code>docker search</code>命令来查找官方仓库中的镜像，并利用<code>docker pull</code>命令来将它下载到本地。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker search centos</span><br><span class="line">NAME                               DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED</span><br><span class="line">centos                             The official build of CentOS.                   6449      [OK]</span><br><span class="line">ansible/centos7-ansible            Ansible on Centos7                              132                  [OK]</span><br><span class="line">consol/centos-xfce-vnc             Centos container with <span class="string">&quot;headless&quot;</span> VNC session…   126                  [OK]</span><br><span class="line">jdeathe/centos-ssh                 OpenSSH / Supervisor / EPEL/IUS/SCL Repos - …   117                  [OK]</span><br><span class="line">centos/systemd                     systemd enabled base container.                 96                   [OK]</span><br></pre></td></tr></table></figure>
+<p>可以看到返回了很多包含关键字的镜像，其中包括镜像名字、描述、收藏数（表示该镜像的受关注程度）、是否官方创建（<code>OFFICIAL</code>）、是否自动构建 （<code>AUTOMATED</code>）。</p>
+<p>根据是否是官方提供，可将镜像分为两类。</p>
+<ul>
+<li>一种是类似 centos 这样的镜像，被称为基础镜像或根镜像。这些基础镜像由 Docker 公司创建、验证、支持、提供。这样的镜像往往使用单个单词作为名字。</li>
+<li>还有一种类型，比如<code>ansible/centos7-ansible</code>镜像，它是由 Docker Hub 的注册用户创建并维护的，往往带有用户名称前缀。可以通过前缀<code>username/</code>来指定使用某个用户提供的镜像，比如<code>ansible</code>用户。</li>
+</ul>
+<p>另外，在查找的时候通过<code>--filter=stars=N</code>参数可以指定仅显示收藏数量为<code>N</code>以上的镜像。</p>
+<h2 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h2><p>从 Docker 镜像仓库获取镜像的命令是<code>docker pull</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull [选项] [Docker 镜像仓库地址[:端口号]/]仓库名[:标签]</span><br></pre></td></tr></table></figure>
+<p>具体的选项可以通过<code>docker pull --help</code>命令看到。</p>
+<p>镜像名称的格式。</p>
+<ul>
+<li>Docker 镜像仓库地址：地址的格式一般是<code>&lt;域名/IP&gt;[:端口号]</code>。默认地址是<code>Docker Hub(docker.io)</code>。</li>
+<li>仓库名：仓库名是两段式名称，即<code>&lt;用户名&gt;/&lt;软件名&gt;</code>。对于 Docker Hub，如果不给出用户名，则默认为<code>library</code>，也就是官方镜像。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull centos:7</span><br><span class="line">7: Pulling from library/centos</span><br><span class="line">2d473b07cdd5: Pull complete </span><br><span class="line">Digest: sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> centos:7</span><br><span class="line">docker.io/library/centos:7</span><br></pre></td></tr></table></figure>
+<p>上面的命令中没有给出 Docker 镜像仓库地址，因此将会从<code>Docker Hub （docker.io）</code>获取镜像。而镜像名称是<code>centos:7</code>，因此将会获取官方镜像<code>library/centos</code>仓库中标签为 7 的镜像。<code>docker pull</code>命令的输出结果最后一行给出了镜像的完整名称，即：<code>docker.io/library/centos:7</code>。</p>
+<p>从下载过程中可以看到镜像是由多层存储所构成。下载也是一层层的去下载，并非单一文件。下载过程中给出了每一层的 ID 的前 12 位。并且下载结束后，给出该镜像完整的 sha256 的摘要，以确保下载一致性。</p>
+<h2 id="列出镜像"><a href="#列出镜像" class="headerlink" title="列出镜像"></a>列出镜像</h2><p>列出已经下载下来的镜像，可以使用<code>docker image ls</code>命令或<code>docker images</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 或docker images</span><br><span class="line">$ docker image <span class="built_in">ls</span></span><br><span class="line"></span><br><span class="line">REPOSITORY   TAG       IMAGE ID       CREATED        SIZE</span><br><span class="line">mysql        5.7       4181d485f650   4 days ago     448MB</span><br><span class="line">redis        latest    f1b6973564e9   3 weeks ago    113MB</span><br><span class="line">nginx        latest    c316d5a335a5   3 weeks ago    142MB</span><br><span class="line">centos       7         eeb6ee3f44bd   5 months ago   204MB</span><br></pre></td></tr></table></figure>
+<p>列表包含了仓库名、标签、镜像 ID、创建时间以及所占用的空间。</p>
+<p>镜像 ID 则是镜像的唯一标识，一个镜像可以对应多个标签。</p>
+<h3 id="镜像体积"><a href="#镜像体积" class="headerlink" title="镜像体积"></a>镜像体积</h3><p>如果仔细观察，会注意到，这里标识的所占用空间和在 Docker Hub 上看到的镜像大小不同。比如，<code>centos:7</code>镜像大小，在这里是 204MB，但是在 Docker Hub 显示的却是 103.35MB。这是因为 Docker Hub 中显示的体积是压缩后的体积。在镜像下载和上传过程中镜像是保持着压缩状态的，因此 Docker Hub 所显示的大小是网络传输中更关心的流量大小。而<code>docker image ls</code>显示的是镜像下载到本地后，展开的大小，准确说，是展开后的各层所占空间的总和，因为镜像到本地后，查看空间的时候，更关心的是本地磁盘空间占用的大小。</p>
+<p>另外一个需要注意的问题是，<code>docker image ls</code>列表中的镜像体积总和并非是所有镜像实际硬盘消耗。由于 Docker 镜像是多层存储结构，并且可以继承、复用，因此不同镜像可能会因为使用相同的基础镜像，从而拥有共同的层。由于 Docker 使用 Union FS，相同的层只需要保存一份即可，因此实际镜像硬盘占用空间很可能要比这个列表镜像大小的总和要小的多。</p>
+<p>可以通过<code>docker system df</code>命令来便捷的查看镜像、容器、数据卷所占用的空间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker system <span class="built_in">df</span></span><br><span class="line"></span><br><span class="line">TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE</span><br><span class="line">Images          4         0         826MB     826MB (100%)</span><br><span class="line">Containers      0         0         0B        0B</span><br><span class="line">Local Volumes   2         0         398.7MB   398.7MB (100%)</span><br><span class="line">Build Cache     0         0         0B        0B</span><br></pre></td></tr></table></figure>
+<h3 id="列出部分镜像"><a href="#列出部分镜像" class="headerlink" title="列出部分镜像"></a>列出部分镜像</h3><p>不加任何参数的情况下，<code>docker image ls</code>会列出所有顶层镜像，但是有时候我们只希望列出部分镜像。<code>docker image ls</code>有好几个参数可以帮助做到这个事情。</p>
+<p>根据仓库名列出镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker image <span class="built_in">ls</span> ubuntu</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">ubuntu              18.04               329ed837d508        3 days ago          63.3MB</span><br><span class="line">ubuntu              bionic              329ed837d508        3 days ago          63.3MB</span><br></pre></td></tr></table></figure>
+<p>列出特定的某个镜像，也就是说指定仓库名和标签</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls ubuntu:18.04</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">ubuntu              18.04               329ed837d508        3 days ago          63.3MB</span><br></pre></td></tr></table></figure>
+<p>除此以外，<code>docker image ls</code>还支持强大的过滤器参数<code>--filter</code>，或者简写<code>-f</code>。比如，我们希望看到在<code>mongo:3.2</code>之后建立的镜像，可以用下面的命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls -f since=mongo:3.2</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">redis               latest              5f515359c7f8        5 days ago          183 MB</span><br><span class="line">nginx               latest              05a60462f8ba        5 days ago          181 MB</span><br></pre></td></tr></table></figure>
+<p>想查看某个位置之前的镜像也可以，只需要把<code>since</code>换成<code>before</code>即可。</p>
+<p>此外，如果镜像构建时，定义了<code>LABEL</code>，还可以通过<code>LABEL</code>来过滤。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker image ls -f label=com.example.version=0.1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="删除本地镜像"><a href="#删除本地镜像" class="headerlink" title="删除本地镜像"></a>删除本地镜像</h2><p>删除本地的镜像，可以使用<code>docker image rm</code>命令，其格式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker image rm [选项] &lt;镜像1&gt; [&lt;镜像2&gt; ...]</span><br><span class="line">// 或docker rmi [选项] &lt;镜像1&gt; [&lt;镜像2&gt; ...]</span><br></pre></td></tr></table></figure>
+<h3 id="用-ID、镜像名、摘要删除镜像"><a href="#用-ID、镜像名、摘要删除镜像" class="headerlink" title="用 ID、镜像名、摘要删除镜像"></a>用 ID、镜像名、摘要删除镜像</h3><p>其中，<code>&lt;镜像&gt;</code>可以是镜像短 ID、镜像长 ID、镜像名或者镜像摘要。</p>
+<p>比如我们有这么一些镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker image <span class="built_in">ls</span></span><br><span class="line">REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">centos                      latest              0584b3d2cf6d        3 weeks ago         196.5 MB</span><br><span class="line">redis                       alpine              501ad78535f0        3 weeks ago         21.03 MB</span><br><span class="line">docker                      latest              cf693ec9b5c7        3 weeks ago         105.1 MB</span><br><span class="line">nginx                       latest              e43d811ce2f4        5 weeks ago         181.5 MB</span><br></pre></td></tr></table></figure>
+<p>我们可以用镜像的完整 ID，也称为长 ID，来删除镜像。使用脚本的时候可能会用长 ID，但是人工输入就太累了，所以更多的时候是用短 ID 来删除镜像。<code>docker image ls</code>默认列出的就已经是短 ID 了，一般取前3个字符以上，只要足够区分于别的镜像就可以了。</p>
+<p>比如这里，如果我们要删除<code>redis:alpine</code>镜像，可以执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//或docker rmi 501</span><br><span class="line">$ docker image <span class="built_in">rm</span> 501</span><br><span class="line">Untagged: redis:alpine</span><br><span class="line">Untagged: redis@sha256:f1ed3708f538b537eb9c2a7dd50dc90a706f7debd7e1196c9264edeea521a86d</span><br><span class="line">Deleted: sha256:501ad78535f015d88872e13fa87a828425117e3d28075d0c117932b05bf189b7</span><br><span class="line">Deleted: sha256:96167737e29ca8e9d74982ef2a0dda76ed7b430da55e321c071f0dbff8c2899b</span><br><span class="line">Deleted: sha256:32770d1dcf835f192cafd6b9263b7b597a1778a403a109e2cc2ee866f74adf23</span><br><span class="line">Deleted: sha256:127227698ad74a5846ff5153475e03439d96d4b1c7f2a449c7a826ef74a2d2fa</span><br><span class="line">Deleted: sha256:1333ecc582459bac54e1437335c0816bc17634e131ea0cc48daa27d32c75eab3</span><br><span class="line">Deleted: sha256:4fc455b921edf9c4aea207c51ab39b10b06540c8b4825ba57b3feed1668fa7c7</span><br></pre></td></tr></table></figure>
+<p>我们也可以用镜像名，也就是<code>&lt;仓库名&gt;:&lt;标签&gt;</code>，来删除镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ docker image <span class="built_in">rm</span> centos</span><br><span class="line">Untagged: centos:latest</span><br><span class="line">Untagged: centos@sha256:b2f9d1c0ff5f87a4743104d099a3d561002ac500db1b9bfa02a783a46e0d366c</span><br><span class="line">Deleted: sha256:0584b3d2cf6d235ee310cf14b54667d889887b838d3f3d3033acd70fc3c48b8a</span><br><span class="line">Deleted: sha256:97ca462ad9eeae25941546209454496e1d66749d53dfa2ee32bf1faabd239d38</span><br></pre></td></tr></table></figure>
+<p>当然，更精确的是使用镜像摘要删除镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker image <span class="built_in">ls</span> --digests</span><br><span class="line">REPOSITORY                  TAG                 DIGEST                                                                    IMAGE ID            CREATED             SIZE</span><br><span class="line">node                        slim                sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228   6e0c4c8e3913        3 weeks ago         214 MB</span><br><span class="line"></span><br><span class="line">$ docker image <span class="built_in">rm</span> node@sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228</span><br><span class="line">Untagged: node@sha256:b4f0e0bdeb578043c1ea6862f0d40cc4afe32a4a582f3be235a3b164422be228</span><br></pre></td></tr></table></figure>
+<h2 id="使用-Dockerfile-定制镜像"><a href="#使用-Dockerfile-定制镜像" class="headerlink" title="使用 Dockerfile 定制镜像"></a>使用 Dockerfile 定制镜像</h2><p>镜像的定制实际上就是定制每一层所添加的配置、文件。如果我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本，用这个脚本来构建、定制镜像，那么之前提及的无法重复的问题、镜像构建透明性的问题、体积的问题就都会解决。这个脚本就是<code>Dockerfile</code>。</p>
+<p><code>Dockerfile</code>是一个文本文件，其内包含了一条条的指令，每一条指令构建一层，因此每一条指令的内容，就是描述该层应当如何构建。</p>
+<p>以定制 nginx 镜像为例。在一个空白目录中，建立一个文本文件，并命名为 Dockerfile：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> mynginx</span><br><span class="line">$ <span class="built_in">cd</span> mynginx</span><br><span class="line">$ <span class="built_in">touch</span> Dockerfile</span><br></pre></td></tr></table></figure>
+<p>其内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx</span><br><span class="line">RUN <span class="built_in">echo</span> <span class="string">&#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27;</span> &gt; /usr/share/nginx/html/index.html</span><br></pre></td></tr></table></figure>
+<p>这个 Dockerfile 很简单，一共就两行。涉及到了两条指令，<code>FROM</code>和<code>RUN</code>。</p>
+<h3 id="FROM-指定基础镜像"><a href="#FROM-指定基础镜像" class="headerlink" title="FROM 指定基础镜像"></a>FROM 指定基础镜像</h3><p>所谓定制镜像，那一定是以一个镜像为基础，在其上进行定制。就像我们之前运行了一个<code>nginx</code>镜像的容器，再进行修改一样，基础镜像是必须指定的。而<code>FROM</code>就是指定 基础镜像，因此一个 Dockerfile 中<code>FROM</code>是必备的指令，并且必须是第一条指令。</p>
+<p>在 Docker Hub 上有非常多的高质量的官方镜像，有可以直接拿来使用的服务类的镜像，如<code>nginx、redis、mongo、mysql、httpd、php、tomcat</code>等；也有一些方便开发、构建、运行各种语言应用的镜像，如<code>node、openjdk、python、ruby、golang</code>等。可以在其中寻找一个最符合我们最终目标的镜像为基础镜像进行定制。</p>
+<p>如果没有找到对应服务的镜像，官方镜像中还提供了一些更为基础的操作系统镜像，如<code>ubuntu、debian、centos、fedora、alpine</code>等，这些操作系统的软件库为我们提供了更广阔的扩展空间。</p>
+<p>除了选择现有镜像为基础镜像外，Docker 还存在一个特殊的镜像，名为<code>scratch</code>。这个镜像是虚拟的概念，并不实际存在，它表示一个空白的镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如果你以<code>scratch</code>为基础镜像的话，意味着你不以任何镜像为基础，接下来所写的指令将作为镜像第一层开始存在。</p>
+<p>不以任何系统为基础，直接将可执行文件复制进镜像的做法并不罕见，对于 Linux 下静态编译的程序来说，并不需要有操作系统提供运行时支持，所需的一切库都已经在可执行文件里了，因此直接<code>FROM scratch</code>会让镜像体积更加小巧。使用 Go 语言 开发的应用很多会使用这种方式来制作镜像，这也是为什么有人认为 Go 是特别适合容器微服务架构的语言的原因之一。</p>
+<h3 id="RUN-执行命令"><a href="#RUN-执行命令" class="headerlink" title="RUN 执行命令"></a>RUN 执行命令</h3><p><code>RUN</code>指令是用来执行命令行命令的。由于命令行的强大能力，RUN 指令在定制镜像时是最常用的指令之一。其格式有两种：</p>
+<ul>
+<li><code>shell</code>格式：<code>RUN &lt;命令&gt;</code>，就像直接在命令行中输入的命令一样。刚才写的 Dockerfile 中的<code>RUN</code>指令就是这种格式。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN echo &#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27; &gt; /usr/share/nginx/html/index.html</span><br></pre></td></tr></table></figure></li>
+<li><code>exec</code>格式：<code>RUN [&quot;可执行文件&quot;, &quot;参数1&quot;, &quot;参数2&quot;]</code>，这更像是函数调用中的格式。</li>
+</ul>
+<p>既然<code>RUN</code>就像 Shell 脚本一样可以执行命令，那么我们是否就可以像 Shell 脚本一样把每个命令对应一个<code>RUN</code>呢？比如这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:stretch</span><br><span class="line"></span><br><span class="line">RUN apt-get update</span><br><span class="line">RUN apt-get install -y gcc libc6-dev make wget</span><br><span class="line">RUN wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span></span><br><span class="line">RUN <span class="built_in">mkdir</span> -p /usr/src/redis</span><br><span class="line">RUN tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1</span><br><span class="line">RUN make -C /usr/src/redis</span><br><span class="line">RUN make -C /usr/src/redis install</span><br></pre></td></tr></table></figure>
+<p>Dockerfile 中每一个指令都会建立一层，<code>RUN</code>也不例外。每一个<code>RUN</code>的行为，就和刚才我们手工建立镜像的过程一样：新建立一层，在其上执行这些命令，执行结束后，<code>commit</code>这一层的修改，构成新的镜像。</p>
+<p>而上面的这种写法，创建了 7 层镜像。这是完全没有意义的，而且很多运行时不需要的东西，都被装进了镜像里，比如编译环境、更新的软件包等等。结果就是产生非常臃肿、非常多层的镜像，不仅仅增加了构建部署的时间，也很容易出错。</p>
+<p>Union FS 是有最大层数限制的，比如 AUFS，曾经是最大不得超过 42 层，现在是不得超过 127 层。</p>
+<p>上面的 Dockerfile 正确的写法应该是这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:stretch</span><br><span class="line"></span><br><span class="line">RUN <span class="built_in">set</span> -x; buildDeps=<span class="string">&#x27;gcc libc6-dev make wget&#x27;</span> \</span><br><span class="line">    &amp;&amp; apt-get update \</span><br><span class="line">    &amp;&amp; apt-get install -y <span class="variable">$buildDeps</span> \</span><br><span class="line">    &amp;&amp; wget -O redis.tar.gz <span class="string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span> \</span><br><span class="line">    &amp;&amp; <span class="built_in">mkdir</span> -p /usr/src/redis \</span><br><span class="line">    &amp;&amp; tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \</span><br><span class="line">    &amp;&amp; make -C /usr/src/redis \</span><br><span class="line">    &amp;&amp; make -C /usr/src/redis install \</span><br><span class="line">    &amp;&amp; <span class="built_in">rm</span> -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; <span class="built_in">rm</span> redis.tar.gz \</span><br><span class="line">    &amp;&amp; <span class="built_in">rm</span> -r /usr/src/redis \</span><br><span class="line">    &amp;&amp; apt-get purge -y --auto-remove <span class="variable">$buildDeps</span></span><br></pre></td></tr></table></figure>
+<p>首先，之前所有的命令只有一个目的，就是编译、安装<code>redis</code>可执行文件。因此没有必要建立很多层，这只是一层的事情。因此，这里没有使用很多个<code>RUN</code>一一对应不同的命令，而是仅仅使用一个<code>RUN</code>指令，并使用<code>&amp;&amp;</code>将各个所需命令串联起来。将之前的 7 层，简化为了 1 层。在撰写 Dockerfile 的时候，要经常提醒自己，这并不是在写 Shell 脚本，而是在定义每一层该如何构建。</p>
+<p>并且，这里为了格式化还进行了换行。Dockerfile 支持 Shell 类的行尾添加<code>\</code>的命令换行方式，以及行首<code>#</code>进行注释的格式。</p>
+<p>此外，还可以看到这一组命令的最后添加了清理工作的命令，删除了为了编译构建所需要的软件，清理了所有下载、展开的文件，并且还清理了<code>apt</code>缓存文件。这是很重要的一步，我们之前说过，镜像是多层存储，每一层的东西并不会在下一层被删除，会一直跟随着镜像。因此镜像构建时，一定要确保每一层只添加真正需要添加的东西，任何无关的东西都应该清理掉。</p>
+<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><p>让我们再回到之前定制的 nginx 镜像的 Dockerfile 来。在 Dockerfile 文件所在目录执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t nginx:v3 .</span><br><span class="line">Sending build context to Docker daemon 2.048 kB</span><br><span class="line">Step 1 : FROM nginx</span><br><span class="line"> ---&gt; e43d811ce2f4</span><br><span class="line">Step 2 : RUN <span class="built_in">echo</span> <span class="string">&#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27;</span> &gt; /usr/share/nginx/html/index.html</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 9cdc27646c7b</span><br><span class="line"> ---&gt; 44aa4490ce2c</span><br><span class="line">Removing intermediate container 9cdc27646c7b</span><br><span class="line">Successfully built 44aa4490ce2c</span><br></pre></td></tr></table></figure>
+<p>从命令的输出结果中，我们可以清晰的看到镜像的构建过程。在<code>Step 2</code>中，如同我们之前所说的那样，<code>RUN</code>指令启动了一个容器<code>9cdc27646c7b</code>，执行了所要求的命令，并最后提交了这一层<code>44aa4490ce2c</code>，随后删除了所用到的这个容器<code>9cdc27646c7b</code>。</p>
+<p>这里我们使用了<code>docker build</code>命令进行镜像构建。其格式为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build [选项] &lt;上下文路径/URL/-&gt;</span><br></pre></td></tr></table></figure>
+<p>在这里我们指定了最终镜像的名称<code>-t nginx:v3</code>，构建成功后，我们可以像之前运行<code>nginx:v2</code>那样来运行这个镜像，其结果会和<code>nginx:v2</code>一样。</p>
+<h3 id="镜像构建上下文（Context）"><a href="#镜像构建上下文（Context）" class="headerlink" title="镜像构建上下文（Context）"></a>镜像构建上下文（Context）</h3><p>如果注意，会看到<code>docker build</code>命令最后有一个<code>.</code>。<code>.</code>表示当前目录，而<code>Dockerfile</code>就在当前目录，因此不少初学者以为这个路径是在指定 Dockerfile 所在路径，这么理解其实是不准确的。如果对应上面的命令格式，你可能会发现，这是在指定上下文路径。那么什么是上下文呢？</p>
+<p>首先我们要理解<code>docker build</code>的工作原理。Docker 在运行时分为 Docker 引擎（也就是服务端守护进程）和客户端工具。Docker 的引擎提供了一组 REST API，被称为 Docker Remote API，而如 docker 命令这样的客户端工具，则是通过这组 API 与 Docker 引擎交互，从而完成各种功能。因此，虽然表面上我们好像是在本机执行各种 docker 功能，但实际上，一切都是使用的远程调用形式在服务端（Docker 引擎）完成。也因为这种 C&#x2F;S 设计，让我们操作远程服务器的 Docker 引擎变得轻而易举。</p>
+<p>当我们进行镜像构建的时候，并非所有定制都会通过 RUN 指令完成，经常会需要将一些本地文件复制进镜像，比如通过<code>COPY</code>指令、<code>ADD</code>指令等。而<code>docker build</code>命令构建镜像，其实并非在本地构建，而是在服务端，也就是 Docker 引擎中构建的。那么在这种客户端&#x2F;服务端的架构中，如何才能让服务端获得本地文件呢？</p>
+<p>这就引入了上下文的概念。当构建的时候，用户会指定构建镜像上下文的路径，docker build 命令得知这个路径后，会将路径下的所有内容打包，然后上传给 Docker 引擎。这样 Docker 引擎收到这个上下文包后，展开就会获得构建镜像所需的一切文件。</p>
+<p>如果在 Dockerfile 中这么写：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPY ./package.json /app/</span><br></pre></td></tr></table></figure>
+<p>这并不是要复制执行<code>docker build</code>命令所在的目录下的<code>package.json</code>，也不是复制 Dockerfile 所在目录下的<code>package.json</code>，而是复制 上下文（context） 目录下的<code>package.json</code>。</p>
+<p>因此，<code>COPY</code>这类指令中的源文件的路径都是相对路径。这也是初学者经常会问的为什么<code>COPY ../package.json /app</code>或者<code>COPY /opt/xxxx /app</code>无法工作的原因，因为这些路径已经超出了上下文的范围，Docker 引擎无法获得这些位置的文件。如果真的需要那些文件，应该将它们复制到上下文目录中去。</p>
+<p>现在就可以理解刚才的命令<code>docker build -t nginx:v3 .</code>中的这个<code>.</code>，实际上是在指定上下文的目录，<code>docker build</code>命令会将该目录下的内容打包交给 Docker 引擎以帮助构建镜像。</p>
+<p>如果观察<code>docker build</code>输出，我们其实已经看到了这个发送上下文的过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t nginx:v3 .</span><br><span class="line">Sending build context to Docker daemon 2.048 kB</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>理解构建上下文对于镜像构建是很重要的，避免犯一些不应该的错误。比如有些初学者在发现<code>COPY /opt/xxxx /app</code>不工作后，于是干脆将 Dockerfile 放到了硬盘根目录去构建，结果发现<code>docker build</code>执行后，在发送一个几十 GB 的东西，极为缓慢而且很容易构建失败。那是因为这种做法是在让<code>docker build</code>打包整个硬盘，这显然是使用错误。</p>
+<p>一般来说，应该会将 Dockerfile 置于一个空目录下，或者项目根目录下。如果该目录下没有所需文件，那么应该把所需文件复制一份过来。如果目录下有些东西确实不希望构建时传给 Docker 引擎，那么可以用<code>.gitignore</code>一样的语法写一个<code>.dockerignore</code>，该文件是用于剔除不需要作为上下文传递给 Docker 引擎的。</p>
+<p>那么为什么会有人误以为<code>.</code>是指定 Dockerfile 所在目录呢？这是因为在默认情况下，如果不额外指定 Dockerfile 的话，会将上下文目录下的名为 Dockerfile 的文件作为 Dockerfile。</p>
+<p>这只是默认行为，实际上 Dockerfile 的文件名并不要求必须为 Dockerfile，而且并不要求必须位于上下文目录中，比如可以用<code>-f ../Dockerfile.php</code>参数指定某个文件作为 Dockerfile。</p>
+<p>当然，一般大家习惯性的会使用默认的文件名 Dockerfile，以及会将其置于镜像构建上下文目录中。</p>
+<h2 id="Dockerfile-指令详解"><a href="#Dockerfile-指令详解" class="headerlink" title="Dockerfile 指令详解"></a>Dockerfile 指令详解</h2><h3 id="COPY-复制文件"><a href="#COPY-复制文件" class="headerlink" title="COPY 复制文件"></a>COPY 复制文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COPY [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;源路径&gt;... &lt;目标路径&gt;</span><br><span class="line">COPY [--<span class="built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] [<span class="string">&quot;&lt;源路径1&gt;&quot;</span>,... <span class="string">&quot;&lt;目标路径&gt;&quot;</span>]</span><br></pre></td></tr></table></figure>
+<p>和<code>RUN</code>指令一样，也有两种格式，一种类似于命令行，一种类似于函数调用。</p>
+<p><code>COPY</code>指令将从构建上下文目录中<code>&lt;源路径&gt;</code>的文件&#x2F;目录复制到新的一层的镜像内的<code>&lt;目标路径&gt;</code>位置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPY package.json /usr/src/app/</span><br></pre></td></tr></table></figure>
+<p><code>&lt;源路径&gt;</code>可以是多个，甚至可以是通配符，其通配符规则要满足 Go 的<code>filepath.Match</code>规则，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">COPY hom* /mydir/</span><br><span class="line">COPY hom?.txt /mydir/</span><br></pre></td></tr></table></figure>
+<p><code>&lt;目标路径&gt;</code>可以是容器内的绝对路径，也可以是相对于工作目录的相对路径（工作目录可以用<code>WORKDIR</code>指令来指定）。目标路径不需要事先创建，如果目录不存在会在复制文件前先行创建缺失目录。</p>
+<p>此外，还需要注意一点，使用<code>COPY</code>指令，源文件的各种元数据都会保留。比如读、写、执行权限、文件变更时间等。这个特性对于镜像定制很有用。特别是构建相关文件都在使用 Git 进行管理的时候。</p>
+<p>在使用该指令的时候还可以加上<code>--chown=&lt;user&gt;:&lt;group&gt;</code>选项来改变文件的所属用户及所属组。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">COPY --<span class="built_in">chown</span>=55:mygroup files* /mydir/</span><br><span class="line">COPY --<span class="built_in">chown</span>=bin files* /mydir/</span><br><span class="line">COPY --<span class="built_in">chown</span>=1 files* /mydir/</span><br><span class="line">COPY --<span class="built_in">chown</span>=10:11 files* /mydir/</span><br></pre></td></tr></table></figure>
+<p>如果源路径为文件夹，复制的时候不是直接复制该文件夹，而是将文件夹中的内容复制到目标路径。</p>
+<h3 id="ADD-更高级的复制文件"><a href="#ADD-更高级的复制文件" class="headerlink" title="ADD 更高级的复制文件"></a>ADD 更高级的复制文件</h3><p><code>ADD</code>指令和<code>COPY</code>的格式和性质基本一致。但是在<code>COPY</code>基础上增加了一些功能。</p>
+<p>比如<code>&lt;源路径&gt;</code>可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到<code>&lt;目标路径&gt;</code>去。下载后的文件权限自动设置为 600，如果这并不是想要的权限，那么还需要增加额外的一层<code>RUN</code>进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层<code>RUN</code>指令进行解压缩。所以不如直接使用<code>RUN</code>指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。</p>
+<p>如果 &lt;源路径&gt; 为一个 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，<code>ADD</code>指令将会自动解压缩这个压缩文件到 &lt;目标路径&gt; 去。<br>在某些情况下，这个自动解压缩的功能非常有用，比如官方镜像 ubuntu 中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>但在某些情况下，如果我们真的是希望复制个压缩文件进去，而不解压缩，这时就不可以使用<code>ADD</code>命令了。</p>
+<p>在 Docker 官方的 Dockerfile 最佳实践文档中要求，尽可能的使用<code>COPY</code>，因为<code>COPY</code>的语义很明确，就是复制文件而已，而 ADD 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用<code>ADD</code>的场合，就是所提及的需要自动解压缩的场合。</p>
+<p>另外需要注意的是，<code>ADD</code>指令会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。</p>
+<p>因此在<code>COPY</code>和<code>ADD</code>指令中选择的时候，可以遵循这样的原则，所有的文件复制均使用<code>COPY</code>指令，仅在需要自动解压缩的场合使用<code>ADD</code>。<br>在使用该指令的时候还可以加上<code>--chown=&lt;user&gt;:&lt;group&gt;</code>选项来改变文件的所属用户及所属组。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ADD --<span class="built_in">chown</span>=55:mygroup files* /mydir/</span><br><span class="line">ADD --<span class="built_in">chown</span>=bin files* /mydir/</span><br><span class="line">ADD --<span class="built_in">chown</span>=1 files* /mydir/</span><br><span class="line">ADD --<span class="built_in">chown</span>=10:11 files* /mydir/</span><br></pre></td></tr></table></figure>
+<h3 id="CMD-容器启动命令"><a href="#CMD-容器启动命令" class="headerlink" title="CMD 容器启动命令"></a>CMD 容器启动命令</h3><p><code>CMD</code>指令的格式和<code>RUN</code>相似，也是两种格式：</p>
+<ul>
+<li>shell 格式：<code>CMD &lt;命令&gt;</code></li>
+<li>exec 格式：<code>CMD [&quot;可执行文件&quot;, &quot;参数1&quot;, &quot;参数2&quot;...]</code></li>
+</ul>
+<p>参数列表格式：<code>CMD [&quot;参数1&quot;, &quot;参数2&quot;...]</code>。在指定了<code>ENTRYPOINT</code>指令后，用<code>CMD</code>指定具体的参数。</p>
+<p>Docker 不是虚拟机，容器就是进程。既然是进程，那么在启动容器的时候，需要指定所运行的程序及参数。<code>CMD</code>指令就是用于指定默认的容器主进程的启动命令的。</p>
+<p>在运行时可以指定新的命令来替代镜像设置中的这个默认命令，比如，ubuntu 镜像默认的 CMD 是<code>/bin/bash</code>，如果我们直接<code>docker run -it ubuntu</code>的话，会直接进入<code>bash</code>。我们也可以在运行时指定运行别的命令，如<code>docker run -it ubuntu cat /etc/os-release</code>。这就是用 cat &#x2F;etc&#x2F;os-release 命令替换了默认的<code>/bin/bash</code>命令了，输出了系统版本信息。</p>
+<p>在指令格式上，一般推荐使用<code>exec</code>格式，这类格式在解析时会被解析为 JSON 数组，因此一定要使用双引号 “，而不要使用单引号。<br>如果使用 shell 格式的话，实际的命令会被包装为<code>sh -c</code>的参数的形式进行执行。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD echo $HOME</span><br></pre></td></tr></table></figure>
+<p>在实际执行中，会将其变更为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;echo $HOME&quot; ]</span><br></pre></td></tr></table></figure>
+<p>这就是为什么我们可以使用环境变量的原因，因为这些环境变量会被 shell 进行解析处理。</p>
+<p>提到 CMD 就不得不提容器中应用在前台执行和后台执行的问题。。</p>
+<p>Docker 不是虚拟机，容器中的应用都应该以前台执行，而不是像虚拟机、物理机里面那样，用 systemd 去启动后台服务，容器内没有后台服务的概念。<br>一些初学者将 CMD 写为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD service nginx start</span><br></pre></td></tr></table></figure>
+<p>然后发现容器执行后就立即退出了。甚至在容器内去使用<code>systemctl</code>命令结果却发现根本执行不了。这就是因为没有搞明白前台、后台的概念，没有区分容器和虚拟机的差异，依旧在以传统虚拟机的角度去理解容器。</p>
+<p>对于容器而言，其启动程序就是容器应用进程，容器就是为了主进程而存在的，主进程退出，容器就失去了存在的意义，从而退出，其它辅助进程不是它需要关心的东西。</p>
+<p>而使用<code>service nginx start</code>命令，则是希望<code>upstart</code>来以后台守护进程形式启动 nginx 服务。而刚才说了<code>CMD service nginx start</code>会被理解为<code>CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;service nginx start&quot;]</code>，因此主进程实际上是 sh。那么当<code>service nginx start</code>命令结束后，sh 也就结束了，sh 作为主进程退出了，自然就会令容器退出。</p>
+<p>正确的做法是直接执行 nginx 可执行文件，并且要求以前台形式运行。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure>
+<h3 id="ENTRYPOINT-入口点"><a href="#ENTRYPOINT-入口点" class="headerlink" title="ENTRYPOINT 入口点"></a>ENTRYPOINT 入口点</h3><p><code>ENTRYPOINT</code>的格式和<code>RUN</code>指令格式一样，分为<code>exec</code>格式和<code>shell</code>格式。</p>
+<p><code>ENTRYPOINT</code>的目的和<code>CMD</code>一样，都是在指定容器启动程序及参数。<code>ENTRYPOINT</code>在运行时也可以替代，不过比<code>CMD</code>要略显繁琐，需要通过<code>docker run</code>的参数<code>--entrypoint</code>来指定。</p>
+<p>当指定了<code>ENTRYPOINT</code>后，<code>CMD</code>的含义就发生了改变，不再是直接的运行其命令，而是将<code>CMD</code>的内容作为参数传给<code>ENTRYPOINT</code>指令，换句话说实际执行时，将变为：<code>&lt;ENTRYPOINT&gt; &quot;&lt;CMD&gt;&quot;</code></p>
+<p>那么有了 CMD 后，为什么还要有 ENTRYPOINT 呢？这种<code>&lt;ENTRYPOINT&gt; &quot;&lt;CMD&gt;&quot;</code>有什么好处么？让我们来看几个场景。</p>
+<p>场景一：让镜像变成像命令一样使用<br>假设我们需要一个得知自己当前公网 IP 的镜像，那么可以先用 CMD 来实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:18.04</span><br><span class="line">RUN apt-get update \</span><br><span class="line">    &amp;&amp; apt-get install -y curl \</span><br><span class="line">    &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br><span class="line">CMD [ &quot;curl&quot;, &quot;-s&quot;, &quot;http://myip.ipip.net&quot; ]</span><br></pre></td></tr></table></figure>
+<p>假如我们使用<code>docker build -t myip .</code>来构建镜像的话，如果我们需要查询当前公网 IP，只需要执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run myip</span><br><span class="line">当前 IP：61.148.226.66 来自：北京市 联通</span><br></pre></td></tr></table></figure>
+<p>嗯，这么看起来好像可以直接把镜像当做命令使用了，不过命令总有参数，如果我们希望加参数呢？比如从上面的<code>CMD</code>中可以看到实质的命令是 curl，那么如果我们希望显示 HTTP 头信息，就需要加上<code>-i</code>参数。那么我们可以直接加<code>-i</code>参数给<code>docker run myip</code>么？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run myip -i</span><br><span class="line">docker: Error response from daemon: invalid header field value &quot;oci runtime error: container_linux.go:247: starting container process caused \&quot;exec: \\\&quot;-i\\\&quot;: executable file not found in $PATH\&quot;\n&quot;.</span><br></pre></td></tr></table></figure>
+<p>我们可以看到可执行文件找不到的报错，<code>executable file not found</code>。之前我们说过，跟在镜像名后面的是 command，运行时会替换 CMD 的默认值。因此这里的 -i 替换了原来的 CMD，而不是添加在原来的 curl -s <a target="_blank" rel="noopener" href="http://myip.ipip.net/">http://myip.ipip.net</a> 后面。而 -i 根本不是命令，所以自然找不到。<br>那么如果我们希望加入 -i 这参数，我们就必须重新完整的输入这个命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run myip curl -s http://myip.ipip.net -i</span><br></pre></td></tr></table></figure>
+<p>这显然不是很好的解决方案，而使用<code>ENTRYPOINT</code>就可以解决这个问题。现在我们重新用<code>ENTRYPOINT</code>来实现这个镜像：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:18.04</span><br><span class="line">RUN apt-get update \</span><br><span class="line">    &amp;&amp; apt-get install -y curl \</span><br><span class="line">    &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br><span class="line">ENTRYPOINT [ &quot;curl&quot;, &quot;-s&quot;, &quot;http://myip.ipip.net&quot; ]</span><br></pre></td></tr></table></figure>
+<p>这次我们再来尝试直接使用 docker run myip -i：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run myip</span><br></pre></td></tr></table></figure>
+<p>当前 IP：61.148.226.66 来自：北京市 联通</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ docker run myip -i</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Server: nginx/1.8.0</span><br><span class="line">Date: Tue, 22 Nov 2016 05:12:40 GMT</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">Vary: Accept-Encoding</span><br><span class="line">X-Powered-By: PHP/5.6.24-1~dotdeb+7.1</span><br><span class="line">X-Cache: MISS from cache-2</span><br><span class="line">X-Cache-Lookup: MISS from cache-2:80</span><br><span class="line">X-Cache: MISS from proxy-2_6</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Via: 1.1 cache-2:80, 1.1 proxy-2_6:8006</span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">当前 IP：61.148.226.66 来自：北京市 联通</span><br></pre></td></tr></table></figure>
+<p>可以看到，这次成功了。这是因为当存在<code>ENTRYPOINT</code>后，<code>CMD</code>的内容将会作为参数传给<code>ENTRYPOINT</code>，而这里<code>-i</code>就是新的<code>CMD</code>，因此会作为参数传给 curl，从而达到了我们预期的效果。</p>
+<p>场景二：应用运行前的准备工作<br>启动容器就是启动主进程，但有些时候，启动主进程前，需要一些准备工作。<br>比如 mysql 类的数据库，可能需要一些数据库配置、初始化的工作，这些工作要在最终的 mysql 服务器运行之前解决。</p>
+<p>此外，可能希望避免使用 root 用户去启动服务，从而提高安全性，而在启动服务前还需要以 root 身份执行一些必要的准备工作，最后切换到服务用户身份启动服务。或者除了服务外，其它命令依旧可以使用 root 身份执行，方便调试等。</p>
+<p>这些准备工作是和容器 CMD 无关的，无论 CMD 为什么，都需要事先进行一个预处理的工作。这种情况下，可以写一个脚本，然后放入 ENTRYPOINT 中去执行，而这个脚本会将接到的参数（也就是<code>&lt;CMD&gt;</code>）作为命令，在脚本最后执行。比如官方镜像 redis 中就是这么做的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.4</span><br><span class="line">...</span><br><span class="line">RUN addgroup -S redis &amp;&amp; adduser -S -G redis redis</span><br><span class="line">...</span><br><span class="line">ENTRYPOINT [<span class="string">&quot;docker-entrypoint.sh&quot;</span>]</span><br><span class="line"></span><br><span class="line">EXPOSE 6379</span><br><span class="line">CMD [ <span class="string">&quot;redis-server&quot;</span> ]</span><br></pre></td></tr></table></figure>
+<p>可以看到其中为了<code>redis</code>服务创建了<code>redis</code>用户，并在最后指定了<code>ENTRYPOINT</code>为<code>docker-entrypoint.sh</code>脚本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">...</span><br><span class="line"><span class="comment"># allow the container to be started with `--user`</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> = <span class="string">&#x27;redis-server&#x27;</span> -a <span class="string">&quot;<span class="subst">$(id -u)</span>&quot;</span> = <span class="string">&#x27;0&#x27;</span> ]; <span class="keyword">then</span></span><br><span class="line">    find . \! -user redis -<span class="built_in">exec</span> <span class="built_in">chown</span> redis <span class="string">&#x27;&#123;&#125;&#x27;</span> +</span><br><span class="line">    <span class="built_in">exec</span> gosu redis <span class="string">&quot;<span class="variable">$0</span>&quot;</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>exec “$@”<br>该脚本的内容就是根据 CMD 的内容来判断，如果是 redis-server 的话，则切换到 redis 用户身份启动服务器，否则依旧使用 root 身份执行。比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it redis <span class="built_in">id</span></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root)</span><br></pre></td></tr></table></figure>
+
+<h1 id="操作容器"><a href="#操作容器" class="headerlink" title="操作容器"></a>操作容器</h1><p>简单的说，容器是独立运行的一个或一组应用，以及它们的运行态环境。对应的，虚拟机可以理解为模拟运行的一整套操作系统（提供了运行态环境和其他系统环境）和跑在上面的应用。</p>
+<h2 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h2><p>查看正在运行的容器使用命令：<code>docker ps</code>。</p>
+<p>查看所有容器使用命令：<code>docker ps -a</code>。</p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>启动容器有两种方式，一种是基于镜像新建一个容器并启动，另外一个是将在终止状态（<code>exited</code>）的容器重新启动。</p>
+<p>因为 Docker 的容器实在太轻量级了，很多时候用户都是随时删除和新创建容器。</p>
+<h3 id="新建并启动"><a href="#新建并启动" class="headerlink" title="新建并启动"></a>新建并启动</h3><p>所需要的命令主要为<code>docker run</code>。</p>
+<p>参数说明：</p>
+<ul>
+<li><code>-i</code>：表示运行容器</li>
+<li><code>-t</code>：表示容器启动后会进入其命令行。加入这个参数后，容器创建就能登录进去。即分配一个伪终端。</li>
+<li><code>--name</code>:为创建的容器命名。</li>
+<li><code>-v</code>：表示目录映射关系（前者是宿主机目录，后者是映射到宿主机上的目录），可以使用多个<code>－v</code>做多个目录或文件映射。注意：最好做目录映射，在宿主机上做修改，然后共享到容器上。</li>
+<li><code>-d</code>：在<code>run</code>后面加上<code>-d</code>参数,则会创建一个守护式容器在后台运行（这样创建容器后不会自动登录容器，如果只加<code>-i -t</code>两个参数，创建后就会自动进去容器）。</li>
+<li><code>-p</code>：表示端口映射，前者是宿主机端口，后者是容器内的映射端口。可以使用多个<code>-p</code>做多个端口映射</li>
+</ul>
+<h3 id="交互式容器"><a href="#交互式容器" class="headerlink" title="交互式容器"></a>交互式容器</h3><p>以交互式方式创建并启动容器，启动完成后，直接进入当前容器。使用<code>exit</code>命令退出容器。需要注意的是以此种方式启动容器，如果退出容器，则容器会进入停止状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name=ubuntu ubuntu:18.04 /bin/bash</span><br><span class="line">root@af8bae53bdd3:/#</span><br></pre></td></tr></table></figure>
+<p>在交互模式下，用户可以通过所创建的终端来输入命令，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@af8bae53bdd3:/# pwd</span><br><span class="line">/</span><br><span class="line">root@af8bae53bdd3:/# ls</span><br><span class="line">bin boot dev etc home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var</span><br></pre></td></tr></table></figure>
+<p>当利用<code>docker run</code>来创建容器时，Docker 在后台运行的标准操作包括：</p>
+<ul>
+<li>检查本地是否存在指定的镜像，不存在就从仓库下载</li>
+<li>利用镜像创建并启动一个容器</li>
+<li>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层</li>
+<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</li>
+<li>从地址池配置一个<code>ip</code>地址给容器</li>
+<li>执行用户指定的应用程序</li>
+<li>执行完毕后容器被终止</li>
+</ul>
+<h3 id="守护式容器"><a href="#守护式容器" class="headerlink" title="守护式容器"></a>守护式容器</h3><p>创建一个守护式容器；如果对于一个需要长期运行的容器来说，我们可以创建一个守护式容器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 创建并启动守护式容器</span><br><span class="line">$ docker run -di --name=mycentos2 centos:7</span><br><span class="line"># 登录进入容器命令为：docker exec -it container_name (或者 container_id) /bin/bash（exit退出 时，容器不会停止）</span><br><span class="line">$ docker exec -it mycentos2 /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="启动已终止容器"><a href="#启动已终止容器" class="headerlink" title="启动已终止容器"></a>启动已终止容器</h3><p>可以利用<code>docker container start 容器名称或者ID</code>或<code>docker start 容器名称或者ID</code>命令，直接将一个已经终止（<code>exited</code>）的容器启动运行。</p>
+<p>容器的核心为所执行的应用程序，所需要的资源都是应用程序运行所必需的。除此之外，并没有其它的资源。可以在伪终端中利用<code>ps</code>或<code>top</code>来查看进程信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@ba267838cc1b:/# ps</span><br><span class="line">  PID TTY          TIME CMD</span><br><span class="line">    1 ?        00:00:00 bash</span><br><span class="line">   11 ?        00:00:00 ps</span><br></pre></td></tr></table></figure>
+<p>可见，容器中仅运行了指定的<code>bash</code>应用。这种特点使得 Docker 对资源的利用率极高。</p>
+<h2 id="终止"><a href="#终止" class="headerlink" title="终止"></a>终止</h2><p>可以使用<code>docker container stop 容器名称或者ID</code>或<code>docker stop 容器名称或者ID</code>来终止一个运行中的容器。</p>
+<p>此外，当 Docker 容器中指定的应用终结时，容器也自动终止。</p>
+<p>例如对于只启动了一个终端的容器，用户通过<code>exit</code>命令或<code>Ctrl+d</code>来退出终端时，所创建的容器立刻终止。</p>
+<p>终止状态的容器可以用<code>docker container ls -a</code>或<code>docker ps -a</code>命令看到。例如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker container <span class="built_in">ls</span> -a</span><br><span class="line">CONTAINER ID        IMAGE                    COMMAND                CREATED             STATUS                          PORTS               NAMES</span><br><span class="line">ba267838cc1b        ubuntu:18.04             <span class="string">&quot;/bin/bash&quot;</span>            30 minutes ago      Exited (0) About a minute ago                       trusting_newton</span><br></pre></td></tr></table></figure>
+<p>处于终止状态的容器，可以通过<code>docker container start</code>或<code>docker start</code>命令来重新启动。</p>
+<p>此外，<code>docker container restart</code>或<code>docker restart</code>命令会将一个运行态的容器终止，然后再重新启动它。</p>
+<h2 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h2><p>在使用<code>-d</code>参数时，容器启动后会进入后台。某些时候需要进入容器进行操作，使用<code>docker exec</code>命令。</p>
+<p><code>docker exec</code>后边可以跟多个参数，这里主要说明<code>-i -t</code>参数。</p>
+<ul>
+<li>只用<code>-i</code>参数时，由于没有分配伪终端，界面没有我们熟悉的 Linux 命令提示符，但命令执行结果仍然可以返回。</li>
+<li>当<code>-i -t</code>参数一起使用时，则可以看到我们熟悉的 Linux 命令提示符。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -di --name=ubuntu ubuntu:18.04</span><br><span class="line">69d137adef7a8a689cbcb059e94da5489d3cddd240ff675c640c8d96e84fe1f6</span><br><span class="line"></span><br><span class="line">$ docker container <span class="built_in">ls</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">69d137adef7a        ubuntu:latest       <span class="string">&quot;/bin/bash&quot;</span>         18 seconds ago      Up 17 seconds                           zealous_swirles</span><br><span class="line"></span><br><span class="line">$ docker <span class="built_in">exec</span> -i 69d1 /bin/bash</span><br><span class="line"><span class="built_in">ls</span></span><br><span class="line">bin</span><br><span class="line">boot</span><br><span class="line">dev</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">#登录进入容器命令为：docker exec -it container_name (或者 container_id) /bin/bash（exit退出时，容器不会停止）</span></span><br><span class="line">$ docker <span class="built_in">exec</span> -it 69d1 /bin/bash</span><br><span class="line">root@69d137adef7a:/<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><p>可以使用<code>docker container rm 容器名称（容器ID）</code>或<code>docker rm 容器名称（容器ID）</code>来删除一个处于终止状态的容器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker container rm trusting_newton</span><br><span class="line">trusting_newton</span><br></pre></td></tr></table></figure>
+<p>如果要删除一个运行中的容器，可以添加<code>-f</code>参数。Docker 会发送<code>SIGKILL</code>信号给容器。</p>
+<h2 id="清理所有处于终止状态的容器"><a href="#清理所有处于终止状态的容器" class="headerlink" title="清理所有处于终止状态的容器"></a>清理所有处于终止状态的容器</h2><p>用<code>docker container ls -a</code>命令可以查看所有已经创建的包括终止状态的容器，如果数量太多要一个个删除可能会很麻烦，用下面的命令可以删除所有处于终止状态的容器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker container prune</span><br><span class="line">// 或</span><br><span class="line">$ docker rm `docker ps -a -q`</span><br></pre></td></tr></table></figure>
+<h1 id="数据管理"><a href="#数据管理" class="headerlink" title="数据管理"></a>数据管理</h1><p>在容器中管理数据主要有两种方式：</p>
+<ul>
+<li>数据卷（<code>Volumes</code>）</li>
+<li>挂载主机目录 (<code>Bind mounts</code>)</li>
+</ul>
+<h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><p>数据卷是一个可供一个或多个容器使用的特殊目录，它绕过 UnionFS，可以提供很多有用的特性：</p>
+<ul>
+<li>数据卷可以在容器之间共享和重用</li>
+<li>对数据卷的修改会立马生效</li>
+<li>对数据卷的更新，不会影响镜像</li>
+<li>数据卷默认会一直存在，即使容器被删除</li>
+</ul>
+<p>注意：数据卷的使用，类似于 Linux 下对目录或文件进行<code>mount</code>，镜像中的被指定为挂载点的目录中的文件会复制到数据卷中（仅数据卷为空时会复制）。</p>
+<h3 id="创建一个数据卷"><a href="#创建一个数据卷" class="headerlink" title="创建一个数据卷"></a>创建一个数据卷</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume create my-vol</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有的数据卷</span></span><br><span class="line">$ docker volume <span class="built_in">ls</span></span><br><span class="line">​</span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line"><span class="built_in">local</span>               my-vol</span><br></pre></td></tr></table></figure>
+<p>在主机里使用以下命令可以查看指定数据卷的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume inspect my-vol</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Labels&quot;</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">&quot;Mountpoint&quot;</span>: <span class="string">&quot;/var/lib/docker/volumes/my-vol/_data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;my-vol&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Options&quot;</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">&quot;Scope&quot;</span>: <span class="string">&quot;local&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="启动一个挂载数据卷的容器"><a href="#启动一个挂载数据卷的容器" class="headerlink" title="启动一个挂载数据卷的容器"></a>启动一个挂载数据卷的容器</h3><p>在用<code>docker run</code>命令的时候，使用<code>--mount</code>标记来将数据卷挂载到容器里。在一次<code>docker run</code>中可以挂载多个数据卷。</p>
+<p>下面创建一个名为<code>web</code>的容器，并加载一个数据卷到容器的<code>/usr/share/nginx/html</code>目录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -P --name web \</span><br><span class="line">    <span class="comment"># -v my-vol:/usr/share/nginx/html \</span></span><br><span class="line">    --mount <span class="built_in">source</span>=my-vol,target=/usr/share/nginx/html \</span><br><span class="line">    nginx:alpine</span><br></pre></td></tr></table></figure>
+<h3 id="查看数据卷的具体信息"><a href="#查看数据卷的具体信息" class="headerlink" title="查看数据卷的具体信息"></a>查看数据卷的具体信息</h3><p>在主机里使用以下命令可以查看 web 容器的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect web</span><br></pre></td></tr></table></figure>
+<p>数据卷信息在<code>&quot;Mounts&quot;</code>属性下面</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;Mounts&quot;</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;Type&quot;</span>: <span class="string">&quot;volume&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;my-vol&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Source&quot;</span>: <span class="string">&quot;/var/lib/docker/volumes/my-vol/_data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Destination&quot;</span>: <span class="string">&quot;/usr/share/nginx/html&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Mode&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="string">&quot;RW&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;Propagation&quot;</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<h3 id="删除数据卷"><a href="#删除数据卷" class="headerlink" title="删除数据卷"></a>删除数据卷</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume rm my-vol</span><br></pre></td></tr></table></figure>
+<p>数据卷是被设计用来持久化数据的，它的生命周期独立于容器，Docker 不会在容器被删除后自动删除数据卷，并且也不存在垃圾回收这样的机制来处理没有任何容器引用的数据卷。如果需要在删除容器的同时移除数据卷。可以在删除容器的时候使用<code>docker rm -v</code>这个命令。</p>
+<p>无主的数据卷可能会占据很多空间，要清理请使用以下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume prune</span><br></pre></td></tr></table></figure>
+<h2 id="文件拷贝"><a href="#文件拷贝" class="headerlink" title="文件拷贝"></a>文件拷贝</h2><p>将linux宿主机中的文件拷贝到容器内可以使用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># docker cp 需要拷贝的文件或目录 容器名称:容器目录</span><br><span class="line"></span><br><span class="line"># 创建一个文件abc.txt</span><br><span class="line">$ touch abc.txt</span><br><span class="line"># 复制abc.txt到mycentos2的容器的 / 目录下</span><br><span class="line">$ docker cp abc.txt mycentos2:/</span><br><span class="line"># 进入mycentos2容器</span><br><span class="line">$ docker exec -it mycentos2 /bin/bash</span><br><span class="line"># 查看容器 / 目录下文件</span><br><span class="line">$ ll</span><br></pre></td></tr></table></figure>
+<p>将文件从容器内拷贝出来到linux宿主机使用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># docker cp 容器名称:容器目录 需要拷贝的文件或目录</span><br><span class="line">#进入容器后创建文件cba.txt</span><br><span class="line">touch cba.txt</span><br><span class="line"># 退出容器 exit</span><br><span class="line"># 在Linux宿主机器执行复制；将容器mycentos2的/cba.txt文件复制到 宿主机器的/root目录下</span><br><span class="line">docker cp mycentos2:/cba.txt /root</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：容器在停止状态下也可以完成文件的拷贝</p>
+</blockquote>
+<h2 id="挂载主机目录"><a href="#挂载主机目录" class="headerlink" title="挂载主机目录"></a>挂载主机目录</h2><p>可以在创建容器的时候，将宿主机的目录与容器内的目录进行映射，这样我们就可以通过修改宿主机某个目录的文件从而去影响容器。</p>
+<p>创建容器时添加<code>-v</code>参数，后边为宿主机目录:容器目录，例如：<code>docker run -di -v /usr/local/test:/usr/local/test --name=mycentos3 centos:7</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建linux宿主机器要挂载的目录</span></span><br><span class="line"><span class="built_in">mkdir</span> /usr/local/test</span><br><span class="line"><span class="comment"># 创建并启动容器mycentos3,并挂载linux中的/usr/local/test目录到容器的/usr/local/test；</span></span><br><span class="line"><span class="comment"># 也就是在 linux中的/usr/local/test中操作相当于对容器相应目录操作</span></span><br><span class="line">docker run -di -v /usr/local/test:/usr/local/test --name=mycentos3 centos:7</span><br><span class="line"><span class="comment"># 在linux下创建文件</span></span><br><span class="line"><span class="built_in">touch</span> /usr/local/test/def.txt</span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it mycentos3 /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在容器中查看目录中是否有对应文件def.txt</span></span><br><span class="line">ll /usr/local/test</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：如果你共享的是多级的目录，可能会出现权限不足的提示。 这是因为 CentOS7 中的安全模块 selinux 把权限禁掉了，需要添加参数<code>--privileged=true</code>来解决挂载的目录没有权限的问题。</p>
+</blockquote>
+<h1 id="使用网络"><a href="#使用网络" class="headerlink" title="使用网络"></a>使用网络</h1><p>Docker 允许通过外部访问容器或容器互联的方式来提供网络服务。</p>
+<h2 id="外部访问容器"><a href="#外部访问容器" class="headerlink" title="外部访问容器"></a>外部访问容器</h2><p>容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过<code>-P</code>或<code>-p</code>参数来指定端口映射。</p>
+<p>当使用<code>-P</code>标记时，Docker 会随机映射一个端口到内部容器开放的网络端口。</p>
+<p>使用<code>docker container ls</code>可以看到，本地主机的 32768 被映射到了容器的 80 端口。此时访问本机的 32768 端口即可访问容器内 NGINX 默认页面。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -P nginx:alpine</span><br><span class="line"></span><br><span class="line">$ docker container <span class="built_in">ls</span> -l</span><br><span class="line">CONTAINER ID    IMAGE          COMMAND                  CREATED         STATUS       PORTS         NAMES</span><br><span class="line">fae320d08268    nginx:alpine   <span class="string">&quot;/docker-entrypoint.…&quot;</span>   24 seconds ago   </span><br></pre></td></tr></table></figure>
+<p><code>-p</code>则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有<code>ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort</code>。</p>
+<h3 id="映射所有接口地址"><a href="#映射所有接口地址" class="headerlink" title="映射所有接口地址"></a>映射所有接口地址</h3><p>使用<code>hostPort:containerPort</code>格式本地的 80 端口映射到容器的 80 端口，可以执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 80:80 nginx:alpine</span><br></pre></td></tr></table></figure>
+<p>此时默认会绑定本地所有接口上的所有地址。</p>
+<h3 id="映射到指定地址的指定端口"><a href="#映射到指定地址的指定端口" class="headerlink" title="映射到指定地址的指定端口"></a>映射到指定地址的指定端口</h3><p>可以使用<code>ip:hostPort:containerPort</code>格式指定映射使用一个特定地址，比如<code>localhost</code>地址<code>127.0.0.1</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 127.0.0.1:80:80 nginx:alpine</span><br></pre></td></tr></table></figure>
+<h3 id="映射到指定地址的任意端口"><a href="#映射到指定地址的任意端口" class="headerlink" title="映射到指定地址的任意端口"></a>映射到指定地址的任意端口</h3><p>使用<code>ip::containerPort</code>绑定<code>localhost</code>的任意端口到容器的 80 端口，本地主机会自动分配一个端口。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 127.0.0.1::80 nginx:alpine</span><br></pre></td></tr></table></figure>
+<p>还可以使用<code>udp</code>标记来指定<code>udp</code>端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 127.0.0.1:80:80/udp nginx:alpine</span><br></pre></td></tr></table></figure>
+<h3 id="查看映射端口配置"><a href="#查看映射端口配置" class="headerlink" title="查看映射端口配置"></a>查看映射端口配置</h3><p>使用<code>docker port</code>来查看当前映射的端口配置，也可以查看到绑定的地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker port fa 80</span><br><span class="line">0.0.0.0:32768</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>容器有自己的内部网络和 ip 地址（使用 docker inspect 查看，Docker 还可以有一个可变的网络配置。）</li>
+<li><code>-p</code>标记可以多次使用来绑定多个端口</li>
+</ul>
+<p>例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 80:80  -p 443:443 nginx:alpine</span><br></pre></td></tr></table></figure>
+<h2 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h2> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/01/18/Docker/Docker%E5%85%A5%E9%97%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/" rel="tag">Docker</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/01/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP%E8%AF%A6%E8%A7%A3/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            ICMP详解
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/01/18/Linux/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Linux文本处理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

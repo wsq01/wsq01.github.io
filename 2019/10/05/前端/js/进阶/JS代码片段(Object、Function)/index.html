@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS代码片段(Object、Function) |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/进阶/JS代码片段(Object、Function)"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS代码片段(Object、Function)
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/10/05/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Object%E3%80%81Function)/" class="article-date">
+  <time datetime="2019-10-05T11:21:45.000Z" itemprop="datePublished">2019-10-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h1><h2 id="deepClone"><a href="#deepClone" class="headerlink" title="deepClone"></a>deepClone</h2><p>创建对象的深度克隆。<br>使用递归。使用<code>object.assign()</code>和空对象创建原始对象的浅克隆。使用<code>object.keys()</code>和<code>array.prototype.foreach()</code>确定需要深度克隆哪些键值对。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">deepClone</span> = obj =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> clone = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj);</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(clone).<span class="title function_">forEach</span>(</span><br><span class="line">    <span class="function"><span class="params">key</span> =&gt;</span> (clone[key] = <span class="keyword">typeof</span> obj[key] === <span class="string">&#x27;object&#x27;</span> ? <span class="title function_">deepClone</span>(obj[key]) : obj[key])</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj) &amp;&amp; obj.<span class="property">length</span></span><br><span class="line">    ? (clone.<span class="property">length</span> = obj.<span class="property">length</span>) &amp;&amp; <span class="title class_">Array</span>.<span class="title function_">from</span>(clone)</span><br><span class="line">    : <span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj)</span><br><span class="line">      ? <span class="title class_">Array</span>.<span class="title function_">from</span>(obj)</span><br><span class="line">      : clone;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">foo</span>: <span class="string">&#x27;bar&#x27;</span>, <span class="attr">obj</span>: &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">const</span> b = <span class="title function_">deepClone</span>(a); <span class="comment">// a !== b, a.obj !== b.obj</span></span><br></pre></td></tr></table></figure>
+<h2 id="equals"><a href="#equals" class="headerlink" title="equals"></a>equals</h2><p>对两个值进行深入比较，以确定它们是否等效。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">equals</span> = (<span class="params">a, b</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (a === b) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">if</span> (a <span class="keyword">instanceof</span> <span class="title class_">Date</span> &amp;&amp; b <span class="keyword">instanceof</span> <span class="title class_">Date</span>) <span class="keyword">return</span> a.<span class="title function_">getTime</span>() === b.<span class="title function_">getTime</span>();</span><br><span class="line">  <span class="keyword">if</span> (!a || !b || (<span class="keyword">typeof</span> a !== <span class="string">&#x27;object&#x27;</span> &amp;&amp; <span class="keyword">typeof</span> b !== <span class="string">&#x27;object&#x27;</span>)) <span class="keyword">return</span> a === b;</span><br><span class="line">  <span class="keyword">if</span> (a === <span class="literal">null</span> || a === <span class="literal">undefined</span> || b === <span class="literal">null</span> || b === <span class="literal">undefined</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (a.<span class="property"><span class="keyword">prototype</span></span> !== b.<span class="property"><span class="keyword">prototype</span></span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">let</span> keys = <span class="title class_">Object</span>.<span class="title function_">keys</span>(a);</span><br><span class="line">  <span class="keyword">if</span> (keys.<span class="property">length</span> !== <span class="title class_">Object</span>.<span class="title function_">keys</span>(b).<span class="property">length</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> keys.<span class="title function_">every</span>(<span class="function"><span class="params">k</span> =&gt;</span> <span class="title function_">equals</span>(a[k], b[k]));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">equals</span>(&#123; <span class="attr">a</span>: [<span class="number">2</span>, &#123; <span class="attr">e</span>: <span class="number">3</span> &#125;], <span class="attr">b</span>: [<span class="number">4</span>], <span class="attr">c</span>: <span class="string">&#x27;foo&#x27;</span> &#125;, &#123; <span class="attr">a</span>: [<span class="number">2</span>, &#123; <span class="attr">e</span>: <span class="number">3</span> &#125;], <span class="attr">b</span>: [<span class="number">4</span>], <span class="attr">c</span>: <span class="string">&#x27;foo&#x27;</span> &#125;); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="flattenObject"><a href="#flattenObject" class="headerlink" title="flattenObject"></a>flattenObject</h2><p>扁平化对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">flattenObject</span> = (<span class="params">obj, prefix = <span class="string">&#x27;&#x27;</span></span>) =&gt;</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, k</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> pre = prefix.<span class="property">length</span> ? prefix + <span class="string">&#x27;.&#x27;</span> : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj[k] === <span class="string">&#x27;object&#x27;</span>) <span class="title class_">Object</span>.<span class="title function_">assign</span>(acc, <span class="title function_">flattenObject</span>(obj[k], pre + k));</span><br><span class="line">    <span class="keyword">else</span> acc[pre + k] = obj[k];</span><br><span class="line">    <span class="keyword">return</span> acc;</span><br><span class="line">  &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">flattenObject</span>(&#123; <span class="attr">a</span>: &#123; <span class="attr">b</span>: &#123; <span class="attr">c</span>: <span class="number">1</span> &#125; &#125;, <span class="attr">d</span>: <span class="number">1</span> &#125;); <span class="comment">// &#123; &#x27;a.b.c&#x27;: 1, d: 1 &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="objectToQueryString"><a href="#objectToQueryString" class="headerlink" title="objectToQueryString"></a>objectToQueryString</h2><p>将对象转换为查询字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">objectToQueryString</span> = queryParameters =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> queryParameters</span><br><span class="line">    ? <span class="title class_">Object</span>.<span class="title function_">entries</span>(queryParameters).<span class="title function_">reduce</span>(<span class="function">(<span class="params">queryString, [key, val], index</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> symbol = queryString.<span class="property">length</span> === <span class="number">0</span> ? <span class="string">&#x27;?&#x27;</span> : <span class="string">&#x27;&amp;&#x27;</span>;</span><br><span class="line">      queryString += <span class="keyword">typeof</span> val === <span class="string">&#x27;string&#x27;</span> ? <span class="string">`<span class="subst">$&#123;symbol&#125;</span><span class="subst">$&#123;key&#125;</span>=<span class="subst">$&#123;val&#125;</span>`</span> : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">      <span class="keyword">return</span> queryString;</span><br><span class="line">    &#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">objectToQueryString</span>(&#123; <span class="attr">page</span>: <span class="string">&#x27;1&#x27;</span>, <span class="attr">size</span>: <span class="string">&#x27;2kg&#x27;</span>, <span class="attr">key</span>: <span class="literal">undefined</span> &#125;); <span class="comment">// &#x27;?page=1&amp;size=2kg&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="pick"><a href="#pick" class="headerlink" title="pick"></a>pick</h2><p>从对象中选取与给定键对应的键值对。<br>使用<code>array.prototype.reduce()</code>将筛选&#x2F;选取的键转换回具有相应键值对的对象（如果该键存在于对象中）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">pick</span> = (<span class="params">obj, arr</span>) =&gt;</span><br><span class="line">  arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, curr</span>) =&gt;</span> (curr <span class="keyword">in</span> obj &amp;&amp; (acc[curr] = obj[curr]), acc), &#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">pick</span>(&#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="string">&#x27;2&#x27;</span>, <span class="attr">c</span>: <span class="number">3</span> &#125;, [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;c&#x27;</span>]); <span class="comment">// &#123; &#x27;a&#x27;: 1, &#x27;c&#x27;: 3 &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="renameKeys"><a href="#renameKeys" class="headerlink" title="renameKeys"></a>renameKeys</h2><p>用提供的值替换多个对象键的名称。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">renameKeys</span> = (<span class="params">keysMap, obj</span>) =&gt;</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">reduce</span>(</span><br><span class="line">    <span class="function">(<span class="params">acc, key</span>) =&gt;</span> (&#123;</span><br><span class="line">      ...acc,</span><br><span class="line">      ...&#123; [keysMap[key] || key]: obj[key] &#125;</span><br><span class="line">    &#125;),</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">name</span>: <span class="string">&#x27;Bobo&#x27;</span>, <span class="attr">job</span>: <span class="string">&#x27;Front-End Master&#x27;</span>, <span class="attr">shoeSize</span>: <span class="number">100</span> &#125;;</span><br><span class="line"><span class="title function_">renameKeys</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;firstName&#x27;</span>, <span class="attr">job</span>: <span class="string">&#x27;passion&#x27;</span> &#125;, obj); <span class="comment">// &#123; firstName: &#x27;Bobo&#x27;, passion: &#x27;Front-End Master&#x27;, shoeSize: 100 &#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="shallowClone"><a href="#shallowClone" class="headerlink" title="shallowClone"></a>shallowClone</h2><p>创建一个对象的浅拷贝。<br>使用<code>Object.assign()</code>和一个空对象(<code>&#123;&#125;</code>)来创建原始对象的浅拷贝。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">shallowClone</span> = obj =&gt; <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, obj);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">x</span>: <span class="literal">true</span>, <span class="attr">y</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> b = <span class="title function_">shallowClone</span>(a); <span class="comment">// a !== b</span></span><br></pre></td></tr></table></figure>
+<h2 id="size"><a href="#size" class="headerlink" title="size"></a>size</h2><p>获取数组，对象或字符串的大小。<br>获取<code>val</code>（<code>array</code>，<code>object</code>或<code>string</code>）的类型。 对于数组使用<code>length</code>属性。 对于对象，使用<code>length</code>或<code>size</code>如果可用的话，或者对象的键的数量。对于字符串，使用根据<code>val</code>创建的<code>Blob</code>对象的<code>size</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">size</span> = val =&gt;</span><br><span class="line">  <span class="title class_">Array</span>.<span class="title function_">isArray</span>(val)</span><br><span class="line">    ? val.<span class="property">length</span></span><br><span class="line">    : val &amp;&amp; <span class="keyword">typeof</span> val === <span class="string">&#x27;object&#x27;</span></span><br><span class="line">      ? val.<span class="property">size</span> || val.<span class="property">length</span> || <span class="title class_">Object</span>.<span class="title function_">keys</span>(val).<span class="property">length</span></span><br><span class="line">      : <span class="keyword">typeof</span> val === <span class="string">&#x27;string&#x27;</span></span><br><span class="line">        ? <span class="keyword">new</span> <span class="title class_">Blob</span>([val]).<span class="property">size</span></span><br><span class="line">        : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">size</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">// 5</span></span><br><span class="line"><span class="title function_">size</span>(<span class="string">&#x27;size&#x27;</span>); <span class="comment">// 4</span></span><br><span class="line"><span class="title function_">size</span>(&#123; <span class="attr">one</span>: <span class="number">1</span>, <span class="attr">two</span>: <span class="number">2</span>, <span class="attr">three</span>: <span class="number">3</span> &#125;); <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<h2 id="unflattenObject"><a href="#unflattenObject" class="headerlink" title="unflattenObject"></a>unflattenObject</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">unflattenObject</span> = obj =&gt;</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, k</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (k.<span class="title function_">indexOf</span>(<span class="string">&#x27;.&#x27;</span>) !== -<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> keys = k.<span class="title function_">split</span>(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">      <span class="title class_">Object</span>.<span class="title function_">assign</span>(</span><br><span class="line">        acc,</span><br><span class="line">        <span class="title class_">JSON</span>.<span class="title function_">parse</span>(</span><br><span class="line">          <span class="string">&#x27;&#123;&#x27;</span> +</span><br><span class="line">            keys.<span class="title function_">map</span>(<span class="function">(<span class="params">v, i</span>) =&gt;</span> (i !== keys.<span class="property">length</span> - <span class="number">1</span> ? <span class="string">`&quot;<span class="subst">$&#123;v&#125;</span>&quot;:&#123;`</span> : <span class="string">`&quot;<span class="subst">$&#123;v&#125;</span>&quot;:`</span>)).<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>) +</span><br><span class="line">            obj[k] +</span><br><span class="line">            <span class="string">&#x27;&#125;&#x27;</span>.<span class="title function_">repeat</span>(keys.<span class="property">length</span>)</span><br><span class="line">        )</span><br><span class="line">      );</span><br><span class="line">    &#125; <span class="keyword">else</span> acc[k] = obj[k];</span><br><span class="line">    <span class="keyword">return</span> acc;</span><br><span class="line">  &#125;, &#123;&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">unflattenObject</span>(&#123; <span class="string">&#x27;a.b.c&#x27;</span>: <span class="number">1</span>, <span class="attr">d</span>: <span class="number">1</span> &#125;); <span class="comment">// &#123; a: &#123; b: &#123; c: 1 &#125; &#125;, d: 1 &#125;</span></span><br></pre></td></tr></table></figure>
+<h1 id="Function"><a href="#Function" class="headerlink" title="Function"></a>Function</h1><h2 id="curry"><a href="#curry" class="headerlink" title="curry"></a>curry</h2><p>柯里化一个函数。<br>使用递归。 如果提供的参数(<code>args</code>)数量足够，调用传递函数<code>fn</code>。否则返回一个柯里化后的函数 fn ，期望剩下的参数。如果你想柯里化一个接受可变参数数量的函数(可变参数数量的函数，例如 Math.min() )，你可以选择将参数个数传递给第二个参数 arity。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">curry</span> = (<span class="params">fn, arity = fn.length, ...args</span>) =&gt;</span><br><span class="line">  arity &lt;= args.<span class="property">length</span> ? <span class="title function_">fn</span>(...args) : curry.<span class="title function_">bind</span>(<span class="literal">null</span>, fn, arity, ...args);</span><br><span class="line"></span><br><span class="line"><span class="title function_">curry</span>(<span class="title class_">Math</span>.<span class="property">pow</span>)(<span class="number">2</span>)(<span class="number">10</span>); <span class="comment">// 1024</span></span><br><span class="line"><span class="title function_">curry</span>(<span class="title class_">Math</span>.<span class="property">min</span>, <span class="number">3</span>)(<span class="number">10</span>)(<span class="number">50</span>)(<span class="number">2</span>); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<h2 id="once"><a href="#once" class="headerlink" title="once"></a>once</h2><p>确保函数只被调用一次。<br>使用一个闭包，使用一个成为<code>called</code>的标志，并在第一次调用该函数时将其设置为<code>rue</code>，以防止它被再次调用。 为了允许函数改变它的<code>this</code>上下文（比如在一个事件监听器中），必须使用<code>function</code>关键字，并且提供的函数必须应用上下文。 允许使用<code>rest</code>（剩余）&#x2F;<code>spread</code>（展开） (<code>...</code>) 运算符为函数提供任意数量的参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">once</span> = fn =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> called = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">...args</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (called) <span class="keyword">return</span>;</span><br><span class="line">    called = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> startApp = <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>, event); <span class="comment">// document.body, MouseEvent</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="title function_">once</span>(startApp));</span><br><span class="line"><span class="comment">// only runs `startApp` once upon click</span></span><br></pre></td></tr></table></figure>
+<h2 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h2><p>延迟异步函数的执行。<br>延迟执行<code>async</code>函数的一部分，通过把它放到<code>sleep</code>状态，返回一个<code>Promise</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">sleep</span> = ms =&gt; <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> <span class="built_in">setTimeout</span>(resolve, ms));</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">sleepyWork</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;I&#x27;m going to sleep for 1 second.&quot;</span>);</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">sleep</span>(<span class="number">1000</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;I woke up after 1 second.&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="throttle"><a href="#throttle" class="headerlink" title="throttle"></a>throttle</h2><p>节流。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">throttle</span> = (<span class="params">fn, wait</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> inThrottle, lastFn, lastTime;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> context = <span class="variable language_">this</span>,</span><br><span class="line">      args = <span class="variable language_">arguments</span>;</span><br><span class="line">    <span class="keyword">if</span> (!inThrottle) &#123;</span><br><span class="line">      fn.<span class="title function_">apply</span>(context, args);</span><br><span class="line">      lastTime = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line">      inThrottle = <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">clearTimeout</span>(lastFn);</span><br><span class="line">      lastFn = <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title class_">Date</span>.<span class="title function_">now</span>() - lastTime &gt;= wait) &#123;</span><br><span class="line">          fn.<span class="title function_">apply</span>(context, args);</span><br><span class="line">          lastTime = <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, <span class="title class_">Math</span>.<span class="title function_">max</span>(wait - (<span class="title class_">Date</span>.<span class="title function_">now</span>() - lastTime), <span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(</span><br><span class="line">  <span class="string">&#x27;resize&#x27;</span>,</span><br><span class="line">  <span class="title function_">throttle</span>(<span class="keyword">function</span>(<span class="params">evt</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">innerWidth</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">innerHeight</span>);</span><br><span class="line">  &#125;, <span class="number">250</span>)</span><br><span class="line">); <span class="comment">// Will log the window dimensions at most every 250ms</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/10/05/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Object%E3%80%81Function)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/10/06/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Type)/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS代码片段(Type)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/10/02/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Math%E3%80%81Date)/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS代码片段(Math、Date)</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

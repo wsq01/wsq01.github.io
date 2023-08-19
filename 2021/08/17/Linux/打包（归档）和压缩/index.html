@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Linux打包（归档）和压缩 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Linux/打包（归档）和压缩"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Linux打包（归档）和压缩
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/08/17/Linux/%E6%89%93%E5%8C%85%EF%BC%88%E5%BD%92%E6%A1%A3%EF%BC%89%E5%92%8C%E5%8E%8B%E7%BC%A9/" class="article-date">
+  <time datetime="2021-08-17T09:38:41.000Z" itemprop="datePublished">2021-08-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>归档，也称为打包，指的是一个文件或目录的集合，而这个集合被存储在一个文件中。归档文件没有经过压缩，因此，它占用的空间是其中所有文件和目录的总和。</p>
+<p>和归档文件类似，压缩文件也是一个文件和目录的集合，且这个集合也被存储在一个文件中，但它们的不同之处在于，压缩文件采用了不同的存储方式，使其所占用的磁盘空间比集合中所有文件大小的总和要小。</p>
+<p>压缩是指利用算法将文件进行处理，已达到保留最大文件信息，而让文件体积变小的目的。其基本原理为，通过查找文件内的重复字节，建立一个相同字节的词典文件，并用一个代码表示。比如，在压缩文件中，有不止一处出现了 “张三”，那么，在压缩文件时，这个词就会用一个代码表示并写入词典文件，这样就可以实现缩小文件体积的目的。</p>
+<p>由于计算机处理的信息是以二进制的形式表示的，因此，压缩软件就是把二进制信息中相同的字符串以特殊字符标记，只要通过合理的数学计算，文件的体积就能够被大大压缩。把一个或者多个文件用压缩软件进行压缩，形成一个文件压缩包，既可以节省存储空间，有方便在网络上传送。</p>
+<p>对文件进行压缩，很可能损坏文件中的内容，因此，压缩又可以分为有损压缩和无损压缩。无损压缩指的是压缩数据必须准确无误；有损压缩指的是即便丢失个别的数据，对文件也不会造成太大的影响。有损压缩广泛应用于动画、声音和图像文件中。</p>
+<p>采用压缩工具对文件进行压缩，生成的文件称为压缩包，该文件的体积通常只有原文件的一半甚至更小。压缩包中的数据无法直接使用，使用前需要利用压缩工具将文件数据还原，此过程又称解压缩。</p>
+<p>Linux 下，常用归档命令有 2 个，分别是<code>tar</code>和<code>dd</code>；常用的压缩命令有很多，比如<code>gzip、zip、bzip2</code>等。<code>tar</code>命令也可以作为压缩命令，也很常用。</p>
+<h1 id="tar打包命令"><a href="#tar打包命令" class="headerlink" title="tar打包命令"></a>tar打包命令</h1><p>Linux 系统中，最常用的归档（打包）命令就是<code>tar</code>，该命令可以将许多文件一起保存到一个单独的磁盘中进行归档。不仅如此，该命令还可以从归档文件中还原所需文件，也就是打包的反过程，称为解打包。</p>
+<p>使用<code>tar</code>命令归档的包通常称为<code>tar</code>包（<code>tar</code>包文件都是以<code>.tar</code>结尾的）。</p>
+<h2 id="tar命令做打包操作"><a href="#tar命令做打包操作" class="headerlink" title="tar命令做打包操作"></a>tar命令做打包操作</h2><p>当<code>tar</code>命令用于打包操作时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#tar [选项] 源文件或目录</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-c</td>
+<td align="center">将多个文件或目录进行打包。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">包名	指定包的文件名。包的扩展名是用来给管理员识别格式的，所以一定要正确指定扩展名；</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示打包文件过程</td>
+</tr>
+</tbody></table>
+<p>需要注意的是，在使用<code>tar</code>命令指定选项时可以不在选项前面输入<code>-</code>。例如，使用<code>cvf</code>选项和<code>-cvf</code>起到的作用一样。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="1-打包文件和目录"><a href="#1-打包文件和目录" class="headerlink" title="1.打包文件和目录"></a>1.打包文件和目录</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -cvf anaconda-ks.cfg.tar anaconda-ks.cfg</span><br><span class="line">#把anacondehks.cfg打包为 anacondehks.cfg.tar文件</span><br></pre></td></tr></table></figure>
+<p>选项<code>-cvf</code>一般是习惯用法，记住打包时需要指定打包之后的文件名，而且要用<code>.tar</code>作为扩展名。打包目录也是如此：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ll -d test/</span><br><span class="line">drwxr-xr-x 2 root root 4096 6月 17 21:09 test/</span><br><span class="line">#test是我们之前的测试目录</span><br><span class="line">[root@localhost ~]# tar -cvf test.tar test/</span><br><span class="line">test/</span><br><span class="line">test/test3</span><br><span class="line">test/test2</span><br><span class="line">test/test1</span><br><span class="line">#把目录打包为test.tar文件</span><br></pre></td></tr></table></figure>
+<p><code>tar</code>命令也可以打包多个文件或目录，只要用空格分开即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -cvf ana.tar anaconda-ks.cfg /tmp/</span><br><span class="line">#把anaconda-ks.cfg文件和/tmp目录打包成ana.tar文件包</span><br></pre></td></tr></table></figure>
+<h4 id="2-打包并压缩目录"><a href="#2-打包并压缩目录" class="headerlink" title="2.打包并压缩目录"></a>2.打包并压缩目录</h4><p>首先声明一点，压缩命令不能直接压缩目录，必须先用<code>tar</code>命令将目录打包，然后才能用<code>gzip</code>命令或<code>bzip2</code>命令对打包文件进行压缩。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#ll -d test test.tar</span><br><span class="line">drwxr-xr-x 2 root root 4096 6月 17 21:09 test</span><br><span class="line">-rw-r--r-- 1 root root 10240 6月 18 01:06 test.tar</span><br><span class="line">#我们之前已经把test目录打包成test.tar文件</span><br><span class="line">[root@localhost ~]# gzip test.tar</span><br><span class="line">[root@localhost ~]# ll test.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 176 6月 18 01:06 test.tar.gz</span><br><span class="line">#gzip命令会把test.tar压缩成test.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="tar命令做解打包操作"><a href="#tar命令做解打包操作" class="headerlink" title="tar命令做解打包操作"></a>tar命令做解打包操作</h2><p>当<code>tar</code>命令用于对<code>tar</code>包做解打包操作时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#tar [选项] 压缩包</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-x</td>
+<td align="center">对 tar 包做解打包操作。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">指定要解压的 tar 包的包名。</td>
+</tr>
+<tr>
+<td align="center">-t</td>
+<td align="center">只查看 tar 包中有哪些文件或目录，不对 tar 包做解打包操作。</td>
+</tr>
+<tr>
+<td align="center">-C</td>
+<td align="center">目录	指定解打包位置。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示解打包的具体过程。</td>
+</tr>
+</tbody></table>
+<p>其实解打包和打包相比，只是把打包选项<code>-cvf</code>更换为<code>-xvf</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -xvf anaconda-ks.cfg. tar</span><br><span class="line">#解打包到当前目录下</span><br></pre></td></tr></table></figure>
+<p>如果使用<code>-xvf</code>选项，则会把包中的文件解压到当前目录下。如果想要指定解压位置，则需要使用<code>-C</code>(大写)选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -xvf test.tar -C /tmp</span><br><span class="line">#把文件包test.tar解打包到/tmp/目录下</span><br></pre></td></tr></table></figure>
+<p>如果只想查看文件包中有哪些文件，则可以把解打包选项 “-x” 更换为测试选项 “-t”。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -tvf test.tar</span><br><span class="line">drwxr-xr-x root/root 0 2016-06-17 21:09 test/</span><br><span class="line">-rw-r-r- root/root 0 2016-06-17 17:51 test/test3</span><br><span class="line">-rw-r-r- root/root 0 2016-06-17 17:51 test/test2</span><br><span class="line">-rw-r-r- root/root 0 2016-06-17 17:51 test/test1</span><br><span class="line">#会用长格式显示test.tar文件包中文件的详细信息</span><br></pre></td></tr></table></figure>
+<h2 id="tar命令做打包压缩（解压缩解打包）操作"><a href="#tar命令做打包压缩（解压缩解打包）操作" class="headerlink" title="tar命令做打包压缩（解压缩解打包）操作"></a>tar命令做打包压缩（解压缩解打包）操作</h2><p><code>tar</code>命令是可以同时打包压缩的。</p>
+<p>当<code>tar</code>命令同时做打包压缩的操作时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#tar [选项] 压缩包 源文件或目录</span><br></pre></td></tr></table></figure>
+<p>常用的选项有以下 2 个，分别是：</p>
+<ul>
+<li><code>-z</code>：压缩和解压缩<code>.tar.gz</code>格式；</li>
+<li><code>-j</code>：压缩和解压缩<code>.tar.bz2</code>格式。</li>
+</ul>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><h4 id="1-压缩与解压缩”-tar-gz”格式"><a href="#1-压缩与解压缩”-tar-gz”格式" class="headerlink" title="1.压缩与解压缩”.tar.gz”格式"></a>1.压缩与解压缩”.tar.gz”格式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -zcvf tmp.tar.gz /tmp/</span><br><span class="line">#把/temp/目录直接打包压缩为&quot;.tar.gz&quot;格式，通过&quot;-z&quot;来识别格式，&quot;-cvf&quot;和打包选项一致</span><br></pre></td></tr></table></figure>
+<p>解压缩也只是在解打包选项<code>-xvf</code>前面加了一个<code>-z</code>选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -zxvf tmp.tar.gz</span><br><span class="line">#解压缩与解打包&quot;.tar.gz&quot;格式</span><br></pre></td></tr></table></figure>
+<h4 id="2-压缩与解压缩”-tar-bz2”格式"><a href="#2-压缩与解压缩”-tar-bz2”格式" class="headerlink" title="2.压缩与解压缩”.tar.bz2”格式"></a>2.压缩与解压缩”.tar.bz2”格式</h4><p>和<code>.tar.gz</code>格式唯一的不同就是<code>-zcvf</code>选项换成了<code>-jcvf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tar -jcvf tmp.tar.bz2 /tmp/</span><br><span class="line">#打包压缩为&quot;.tar.bz2&quot;格式，注意压缩包文件名</span><br><span class="line">[root@localhost ~]# tar -jxvf tmp.tar.bz2</span><br><span class="line">#解压缩与解打包&quot;.tar.bz2&quot;格式</span><br></pre></td></tr></table></figure>
+<h1 id="zip命令：压缩文件或目录"><a href="#zip命令：压缩文件或目录" class="headerlink" title="zip命令：压缩文件或目录"></a>zip命令：压缩文件或目录</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#zip [选项] 压缩包名 源文件或源目录列表</span><br></pre></td></tr></table></figure>
+<p>注意，<code>zip</code>压缩命令需要手工指定压缩之后的压缩包名，注意写清楚扩展名，以便解压缩时使用。</p>
+<p>该命令常用的几个选项及各自的含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-r</td>
+<td align="center">递归压缩目录，及将制定目录下的所有文件以及子目录全部压缩。</td>
+</tr>
+<tr>
+<td align="center">-m</td>
+<td align="center">将文件压缩之后，删除原始文件，相当于把文件移到压缩文件中。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示详细的压缩过程信息。</td>
+</tr>
+<tr>
+<td align="center">-q</td>
+<td align="center">在压缩的时候不显示命令的执行过程。</td>
+</tr>
+<tr>
+<td align="center">-u</td>
+<td align="center">更新压缩文件，即往压缩文件中添加新文件。</td>
+</tr>
+</tbody></table>
+<h2 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a>示例</h2><h3 id="1-zip-命令的基本使用"><a href="#1-zip-命令的基本使用" class="headerlink" title="1.zip 命令的基本使用"></a>1.zip 命令的基本使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# zip ana.zip anaconda-ks.cfg</span><br><span class="line">adding: anaconda-ks.cfg (deflated 37%)</span><br><span class="line">#压缩</span><br><span class="line">[root@localhost ~]# ll ana.zip</span><br><span class="line">-rw-r--r-- 1 root root 935 6月 1716:00 ana.zip</span><br><span class="line">#压缩文件生成</span><br></pre></td></tr></table></figure>
+<p>不仅如此，所有的压缩命令都可以同时压缩多个文件，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# zip test.zip install.log install.log.syslog</span><br><span class="line">adding: install.log (deflated 72%)</span><br><span class="line">adding: install.log.syslog (deflated 85%)</span><br><span class="line">#同时压缩多个文件到test.zip压缩包中</span><br><span class="line">[root@localhost ~]#ll test.zip</span><br><span class="line">-rw-r--r-- 1 root root 8368 6月 1716:03 test.zip</span><br><span class="line">#压缩文件生成</span><br></pre></td></tr></table></figure>
+<h3 id="2-使用-zip-命令压缩目录"><a href="#2-使用-zip-命令压缩目录" class="headerlink" title="2.使用 zip 命令压缩目录"></a>2.使用 zip 命令压缩目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkdir dir1</span><br><span class="line">#建立测试目录</span><br><span class="line">[root@localhost ~]# zip -r dir1.zip dir1</span><br><span class="line">adding: dir1/(stored 0%)</span><br><span class="line">#压缩目录</span><br><span class="line">[root@localhost ~]# ls -dl dir1.zip</span><br><span class="line">-rw-r--r-- 1 root root 160 6月 1716:22 dir1.zip</span><br><span class="line">#压缩文件生成</span><br></pre></td></tr></table></figure>
+<h1 id="unzip命令：解压zip文件"><a href="#unzip命令：解压zip文件" class="headerlink" title="unzip命令：解压zip文件"></a>unzip命令：解压zip文件</h1><p><code>unzip</code>命令可以查看和解压缩<code>zip</code>文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# unzip [选项] 压缩包名</span><br></pre></td></tr></table></figure>
+<p><code>unzip</code>命令常用选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-d</td>
+<td align="center">目录名	将压缩文件解压到指定目录下。</td>
+</tr>
+<tr>
+<td align="center">-n</td>
+<td align="center">解压时并不覆盖已经存在的文件。</td>
+</tr>
+<tr>
+<td align="center">-o</td>
+<td align="center">解压时覆盖已经存在的文件，并且无需用户确认。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">查看压缩文件的详细信息，包括压缩文件中包含的文件大小、文件名以及压缩比等，但并不做解压操作。</td>
+</tr>
+<tr>
+<td align="center">-t</td>
+<td align="center">测试压缩文件有无损坏，但并不解压。</td>
+</tr>
+<tr>
+<td align="center">-x</td>
+<td align="center">文件列表	解压文件，但不包含文件列表中指定的文件。</td>
+</tr>
+</tbody></table>
+<h2 id="示例-3"><a href="#示例-3" class="headerlink" title="示例"></a>示例</h2><h3 id="1-不论是文件压缩包，还是目录压缩包，都可以直接解压缩"><a href="#1-不论是文件压缩包，还是目录压缩包，都可以直接解压缩" class="headerlink" title="1.不论是文件压缩包，还是目录压缩包，都可以直接解压缩"></a>1.不论是文件压缩包，还是目录压缩包，都可以直接解压缩</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# unzip dir1.zip</span><br><span class="line">Archive: dir1.zip</span><br><span class="line">creating: dirl/</span><br><span class="line">#解压缩</span><br></pre></td></tr></table></figure>
+<h3 id="2-使用-d-选项手动指定解压缩位置"><a href="#2-使用-d-选项手动指定解压缩位置" class="headerlink" title="2.使用 -d 选项手动指定解压缩位置"></a>2.使用 -d 选项手动指定解压缩位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# unzip -d /tmp/ ana.zip</span><br><span class="line">Archive: ana.zip</span><br><span class="line">inflating: /tmp/anaconda-ks.cfg</span><br><span class="line">#把压缩包解压到指定位置</span><br></pre></td></tr></table></figure>
+<h1 id="gzip命令：压缩文件或目录"><a href="#gzip命令：压缩文件或目录" class="headerlink" title="gzip命令：压缩文件或目录"></a>gzip命令：压缩文件或目录</h1><p><code>gzip</code>是 Linux 系统中经常用来对文件进行压缩和解压缩的命令，通过此命令压缩得到的新文件，其扩展名通常标记为<code>.gz</code>。</p>
+<p><code>gzip</code>命令只能用来压缩文件，不能压缩目录，即便指定了目录，也只能压缩目录内的所有文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gzip [选项] 源文件</span><br></pre></td></tr></table></figure>
+<p>命令中的源文件，当进行压缩操作时，指的是普通文件；当进行解压缩操作时，指的是压缩文件。该命令常用的选项及含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-c</td>
+<td align="center">将压缩数据输出到标准输出中，并保留源文件。</td>
+</tr>
+<tr>
+<td align="center">-d</td>
+<td align="center">对压缩文件进行解压缩。</td>
+</tr>
+<tr>
+<td align="center">-r</td>
+<td align="center">递归压缩指定目录下以及子目录下的所有文件。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">对于每个压缩和解压缩的文件，显示相应的文件名和压缩比。</td>
+</tr>
+<tr>
+<td align="center">-l</td>
+<td align="center">对每一个压缩文件，显示以下字段：压缩文件的大小；未压缩文件的大小；压缩比；未压缩文件的名称。</td>
+</tr>
+<tr>
+<td align="center">-数字</td>
+<td align="center">用于指定压缩等级，-1 压缩等级最低，压缩比最差；-9 压缩比最高。默认压缩比是 -6。</td>
+</tr>
+</tbody></table>
+<h2 id="示例-4"><a href="#示例-4" class="headerlink" title="示例"></a>示例</h2><h3 id="1-基本压缩"><a href="#1-基本压缩" class="headerlink" title="1.基本压缩"></a>1.基本压缩</h3><p><code>gzip</code>压缩命令非常简单，甚至不需要指定压缩之后的压缩包名，只需指定源文件名即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gzip install.log</span><br><span class="line">#压缩instal.log 文件</span><br><span class="line">[root@localhost ~]# ls</span><br><span class="line">anaconda-ks.cfg install.log.gz install.log.syslog</span><br><span class="line">#压缩文件生成，但是源文件也消失了</span><br></pre></td></tr></table></figure>
+<h3 id="2-保留源文件压缩。"><a href="#2-保留源文件压缩。" class="headerlink" title="2.保留源文件压缩。"></a>2.保留源文件压缩。</h3><p>在使用<code>gzip</code>命令压缩文件时，源文件会消失，从而生成压缩文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gzip -c anaconda-ks.cfg &gt;anaconda-ks.cfg.gz</span><br><span class="line">#使用-c选项，但是不让压缩数据输出到屏幕上，而是重定向到压缩文件中，这样可以缩文件的同时不删除源文件</span><br><span class="line">[root@localhost ~]# ls</span><br><span class="line">anaconda-ks.cfg anaconda-ks.cfg.gz install.log.gz install.log.syslog</span><br><span class="line">#可以看到压缩文件和源文件都存在</span><br></pre></td></tr></table></figure>
+<h3 id="3-压缩目录。"><a href="#3-压缩目录。" class="headerlink" title="3.压缩目录。"></a>3.压缩目录。</h3><p>我们可能会想当然地认为<code>gzip</code>命令可以压缩目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkdir test</span><br><span class="line">[root@localhost ~]# touch test/test1</span><br><span class="line">[root@localhost ~]# touch test/test2</span><br><span class="line">[root@localhost ~]# touch test/test3 #建立测试目录，并在里面建立几个测试文件</span><br><span class="line">[root@localhost ~]# gzip -r test/</span><br><span class="line">#压缩目录，并没有报错</span><br><span class="line">[root@localhost ~]# ls</span><br><span class="line">anaconda-ks.cfg anaconda-ks.cfg.gz install.log.gz install.log.syslog test</span><br><span class="line">#但是查看发现test目录依然存在，并没有变为压缩文件</span><br><span class="line">[root@localhost ~]# ls test/</span><br><span class="line">testl .gz test2.gz test3.gz</span><br><span class="line">#原来gzip命令不会打包目录，而是把目录下所有的子文件分别压缩</span><br></pre></td></tr></table></figure>
+<p>在 Linux 中，打包和压缩是分开处理的。而<code>gzip</code>命令只会压缩，不能打包，所以才会出现没有打包目录，而只把目录下的文件进行压缩的情况。</p>
+<h1 id="gunzip命令：解压缩文件或目录"><a href="#gunzip命令：解压缩文件或目录" class="headerlink" title="gunzip命令：解压缩文件或目录"></a>gunzip命令：解压缩文件或目录</h1><p><code>gunzip</code>是一个使用广泛的解压缩命令，它用于解压被<code>gzip</code>压缩过的文件（扩展名为<code>.gz</code>）。</p>
+<p>对于解压被<code>gzip</code>压缩过的文件，还可以使用<code>gzip</code>自己，即<code>gzip -d</code>压缩包。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gunzip [选项] 文件</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">-r</td>
+<td align="center">递归处理，解压缩指定目录下以及子目录下的所有文件。</td>
+</tr>
+<tr>
+<td align="center">-c</td>
+<td align="center">把解压缩后的文件输出到标准输出设备。</td>
+</tr>
+<tr>
+<td align="center">-f</td>
+<td align="center">强制解压缩文件，不理会文件是否已存在等情况。</td>
+</tr>
+<tr>
+<td align="center">-l</td>
+<td align="center">列出压缩文件内容。</td>
+</tr>
+<tr>
+<td align="center">-v</td>
+<td align="center">显示命令执行过程。</td>
+</tr>
+<tr>
+<td align="center">-t</td>
+<td align="center">测试压缩文件是否正常，但不对其做解压缩操作。</td>
+</tr>
+</tbody></table>
+<p>直接解压缩文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gunzip install.log.gz</span><br></pre></td></tr></table></figure>
+<p>当然，<code>gunzip -r</code>依然只会解压缩目录下的文件，而不会解打包。要想解压缩<code>.gz</code>格式，还可以使用<code>gzip -d</code>命令，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gzip -d anaconda-ks.cfg.gz</span><br></pre></td></tr></table></figure>
+<p>要解压缩目录下的内容，则需使用<code>-r</code>选项，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# gunzip -r test/</span><br></pre></td></tr></table></figure>
+<p>注意，如果我们压缩的是一个纯文本文件，则可以直接使用<code>zcat</code>命令在不解压缩的情况下查看这个文本文件中的内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# zcat anaconda-ks.cfg.gz</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/08/17/Linux/%E6%89%93%E5%8C%85%EF%BC%88%E5%BD%92%E6%A1%A3%EF%BC%89%E5%92%8C%E5%8E%8B%E7%BC%A9/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/09/04/java/SpringBoot/YAML%E6%95%99%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            YAML教程
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/08/15/Linux/%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Linux文件和目录管理</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

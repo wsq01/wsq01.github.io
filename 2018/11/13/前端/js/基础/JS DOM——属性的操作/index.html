@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS DOM—属性的操作 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/基础/JS DOM——属性的操作"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS DOM—属性的操作
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/11/13/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94%E5%B1%9E%E6%80%A7%E7%9A%84%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2018-11-13T03:22:14.000Z" itemprop="datePublished">2018-11-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>HTML 元素包括标签名和若干个键值对，这个键值对就称为“属性”（<code>attribute</code>）。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://www.example.com&quot;</span>&gt;</span></span><br><span class="line">  链接</span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>a</code>元素包括两个属性：<code>id</code>属性和<code>href</code>属性。</p>
+<p>属性本身是一个对象（<code>Attr</code>对象），但是实际上，这个对象极少使用。一般都是通过元素节点对象（<code>HTMlElement</code>对象）来操作属性。</p>
+<h1 id="Element-attributes-属性"><a href="#Element-attributes-属性" class="headerlink" title="Element.attributes 属性"></a>Element.attributes 属性</h1><p>元素对象有一个<code>attributes</code>属性，返回一个类似数组的动态对象，成员是该元素标签的所有属性节点对象，属性的实时变化都会反映在这个节点对象上。其他类型的节点对象，虽然也有<code>attributes</code>属性，但返回的都是<code>null</code>，因此可以把这个属性视为元素对象独有的。</p>
+<p>单个属性可以通过序号引用，也可以通过属性名引用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML 代码如下</span></span><br><span class="line"><span class="comment">// &lt;body bgcolor=&quot;yellow&quot; onload=&quot;&quot;&gt;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">attributes</span>[<span class="number">0</span>]</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">attributes</span>.<span class="property">bgcolor</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">attributes</span>[<span class="string">&#x27;ONLOAD&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p>注意，上面代码的三种方法，返回的都是属性节点对象，而不是属性值。</p>
+<p>属性节点对象有<code>name</code>和<code>value</code>属性，对应该属性的属性名和属性值，等同于<code>nodeName</code>属性和<code>nodeValue</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML代码为</span></span><br><span class="line"><span class="comment">// &lt;div id=&quot;mydiv&quot;&gt;</span></span><br><span class="line"><span class="keyword">var</span> n = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;mydiv&#x27;</span>);</span><br><span class="line"></span><br><span class="line">n.<span class="property">attributes</span>[<span class="number">0</span>].<span class="property">name</span> <span class="comment">// &quot;id&quot;</span></span><br><span class="line">n.<span class="property">attributes</span>[<span class="number">0</span>].<span class="property">nodeName</span> <span class="comment">// &quot;id&quot;</span></span><br><span class="line"></span><br><span class="line">n.<span class="property">attributes</span>[<span class="number">0</span>].<span class="property">value</span> <span class="comment">// &quot;mydiv&quot;</span></span><br><span class="line">n.<span class="property">attributes</span>[<span class="number">0</span>].<span class="property">nodeValue</span> <span class="comment">// &quot;mydiv&quot;</span></span><br></pre></td></tr></table></figure>
+<p>下面代码可以遍历一个元素节点的所有属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> para = <span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;p&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">var</span> result = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;result&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (para.<span class="title function_">hasAttributes</span>()) &#123;</span><br><span class="line">  <span class="keyword">var</span> attrs = para.<span class="property">attributes</span>;</span><br><span class="line">  <span class="keyword">var</span> output = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = attrs.<span class="property">length</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    output += attrs[i].<span class="property">name</span> + <span class="string">&#x27;-&gt;&#x27;</span> + attrs[i].<span class="property">value</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  result.<span class="property">textContent</span> = output;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  result.<span class="property">textContent</span> = <span class="string">&#x27;No attributes to show&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="元素的标准属性"><a href="#元素的标准属性" class="headerlink" title="元素的标准属性"></a>元素的标准属性</h1><p>HTML 元素的标准属性（即在标准中定义的属性），会自动成为元素节点对象的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;test&#x27;</span>);</span><br><span class="line">a.<span class="property">id</span> <span class="comment">// &quot;test&quot;</span></span><br><span class="line">a.<span class="property">href</span> <span class="comment">// &quot;http://www.example.com/&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>a</code>元素标签的属性<code>id</code>和<code>href</code>，自动成为节点对象的属性。</p>
+<p>这些属性都是可写的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> img = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myImage&#x27;</span>);</span><br><span class="line">img.<span class="property">src</span> = <span class="string">&#x27;http://www.example.com/image.jpg&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>上面的写法，会立刻替换掉<code>img</code>对象的<code>src</code>属性，即会显示另外一张图片。</p>
+<p>这种修改属性的方法，常常用于添加表单的属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f = <span class="variable language_">document</span>.<span class="property">forms</span>[<span class="number">0</span>];</span><br><span class="line">f.<span class="property">action</span> = <span class="string">&#x27;submit.php&#x27;</span>;</span><br><span class="line">f.<span class="property">method</span> = <span class="string">&#x27;POST&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>上面代码为表单添加提交网址和提交方法。</p>
+<p>注意，这种用法虽然可以读写属性，但是无法删除属性，<code>delete</code>运算符在这里不会生效。</p>
+<p>HTML 元素的属性名是大小写不敏感的，但是 JavaScript 对象的属性名是大小写敏感的。转换规则是，转为 JavaScript 属性名时，一律采用小写。如果属性名包括多个单词，则采用骆驼拼写法，即从第二个单词开始，每个单词的首字母采用大写，比如<code>onClick</code>。</p>
+<p>有些 HTML 属性名是 JavaScript 的保留字，转为 JavaScript 属性时，必须改名。主要是以下两个。</p>
+<ul>
+<li><code>for</code>属性改为<code>htmlFor</code></li>
+<li><code>class</code>属性改为<code>className</code></li>
+</ul>
+<p>另外，HTML 属性值一般都是字符串，但是 JavaScript 属性会自动转换类型。比如，将字符串<code>true</code>转为布尔值，将<code>onClick</code>的值转为一个函数，将<code>style</code>属性的值转为一个<code>CSSStyleDeclaration</code>对象。因此，可以对这些属性赋予各种类型的值。</p>
+<h1 id="属性操作的标准方法"><a href="#属性操作的标准方法" class="headerlink" title="属性操作的标准方法"></a>属性操作的标准方法</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>元素节点提供六个方法，用来操作属性。</p>
+<ul>
+<li><code>getAttribute()</code></li>
+<li><code>getAttributeNames()</code></li>
+<li><code>setAttribute()</code></li>
+<li><code>hasAttribute()</code></li>
+<li><code>hasAttributes()</code></li>
+<li><code>removeAttribute()</code></li>
+</ul>
+<p>这有几点注意。<br>（1）适用性<br>这六个方法对所有属性（包括用户自定义的属性）都适用。<br>（2）返回值<br><code>getAttribute()</code>只返回字符串，不会返回其他类型的值。<br>（3）属性名<br>这些方法只接受属性的标准名称，不用改写保留字，比如<code>for</code>和<code>class</code>都可以直接使用。另外，这些方法对于属性名是大小写不敏感的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> image = <span class="variable language_">document</span>.<span class="property">images</span>[<span class="number">0</span>];</span><br><span class="line">image.<span class="title function_">setAttribute</span>(<span class="string">&#x27;class&#x27;</span>, <span class="string">&#x27;myImage&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>setAttribute</code>方法直接使用<code>class</code>作为属性名，不用写成<code>className</code>。</p>
+<h2 id="Element-getAttribute"><a href="#Element-getAttribute" class="headerlink" title="Element.getAttribute()"></a>Element.getAttribute()</h2><p><code>Element.getAttribute</code>方法返回当前元素节点的指定属性。如果指定属性不存在，则返回<code>null</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;div id=&quot;div1&quot; align=&quot;left&quot;&gt;</span></span><br><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;div1&#x27;</span>);</span><br><span class="line">div.<span class="title function_">getAttribute</span>(<span class="string">&#x27;align&#x27;</span>) <span class="comment">// &quot;left&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Element-getAttributeNames"><a href="#Element-getAttributeNames" class="headerlink" title="Element.getAttributeNames()"></a>Element.getAttributeNames()</h2><p><code>Element.getAttributeNames()</code>返回一个数组，成员是当前元素的所有属性的名字。如果当前元素没有任何属性，则返回一个空数组。使用<code>Element.attributes</code>属性，也可以拿到同样的结果，唯一的区别是它返回的是类似数组的对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mydiv = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;mydiv&#x27;</span>);</span><br><span class="line"></span><br><span class="line">mydiv.<span class="title function_">getAttributeNames</span>().<span class="title function_">forEach</span>(<span class="keyword">function</span> (<span class="params">key</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> value = mydiv.<span class="title function_">getAttribute</span>(key);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(key, value);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面代码用于遍历某个节点的所有属性。</p>
+<h2 id="Element-setAttribute"><a href="#Element-setAttribute" class="headerlink" title="Element.setAttribute()"></a>Element.setAttribute()</h2><p><code>Element.setAttribute</code>方法用于为当前元素节点新增属性。如果同名属性已存在，则相当于编辑已存在的属性。该方法没有返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;button&gt;Hello World&lt;/button&gt;</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">b.<span class="title function_">setAttribute</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;myButton&#x27;</span>);</span><br><span class="line">b.<span class="title function_">setAttribute</span>(<span class="string">&#x27;disabled&#x27;</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>button</code>元素的<code>name</code>属性被设成<code>myButton</code>，<code>disabled</code>属性被设成<code>true</code>。</p>
+<p>这里有两个地方需要注意，首先，属性值总是字符串，其他类型的值会自动转成字符串，比如布尔值<code>true</code>就会变成字符串<code>true</code>；其次，上例的<code>disable</code>属性是一个布尔属性，对于<code>&lt;button&gt;</code>元素来说，这个属性不需要属性值，只要设置了就总是会生效，因此<code>setAttribute</code>方法里面可以将<code>disabled</code>属性设成任意值。</p>
+<h2 id="Element-hasAttribute"><a href="#Element-hasAttribute" class="headerlink" title="Element.hasAttribute()"></a>Element.hasAttribute()</h2><p><code>Element.hasAttribute</code>方法返回一个布尔值，表示当前元素节点是否包含指定属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> d = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;div1&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (d.<span class="title function_">hasAttribute</span>(<span class="string">&#x27;align&#x27;</span>)) &#123;</span><br><span class="line">  d.<span class="title function_">setAttribute</span>(<span class="string">&#x27;align&#x27;</span>, <span class="string">&#x27;center&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Element-hasAttributes"><a href="#Element-hasAttributes" class="headerlink" title="Element.hasAttributes()"></a>Element.hasAttributes()</h2><p><code>Element.hasAttributes</code>方法返回一个布尔值，表示当前元素是否有属性，如果没有任何属性，就返回<code>false</code>，否则返回<code>true</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line">foo.<span class="title function_">hasAttributes</span>() <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Element-removeAttribute"><a href="#Element-removeAttribute" class="headerlink" title="Element.removeAttribute()"></a>Element.removeAttribute()</h2><p><code>Element.removeAttribute</code>方法移除指定属性。该方法没有返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML 代码为</span></span><br><span class="line"><span class="comment">// &lt;div id=&quot;div1&quot; align=&quot;left&quot; width=&quot;200px&quot;&gt;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;div1&#x27;</span>).<span class="title function_">removeAttribute</span>(<span class="string">&#x27;align&#x27;</span>);</span><br><span class="line"><span class="comment">// 现在的HTML代码为</span></span><br><span class="line"><span class="comment">// &lt;div id=&quot;div1&quot; width=&quot;200px&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="dataset-属性"><a href="#dataset-属性" class="headerlink" title="dataset 属性"></a>dataset 属性</h1><p>有时，需要在HTML元素上附加数据，供 JavaScript 脚本使用。一种解决方法是自定义属性。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;mydiv&quot;</span> <span class="attr">foo</span>=<span class="string">&quot;bar&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码为<code>div</code>元素自定义了<code>foo</code>属性，然后可以用<code>getAttribute()</code>和<code>setAttribute()</code>读写这个属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> n = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;mydiv&#x27;</span>);</span><br><span class="line">n.<span class="title function_">getAttribute</span>(<span class="string">&#x27;foo&#x27;</span>) <span class="comment">// bar</span></span><br><span class="line">n.<span class="title function_">setAttribute</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;baz&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这种方法虽然可以达到目的，但是会使得 HTML 元素的属性不符合标准，导致网页代码通不过校验。</p>
+<p>更好的解决方法是，使用标准提供的<code>data-*</code>属性。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;mydiv&quot;</span> <span class="attr">data-foo</span>=<span class="string">&quot;bar&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后，使用元素节点对象的<code>dataset</code>属性，它指向一个对象，可以用来操作 HTML 元素标签的<code>data-*</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> n = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;mydiv&#x27;</span>);</span><br><span class="line">n.<span class="property">dataset</span>.<span class="property">foo</span> <span class="comment">// bar</span></span><br><span class="line">n.<span class="property">dataset</span>.<span class="property">foo</span> = <span class="string">&#x27;baz&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，通过<code>dataset.foo</code>读写<code>data-foo</code>属性。</p>
+<p>删除一个<code>data-*</code>属性，可以直接使用<code>delete</code>命令。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;myDiv&#x27;</span>).<span class="property">dataset</span>.<span class="property">foo</span>;</span><br></pre></td></tr></table></figure>
+<p>除了<code>dataset</code>属性，也可以用<code>getAttribute(&#39;data-foo&#39;)</code>、<code>removeAttribute(&#39;data-foo&#39;)</code>、<code>setAttribute(&#39;data-foo&#39;)</code>、<code>hasAttribute(&#39;data-foo&#39;)</code>等方法操作<code>data-*</code>属性。</p>
+<p>注意，<code>data-</code>后面的属性名有限制，只能包含字母、数字、连词线（<code>-</code>）、点（<code>.</code>）、冒号（<code>:</code>）和下划线（<code>_</code>)。而且，属性名不应该使用<code>A</code>到<code>Z</code>的大写字母，比如不能有<code>data-helloWorld</code>这样的属性名，而要写成<code>data-hello-world</code>。</p>
+<p>转成<code>dataset</code>的键名时，连词线后面如果跟着一个小写字母，那么连词线会被移除，该小写字母转为大写字母，其他字符不变。反过来，<code>dataset</code>的键名转成属性名时，所有大写字母都会被转成连词线+该字母的小写形式，其他字符不变。比如，<code>dataset.helloWorld</code>会转成<code>data-hello-world</code>。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2018/11/13/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94%E5%B1%9E%E6%80%A7%E7%9A%84%E6%93%8D%E4%BD%9C/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2018/11/13/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94Text%E8%8A%82%E7%82%B9%E5%92%8CDocumentFragment%E8%8A%82%E7%82%B9/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JS DOM—Text节点和DocumentFragment节点
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/11/11/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20DOM%E2%80%94%E2%80%94Element%E8%8A%82%E7%82%B9/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS DOM—Element节点</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

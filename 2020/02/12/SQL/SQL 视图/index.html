@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>SQL 视图 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-SQL/SQL 视图"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SQL 视图
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/02/12/SQL/SQL%20%E8%A7%86%E5%9B%BE/" class="article-date">
+  <time datetime="2020-02-12T03:44:31.000Z" itemprop="datePublished">2020-02-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>视图，也就是虚拟表，本身是不具有数据的，它是 SQL 中的一个重要概念。从下面这张图中，你能看到，虚拟表的创建连接了一个或多个数据表，不同的查询应用都可以建立在虚拟表之上。</p>
+<img src="/2020/02/12/SQL/SQL%20%E8%A7%86%E5%9B%BE/img1.jpeg" class="">
+
+<p>视图一方面可以帮我们使用表的一部分而不是所有的表，另一方面也可以针对不同的用户制定不同的查询视图。比如，针对一个公司的销售人员，我们只想给他看部分数据，而某些特殊的数据，比如采购的价格，则不会提供给他。</p>
+<h1 id="如何创建，更新和删除视图"><a href="#如何创建，更新和删除视图" class="headerlink" title="如何创建，更新和删除视图"></a>如何创建，更新和删除视图</h1><p>视图作为一张虚拟表，帮我们封装了底层与数据表的接口。它相当于是一张表或多张表的数据结果集。视图的这一特点，可以帮我们简化复杂的 SQL 查询，比如在编写视图后，我们就可以直接重用它，而不需要考虑视图中包含的基础查询的细节。同样，我们也可以根据需要更改数据格式，返回与底层数据表格式不同的数据。</p>
+<p>通常情况下，小型项目的数据库可以不使用视图，但是在大型项目中，以及数据表比较复杂的情况下，视图的价值就凸显出来了，它可以帮助我们把经常查询的结果集放到虚拟表中，提升使用效率。理解和使用起来都非常方便。</p>
+<h2 id="创建视图：CREATE-VIEW"><a href="#创建视图：CREATE-VIEW" class="headerlink" title="创建视图：CREATE VIEW"></a>创建视图：CREATE VIEW</h2><p>创建视图的语法是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> view_name <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> column1, column2</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">condition</span></span><br></pre></td></tr></table></figure>
+<p>实际上就是我们在 SQL 查询语句的基础上封装了视图<code>VIEW</code>，这样就会基于 SQL 语句的结果集形成一张虚拟表。其中<code>view_name</code>为视图名称，<code>column1、column2</code>代表列名，<code>condition</code>代表查询过滤条件。</p>
+<p>我们以 NBA 球员数据表为例。我们想要查询比 NBA 球员平均身高高的球员都有哪些，显示他们的球员<code>ID</code>和身高。假设我们给这个视图起个名字<code>player_above_avg_height</code>，那么创建视图可以写成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> player_above_avg_height <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> player_id, height</span><br><span class="line"><span class="keyword">FROM</span> player</span><br><span class="line"><span class="keyword">WHERE</span> height <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(height) <span class="keyword">from</span> player)</span><br></pre></td></tr></table></figure>
+<p>视图查询结果（18 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10003</td>
+<td align="center">2.11</td>
+</tr>
+<tr>
+<td align="center">10004</td>
+<td align="center">2.16</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">2.08</td>
+</tr>
+</tbody></table>
+<p>当视图创建之后，它就相当于一个虚拟表，可以直接使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> player_above_avg_height</span><br></pre></td></tr></table></figure>
+<p>运行结果和上面一样。</p>
+<h2 id="嵌套视图"><a href="#嵌套视图" class="headerlink" title="嵌套视图"></a>嵌套视图</h2><p>当我们创建好一张视图之后，还可以在它的基础上继续创建视图，比如我们想在虚拟表<code>player_above_avg_height</code>的基础上，找到比这个表中的球员平均身高高的球员，作为新的视图<code>player_above_above_avg_height</code>，那么可以写成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> player_above_above_avg_height <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> player_id, height</span><br><span class="line"><span class="keyword">FROM</span> player</span><br><span class="line"><span class="keyword">WHERE</span> height <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(height) <span class="keyword">from</span> player_above_avg_height)</span><br></pre></td></tr></table></figure>
+<p>视图查询结果（11 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10003</td>
+<td align="center">2.11</td>
+</tr>
+<tr>
+<td align="center">10004</td>
+<td align="center">2.16</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">2.08</td>
+</tr>
+</tbody></table>
+<p>你能看到这个视图的数据记录数为 11 个，比之前的记录少了 7 个。</p>
+<h2 id="修改视图：ALTER-VIEW"><a href="#修改视图：ALTER-VIEW" class="headerlink" title="修改视图：ALTER VIEW"></a>修改视图：ALTER VIEW</h2><p>修改视图的语法是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> view_name <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> column1, column2</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">condition</span></span><br></pre></td></tr></table></figure>
+<p>你能看出来它的语法和创建视图一样，只是对原有视图的更新。比如我们想更新视图<code>player_above_avg_height</code>，增加一个<code>player_name</code>字段，可以写成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> player_above_avg_height <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> player_id, player_name, height</span><br><span class="line"><span class="keyword">FROM</span> player</span><br><span class="line"><span class="keyword">WHERE</span> height <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(height) <span class="keyword">from</span> player)</span><br></pre></td></tr></table></figure>
+<p>这样的话，下次再对视图进行查询的时候，视图结果就进行了更新。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> player_above_avg_height</span><br></pre></td></tr></table></figure>
+<p>运行结果（18 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">player_id</th>
+<th align="center">player_name</th>
+<th align="center">height</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10003</td>
+<td align="center">安德烈·德拉蒙德</td>
+<td align="center">2.11</td>
+</tr>
+<tr>
+<td align="center">10004</td>
+<td align="center">索恩·马克</td>
+<td align="center">2.16</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">10037</td>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+</tr>
+</tbody></table>
+<h2 id="删除视图：DROP-VIEW"><a href="#删除视图：DROP-VIEW" class="headerlink" title="删除视图：DROP VIEW"></a>删除视图：DROP VIEW</h2><p>删除视图的语法是：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> view_name</span><br></pre></td></tr></table></figure>
+<p>比如我们想把刚才创建的视图删除，可以使用：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> player_above_avg_height</span><br></pre></td></tr></table></figure>
+<p>需要说明的是，SQLite 不支持视图的修改，仅支持只读视图，也就是说你只能使用<code>CREATE VIEW</code>和<code>DROP VIEW</code>，如果想要修改视图，就需要先<code>DROP</code>然后再<code>CREATE</code>。</p>
+<h1 id="如何使用视图简化-SQL-操作"><a href="#如何使用视图简化-SQL-操作" class="headerlink" title="如何使用视图简化 SQL 操作"></a>如何使用视图简化 SQL 操作</h1><p>从上面这个例子中，你能看出视图就是对<code>SELECT</code>语句进行了封装，方便我们重用它们。下面我们再来看几个视图使用的例子。</p>
+<h2 id="利用视图完成复杂的连接"><a href="#利用视图完成复杂的连接" class="headerlink" title="利用视图完成复杂的连接"></a>利用视图完成复杂的连接</h2><p>举一个 NBA 球员和身高等级连接的例子，有两张表，分别为<code>player</code>和<code>height_grades</code>。其中<code>height_grades</code>记录了不同身高对应的身高等级。这里我们可以通过创建视图，来完成球员以及对应身高等级的查询。</p>
+<p>首先我们对<code>player</code>表和<code>height_grades</code>表进行连接，关联条件是球员的身高<code>height</code>（在身高等级表规定的最低身高和最高身高之间），这样就可以得到这个球员对应的身高等级，对应的字段为<code>height_level</code>。然后我们通过<code>SELECT</code>得到我们想要查询的字段，分别为球员姓名<code>player_name</code>、球员身高<code>height</code>，还有对应的身高等级<code>height_level</code>。然后把取得的查询结果集放到视图<code>player_height_grades</code>中，即：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> player_height_grades <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> p.player_name, p.height, h.height_level</span><br><span class="line"><span class="keyword">FROM</span> player <span class="keyword">as</span> p <span class="keyword">JOIN</span> height_grades <span class="keyword">as</span> h</span><br><span class="line"><span class="keyword">ON</span> height <span class="keyword">BETWEEN</span> h.height_lowest <span class="keyword">AND</span> h.height_highest</span><br></pre></td></tr></table></figure>
+<p>运行结果（37 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><code>player_name</code></th>
+<th align="center"><code>height</code></th>
+<th align="center"><code>height_level</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">韦恩·艾灵顿</td>
+<td align="center">1.93</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td align="center">雷吉·杰克逊</td>
+<td align="center">1.91</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<p>以后我们进行查询的时候，可以直接通过视图查询，比如我想查询身高介于<code>1.90m</code>和<code>2.08m</code>之间的球员及他们对应的身高：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> player_height_grades <span class="keyword">WHERE</span> height <span class="operator">&gt;=</span> <span class="number">1.90</span> <span class="keyword">AND</span> height <span class="operator">&lt;=</span> <span class="number">2.08</span></span><br></pre></td></tr></table></figure>
+<p>运行结果（26 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><code>player_name</code></th>
+<th align="center"><code>height</code></th>
+<th align="center"><code>height_level</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">韦恩·艾灵顿</td>
+<td align="center">1.93</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td align="center">雷吉·杰克逊</td>
+<td align="center">1.91</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">伊凯·阿尼博古</td>
+<td align="center">2.08</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<p>这样就把一个相对复杂的连接查询转化成了视图查询。</p>
+<h1 id="利用视图对数据进行格式化"><a href="#利用视图对数据进行格式化" class="headerlink" title="利用视图对数据进行格式化"></a>利用视图对数据进行格式化</h1><p>我们经常需要输出某个格式的内容，比如我们想输出球员姓名和对应的球队，对应格式为<code>player_name(team_name)</code>，就可以使用视图来完成数据格式化的操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> player_team <span class="keyword">AS</span> </span><br><span class="line"><span class="keyword">SELECT</span> CONCAT(player_name, <span class="string">&#x27;(&#x27;</span> , team.team_name , <span class="string">&#x27;)&#x27;</span>) <span class="keyword">AS</span> player_team <span class="keyword">FROM</span> player <span class="keyword">JOIN</span> team <span class="keyword">WHERE</span> player.team_id <span class="operator">=</span> team.team_id</span><br></pre></td></tr></table></figure>
+<p>首先我们将<code>player</code>表和<code>team</code>表进行连接，关联条件是相同的<code>team_id</code>。我们想要的格式是<code>player_name(team_name)</code>，因此我们使用<code>CONCAT</code>函数，即<code>CONCAT(player_name, &#39;(&#39; , team.team_name , &#39;)&#39;)</code>，将<code>player_name</code>字段和<code>team_name</code>字段进行拼接，得到了拼接值被命名为<code>player_team</code>的字段名，将它放到视图<code>player_team</code>中。</p>
+<p>这样的话，我们直接查询视图，就可以得到格式化后的结果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> player_team</span><br></pre></td></tr></table></figure>
+<p>运行结果（37 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center"><code>player_team</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">韦恩·艾灵顿(底特律活塞)</td>
+</tr>
+<tr>
+<td align="center">雷吉·杰克逊(底特律活塞)</td>
+</tr>
+<tr>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">安德烈·德拉蒙德(底特律活塞)</td>
+</tr>
+</tbody></table>
+<h1 id="使用视图与计算字段"><a href="#使用视图与计算字段" class="headerlink" title="使用视图与计算字段"></a>使用视图与计算字段</h1><p>我们在数据查询中，有很多统计的需求可以通过视图来完成。正确地使用视图可以帮我们简化复杂的数据处理。</p>
+<p>我以球员比赛成绩表为例，对应的是<code>player_score</code>表。这张表中一共有 19 个字段，它们代表的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">game_id <br> 比赛ID</td>
+<td align="center">player_id <br> 球员ID</td>
+<td align="center">is_first <br> 是否首发</td>
+<td align="center">playing_time <br> 出场时间</td>
+</tr>
+<tr>
+<td align="center">rebound <br> 篮板球</td>
+<td align="center">rebound_o <br> 前场篮板</td>
+<td align="center">rebound_d <br> 后场篮板</td>
+<td align="center">assist <br> 助攻</td>
+</tr>
+<tr>
+<td align="center">score <br> 比分</td>
+<td align="center">steal <br> 抢断</td>
+<td align="center">blockshot <br> 盖帽</td>
+<td align="center">fault <br> 失误</td>
+</tr>
+<tr>
+<td align="center">foul <br> 犯规</td>
+<td align="center">shoot_attempts <br> 出手</td>
+<td align="center">shoot_hits <br> 命中</td>
+<td align="center">shoot_3_attempts 3分出手</td>
+</tr>
+<tr>
+<td align="center">shoot_3_hits <br> 3分命中</td>
+<td align="center">shoot_p_appempts <br> 罚球出手</td>
+<td align="center">shoot_p_hits <br> 罚球命中</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>如果我想要统计每位球员在每场比赛中的二分球、三分球和罚球的得分，可以通过创建视图完成：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> game_player_score <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> game_id, player_id, (shoot_hits<span class="operator">-</span>shoot_3_hits)<span class="operator">*</span><span class="number">2</span> <span class="keyword">AS</span> shoot_2_points, shoot_3_hits<span class="operator">*</span><span class="number">3</span> <span class="keyword">AS</span> shoot_3_points, shoot_p_hits <span class="keyword">AS</span> shoot_p_points, score  <span class="keyword">FROM</span> player_score</span><br></pre></td></tr></table></figure>
+<p>然后通过查询视图就可以完成。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> game_player_score</span><br></pre></td></tr></table></figure>
+<p>运行结果（19 条记录）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">game_id</th>
+<th align="center">player_id</th>
+<th align="center">shoot_2_points</th>
+<th align="center">shoot_3_points</th>
+<th align="center">shoot_p_points</th>
+<th align="center">score</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10001</td>
+<td align="center">10001</td>
+<td align="center">12</td>
+<td align="center">12</td>
+<td align="center">2</td>
+<td align="center">26</td>
+</tr>
+<tr>
+<td align="center">10001</td>
+<td align="center">10002</td>
+<td align="center">14</td>
+<td align="center">3</td>
+<td align="center">5</td>
+<td align="center">22</td>
+</tr>
+<tr>
+<td align="center">10001</td>
+<td align="center">10003</td>
+<td align="center">16</td>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">18</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+<td align="center">…</td>
+</tr>
+<tr>
+<td align="center">10002</td>
+<td align="center">10032</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>你能看出正确使用视图可以简化复杂的 SQL 查询，让 SQL 更加清爽易用。不过有一点需要注意，视图是虚拟表，它只是封装了底层的数据表查询接口，因此有些 RDBMS 不支持对视图创建索引（有些 RDBMS 则支持，比如新版本的 SQL Server）。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用视图有很多好处，比如安全、简单清晰。</p>
+<ul>
+<li>安全性：虚拟表是基于底层数据表的，我们在使用视图时，一般不会轻易通过视图对底层数据进行修改，即使是使用单表的视图，也会受到限制，比如计算字段，类型转换等是无法通过视图来对底层数据进行修改的，这也在一定程度上保证了数据表的数据安全性。同时，我们还可以针对不同用户开放不同的数据查询权限，比如人员薪酬是个敏感的字段，那么只给某个级别以上的人员开放，其他人的查询视图中则不提供这个字段。</li>
+<li>简单清晰：视图是对 SQL 查询的封装，它可以将原本复杂的 SQL 查询简化，在编写好查询之后，我们就可以直接重用它而不必要知道基本的查询细节。同时我们还可以在视图之上再嵌套视图。这样就好比我们在进行模块化编程一样，不仅结构清晰，还提升了代码的复用率。</li>
+</ul>
+<p>另外，我们也需要了解到视图是虚拟表，本身不存储数据，如果想要通过视图对底层数据表的数据进行修改也会受到很多限制，通常我们是把视图用于查询，也就是对 SQL 查询的一种封装。那么它和临时表又有什么区别呢？在实际工作中，我们可能会见到各种临时数据。比如你可能会问，如果我在做一个电商的系统，中间会有个购物车的功能，需要临时统计购物车中的商品和金额，那该怎么办呢？这里就需要用到临时表了，临时表是真实存在的数据表，不过它不用于长期存放数据，只为当前连接存在，关闭连接后，临时表就会自动释放。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/02/12/SQL/SQL%20%E8%A7%86%E5%9B%BE/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/02/13/SQL/SQL%20%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SQL 存储过程
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/02/08/SQL/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SQL 子查询</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

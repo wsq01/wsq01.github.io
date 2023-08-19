@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL运算符 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-MySQL/MySQL运算符"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL运算符
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/04/19/MySQL/MySQL%E8%BF%90%E7%AE%97%E7%AC%A6/" class="article-date">
+  <time datetime="2020-04-19T06:59:13.000Z" itemprop="datePublished">2020-04-19</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">6.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">27 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>MySQL 所提供的运算符可以直接对表中数据或字段进行运算，进而实现用户的新需求，增强了 MySQL 的功能。</p>
+<p>MySQL 支持 4 种运算符：</p>
+<ol>
+<li>算术运算符：加、减、乘、除和取余运算。</li>
+<li>比较运算符：包括大于、小于、等于或不等于、等等。主要用于数值的比较、字符串的匹配等方面。</li>
+<li>逻辑运算符：包括与、或、非和异或、等逻辑运算符。其返回值为布尔型，真值（1 或<code>true</code>）和假值（0 或<code>false</code>）。</li>
+<li>位运算符：包括按位与、按位或、按位取反、按位异或、按位左移和按位右移等位运算符。位运算必须先将数据转换为补码，然后在根据数据的补码进行操作。运算完成后，将得到的值转换为原来的类型（十进制数），返回给用户。</li>
+</ol>
+<h1 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h1><table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">作用</th>
+<th align="center">使用方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">+</td>
+<td align="center">加法运算</td>
+<td align="center">用于获得一个或多个值的和</td>
+</tr>
+<tr>
+<td align="center">-</td>
+<td align="center">减法运算</td>
+<td align="center">用于从一个值中减去另一个值</td>
+</tr>
+<tr>
+<td align="center">*</td>
+<td align="center">乘法运算</td>
+<td align="center">使数字相乘，得到两个或多个值的乘积</td>
+</tr>
+<tr>
+<td align="center">&#x2F;</td>
+<td align="center">除法运算，返回商</td>
+<td align="center">用一个值除以另一个值得到商</td>
+</tr>
+<tr>
+<td align="center">%，MOD</td>
+<td align="center">求余运算，返回余数</td>
+<td align="center">用一个值除以另一个值得到余数</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> temp(num <span class="type">INT</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> temp <span class="keyword">VALUE</span> (<span class="number">64</span>);</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> num, num<span class="operator">+</span><span class="number">10</span>, num<span class="number">-3</span><span class="operator">+</span><span class="number">5</span>, num<span class="operator">+</span><span class="number">36.5</span> <span class="keyword">FROM</span> temp;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+--------+---------+----------+</span></span><br><span class="line"><span class="operator">|</span> num  <span class="operator">|</span> num<span class="operator">+</span><span class="number">10</span> <span class="operator">|</span> num<span class="number">-3</span><span class="operator">+</span><span class="number">5</span> <span class="operator">|</span> num<span class="operator">+</span><span class="number">36.5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+--------+---------+----------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">64</span> <span class="operator">|</span>     <span class="number">74</span> <span class="operator">|</span>      <span class="number">66</span> <span class="operator">|</span>    <span class="number">100.5</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+--------+---------+----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> num, num<span class="operator">*</span><span class="number">2</span>, num<span class="operator">/</span><span class="number">2</span>, num<span class="operator">/</span><span class="number">3</span>, num<span class="operator">%</span><span class="number">3</span> <span class="keyword">FROM</span> temp;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+---------+---------+-------+</span></span><br><span class="line"><span class="operator">|</span> num  <span class="operator">|</span> num<span class="operator">*</span><span class="number">2</span> <span class="operator">|</span> num<span class="operator">/</span><span class="number">2</span>   <span class="operator">|</span> num<span class="operator">/</span><span class="number">3</span>   <span class="operator">|</span> num<span class="operator">%</span><span class="number">3</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+---------+---------+-------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">64</span> <span class="operator">|</span>   <span class="number">128</span> <span class="operator">|</span> <span class="number">32.0000</span> <span class="operator">|</span> <span class="number">21.3333</span> <span class="operator">|</span>     <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+---------+---------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由上面计算结果可以看出，对<code>num</code>进行除法运算时，由于 64 无法被 3 整除，因此 MySQL 对<code>num/3</code>求商的结果保存到了小数点后面四位，结果为 21.3333；64 除以 3 的余数为 1，因此取余运算<code>num%3</code>的结果为 1。</p>
+<p>对于取余运算，还可以使用<code>MOD(a, b)</code>函数，<code>MOD(a, b)</code>相当于<code>a%b</code>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="built_in">MOD</span>(num,<span class="number">3</span>) <span class="keyword">FROM</span> temp;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="built_in">MOD</span>(num,<span class="number">3</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+</span></span><br><span class="line"><span class="operator">|</span>           <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>数学运算中，除数为 0 的除法是没有意义的。所以在除法运算和取余运算中，如果除数为 0，那么返回结果为<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> num, num<span class="operator">/</span><span class="number">0</span>, num<span class="operator">%</span><span class="number">0</span> <span class="keyword">FROM</span> temp;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+-------+</span></span><br><span class="line"><span class="operator">|</span> num  <span class="operator">|</span> num<span class="operator">/</span><span class="number">0</span> <span class="operator">|</span> num<span class="operator">%</span><span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+-------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">64</span> <span class="operator">|</span>  <span class="keyword">NULL</span> <span class="operator">|</span>  <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h1 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h1><p>逻辑运算符又称为布尔运算符，用来确定表达式的真和假。</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">NOT 或者 !</td>
+<td align="center">逻辑非</td>
+</tr>
+<tr>
+<td align="center">AND 或者 &amp;&amp;</td>
+<td align="center">逻辑与</td>
+</tr>
+<tr>
+<td align="center">OR 和 <code>||</code></td>
+<td align="center">逻辑或</td>
+</tr>
+<tr>
+<td align="center">XOR</td>
+<td align="center">逻辑异或</td>
+</tr>
+</tbody></table>
+<h2 id="逻辑非运算（NOT-或者-）"><a href="#逻辑非运算（NOT-或者-）" class="headerlink" title="逻辑非运算（NOT 或者 !）"></a>逻辑非运算（NOT 或者 !）</h2><p><code>NOT</code>和<code>!</code>都是逻辑非运算符，返回和操作数相反的结果：</p>
+<ul>
+<li>当操作数为 0（假）时，返回值为 1；</li>
+<li>当操作数为非零值时，返回值为 0；</li>
+<li>当操作数为<code>NULL</code>时，返回值为<code>NULL</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">NOT</span> <span class="number">10</span>, <span class="keyword">NOT</span>(<span class="number">1</span><span class="number">-1</span>), <span class="keyword">NOT</span><span class="number">-5</span>, <span class="keyword">NOT</span> <span class="keyword">NULL</span>, <span class="keyword">NOT</span> <span class="number">1</span><span class="operator">+</span><span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+-------+----------+---------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NOT</span> <span class="number">10</span> <span class="operator">|</span> <span class="keyword">NOT</span>(<span class="number">1</span><span class="number">-1</span>) <span class="operator">|</span> <span class="keyword">NOT</span><span class="number">-5</span> <span class="operator">|</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="keyword">NOT</span> <span class="number">1</span><span class="operator">+</span><span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+-------+----------+---------+</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>        <span class="number">1</span> <span class="operator">|</span>     <span class="number">0</span> <span class="operator">|</span>     <span class="keyword">NULL</span> <span class="operator">|</span>       <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+----------+-------+----------+---------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">!</span><span class="number">10</span>, <span class="operator">!</span>(<span class="number">1</span><span class="number">-1</span>), <span class="operator">!</span><span class="number">-5</span>, <span class="operator">!</span><span class="keyword">NULL</span>, <span class="operator">!</span><span class="number">1</span><span class="operator">+</span><span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------+-----+-------+------+</span></span><br><span class="line"><span class="operator">|</span> <span class="operator">!</span><span class="number">10</span> <span class="operator">|</span> <span class="operator">!</span>(<span class="number">1</span><span class="number">-1</span>) <span class="operator">|</span> <span class="operator">!</span><span class="number">-5</span> <span class="operator">|</span> <span class="operator">!</span><span class="keyword">NULL</span> <span class="operator">|</span> <span class="operator">!</span><span class="number">1</span><span class="operator">+</span><span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------+-----+-------+------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>  <span class="keyword">NULL</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+--------+-----+-------+------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">!</span><span class="number">1</span><span class="operator">+</span><span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="operator">|</span> <span class="operator">!</span><span class="number">1</span><span class="operator">+</span><span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由运行结果可以看出，<code>NOT 1+1</code>和<code>!1+1</code>的返回值不同，这是因为<code>NOT</code>与<code>!</code>的优先级不同：</p>
+<ul>
+<li><code>NOT</code>的优先级低于<code>+</code>，因此<code>NOT 1+1</code>相当于<code>NOT(1+1)</code>，先计算<code>1+1</code>，然后再进行<code>NOT</code>运算，由于操作数不为 0，因此<code>NOT 1+1</code>的结果是 0；</li>
+<li>相反，<code>!</code>的优先级别要高于<code>+</code>，因此<code>! 1+1</code>相当于<code>(!1)+1</code>，先计算<code>!1</code>结果为 0，再加 1，最后结果为 1。</li>
+</ul>
+<p>在使用运算符运算时，一定要注意运算符的优先级，如果不能确定计算顺序，最好使用括号，以保证运算结果的正确。</p>
+<h2 id="逻辑与运算符（AND-或者-amp-amp-）"><a href="#逻辑与运算符（AND-或者-amp-amp-）" class="headerlink" title="逻辑与运算符（AND 或者 &amp;&amp;）"></a>逻辑与运算符（AND 或者 &amp;&amp;）</h2><p><code>AND</code>和<code>&amp;&amp;</code>都是逻辑与运算符：</p>
+<ul>
+<li>当所有操作数都为非零值并且不为<code>NULL</code>时，返回值为 1；</li>
+<li>当一个或多个操作数为 0 时，返回值为 0；</li>
+<li>操作数中有任何一个为<code>NULL</code>时，返回值为<code>NULL</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">-1</span>, <span class="number">1</span> <span class="keyword">AND</span> <span class="number">0</span>, <span class="number">1</span> <span class="keyword">AND</span> <span class="keyword">NULL</span>, <span class="number">0</span> <span class="keyword">AND</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------+---------+------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">-1</span> <span class="operator">|</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">0</span> <span class="operator">|</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">0</span> <span class="keyword">AND</span> <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+---------+------------+------------+</span></span><br><span class="line"><span class="operator">|</span>        <span class="number">1</span> <span class="operator">|</span>       <span class="number">0</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span>          <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------+---------+------------+------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span> <span class="operator">&amp;&amp;</span> <span class="number">-1</span>, <span class="number">1</span><span class="operator">&amp;&amp;</span><span class="number">0</span>, <span class="number">1</span><span class="operator">&amp;&amp;</span><span class="keyword">NULL</span>, <span class="number">0</span><span class="operator">&amp;&amp;</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------+---------+---------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="operator">&amp;&amp;</span> <span class="number">-1</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&amp;&amp;</span><span class="number">0</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&amp;&amp;</span><span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">0</span><span class="operator">&amp;&amp;</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------+---------+---------+</span></span><br><span class="line"><span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span>    <span class="number">0</span> <span class="operator">|</span>    <span class="keyword">NULL</span> <span class="operator">|</span>       <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+------+---------+---------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>AND</code>和<code>&amp;&amp;</code>的作用相同。<code>1 AND -1</code>中没有 0 或者<code>NULL</code>，所以返回值为 1；<code>1 AND 0</code>中有操作数 0，所以返回值为 0；<code>1 AND NULL</code>有<code>NULL</code>，所以返回值为<code>NULL</code>。</p>
+<blockquote>
+<p>注意：<code>AND</code>运算符可以有多个操作数，但要注意多个操作数运算时，<code>AND</code>两边一定要使用空格隔开，不然会影响结果的正确性。</p>
+</blockquote>
+<h2 id="逻辑或运算符（OR-或者-）"><a href="#逻辑或运算符（OR-或者-）" class="headerlink" title="逻辑或运算符（OR 或者 ||）"></a>逻辑或运算符（OR 或者 ||）</h2><p><code>OR</code>和<code>||</code>都是逻辑或运算符：</p>
+<ul>
+<li>当两个操作数都为非<code>NULL</code>值时，如果有任意一个操作数为非零值，则返回值为 1，否则结果为 0；</li>
+<li>当有一个操作数为<code>NULL</code>时，如果另一个操作数为非零值，则返回值为 1，否则结果为<code>NULL</code>；</li>
+<li>假如两个操作数均为<code>NULL</code>时，则返回值为<code>NULL</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span> <span class="keyword">OR</span> <span class="number">-1</span> <span class="keyword">OR</span> <span class="number">0</span>,<span class="number">1</span> <span class="keyword">OR</span> <span class="number">2</span>,<span class="number">1</span> <span class="keyword">OR</span> <span class="keyword">NULL</span>, <span class="number">0</span> <span class="keyword">OR</span> <span class="keyword">NULL</span>, <span class="keyword">NULL</span> <span class="keyword">OR</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+-----------+-----------+--------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="keyword">OR</span> <span class="number">-1</span> <span class="keyword">OR</span> <span class="number">0</span> <span class="operator">|</span> <span class="number">1</span> <span class="keyword">OR</span> <span class="number">2</span> <span class="operator">|</span> <span class="number">1</span> <span class="keyword">OR</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">0</span> <span class="keyword">OR</span> <span class="keyword">NULL</span> <span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">OR</span> <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+-----------+-----------+--------------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span>      <span class="keyword">NULL</span> <span class="operator">|</span>         <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------+-----------+-----------+--------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span> <span class="operator">||</span> <span class="number">-1</span> <span class="operator">||</span> <span class="number">0</span>, <span class="number">1</span><span class="operator">||</span><span class="number">2</span>, <span class="number">1</span><span class="operator">||</span><span class="keyword">NULL</span>, <span class="number">0</span><span class="operator">||</span><span class="keyword">NULL</span>, <span class="keyword">NULL</span><span class="operator">||</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+------+---------+---------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> <span class="operator">||</span> <span class="number">-1</span> <span class="operator">||</span> <span class="number">0</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">||</span><span class="number">2</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">||</span><span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">0</span><span class="operator">||</span><span class="keyword">NULL</span> <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">||</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+------+---------+---------+------------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span>    <span class="keyword">NULL</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+------+---------+---------+------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>OR</code>和<code>||</code>的作用相同。下面是对各个结果的解析：</p>
+<ul>
+<li><code>1 OR -1 OR 0</code>含有 0，但同时包含有非 0 的值 1 和 -1，所以返回结果为 1；</li>
+<li><code>1 OR 2</code>中没有操作数 0，所以返回结果为 1；</li>
+<li><code>1 OR NULL</code>虽然有<code>NULL</code>，但是有操作数 1，所以返回结果为 1；</li>
+<li><code>0 OR NULL</code>中没有非 0 值，并且有<code>NULL</code>，所以返回值为<code>NULL</code>；</li>
+<li><code>NULL OR NULL</code>中只有<code>NULL</code>，所以返回值为<code>NULL</code>。</li>
+</ul>
+<h2 id="异或运算（XOR-运算符）"><a href="#异或运算（XOR-运算符）" class="headerlink" title="异或运算（XOR 运算符）"></a>异或运算（XOR 运算符）</h2><p><code>XOR</code>表示逻辑异或：</p>
+<ul>
+<li>当任意一个操作数为<code>NULL</code>时，返回值为<code>NULL</code>；</li>
+<li>对于非<code>NULL</code>的操作数，如果两个操作数都是非 0 值或者都是 0 值，则返回值为 0；</li>
+<li>如果一个为 0 值，另一个为非 0 值，返回值为 1。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span> XOR <span class="number">1</span>, <span class="number">0</span> XOR <span class="number">0</span>, <span class="number">1</span> XOR <span class="number">0</span>, <span class="number">1</span> XOR <span class="keyword">NULL</span>, <span class="number">1</span> XOR <span class="number">1</span> XOR <span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------+---------+---------+------------+---------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span> XOR <span class="number">1</span> <span class="operator">|</span> <span class="number">0</span> XOR <span class="number">0</span> <span class="operator">|</span> <span class="number">1</span> XOR <span class="number">0</span> <span class="operator">|</span> <span class="number">1</span> XOR <span class="keyword">NULL</span> <span class="operator">|</span> <span class="number">1</span> XOR <span class="number">1</span> XOR <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+---------+---------+------------+---------------+</span></span><br><span class="line"><span class="operator">|</span>       <span class="number">0</span> <span class="operator">|</span>       <span class="number">0</span> <span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span>             <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+---------+---------+------------+---------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到：</p>
+<ul>
+<li><code>1 XOR 1</code>和<code>0 XOR 0</code>中运算符两边的操作数都为非零值，或者都是零值，因此返回 0；</li>
+<li><code>1 XOR 0</code>中两边的操作数，一个为 0 值，另一个为非 0 值，所以返回值为 1；</li>
+<li><code>1 XOR NULL</code>中有一个操作数为<code>NULL</code>，所以返回值为<code>NULL</code>；</li>
+<li><code>1 XOR 1 XOR 1</code>中有多个操作数，运算符相同，因此运算顺序从左到右依次计算，<code>1 XOR 1</code>的结果为 0，再与 1 进行异或运算，所以返回值为 1。</li>
+</ul>
+<blockquote>
+<p>提示：<code>a XOR b</code>的计算等同于<code>(a AND (NOT b))</code>或者<code>((NOT a) AND b)</code>。</p>
+</blockquote>
+<h1 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h1><p>当使用<code>SELECT</code>语句进行查询时，MySQL 允许用户对表达式的左边操作数和右边操作数进行比较，比较结果为真，则返回 1，为假则返回 0，比较结果不确定则返回<code>NULL</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&#x3D;</td>
+<td align="center">等于</td>
+</tr>
+<tr>
+<td align="center">&lt;&#x3D;&gt;</td>
+<td align="center">安全的等于</td>
+</tr>
+<tr>
+<td align="center">&lt;&gt; 或者 !&#x3D;</td>
+<td align="center">不等于</td>
+</tr>
+<tr>
+<td align="center">&lt;&#x3D;</td>
+<td align="center">小于等于</td>
+</tr>
+<tr>
+<td align="center">&lt;</td>
+<td align="center">小于</td>
+</tr>
+<tr>
+<td align="center">&gt;&#x3D;</td>
+<td align="center">大于等于</td>
+</tr>
+<tr>
+<td align="center">&gt;</td>
+<td align="center">大于</td>
+</tr>
+<tr>
+<td align="center">IS NULL 或者 ISNULL</td>
+<td align="center">判断一个值是否为空</td>
+</tr>
+<tr>
+<td align="center">IS NOT NULL</td>
+<td align="center">判断一个值是否不为空</td>
+</tr>
+<tr>
+<td align="center">BETWEEN AND</td>
+<td align="center">判断一个值是否落在两个值之间</td>
+</tr>
+</tbody></table>
+<p>比较运算符可以用于比较数字、字符串和表达式的值。注意，字符串的比较是不区分大小写的。</p>
+<h2 id="等于运算（-x3D-）"><a href="#等于运算（-x3D-）" class="headerlink" title="等于运算（&#x3D;）"></a>等于运算（&#x3D;）</h2><p><code>=</code>运算符用来比较两边的操作数是否相等，相等的话返回 1，不相等的话返回 0：</p>
+<ul>
+<li>若有一个或两个操作数为<code>NULL</code>，则比较运算的结果为<code>NULL</code>。</li>
+<li>若两个操作数都是字符串，则按照字符串进行比较。</li>
+<li>若两个操作数均为整数，则按照整数进行比较。</li>
+<li>若一个操作数为字符串，另一个操作数为数字，则 MySQL 可以自动将字符串转换为数字。</li>
+</ul>
+<blockquote>
+<p>注意：<code>NULL</code>不能用于<code>=</code>比较。如果字符串转换数值不成功则转成 0。</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span><span class="operator">=</span><span class="number">0</span>, <span class="string">&#x27;2&#x27;</span><span class="operator">=</span><span class="number">2</span>, <span class="number">2</span><span class="operator">=</span><span class="number">2</span>, <span class="string">&#x27;0.02&#x27;</span><span class="operator">=</span><span class="number">0</span>, <span class="string">&#x27;b&#x27;</span><span class="operator">=</span><span class="string">&#x27;b&#x27;</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">2</span>), <span class="keyword">NULL</span><span class="operator">=</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-------+-----+----------+---------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span><span class="operator">=</span><span class="number">0</span> <span class="operator">|</span> <span class="string">&#x27;2&#x27;</span><span class="operator">=</span><span class="number">2</span> <span class="operator">|</span> <span class="number">2</span><span class="operator">=</span><span class="number">2</span> <span class="operator">|</span> <span class="string">&#x27;0.02&#x27;</span><span class="operator">=</span><span class="number">0</span> <span class="operator">|</span> <span class="string">&#x27;b&#x27;</span><span class="operator">=</span><span class="string">&#x27;b&#x27;</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">2</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">=</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-------+-----+----------+---------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>     <span class="number">1</span> <span class="operator">|</span>   <span class="number">1</span> <span class="operator">|</span>        <span class="number">0</span> <span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span>           <span class="number">1</span> <span class="operator">|</span>      <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+-------+-----+----------+---------+-------------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<h2 id="安全等于运算符（-lt-x3D-gt-）"><a href="#安全等于运算符（-lt-x3D-gt-）" class="headerlink" title="安全等于运算符（&lt;&#x3D;&gt;）"></a>安全等于运算符（&lt;&#x3D;&gt;）</h2><p><code>&lt;=&gt;</code>操作符和<code>=</code>操作符类似，不过<code>&lt;=&gt;</code>可以用来判断<code>NULL</code>值：</p>
+<ul>
+<li>当两个操作数均为<code>NULL</code>时，其返回值为 1 而不为<code>NULL</code>；</li>
+<li>而当一个操作数为<code>NULL</code>时，其返回值为 0 而不为<code>NULL</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span><span class="operator">&lt;=&gt;</span><span class="number">0</span>,<span class="string">&#x27;2&#x27;</span><span class="operator">&lt;=&gt;</span><span class="number">2</span>, <span class="number">2</span><span class="operator">&lt;=&gt;</span><span class="number">2</span>, <span class="string">&#x27;0.02&#x27;</span><span class="operator">&lt;=&gt;</span><span class="number">0</span>, <span class="string">&#x27;b&#x27;</span><span class="operator">&lt;=&gt;</span><span class="string">&#x27;b&#x27;</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>) <span class="operator">&lt;=&gt;</span> (<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&lt;=&gt;</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+---------+-------+------------+-----------+-----------------+-------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span><span class="operator">&lt;=&gt;</span><span class="number">0</span> <span class="operator">|</span> <span class="string">&#x27;2&#x27;</span><span class="operator">&lt;=&gt;</span><span class="number">2</span> <span class="operator">|</span> <span class="number">2</span><span class="operator">&lt;=&gt;</span><span class="number">2</span> <span class="operator">|</span> <span class="string">&#x27;0.02&#x27;</span><span class="operator">&lt;=&gt;</span><span class="number">0</span> <span class="operator">|</span> <span class="string">&#x27;b&#x27;</span><span class="operator">&lt;=&gt;</span><span class="string">&#x27;b&#x27;</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>) <span class="operator">&lt;=&gt;</span> (<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&lt;=&gt;</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+---------+-------+------------+-----------+-----------------+-------------+</span></span><br><span class="line"><span class="operator">|</span>     <span class="number">0</span> <span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span>     <span class="number">1</span> <span class="operator">|</span>          <span class="number">0</span> <span class="operator">|</span>         <span class="number">1</span> <span class="operator">|</span>               <span class="number">0</span> <span class="operator">|</span>           <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+---------+-------+------------+-----------+-----------------+-------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>&lt;=&gt;</code>在执行比较操作时和<code>=</code>的作用是相似的，唯一的区别是<code>&lt;=&gt;</code>可以用来对<code>NULL</code>进行判断，两者都为<code>NULL</code>时返回值为 1。</p>
+<h2 id="不等于运算符（-lt-gt-或者-x3D-）"><a href="#不等于运算符（-lt-gt-或者-x3D-）" class="headerlink" title="不等于运算符（&lt;&gt; 或者 !&#x3D;）"></a>不等于运算符（&lt;&gt; 或者 !&#x3D;）</h2><p>与<code>=</code>的作用相反，<code>&lt;&gt;</code>和<code>!=</code>用于判断数字、字符串、表达式是否不相等。对于<code>&lt;&gt;</code>和<code>!=</code>，如果两侧操作数不相等，返回值为 1，否则返回值为 0；如果两侧操作数有一个是<code>NULL</code>，那么返回值也是<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;&gt;</span><span class="string">&#x27;god&#x27;</span>, <span class="number">1</span><span class="operator">&lt;&gt;</span><span class="number">2</span>, <span class="number">4</span><span class="operator">!=</span><span class="number">4</span>, <span class="number">5.5</span><span class="operator">!=</span><span class="number">5</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">!=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&lt;&gt;</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;&gt;</span><span class="string">&#x27;god&#x27;</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&lt;&gt;</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">!=</span><span class="number">4</span> <span class="operator">|</span> <span class="number">5.5</span><span class="operator">!=</span><span class="number">5</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">!=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&lt;&gt;</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span>             <span class="number">1</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>    <span class="number">0</span> <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，两个不等于运算符作用相同，都可以进行数字、字符串、表达式的比较判断。</p>
+<h2 id="小于等于运算符（-lt-x3D-）"><a href="#小于等于运算符（-lt-x3D-）" class="headerlink" title="小于等于运算符（&lt;&#x3D;）"></a>小于等于运算符（&lt;&#x3D;）</h2><p><code>&lt;=</code>是小于等于运算符，用来判断左边的操作数是否小于或者等于右边的操作数；如果小于或者等于，返回值为 1，否则返回值为 0；如果两侧操作数有一个是<code>NULL</code>，那么返回值也是<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;=</span><span class="string">&#x27;god&#x27;</span>, <span class="number">1</span><span class="operator">&lt;=</span><span class="number">2</span>, <span class="number">4</span><span class="operator">&lt;=</span><span class="number">4</span>, <span class="number">5.5</span><span class="operator">&lt;=</span><span class="number">5</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&lt;=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&lt;=</span><span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;=</span><span class="string">&#x27;god&#x27;</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&lt;=</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">&lt;=</span><span class="number">4</span> <span class="operator">|</span> <span class="number">5.5</span><span class="operator">&lt;=</span><span class="number">5</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&lt;=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&lt;=</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span>             <span class="number">0</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span>            <span class="number">0</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h2 id="小于运算符（-lt-）"><a href="#小于运算符（-lt-）" class="headerlink" title="小于运算符（&lt;）"></a>小于运算符（&lt;）</h2><p><code>&lt;</code>是小于运算符，用来判断左边的操作数是否小于右边的操作数；如果小于，返回值为 1，否则返回值为 0；如果两侧操作数有一个是<code>NULL</code>，那么返回值也是<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;</span><span class="string">&#x27;god&#x27;</span>, <span class="number">1</span><span class="operator">&lt;</span><span class="number">2</span>, <span class="number">4</span><span class="operator">&lt;</span><span class="number">4</span>, <span class="number">5.5</span><span class="operator">&lt;</span><span class="number">5</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&lt;</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&lt;</span><span class="keyword">NULL</span>；</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&lt;</span><span class="string">&#x27;god&#x27;</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&lt;</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">&lt;</span><span class="number">4</span> <span class="operator">|</span> <span class="number">5.5</span><span class="operator">&lt;</span><span class="number">5</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&lt;</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&lt;</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">0</span> <span class="operator">|</span>   <span class="number">1</span> <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>     <span class="number">0</span> <span class="operator">|</span>           <span class="number">0</span> <span class="operator">|</span>      <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.02</span> sec)</span><br></pre></td></tr></table></figure>
+<h2 id="大于等于运算符（-gt-x3D-）"><a href="#大于等于运算符（-gt-x3D-）" class="headerlink" title="大于等于运算符（&gt;&#x3D;）"></a>大于等于运算符（&gt;&#x3D;）</h2><p><code>&gt;=</code>是大于等于运算符，用来判断左边的操作数是否大于或者等于右边的操作数；如果大于或者等于，返回值为 1，否则返回值为 0；如果两侧操作数有一个是<code>NULL</code>，那么返回值也是<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&gt;=</span><span class="string">&#x27;god&#x27;</span>, <span class="number">1</span><span class="operator">&gt;=</span><span class="number">2</span>, <span class="number">4</span><span class="operator">&gt;=</span><span class="number">4</span>, <span class="number">5.5</span><span class="operator">&gt;=</span><span class="number">5</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&gt;=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&gt;=</span><span class="keyword">NULL</span>；</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&gt;=</span><span class="string">&#x27;god&#x27;</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&gt;=</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">&gt;=</span><span class="number">4</span> <span class="operator">|</span> <span class="number">5.5</span><span class="operator">&gt;=</span><span class="number">5</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&gt;=</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&gt;=</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="operator">|</span>             <span class="number">1</span> <span class="operator">|</span>    <span class="number">0</span> <span class="operator">|</span>    <span class="number">1</span> <span class="operator">|</span>      <span class="number">1</span> <span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>       <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+------+------+--------+--------------+------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h2 id="大于运算符（-gt-）"><a href="#大于运算符（-gt-）" class="headerlink" title="大于运算符（&gt;）"></a>大于运算符（&gt;）</h2><p><code>&gt;</code>是大于运算符，用来判断左边的操作数是否大于右边的操作数；如果大于，返回值为 1，否则返回值为 0；如果两侧操作数有一个是<code>NULL</code>，那么返回值也是<code>NULL</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&gt;</span><span class="string">&#x27;god&#x27;</span>, <span class="number">1</span><span class="operator">&gt;</span><span class="number">2</span>, <span class="number">4</span><span class="operator">&gt;</span><span class="number">4</span>, <span class="number">5.5</span><span class="operator">&gt;</span><span class="number">5</span>, (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&gt;</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>), <span class="keyword">NULL</span><span class="operator">&gt;</span><span class="keyword">NULL</span>；</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="string">&#x27;good&#x27;</span><span class="operator">&gt;</span><span class="string">&#x27;god&#x27;</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">&gt;</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">&gt;</span><span class="number">4</span> <span class="operator">|</span> <span class="number">5.5</span><span class="operator">&gt;</span><span class="number">5</span> <span class="operator">|</span> (<span class="number">1</span><span class="operator">+</span><span class="number">3</span>)<span class="operator">&gt;</span>(<span class="number">2</span><span class="operator">+</span><span class="number">1</span>) <span class="operator">|</span> <span class="keyword">NULL</span><span class="operator">&gt;</span><span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span>     <span class="number">1</span> <span class="operator">|</span>           <span class="number">1</span> <span class="operator">|</span>      <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+-----+-----+-------+-------------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h2 id="IS-NULL-ISNULL-和-IS-NOT-NULL-运算符"><a href="#IS-NULL-ISNULL-和-IS-NOT-NULL-运算符" class="headerlink" title="IS NULL(ISNULL) 和 IS NOT NULL 运算符"></a>IS NULL(ISNULL) 和 IS NOT NULL 运算符</h2><p><code>IS NULL</code>或<code>ISNULL</code>运算符用来检测一个值是否为<code>NULL</code>，如果为<code>NULL</code>，返回值为 1，否则返回值为 0。<code>ISNULL</code>可以认为是<code>IS NULL</code>的简写，去掉了一个空格而已，两者的作用和用法都是完全相同的。</p>
+<p><code>IS NOT NULL</code>运算符用来检测一个值是否为非<code>NULL</code>，如果是非<code>NULL</code>，返回值为 1，否则返回值为 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">NULL</span> <span class="keyword">IS</span> <span class="keyword">NULL</span>, ISNULL(<span class="keyword">NULL</span>), ISNULL(<span class="number">10</span>), <span class="number">10</span> <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------------+------------+----------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">IS</span> <span class="keyword">NULL</span> <span class="operator">|</span> ISNULL(<span class="keyword">NULL</span>) <span class="operator">|</span> ISNULL(<span class="number">10</span>) <span class="operator">|</span> <span class="number">10</span> <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------------+------------+----------------+</span></span><br><span class="line"><span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>            <span class="number">1</span> <span class="operator">|</span>          <span class="number">0</span> <span class="operator">|</span>              <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------+--------------+------------+----------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>IS NULL</code>和<code>ISNULL</code>的作用相同，只是写法略有不同。<code>ISNULL</code>和<code>IS NOT NULL</code>的返回值正好相反。</p>
+<h2 id="BETWEEN-AND-运算符"><a href="#BETWEEN-AND-运算符" class="headerlink" title="BETWEEN AND 运算符"></a>BETWEEN AND 运算符</h2><p><code>BETWEEN AND</code>运算符用来判断表达式的值是否位于两个数之间，或者说是否位于某个范围内。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr BETWEEN min AND max</span><br></pre></td></tr></table></figure>
+<p><code>expr</code>表示要判断的表达式，<code>min</code>表示最小值，<code>max</code>表示最大值。如果<code>expr</code>大于等于<code>min</code>并且小于等于<code>max</code>，那么返回值为 1，否则返回值为 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">4</span> <span class="keyword">BETWEEN</span> <span class="number">2</span> <span class="keyword">AND</span> <span class="number">5</span>, <span class="number">4</span> <span class="keyword">BETWEEN</span> <span class="number">4</span> <span class="keyword">AND</span> <span class="number">6</span>, <span class="number">12</span> <span class="keyword">BETWEEN</span> <span class="number">9</span> <span class="keyword">AND</span> <span class="number">10</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">4</span> <span class="keyword">BETWEEN</span> <span class="number">2</span> <span class="keyword">AND</span> <span class="number">5</span> <span class="operator">|</span> <span class="number">4</span> <span class="keyword">BETWEEN</span> <span class="number">4</span> <span class="keyword">AND</span> <span class="number">6</span> <span class="operator">|</span> <span class="number">12</span> <span class="keyword">BETWEEN</span> <span class="number">9</span> <span class="keyword">AND</span> <span class="number">10</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+---------------------+</span></span><br><span class="line"><span class="operator">|</span>                 <span class="number">1</span> <span class="operator">|</span>                 <span class="number">1</span> <span class="operator">|</span>                   <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------+-------------------+---------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>对于字符串类型的比较，按字母表中字母顺序进行比较，<code>x</code>不在指定的字母区间内，因此返回值为 0，而<code>b</code>位于指定字母区间内，因此返回值为 1。</p>
+<p>使用比较运算符时需要注意空值<code>NULL</code>，大部分比较运算符遇到<code>NULL</code>时也会返回<code>NULL</code>。</p>
+<h1 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h1><p>所谓位运算，就是按照内存中的比特位（<code>Bit</code>）进行操作，这是计算机能够支持的最小单位的运算。程序中所有的数据在内存中都是以二进制形式存储的，位运算就是对这些二进制数据进行操作。</p>
+<p>位运算一般用于操作整数，对整数进行位运算才有实际的意义。整数在内存中是以补码形式存储的，正数的补码形式和原码形式相同，而负数的补码形式和它的原码形式是不一样的，这一点大家要特别注意；这意味着，对负数进行位运算时，操作的是它的补码，而不是它的原码。</p>
+<p>MySQL 中的整数字面量（常量整数，也就是直接书写出来的整数）默认以 8 个字节（<code>Byte</code>）来表示，也就是 64 位（<code>Bit</code>）。例如，5 的二进制形式为：<code>0000 0000 ... 0000 0101</code></p>
+<p>省略号部分都是 0，101 前面总共有 61 个 0。</p>
+<p>MySQL 中的位运算符：</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">说明   使用形式</th>
+<th align="center">举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&#96;</td>
+<td align="center">&#96;</td>
+<td align="center">位或    a</td>
+</tr>
+<tr>
+<td align="center">&amp;</td>
+<td align="center">位与    a &amp; b</td>
+<td align="center">5 &amp; 8</td>
+</tr>
+<tr>
+<td align="center">^</td>
+<td align="center">位异或  a ^ b</td>
+<td align="center">5 ^ 8</td>
+</tr>
+<tr>
+<td align="center">~</td>
+<td align="center">位取反  ~a</td>
+<td align="center">~5</td>
+</tr>
+<tr>
+<td align="center">&lt;&lt;</td>
+<td align="center">位左移  a &lt;&lt; b</td>
+<td align="center">5 &lt;&lt; 2，表示整数 5 按位左移 2 位</td>
+</tr>
+<tr>
+<td align="center">&gt;&gt;</td>
+<td align="center">位右移  a &gt;&gt; b</td>
+<td align="center">5 &gt;&gt; 2，表示整数 5 按位右移 2 位</td>
+</tr>
+</tbody></table>
+<p>位运算中的<code>&amp;、|、~</code>和逻辑运算中的<code>&amp;&amp;、||、!</code>非常相似。</p>
+<h2 id="位或运算符"><a href="#位或运算符" class="headerlink" title="位或运算符 |"></a>位或运算符 |</h2><p>参与<code>|</code>运算的两个二进制位有一个为 1 时，结果就为 1，两个都为 0 时结果才为 0。例如<code>1|1</code>结果为 1，<code>0|0</code>结果为0，<code>1|0</code>结果为1，这和逻辑运算中的<code>||</code>非常类似。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">10</span><span class="operator">|</span><span class="number">15</span>, <span class="number">9</span><span class="operator">|</span><span class="number">4</span><span class="operator">|</span><span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span><span class="operator">|</span><span class="number">15</span> <span class="operator">|</span> <span class="number">9</span><span class="operator">|</span><span class="number">4</span><span class="operator">|</span><span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-------+</span></span><br><span class="line"><span class="operator">|</span>    <span class="number">15</span> <span class="operator">|</span>    <span class="number">15</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>10 的补码为 1010，15 的补码为 1111，按位或运算之后，结果为 1111，即整数 15；9 的补码为 1001，4 的补码为 0100，2 的补码为 0010，按位或运算之后，结果为 111，即整数 15。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">-7</span><span class="operator">|</span><span class="number">-1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">-7</span><span class="operator">|</span><span class="number">-1</span>                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">18446744073709551615</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>-7 的补码为 60 个 1 加 1001，-1 的补码为 64 个 1，按位或运算之后，结果为 64 个 1，即整数<code>18446744073709551615</code>。</p>
+<p>可以发现，任何数和 -1 进行位或运算时，最终结果都是 -1 的十进制数。</p>
+<h2 id="位与运算符-amp"><a href="#位与运算符-amp" class="headerlink" title="位与运算符 &amp;"></a>位与运算符 &amp;</h2><p>参与<code>&amp;</code>运算的两个二进制位都为 1 时，结果就为 1，否则为 0。例如<code>1&amp;1</code>结果为 1，<code>0&amp;0</code>结果为 0，<code>1&amp;0</code>结果为 0，这和逻辑运算中的&amp;&amp;非常类似。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">10</span> <span class="operator">&amp;</span> <span class="number">15</span>, <span class="number">9</span> <span class="operator">&amp;</span> <span class="number">4</span> <span class="operator">&amp;</span> <span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------+-----------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> <span class="operator">&amp;</span> <span class="number">15</span> <span class="operator">|</span> <span class="number">9</span> <span class="operator">&amp;</span> <span class="number">4</span> <span class="operator">&amp;</span> <span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+-----------+</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">10</span> <span class="operator">|</span>         <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+<p>10 的补码为 1010，15 的补码为 1111，按位与运算之后，结果为 1010，即整数 10；9 的补码为 1001，4 的补码为 0100，2 的补码为 0010，按位与运算之后，结果为 0000，即整数 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">-7</span><span class="operator">&amp;</span><span class="number">-1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">-7</span><span class="operator">&amp;</span><span class="number">-1</span>                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">18446744073709551609</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>-7 的补码为 60 个 1 加 1001，-1 的补码为 64 个 1，按位与运算之后，结果为 60 个 1 加 1001，即整数<code>18446744073709551609</code>。</p>
+<p>可以发现，任何数和 -1 进行位与运算时，最终结果都为任何数本身的十进制数。</p>
+<h2 id="位异或运算符"><a href="#位异或运算符" class="headerlink" title="位异或运算符 ^"></a>位异或运算符 ^</h2><p>参与<code>^</code>运算的两个二进制位不同时，结果为 1，相同时，结果为 0。例如<code>1^1</code>结果为 0，<code>0^0</code>结果为 0，<code>1^0</code>结果为 1。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">10</span><span class="operator">^</span><span class="number">15</span>, <span class="number">1</span><span class="operator">^</span><span class="number">0</span>, <span class="number">1</span><span class="operator">^</span><span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-----+-----+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span><span class="operator">^</span><span class="number">15</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">^</span><span class="number">0</span> <span class="operator">|</span> <span class="number">1</span><span class="operator">^</span><span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-----+-----+</span></span><br><span class="line"><span class="operator">|</span>     <span class="number">5</span> <span class="operator">|</span>   <span class="number">1</span> <span class="operator">|</span>   <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+-----+-----+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+<p>10 的补码为 1010，15 的补码为 111，按位异或运算之后，结果为 0101，即整数 5；1 的补码为 0001，0 的补码为 0000，按位异或运算之后，结果为 0001；1 和 1 本身二进制位完全相同，因此结果为 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">-7</span><span class="operator">^</span><span class="number">-1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">-7</span><span class="operator">^</span><span class="number">-1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="operator">|</span>     <span class="number">6</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+<p>-7 的补码为 60 个 1 加 1001，-1 的补码为 64 个 1，按位异或运算之后，结果为 110，即整数 6。</p>
+<h2 id="位左移运算符-lt-lt"><a href="#位左移运算符-lt-lt" class="headerlink" title="位左移运算符 &lt;&lt;"></a>位左移运算符 &lt;&lt;</h2><p>位左移是按指定值的补码形式进行左移，左移指定位数之后，左边高位的数值被移出并丢弃，右边低位空出的位置用 0 补齐。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr &lt;&lt; n</span><br></pre></td></tr></table></figure>
+<p>其中，<code>n</code>指定值<code>expr</code>要移位的位数，<code>n</code>必须为非负数。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span><span class="operator">&lt;&lt;</span><span class="number">2</span>, <span class="number">4</span><span class="operator">&lt;&lt;</span><span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span><span class="operator">&lt;&lt;</span><span class="number">2</span> <span class="operator">|</span> <span class="number">4</span><span class="operator">&lt;&lt;</span><span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+------+</span></span><br><span class="line"><span class="operator">|</span>    <span class="number">4</span> <span class="operator">|</span>   <span class="number">16</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+<p>1 的补码为 0000 0001，左移两位之后变成 0000 0100，即整数 4；4 的补码为 0000 0100，左移两位之后变成 0001 0000，即整数 16。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">-7</span><span class="operator">&lt;&lt;</span><span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">-7</span><span class="operator">&lt;&lt;</span><span class="number">2</span>                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">18446744073709551588</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>-7 的补码为 60 个 1 加 1001，左移两位之后变成 56 个 1 加 1110 0100，即整数<code>18446744073709551588</code>。</p>
+<h2 id="位右移运算符-gt-gt"><a href="#位右移运算符-gt-gt" class="headerlink" title="位右移运算符 &gt;&gt;"></a>位右移运算符 &gt;&gt;</h2><p>位右移是按指定值的补码形式进行右移，右移指定位数之后，右边低位的数值被移出并丢弃，左边高位空出的位置用 0 补齐。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr &gt;&gt; n</span><br></pre></td></tr></table></figure>
+<p>其中，<code>n</code>指定值<code>expr</code>要移位的位数，<code>n</code>必须为非负数。 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">1</span><span class="operator">&gt;&gt;</span><span class="number">1</span>, <span class="number">16</span><span class="operator">&gt;&gt;</span><span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1</span><span class="operator">&gt;&gt;</span><span class="number">1</span> <span class="operator">|</span> <span class="number">16</span><span class="operator">&gt;&gt;</span><span class="number">2</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+</span></span><br><span class="line"><span class="operator">|</span>    <span class="number">0</span> <span class="operator">|</span>     <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------+-------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>1 的补码为 0000 0001，右移 1 位之后变成 0000 0000，即整数 0；16 的补码为 0001 0000，右移两位之后变成 0000 0100，即整数 4。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">-7</span><span class="operator">&gt;&gt;</span><span class="number">2</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">-7</span><span class="operator">&gt;&gt;</span><span class="number">2</span>               <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">4611686018427387902</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>-7 的补码为 60 个 1 加 1001，右移两位之后变成 0011 加 56 个 1 加 1110，即整数<code>4611686018427387902</code>。</p>
+<h2 id="位取反运算符"><a href="#位取反运算符" class="headerlink" title="位取反运算符 ~"></a>位取反运算符 ~</h2><p>位取反是将参与运算的数据按对应的补码进行反转，也就是做<code>NOT</code>操作，即 1 取反后变 0，0 取反后变为 1。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="operator">~</span><span class="number">1</span>, <span class="operator">~</span><span class="number">18446744073709551614</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="operator">~</span><span class="number">1</span>                   <span class="operator">|</span> <span class="operator">~</span><span class="number">18446744073709551614</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">18446744073709551614</span> <span class="operator">|</span>                     <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------+-----------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>常量 1 的补码为 63 个 0 加 1 个 1，位取反后就是 63 个 1 加一个 0，转换为二进制后就是<code>18446744073709551614</code>。</p>
+<p>可以使用<code>BIN()</code>函数查看 1 取反之后的结果，<code>BIN()</code>函数的作用是将一个十进制数转换为二进制数:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> BIN(<span class="operator">~</span><span class="number">1</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> BIN(<span class="operator">~</span><span class="number">1</span>)                                                          <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">1111111111111111111111111111111111111111111111111111111111111110</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>1 的补码表示为最右边位为 1，其他位均为 0，取反操作之后，除了最低位，其他位均变为 1。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">5</span> <span class="operator">&amp;</span> <span class="operator">~</span><span class="number">1</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">5</span> <span class="operator">&amp;</span> <span class="operator">~</span><span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="operator">|</span>      <span class="number">4</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec) </span><br></pre></td></tr></table></figure>
+<p>逻辑运算<code>5&amp;~1</code>中，由于位取反运算符<code>~</code>的级别高于位与运算符<code>&amp;</code>，因此先对 1 进行取反操作，结果为 63 个 1 加一个 0，然后再与整数 5 进行与运算，结果为 0100，即整数 4。</p>
+<h1 id="运算符的优先级"><a href="#运算符的优先级" class="headerlink" title="运算符的优先级"></a>运算符的优先级</h1><p>运算符的优先级决定了不同的运算符在表达式中计算的先后顺序，下表列出了 MySQL 中的各类运算符及其优先级。</p>
+<table>
+<thead>
+<tr>
+<th align="center">优先级由低到高排列</th>
+<th align="center">运算符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">&#x3D;(赋值运算)、:&#x3D;</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">II、OR</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">XOR</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">&amp;&amp;、AND</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">NOT</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">BETWEEN、CASE、WHEN、THEN、ELSE</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">&#x3D;(比较运算)、&lt;&#x3D;&gt;、&gt;&#x3D;、&gt;、&lt;&#x3D;、&lt;、&lt;&gt;、!&#x3D;、 IS、LIKE、REGEXP、IN</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">&amp;</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">&lt;&lt;、&gt;&gt;</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">-(减号)、+</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center">*、&#x2F;、%</td>
+</tr>
+<tr>
+<td align="center">13</td>
+<td align="center">^</td>
+</tr>
+<tr>
+<td align="center">14</td>
+<td align="center">-(负号)、〜（位反转）</td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td align="center">!</td>
+</tr>
+</tbody></table>
+<p>可以看出，不同运算符的优先级是不同的。一般情况下，级别高的运算符优先进行计算，如果级别相同，MySQL 按表达式的顺序从左到右依次计算。</p>
+<p>另外，在无法确定优先级的情况下，可以使用圆括号<code>()</code>来改变优先级，并且这样会使计算过程更加清晰。</p>
+<h1 id="IN和NOT-IN用法"><a href="#IN和NOT-IN用法" class="headerlink" title="IN和NOT IN用法"></a>IN和NOT IN用法</h1><p>MySQL 中的<code>IN</code>运算符用来判断表达式的值是否位于给出的列表中；如果是，返回值为 1，否则返回值为 0。</p>
+<p><code>NOT IN</code>的作用和<code>IN</code>恰好相反，<code>NOT IN</code>用来判断表达式的值是否不存在于给出的列表中；如果不是，返回值为 1，否则返回值为 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">expr <span class="keyword">IN</span> ( value1, value2, value3 ... valueN )</span><br><span class="line">expr <span class="keyword">NOT</span> <span class="keyword">IN</span> ( value1, value2, value3 ... valueN )</span><br></pre></td></tr></table></figure>
+<p><code>expr</code>表示要判断的表达式，<code>value1, value2, value3 ... valueN</code>表示列表中的值。MySQL 会将<code>expr</code>的值和列表中的值逐一对比。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="string">&#x27;thks&#x27;</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>, <span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+---------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="string">&#x27;thks&#x27;</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>, <span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+---------------------------+</span></span><br><span class="line"><span class="operator">|</span>                   <span class="number">0</span> <span class="operator">|</span>                         <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------+---------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span>, <span class="number">2</span> warnings (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="string">&#x27;thks&#x27;</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>, <span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+-------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="string">&#x27;thks&#x27;</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>, <span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+-------------------------------+</span></span><br><span class="line"><span class="operator">|</span>                       <span class="number">1</span> <span class="operator">|</span>                             <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------+-------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span>, <span class="number">2</span> warnings (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>由结果可以看到，<code>IN</code>和<code>NOT IN</code>的返回值正好相反。</p>
+<h2 id="对空值-NULL-的处理"><a href="#对空值-NULL-的处理" class="headerlink" title="对空值 NULL 的处理"></a>对空值 NULL 的处理</h2><p>当<code>IN</code>运算符的两侧有一个为空值<code>NULL</code>时，如果找不到匹配项，则返回值为<code>NULL</code>；如果找到了匹配项，则返回值为 1。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">NULL</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="number">10</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="number">10</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------------------------+</span></span><br><span class="line"><span class="operator">|</span>                   <span class="keyword">NULL</span> <span class="operator">|</span>                    <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+-------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span>, <span class="number">1</span> warning (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span>  <span class="keyword">SELECT</span> <span class="keyword">NULL</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="number">10</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">10</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+--------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="number">10</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">10</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+--------------------------+</span></span><br><span class="line"><span class="operator">|</span>                   <span class="keyword">NULL</span> <span class="operator">|</span>                        <span class="number">1</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------------+--------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p><code>NOT IN</code>恰好相反，当<code>NOT IN</code>运算符的两侧有一个为空值<code>NULL</code>时，如果找不到匹配项，则返回值为<code>NULL</code>；如果找到了匹配项，则返回值为 0。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span>  <span class="keyword">SELECT</span> <span class="keyword">NULL</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="number">10</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">0</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="number">10</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">0</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+-----------------------------+</span></span><br><span class="line"><span class="operator">|</span>                       <span class="keyword">NULL</span> <span class="operator">|</span>                        <span class="keyword">NULL</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+-----------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span>, <span class="number">1</span> warning (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span>  <span class="keyword">SELECT</span> <span class="keyword">NULL</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>), <span class="number">10</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">10</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">NULL</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span> <span class="number">10</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">10</span>,<span class="keyword">NULL</span>,<span class="string">&#x27;thks&#x27;</span>) <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+------------------------------+</span></span><br><span class="line"><span class="operator">|</span>                       <span class="keyword">NULL</span> <span class="operator">|</span>                            <span class="number">0</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----------------------------+------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/04/19/MySQL/MySQL%E8%BF%90%E7%AE%97%E7%AC%A6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/04/21/MySQL/MySQL%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E6%B1%87%E6%80%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL常用函数汇总
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/15/MySQL/MySQL%E7%BA%A6%E6%9D%9F/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL约束</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

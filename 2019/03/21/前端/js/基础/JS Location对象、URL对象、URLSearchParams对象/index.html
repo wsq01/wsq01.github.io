@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS Location对象、URL对象、RULSearchParams对象 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/基础/JS Location对象、URL对象、URLSearchParams对象"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS Location对象、URL对象、RULSearchParams对象
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/03/21/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20Location%E5%AF%B9%E8%B1%A1%E3%80%81URL%E5%AF%B9%E8%B1%A1%E3%80%81URLSearchParams%E5%AF%B9%E8%B1%A1/" class="article-date">
+  <time datetime="2019-03-21T13:20:41.000Z" itemprop="datePublished">2019-03-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>URL 是互联网的基础设施之一。浏览器提供了一些原生对象，用来管理 URL。</p>
+<h1 id="Location-对象"><a href="#Location-对象" class="headerlink" title="Location 对象"></a>Location 对象</h1><p><code>Location</code>对象是浏览器提供的原生对象，提供 URL 相关的信息和操作方法。通过<code>window.location</code>和<code>document.location</code>属性，可以拿到这个对象。</p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p><code>Location</code>对象提供以下属性。</p>
+<ul>
+<li><code>Location.href</code>：整个 URL。</li>
+<li><code>Location.protocol</code>：当前 URL 的协议，包括冒号（<code>:</code>）。</li>
+<li><code>Location.host</code>：主机，包括冒号（<code>:</code>）和端口（默认的80端口和443端口会省略）。</li>
+<li><code>Location.hostname</code>：主机名，不包括端口。</li>
+<li><code>Location.port</code>：端口号。</li>
+<li><code>Location.pathname</code>：URL 的路径部分，从根路径<code>/</code>开始。</li>
+<li><code>Location.search</code>：查询字符串部分，从问号<code>?</code>开始。</li>
+<li><code>Location.hash</code>：片段字符串部分，从<code>#</code>开始。</li>
+<li><code>Location.username</code>：域名前面的用户名。</li>
+<li><code>Location.password</code>：域名前面的密码。</li>
+<li><code>Location.origin</code>：URL 的协议、主机名和端口。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 当前网址为</span></span><br><span class="line"><span class="comment">// http://user:passwd@www.example.com:4097/path/a.html?x=111#part1</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://user:passwd@www.example.com:4097/path/a.html?x=111#part1&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">protocol</span></span><br><span class="line"><span class="comment">// &quot;http:&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">host</span></span><br><span class="line"><span class="comment">// &quot;www.example.com:4097&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">hostname</span></span><br><span class="line"><span class="comment">// &quot;www.example.com&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">port</span></span><br><span class="line"><span class="comment">// &quot;4097&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">pathname</span></span><br><span class="line"><span class="comment">// &quot;/path/a.html&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">search</span></span><br><span class="line"><span class="comment">// &quot;?x=111&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">hash</span></span><br><span class="line"><span class="comment">// &quot;#part1&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">username</span></span><br><span class="line"><span class="comment">// &quot;user&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">password</span></span><br><span class="line"><span class="comment">// &quot;passwd&quot;</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">origin</span></span><br><span class="line"><span class="comment">// &quot;http://user:passwd@www.example.com:4097&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这些属性里面，只有<code>origin</code>属性是只读的，其他属性都可写。</p>
+<p>注意，如果对<code>Location.href</code>写入新的 URL 地址，浏览器会立刻跳转到这个新地址。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到新网址</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span> = <span class="string">&#x27;http://www.example.com&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>这个特性常常用于让网页自动滚动到新的锚点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span> = <span class="string">&#x27;#top&#x27;</span>;</span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">hash</span> = <span class="string">&#x27;#top&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>直接改写<code>location</code>，相当于写入<code>href</code>属性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">location</span> = <span class="string">&#x27;http://www.example.com&#x27;</span>;</span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span> = <span class="string">&#x27;http://www.example.com&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>另外，<code>Location.href</code>属性是浏览器唯一允许跨域写入的属性，即非同源的窗口可以改写另一个窗口（比如子窗口与父窗口）的<code>Location.href</code>属性，导致后者的网址跳转。<code>Location</code>的其他属性都不允许跨域写入。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h4 id="Location-assign"><a href="#Location-assign" class="headerlink" title="Location.assign()"></a>Location.assign()</h4><p><code>assign</code>方法接受一个 URL 字符串作为参数，使得浏览器立刻跳转到新的 URL。如果参数不是有效的 URL 字符串，则会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到新的网址</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="title function_">assign</span>(<span class="string">&#x27;http://www.example.com&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Location-replace"><a href="#Location-replace" class="headerlink" title="Location.replace()"></a>Location.replace()</h4><p><code>replace</code>方法接受一个 URL 字符串作为参数，使得浏览器立刻跳转到新的 URL。如果参数不是有效的 URL 字符串，则会报错。</p>
+<p>它与<code>assign</code>方法的差异在于，<code>replace</code>会在浏览器的浏览历史<code>History</code>里面删除当前网址，也就是说，一旦使用了该方法，后退按钮就无法回到当前网页了，相当于在浏览历史里面，使用新的 URL 替换了老的 URL。它的一个应用是，当脚本发现当前是移动设备时，就立刻跳转到移动版网页。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转到新的网址</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">location</span>.<span class="title function_">replace</span>(<span class="string">&#x27;http://www.example.com&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Location-reload"><a href="#Location-reload" class="headerlink" title="Location.reload()"></a>Location.reload()</h4><p><code>reload</code>方法使得浏览器重新加载当前网址，相当于按下浏览器的刷新按钮。</p>
+<p>它接受一个布尔值作为参数。如果参数为<code>true</code>，浏览器将向服务器重新请求这个网页，并且重新加载后，网页将滚动到头部（即<code>scrollTop === 0</code>）。如果参数是<code>false</code>或为空，浏览器将从本地缓存重新加载该网页，并且重新加载后，网页的视口位置是重新加载前的位置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 向服务器重新请求当前网址</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="title function_">reload</span>(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Location-toString"><a href="#Location-toString" class="headerlink" title="Location.toString()"></a>Location.toString()</h4><p><code>toString</code>方法返回整个 URL 字符串，相当于读取<code>Location.href</code>属性。</p>
+<h1 id="URL-的编码和解码"><a href="#URL-的编码和解码" class="headerlink" title="URL 的编码和解码"></a>URL 的编码和解码</h1><p>网页的 URL 只能包含合法的字符。合法字符分成两类。</p>
+<ul>
+<li>URL 元字符：分号（<code>;</code>），逗号（<code>,</code>），斜杠（<code>/</code>），问号（<code>?</code>），冒号（<code>:</code>），at（<code>@</code>），<code>&amp;</code>，等号（<code>=</code>），加号（<code>+</code>），美元符号（<code>$</code>），井号（<code>#</code>）</li>
+<li>语义字符：<code>a-z</code>，<code>A-Z</code>，<code>0-9</code>，连词号（<code>-</code>），下划线（<code>_</code>），点（<code>.</code>），感叹号（<code>!</code>），波浪线（<code>~</code>），星号（<code>*</code>），单引号（<code>&#39;</code>），圆括号（<code>()</code>）</li>
+</ul>
+<p>除了以上字符，其他字符出现在 URL 之中都必须转义，规则是根据操作系统的默认编码，将每个字节转为百分号（<code>%</code>）加上两个大写的十六进制字母。</p>
+<p>比如，UTF-8 的操作系统上，<code>http://www.example.com/q=春节</code>这个 URL 之中，汉字“春节”不是 URL 的合法字符，所以被浏览器自动转成<code>http://www.example.com/q=%E6%98%A5%E8%8A%82</code>。其中，“春”转成了<code>%E6%98%A5</code>，“节”转成了<code>%E8%8A%82</code>。这是因为“春”和“节”的 UTF-8 编码分别是<code>E6 98 A5</code>和<code>E8 8A 82</code>，将每个字节前面加上百分号，就构成了 URL 编码。</p>
+<p>JavaScript 提供四个 URL 的编码&#x2F;解码方法。</p>
+<ul>
+<li><code>encodeURI()</code></li>
+<li><code>encodeURIComponent()</code></li>
+<li><code>decodeURI()</code></li>
+<li><code>decodeURIComponent()</code></li>
+</ul>
+<h2 id="encodeURI"><a href="#encodeURI" class="headerlink" title="encodeURI()"></a>encodeURI()</h2><p><code>encodeURI()</code>方法用于转码整个 URL。它的参数是一个字符串，代表整个 URL。它会将元字符和语义字符之外的字符，都进行转义。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">encodeURI</span>(<span class="string">&#x27;http://www.example.com/q=春节&#x27;</span>)</span><br><span class="line"><span class="comment">// &quot;http://www.example.com/q=%E6%98%A5%E8%8A%82&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="encodeURIComponent"><a href="#encodeURIComponent" class="headerlink" title="encodeURIComponent()"></a>encodeURIComponent()</h2><p><code>encodeURIComponent()</code>方法用于转码 URL 的组成部分，会转码除了语义字符之外的所有字符，即元字符也会被转码。所以，它不能用于转码整个 URL。它接受一个参数，就是 URL 的片段。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">encodeURIComponent</span>(<span class="string">&#x27;春节&#x27;</span>)</span><br><span class="line"><span class="comment">// &quot;%E6%98%A5%E8%8A%82&quot;</span></span><br><span class="line"><span class="built_in">encodeURIComponent</span>(<span class="string">&#x27;http://www.example.com/q=春节&#x27;</span>)</span><br><span class="line"><span class="comment">// &quot;http%3A%2F%2Fwww.example.com%2Fq%3D%E6%98%A5%E8%8A%82&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>encodeURIComponent()</code>会连 URL 元字符一起转义，所以如果转码整个 URL 就会出错。</p>
+<h2 id="decodeURI"><a href="#decodeURI" class="headerlink" title="decodeURI()"></a>decodeURI()</h2><p><code>decodeURI()</code>方法用于整个 URL 的解码。它是<code>encodeURI()</code>方法的逆运算。它接受一个参数，就是转码后的 URL。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">decodeURI</span>(<span class="string">&#x27;http://www.example.com/q=%E6%98%A5%E8%8A%82&#x27;</span>)</span><br><span class="line"><span class="comment">// &quot;http://www.example.com/q=春节&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="decodeURIComponent"><a href="#decodeURIComponent" class="headerlink" title="decodeURIComponent()"></a>decodeURIComponent()</h2><p><code>decodeURIComponent()</code>用于URL 片段的解码。它是<code>encodeURIComponent()</code>方法的逆运算。它接受一个参数，就是转码后的 URL 片段。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">decodeURIComponent</span>(<span class="string">&#x27;%E6%98%A5%E8%8A%82&#x27;</span>) <span class="comment">// &quot;春节&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="URL-对象"><a href="#URL-对象" class="headerlink" title="URL 对象"></a>URL 对象</h1><p><code>URL</code>对象是浏览器的原生对象，可以用来构造、解析和编码 URL。一般情况下，通过<code>window.URL</code>可以拿到这个对象。</p>
+<p><code>&lt;a&gt;</code>元素和<code>&lt;area&gt;</code>元素都部署了这个接口。这就是说，它们的 DOM 节点对象可以使用 URL 的实例属性和方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">a.<span class="property">href</span> = <span class="string">&#x27;http://example.com/?foo=1&#x27;</span>;</span><br><span class="line"></span><br><span class="line">a.<span class="property">hostname</span> <span class="comment">// &quot;example.com&quot;</span></span><br><span class="line">a.<span class="property">search</span> <span class="comment">// &quot;?foo=1&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>a</code>是<code>&lt;a&gt;</code>元素的 DOM 节点对象。可以在这个对象上使用 URL 的实例属性，比如<code>hostname</code>和<code>search</code>。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p><code>URL</code>对象本身是一个构造函数，可以生成 URL 实例。</p>
+<p>它接受一个表示 URL 的字符串作为参数。如果参数不是合法的 URL，会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;http://www.example.com/index.html&#x27;</span>);</span><br><span class="line">url.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://www.example.com/index.html&quot;</span></span><br></pre></td></tr></table></figure>
+<p>如果参数是另一个 URL 实例，构造函数会自动读取该实例的<code>href</code>属性，作为实际参数。</p>
+<p>如果 URL 字符串是一个相对路径，那么需要表示绝对路径的第二个参数，作为计算基准。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url1 = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;index.html&#x27;</span>, <span class="string">&#x27;http://example.com&#x27;</span>);</span><br><span class="line">url1.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://example.com/index.html&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> url2 = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;page2.html&#x27;</span>, <span class="string">&#x27;http://example.com/page1.html&#x27;</span>);</span><br><span class="line">url2.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://example.com/page2.html&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> url3 = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;http://example.com/a/b.html&#x27;</span>)</span><br><span class="line">url3.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://example.com/&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，返回的 URL 实例的路径都是在第二个参数的基础上，切换到第一个参数得到的。最后一个例子里面，第一个参数是<code>..</code>，表示上层路径。</p>
+<h2 id="实例属性"><a href="#实例属性" class="headerlink" title="实例属性"></a>实例属性</h2><p>URL 实例的属性与<code>Location</code>对象的属性基本一致，返回当前 URL 的信息。</p>
+<ul>
+<li><code>URL.href</code>：返回整个 URL</li>
+<li><code>URL.protocol</code>：返回协议，以冒号<code>:</code>结尾</li>
+<li><code>URL.hostname</code>：返回域名</li>
+<li><code>URL.host</code>：返回域名与端口，包含<code>:</code>号，默认的80和443端口会省略</li>
+<li><code>URL.port</code>：返回端口</li>
+<li><code>URL.origin</code>：返回协议、域名和端口</li>
+<li><code>URL.pathname</code>：返回路径，以斜杠<code>/</code>开头</li>
+<li><code>URL.search</code>：返回查询字符串，以问号<code>?</code>开头</li>
+<li><code>URL.searchParams</code>：返回一个<code>URLSearchParams</code>实例，该属性是<code>Location</code>对象没有的</li>
+<li><code>URL.hash</code>：返回片段识别符，以井号<code>#</code>开头</li>
+<li><code>URL.password</code>：返回域名前面的密码</li>
+<li><code>URL.username</code>：返回域名前面的用户名</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;http://user:passwd@www.example.com:4097/path/a.html?x=111#part1&#x27;</span>);</span><br><span class="line"></span><br><span class="line">url.<span class="property">href</span></span><br><span class="line"><span class="comment">// &quot;http://user:passwd@www.example.com:4097/path/a.html?x=111#part1&quot;</span></span><br><span class="line">url.<span class="property">protocol</span></span><br><span class="line"><span class="comment">// &quot;http:&quot;</span></span><br><span class="line">url.<span class="property">hostname</span></span><br><span class="line"><span class="comment">// &quot;www.example.com&quot;</span></span><br><span class="line">url.<span class="property">host</span></span><br><span class="line"><span class="comment">// &quot;www.example.com:4097&quot;</span></span><br><span class="line">url.<span class="property">port</span></span><br><span class="line"><span class="comment">// &quot;4097&quot;</span></span><br><span class="line">url.<span class="property">origin</span></span><br><span class="line"><span class="comment">// &quot;http://www.example.com:4097&quot;</span></span><br><span class="line">url.<span class="property">pathname</span></span><br><span class="line"><span class="comment">// &quot;/path/a.html&quot;</span></span><br><span class="line">url.<span class="property">search</span></span><br><span class="line"><span class="comment">// &quot;?x=111&quot;</span></span><br><span class="line">url.<span class="property">searchParams</span></span><br><span class="line"><span class="comment">// URLSearchParams &#123;&#125;</span></span><br><span class="line">url.<span class="property">hash</span></span><br><span class="line"><span class="comment">// &quot;#part1&quot;</span></span><br><span class="line">url.<span class="property">password</span></span><br><span class="line"><span class="comment">// &quot;passwd&quot;</span></span><br><span class="line">url.<span class="property">username</span></span><br><span class="line"><span class="comment">// &quot;user&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这些属性里面，只有<code>origin</code>属性是只读的，其他属性都可写。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;http://example.com/index.html#part1&#x27;</span>);</span><br><span class="line"></span><br><span class="line">url.<span class="property">pathname</span> = <span class="string">&#x27;index2.html&#x27;</span>;</span><br><span class="line">url.<span class="property">href</span> <span class="comment">// &quot;http://example.com/index2.html#part1&quot;</span></span><br><span class="line"></span><br><span class="line">url.<span class="property">hash</span> = <span class="string">&#x27;#part2&#x27;</span>;</span><br><span class="line">url.<span class="property">href</span> <span class="comment">// &quot;http://example.com/index2.html#part2&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，改变 URL 实例的<code>pathname</code>属性和<code>hash</code>属性，都会实时反映在 URL 实例当中。</p>
+<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><h4 id="URL-createObjectURL"><a href="#URL-createObjectURL" class="headerlink" title="URL.createObjectURL()"></a>URL.createObjectURL()</h4><p><code>URL.createObjectURL</code>方法用来为上传&#x2F;下载的文件、流媒体文件生成一个 URL 字符串。这个字符串代表了<code>File</code>对象或<code>Blob</code>对象的 URL。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML 代码如下</span></span><br><span class="line"><span class="comment">// &lt;div id=&quot;display&quot;/&gt;</span></span><br><span class="line"><span class="comment">// &lt;input</span></span><br><span class="line"><span class="comment">//   type=&quot;file&quot;</span></span><br><span class="line"><span class="comment">//   id=&quot;fileElem&quot;</span></span><br><span class="line"><span class="comment">//   multiple</span></span><br><span class="line"><span class="comment">//   accept=&quot;image/*&quot;</span></span><br><span class="line"><span class="comment">//   onchange=&quot;handleFiles(this.files)&quot;</span></span><br><span class="line"><span class="comment">//  &gt;</span></span><br><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;display&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">handleFiles</span>(<span class="params">files</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; files.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> img = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line">    img.<span class="property">src</span> = <span class="variable language_">window</span>.<span class="property">URL</span>.<span class="title function_">createObjectURL</span>(files[i]);</span><br><span class="line">    div.<span class="title function_">appendChild</span>(img);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>URL.createObjectURL</code>方法用来为上传的文件生成一个 URL 字符串，作为<code>&lt;img&gt;</code>元素的图片来源。</p>
+<p>该方法生成的 URL 就像下面的样子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">blob</span>:<span class="attr">http</span>:<span class="comment">//localhost/c745ef73-ece9-46da-8f66-ebes574789b1</span></span><br></pre></td></tr></table></figure>
+<p>注意，每次使用<code>URL.createObjectURL</code>方法，都会在内存里面生成一个 URL 实例。如果不再需要该方法生成的 URL 字符串，为了节省内存，可以使用<code>URL.revokeObjectURL()</code>方法释放这个实例。</p>
+<h4 id="URL-revokeObjectURL"><a href="#URL-revokeObjectURL" class="headerlink" title="URL.revokeObjectURL()"></a>URL.revokeObjectURL()</h4><p><code>URL.revokeObjectURL</code>方法用来释放<code>URL.createObjectURL</code>方法生成的 URL 实例。它的参数就是<code>URL.createObjectURL</code>方法返回的 URL 字符串。</p>
+<p>下面为上一段的示例加上<code>URL.revokeObjectURL()</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;display&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">handleFiles</span>(<span class="params">files</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; files.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> img = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line">    img.<span class="property">src</span> = <span class="variable language_">window</span>.<span class="property">URL</span>.<span class="title function_">createObjectURL</span>(files[i]);</span><br><span class="line">    div.<span class="title function_">appendChild</span>(img);</span><br><span class="line">    img.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="variable language_">window</span>.<span class="property">URL</span>.<span class="title function_">revokeObjectURL</span>(<span class="variable language_">this</span>.<span class="property">src</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，一旦图片加载成功以后，为本地文件生成的 URL 字符串就没用了，于是可以在<code>img.onload</code>回调函数里面，通过<code>URL.revokeObjectURL</code>方法卸载这个 URL 实例。</p>
+<h1 id="URLSearchParams-对象"><a href="#URLSearchParams-对象" class="headerlink" title="URLSearchParams 对象"></a>URLSearchParams 对象</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><code>URLSearchParams</code>对象是浏览器的原生对象，用来构造、解析和处理 URL 的查询字符串（即 URL 问号后面的部分）。</p>
+<p>它本身也是一个构造函数，可以生成实例。参数可以为查询字符串，起首的问号<code>?</code>有没有都行，也可以是对应查询字符串的数组或对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法一：传入字符串</span></span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=1&amp;bar=2&#x27;</span>);</span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">search</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法二：传入数组</span></span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>([[<span class="string">&#x27;foo&#x27;</span>, <span class="number">1</span>], [<span class="string">&#x27;bar&#x27;</span>, <span class="number">2</span>]]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法三：传入对象</span></span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span> : <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span> : <span class="number">2</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>URLSearchParams</code>会对查询字符串自动编码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="string">&#x27;你好&#x27;</span>&#125;);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=%E4%BD%A0%E5%A5%BD&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>foo</code>的值是汉字，<code>URLSearchParams</code>对其自动进行 URL 编码。</p>
+<p>浏览器向服务器发送表单数据时，可以直接使用<code>URLSearchParams</code>实例作为表单数据。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="attr">foo</span>: <span class="number">1</span>, <span class="attr">bar</span>: <span class="number">2</span>&#125;);</span><br><span class="line"><span class="title function_">fetch</span>(<span class="string">&#x27;https://example.com/api&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">body</span>: params</span><br><span class="line">&#125;).<span class="title function_">then</span>(...)</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>fetch</code>命令向服务器发送命令时，可以直接使用<code>URLSearchParams</code>实例。</p>
+<p><code>URLSearchParams</code>可以与<code>URL</code>接口结合使用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="variable language_">window</span>.<span class="property">location</span>);</span><br><span class="line"><span class="keyword">var</span> foo = url.<span class="property">searchParams</span>.<span class="title function_">get</span>(<span class="string">&#x27;foo&#x27;</span>) || <span class="string">&#x27;somedefault&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，URL 实例的<code>searchParams</code>属性就是一个<code>URLSearchParams</code>实例，所以可以使用<code>URLSearchParams</code>接口的<code>get</code>方法。</p>
+<p>DOM 的<code>a</code>元素节点的<code>searchParams</code>属性，就是一个<code>URLSearchParams</code>实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">a.<span class="property">href</span> = <span class="string">&#x27;https://example.com?filter=api&#x27;</span>;</span><br><span class="line">a.<span class="property">searchParams</span>.<span class="title function_">get</span>(<span class="string">&#x27;filter&#x27;</span>) <span class="comment">// &quot;api&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>URLSearchParams</code>实例有遍历器接口，可以用<code>for...of</code>循环遍历。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span>: <span class="number">2</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">of</span> params) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(p[<span class="number">0</span>] + <span class="string">&#x27;: &#x27;</span> + p[<span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// foo: 1</span></span><br><span class="line"><span class="comment">// bar: 2</span></span><br></pre></td></tr></table></figure>
+<p><code>URLSearchParams</code>没有实例属性，只有实例方法。</p>
+<h2 id="URLSearchParams-toString"><a href="#URLSearchParams-toString" class="headerlink" title="URLSearchParams.toString()"></a>URLSearchParams.toString()</h2><p><code>toString</code>方法返回实例的字符串形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;https://example.com?foo=1&amp;bar=2&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(url.<span class="property">search</span>);</span><br><span class="line"></span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=1&amp;bar=2&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>那么需要字符串的场合，会自动调用<code>toString</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="attr">version</span>: <span class="number">2.0</span>&#125;);</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span> = location.<span class="property">pathname</span> + <span class="string">&#x27;?&#x27;</span> + params;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>location.href</code>赋值时，可以直接使用<code>params</code>对象。这时就会自动调用<code>toString</code>方法。</p>
+<h2 id="URLSearchParams-append"><a href="#URLSearchParams-append" class="headerlink" title="URLSearchParams.append()"></a>URLSearchParams.append()</h2><p><code>append</code>方法用来追加一个查询参数。它接受两个参数，第一个为键名，第二个为键值，没有返回值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span>: <span class="number">2</span>&#125;);</span><br><span class="line">params.<span class="title function_">append</span>(<span class="string">&#x27;baz&#x27;</span>, <span class="number">3</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=1&amp;bar=2&amp;baz=3&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>append</code>方法不会识别是否键名已经存在。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span>: <span class="number">2</span>&#125;);</span><br><span class="line">params.<span class="title function_">append</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="number">3</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=1&amp;bar=2&amp;foo=3&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，查询字符串里面<code>foo</code>已经存在了，但是<code>append</code>依然会追加一个同名键。</p>
+<h2 id="URLSearchParams-delete"><a href="#URLSearchParams-delete" class="headerlink" title="URLSearchParams.delete()"></a>URLSearchParams.delete()</h2><p><code>delete</code>方法用来删除指定的查询参数。它接受键名作为参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span>: <span class="number">2</span>&#125;);</span><br><span class="line">params.<span class="title function_">delete</span>(<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=1&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="URLSearchParams-has"><a href="#URLSearchParams-has" class="headerlink" title="URLSearchParams.has()"></a>URLSearchParams.has()</h2><p><code>has</code>方法返回一个布尔值，表示查询字符串是否包含指定的键名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(&#123;<span class="string">&#x27;foo&#x27;</span>: <span class="number">1</span> , <span class="string">&#x27;bar&#x27;</span>: <span class="number">2</span>&#125;);</span><br><span class="line">params.<span class="title function_">has</span>(<span class="string">&#x27;bar&#x27;</span>) <span class="comment">// true</span></span><br><span class="line">params.<span class="title function_">has</span>(<span class="string">&#x27;baz&#x27;</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="URLSearchParams-set"><a href="#URLSearchParams-set" class="headerlink" title="URLSearchParams.set()"></a>URLSearchParams.set()</h2><p><code>set</code>方法用来设置查询字符串的键值。</p>
+<p>它接受两个参数，第一个是键名，第二个是键值。如果是已经存在的键，键值会被改写，否则会被追加。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=1&#x27;</span>);</span><br><span class="line">params.<span class="title function_">set</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="number">2</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=2&quot;</span></span><br><span class="line">params.<span class="title function_">set</span>(<span class="string">&#x27;bar&#x27;</span>, <span class="number">3</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=2&amp;bar=3&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>foo</code>是已经存在的键，<code>bar</code>是还不存在的键。</p>
+<p>如果有多个的同名键，<code>set</code>会移除现存所有的键。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=1&amp;foo=2&#x27;</span>);</span><br><span class="line">params.<span class="title function_">set</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="number">3</span>);</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;foo=3&quot;</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个替换当前 URL 的例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// URL: https://example.com?version=1.0</span></span><br><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(location.<span class="property">search</span>.<span class="title function_">slice</span>(<span class="number">1</span>));</span><br><span class="line">params.<span class="title function_">set</span>(<span class="string">&#x27;version&#x27;</span>, <span class="number">2.0</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">history</span>.<span class="title function_">replaceState</span>(&#123;&#125;, <span class="string">&#x27;&#x27;</span>, location.<span class="property">pathname</span> + <span class="string">`?`</span> + params);</span><br><span class="line"><span class="comment">// URL: https://example.com?version=2.0</span></span><br></pre></td></tr></table></figure>
+<h2 id="URLSearchParams-get-，URLSearchParams-getAll"><a href="#URLSearchParams-get-，URLSearchParams-getAll" class="headerlink" title="URLSearchParams.get()，URLSearchParams.getAll()"></a>URLSearchParams.get()，URLSearchParams.getAll()</h2><p><code>get</code>方法用来读取查询字符串里面的指定键。它接受键名作为参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=1&#x27;</span>);</span><br><span class="line">params.<span class="title function_">get</span>(<span class="string">&#x27;foo&#x27;</span>) <span class="comment">// &quot;1&quot;</span></span><br><span class="line">params.<span class="title function_">get</span>(<span class="string">&#x27;bar&#x27;</span>) <span class="comment">// null</span></span><br></pre></td></tr></table></figure>
+<p>两个地方需要注意。第一，它返回的是字符串，如果原始值是数值，需要转一下类型；第二，如果指定的键名不存在，返回值是<code>null</code>。</p>
+<p>如果有多个的同名键，<code>get</code>返回位置最前面的那个键值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=3&amp;foo=2&amp;foo=1&#x27;</span>);</span><br><span class="line">params.<span class="title function_">get</span>(<span class="string">&#x27;foo&#x27;</span>) <span class="comment">// &quot;3&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，查询字符串有三个<code>foo</code>键，<code>get</code>方法返回最前面的键值<code>3</code>。</p>
+<p><code>getAll</code>方法返回一个数组，成员是指定键的所有键值。它接受键名作为参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;?foo=1&amp;foo=2&#x27;</span>);</span><br><span class="line">params.<span class="title function_">getAll</span>(<span class="string">&#x27;foo&#x27;</span>) <span class="comment">// [&quot;1&quot;, &quot;2&quot;]</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，查询字符串有两个<code>foo</code>键，<code>getAll</code>返回的数组就有两个成员。</p>
+<h2 id="URLSearchParams-sort"><a href="#URLSearchParams-sort" class="headerlink" title="URLSearchParams.sort()"></a>URLSearchParams.sort()</h2><p><code>sort</code>方法对查询字符串里面的键进行排序，规则是按照 Unicode 码点从小到大排列。</p>
+<p>该方法没有返回值，或者说返回值是<code>undefined</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;c=4&amp;a=2&amp;b=3&amp;a=1&#x27;</span>);</span><br><span class="line">params.<span class="title function_">sort</span>();</span><br><span class="line">params.<span class="title function_">toString</span>() <span class="comment">// &quot;a=2&amp;a=1&amp;b=3&amp;c=4&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，如果有两个同名的键<code>a</code>，它们之间不会排序，而是保留原始的顺序。</p>
+<h2 id="URLSearchParams-keys-，URLSearchParams-values-，URLSearchParams-entries"><a href="#URLSearchParams-keys-，URLSearchParams-values-，URLSearchParams-entries" class="headerlink" title="URLSearchParams.keys()，URLSearchParams.values()，URLSearchParams.entries()"></a>URLSearchParams.keys()，URLSearchParams.values()，URLSearchParams.entries()</h2><p>这三个方法都返回一个遍历器对象，供<code>for...of</code>循环消费。它们的区别在于，<code>keys</code>方法返回的是键名的遍历器，<code>values</code>方法返回的是键值的遍历器，<code>entries</code>返回的是键值对的遍历器。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>(<span class="string">&#x27;a=1&amp;b=2&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> p <span class="keyword">of</span> params.<span class="title function_">keys</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// a</span></span><br><span class="line"><span class="comment">// b</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> p <span class="keyword">of</span> params.<span class="title function_">values</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> p <span class="keyword">of</span> params.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [&quot;a&quot;, &quot;1&quot;]</span></span><br><span class="line"><span class="comment">// [&quot;b&quot;, &quot;2&quot;]</span></span><br></pre></td></tr></table></figure>
+<p>如果直接对<code>URLSearchParams</code>进行遍历，其实内部调用的就是<code>entries</code>接口。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">of</span> params) &#123;&#125;</span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">of</span> params.<span class="title function_">entries</span>()) &#123;&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/03/21/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20Location%E5%AF%B9%E8%B1%A1%E3%80%81URL%E5%AF%B9%E8%B1%A1%E3%80%81URLSearchParams%E5%AF%B9%E8%B1%A1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/03/%E5%89%8D%E7%AB%AF/ES6/ES6%20let%E5%92%8Cconst/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            ES6 let和const
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/03/20/%E5%89%8D%E7%AB%AF/js/%E5%9F%BA%E7%A1%80/JS%20History%E5%AF%B9%E8%B1%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS History对象</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

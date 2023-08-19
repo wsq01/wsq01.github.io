@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/Spring/SpEL表达式语言"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/Spring/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E8%A8%80/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.738Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">6 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Spring Expression Language（简称 SpEL）是一种功能强大的表达式语言，支持运行时查询和操作对象图 。表达式语言一般是用最简单的形式完成最主要的工作，以此减少工作量。</p>
+<p>Java 有许多可用的表达式语言，例如 JSP EL，OGNL，MVEL 和 JBoss EL，SpEL 语法类似于 JSP EL，功能类似于 Struts2 中的 OGNL，能在运行时构建复杂表达式、存取对象图属性、调用对象方法等，并且能与 Spring 功能完美整合，如 SpEL 可以用来配置 Bean 定义。</p>
+<p>SpEL 并不与 Spring 直接相关，可以被独立使用。SpEL 表达式的创建是为了向 Spring 社区提供一种受良好支持的表达式语言，该语言适用于 Spring 家族中的所有产品。也就是说，SpEL 是一种与技术无关的 API，可以集成其它表达式语言。</p>
+<p>SpEL 提供了以下接口和类：<br>Expression interface：该接口负责评估表达式字符串<br>ExpressionParser interface：该接口负责解析字符串<br>EvaluationContext interface：该接口负责定义上下文环境</p>
+<p>SpEL 支持如下表达式：</p>
+<ol>
+<li>基本表达式<br>字面量表达式、关系、逻辑与算术运算表达式、字符串连接及截取表达式、三目运算表达式、正则表达式、括号优先级表达式；</li>
+<li>类相关表达式<br>类类型表达式、类实例化、instanceof 表达式、变量定义及引用、赋值表达式、自定义函数、对象属性存取及安全导航表达式、对象方法调用、Bean 引用；</li>
+<li>集合相关表达式<br>内联 List、内联数组、集合、字典访问、列表、字典、数组修改、集合投影、集合选择；不支持多维内联数组初始化；不支持内联字典定义；</li>
+<li>其他表达式<br>模板表达式。<br>注：SpEL 表达式中的关键字不区分大小写。</li>
+</ol>
+<p>示例<br>例 1<br>下面使用 SpEL 输出一个简单的字符串“Hello，编程帮”。<br>package net.biancheng;<br>import org.springframework.expression.Expression;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        &#x2F;&#x2F; 构造解析器<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        &#x2F;&#x2F; 解析器解析字符串表达式<br>        Expression exp &#x3D; parser.parseExpression(“‘Hello，编程帮’”);<br>        &#x2F;&#x2F; 获取表达式的值<br>        String message &#x3D; (String) exp.getValue();<br>        System.out.println(message);<br>        &#x2F;&#x2F; OR<br>        &#x2F;&#x2F; System.out.println(parser.parseExpression(“‘Hello，编程帮’”).getValue());<br>    }<br>}<br>输出结果如下。<br>Hello，编程帮</p>
+<p>SpEL 还可以调用方法、访问属性和调用构造函数。<br>例 2<br>使用 SpEL 调用 concat() 方法，代码如下。<br>package net.biancheng;<br>import org.springframework.expression.Expression;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        Expression exp &#x3D; parser.parseExpression(“‘Welcome，编程帮’.concat(‘！’)”);<br>        String message &#x3D; (String) exp.getValue();<br>        System.out.println(message);<br>    }<br>}<br>输出结果如下。<br>Welcome，编程帮！</p>
+<p>例 3<br>使用 SpEL 调用 String 的属性 bytes，将字符串转换为字节数组，代码如下。<br>package net.biancheng;<br>import org.springframework.expression.Expression;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        Expression exp &#x3D; parser.parseExpression(“‘Hello 编程帮’.bytes”);<br>        byte[] bytes &#x3D; (byte[]) exp.getValue();<br>        for (int i &#x3D; 0; i &lt; bytes.length; i++) {<br>            System.out.print(bytes[i] + “ “);<br>        }<br>    }<br>}<br>输出结果如下。<br>72 101 108 108 111 32 -79 -32 -77 -52 -80 -17 </p>
+<p>例 4<br>SpEL 还支持使用嵌套属性，下面将字符串转换为字节后获取长度，代码如下。<br>package net.biancheng;<br>import org.springframework.expression.Expression;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        Expression exp &#x3D; parser.parseExpression(“‘Hello 编程帮’.bytes.length”);<br>        int length &#x3D; (Integer) exp.getValue();<br>        System.out.println(length);<br>    }<br>}<br>输出结果如下。<br>12</p>
+<p>例 5<br>字符串的构造函数可以被调用，而不是使用字符串文本，下面将字符串内容转换为大写字母，代码如下。<br>package net.biancheng;<br>import org.springframework.expression.Expression;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        Expression exp &#x3D; parser.parseExpression(“new String(‘hello bianchengbang’).toUpperCase()”);<br>        String message &#x3D; exp.getValue(String.class);<br>        System.out.println(message);<br>        &#x2F;&#x2F; OR<br>        &#x2F;&#x2F; System.out.println(parser.parseExpression(“‘hello<br>        &#x2F;&#x2F; bianchengbang’.toUpperCase()”).getValue());<br>    }<br>}<br>输出结果如下。<br>HELLO BIANCHENGBANG</p>
+<p>SpEL对Bean定义的支持<br>SpEL 表达式可以与 XML 或基于注解的配置元数据一起使用，SpEL 表达式以#{开头，以}结尾，如#{‘Hello’}。</p>
+<ol>
+<li>基于XML的配置<br>可以使用以下表达式来设置属性或构造函数的参数值。<bean id="number" class="net.biancheng.Number">
+ <property name="randomNumber" value="#{T(java.lang.Math).random() * 100.0}"/>
+</bean>
+也可以通过名称引用其它 Bean 属性，如以下代码。
+<bean id="shapeGuess" class="net.biancheng.ShapeGuess">
+ <property name="shapSeed" value="#{number.randomNumber}"/>
+</bean></li>
+<li>基于注解的配置<br>@Value 注解可以放在字段、方法、以及构造函数参数上，以指定默认值。</li>
+</ol>
+<p>以下是一个设置字段变量默认值的例子。<br>public static class FieldValueTestBean<br>    @value(“#{ systemProperties[ ‘user.region’] }”)<br>    private String defaultLocale;<br>    public void setDefaultLocale (String defaultLocale) {<br>        this.defaultLocale &#x3D; defaultLocale;<br>    }<br>    public string getDefaultLocale() {<br>        return this.defaultLocale;<br>    }<br>}<br>SpEL中的运算符<br>我们可以在 SpEL 中使用运算符，例如算术运算符、关系运算符、逻辑运算符。<br>例 6<br>package net.biancheng;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>public class Test {<br>    public static void main(String[] args) {<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        &#x2F;&#x2F; 算术运算符<br>        System.out.println(parser.parseExpression(“‘Hello SPEL’+’!’”).getValue());<br>        System.out.println(parser.parseExpression(“10 * 10&#x2F;2”).getValue());<br>        System.out.println(parser.parseExpression(“‘今天是：’+ new java.util.Date()”).getValue());<br>        &#x2F;&#x2F; 逻辑运算符<br>        System.out.println(parser.parseExpression(“true and true”).getValue());<br>        &#x2F;&#x2F; 关系运算符<br>        System.out.println(parser.parseExpression(“‘sonoo’.length()&#x3D;&#x3D;5”).getValue());<br>    }<br>}</p>
+<p>输出结果为<br>Hello SPEL!<br>50<br>今天是：Fri Feb 05 09:31:46 CST 2021<br>true<br>true</p>
+<p>SpEL中的变量<br>在 SpEL 中，我们可以定义变量，并在方法中使用。定义变量需要用到 StandardEvaluationContext 类。<br>例 7<br>Calculation 类代码如下。<br>package net.biancheng;<br>public class Calculation {<br>    private int number;<br>    public int getNumber() {<br>        return number;<br>    }<br>    public void setNumber(int number) {<br>        this.number &#x3D; number;<br>    }<br>    public int cube() {<br>        return number * number * number;<br>    }<br>}</p>
+<p>Test 类代码如下。<br>纯文本复制<br>package net.biancheng;<br>import org.springframework.expression.ExpressionParser;<br>import org.springframework.expression.spel.standard.SpelExpressionParser;<br>import org.springframework.expression.spel.support.StandardEvaluationContext;<br>public class Test {<br>    public static void main(String[] args) {<br>        Calculation calculation &#x3D; new Calculation();<br>        StandardEvaluationContext context &#x3D; new StandardEvaluationContext(calculation);<br>        ExpressionParser parser &#x3D; new SpelExpressionParser();<br>        parser.parseExpression(“number”).setValue(context, “5”);<br>        System.out.println(calculation.cube());<br>    }<br>}</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/Spring/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E8%A8%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/MyBatis/MyBatis%E7%BC%93%E5%AD%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/MyBatis/MyBatis%E4%B8%8ESpring%E6%95%B4%E5%90%88/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

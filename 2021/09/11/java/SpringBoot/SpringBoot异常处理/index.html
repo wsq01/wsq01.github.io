@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>SpringBoot异常处理 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/SpringBoot/SpringBoot异常处理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SpringBoot异常处理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/09/11/java/SpringBoot/SpringBoot%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2021-09-11T07:21:16.000Z" itemprop="datePublished">2021-09-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring-Boot/">Spring Boot</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="默认异常处理"><a href="#默认异常处理" class="headerlink" title="默认异常处理"></a>默认异常处理</h1><h2 id="默认异常处理机制"><a href="#默认异常处理机制" class="headerlink" title="默认异常处理机制"></a>默认异常处理机制</h2><p>Spring Boot 提供了一套默认的异常处理机制，一旦程序中出现了异常，Spring Boot 会自动识别客户端的类型（浏览器客户端或机器客户端），并根据客户端的不同，以不同的形式展示异常信息。</p>
+<ol>
+<li>对于浏览器客户端而言，Spring Boot 会响应一个错误视图，以 HTML 格式呈现错误信息；<img src="/2021/09/11/java/SpringBoot/SpringBoot%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/1.png" class="" title="Spring Boot 默认错误白页"></li>
+<li>对于机器客户端而言，Spring Boot 将生成 JSON 响应，来展示异常消息。<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2021-07-12T07:05:29.885+00:00&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="number">404</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Not Found&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;No message available&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/main.html&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="异常处理自动配置原理"><a href="#异常处理自动配置原理" class="headerlink" title="异常处理自动配置原理"></a>异常处理自动配置原理</h2><p>Spring Boot 通过配置类<code>ErrorMvcAutoConfiguration</code>对异常处理提供了自动配置，该配置类向容器中注入了以下 4 个组件。</p>
+<ul>
+<li><code>ErrorPageCustomizer</code>：该组件会在在系统发生异常后，默认将请求转发到<code>/error</code>上。</li>
+<li><code>BasicErrorController</code>：处理默认的<code>/error</code>请求。</li>
+<li><code>DefaultErrorViewResolver</code>：默认的错误视图解析器，将异常信息解析到相应的错误视图上。</li>
+<li><code>DefaultErrorAttributes</code>：用于页面上共享异常信息。</li>
+</ul>
+<h2 id="ErrorPageCustomizer"><a href="#ErrorPageCustomizer" class="headerlink" title="ErrorPageCustomizer"></a>ErrorPageCustomizer</h2><p><code>ErrorMvcAutoConfiguration</code>向容器中注入了一个名为<code>ErrorPageCustomizer</code>的组件，它主要用于定制错误页面的响应规则。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> ErrorPageCustomizer <span class="title function_">errorPageCustomizer</span><span class="params">(DispatcherServletPath dispatcherServletPath)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ErrorPageCustomizer</span>(<span class="built_in">this</span>.serverProperties, dispatcherServletPath);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ErrorPageCustomizer</code>通过<code>registerErrorPages()</code>方法来注册错误页面的响应规则。当系统中发生异常后，<code>ErrorPageCustomizer</code>组件会自动生效，并将请求转发到<code>/error</code>上，交给<code>BasicErrorController</code>进行处理，其部分代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerErrorPages</span><span class="params">(ErrorPageRegistry errorPageRegistry)</span> &#123;</span><br><span class="line">  <span class="comment">//将请求转发到 /errror（this.properties.getError().getPath()）上</span></span><br><span class="line">  <span class="type">ErrorPage</span> <span class="variable">errorPage</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ErrorPage</span>(<span class="built_in">this</span>.dispatcherServletPath.getRelativePath(<span class="built_in">this</span>.properties.getError().getPath()));</span><br><span class="line">  <span class="comment">// 注册错误页面</span></span><br><span class="line">  errorPageRegistry.addErrorPages(errorPage);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="BasicErrorController"><a href="#BasicErrorController" class="headerlink" title="BasicErrorController"></a>BasicErrorController</h2><p><code>ErrorMvcAutoConfiguration</code>还向容器中注入了一个错误控制器组件<code>BasicErrorController</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(value = ErrorController.class, search = SearchStrategy.CURRENT)</span></span><br><span class="line"><span class="keyword">public</span> BasicErrorController <span class="title function_">basicErrorController</span><span class="params">(ErrorAttributes errorAttributes, ObjectProvider&lt;ErrorViewResolver&gt; errorViewResolvers)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BasicErrorController</span>(errorAttributes, <span class="built_in">this</span>.serverProperties.getError(), errorViewResolvers.orderedStream().collect(Collectors.toList()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>BasicErrorController</code>的定义如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BasicErrorController 用于处理 “/error” 请求</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;$&#123;server.error.path:$&#123;error.path:/error&#125;&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BasicErrorController</span> <span class="keyword">extends</span> <span class="title class_">AbstractErrorController</span> &#123;</span><br><span class="line">  ......</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 该方法用于处理浏览器客户端的请求发生的异常</span></span><br><span class="line"><span class="comment">    * 生成 html 页面来展示异常信息</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="meta">@RequestMapping(produces = MediaType.TEXT_HTML_VALUE)</span></span><br><span class="line">  <span class="keyword">public</span> ModelAndView <span class="title function_">errorHtml</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> &#123;</span><br><span class="line">    <span class="comment">//获取错误状态码</span></span><br><span class="line">    <span class="type">HttpStatus</span> <span class="variable">status</span> <span class="operator">=</span> getStatus(request);</span><br><span class="line">    <span class="comment">//getErrorAttributes 根据错误信息来封装一些 model 数据，用于页面显示</span></span><br><span class="line">    Map&lt;String, Object&gt; model = Collections</span><br><span class="line">            .unmodifiableMap(getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.TEXT_HTML)));</span><br><span class="line">    <span class="comment">//为响应对象设置错误状态码</span></span><br><span class="line">    response.setStatus(status.value());</span><br><span class="line">    <span class="comment">//调用 resolveErrorView() 方法，使用错误视图解析器生成 ModelAndView 对象（包含错误页面地址和页面内容）</span></span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> resolveErrorView(request, response, status, model);</span><br><span class="line">    <span class="keyword">return</span> (modelAndView != <span class="literal">null</span>) ? modelAndView : <span class="keyword">new</span> <span class="title class_">ModelAndView</span>(<span class="string">&quot;error&quot;</span>, model);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 该方法用于处理机器客户端的请求发生的错误</span></span><br><span class="line"><span class="comment">    * 产生 JSON 格式的数据展示错误信息</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="meta">@RequestMapping</span></span><br><span class="line">  <span class="keyword">public</span> ResponseEntity&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">error</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line">    <span class="type">HttpStatus</span> <span class="variable">status</span> <span class="operator">=</span> getStatus(request);</span><br><span class="line">    <span class="keyword">if</span> (status == HttpStatus.NO_CONTENT) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span>&lt;&gt;(status);</span><br><span class="line">    &#125;</span><br><span class="line">    Map&lt;String, Object&gt; body = getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.ALL));</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span>&lt;&gt;(body, status);</span><br><span class="line">  &#125;</span><br><span class="line">  ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring Boot 通过<code>BasicErrorController</code>进行统一的错误处理（例如默认的<code>/error</code>请求）。Spring Boot 会自动识别发出请求的客户端的类型（浏览器客户端或机器客户端），并根据客户端类型，将请求分别交给<code>errorHtml()</code>和<code>error()</code>方法进行处理。</p>
+<table>
+<thead>
+<tr>
+<th align="center">返回值类型</th>
+<th align="center">方法声明</th>
+<th align="center">客户端类型</th>
+<th align="center">错误信息返类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ModelAndView</td>
+<td align="center">errorHtml(HttpServletRequest request, HttpServletResponse response)</td>
+<td align="center">浏览器客户端</td>
+<td align="center">text&#x2F;html（错误页面）</td>
+</tr>
+<tr>
+<td align="center"><code>ResponseEntity&lt;Map&lt;String, Object&gt;&gt;</code></td>
+<td align="center">error(HttpServletRequest request)</td>
+<td align="center">机器客户端（例如安卓、IOS、Postman 等等）</td>
+<td align="center">JSON</td>
+</tr>
+</tbody></table>
+<p>换句话说，当使用浏览器访问出现异常时，会进入<code>BasicErrorController</code>控制器中的<code>errorHtml()</code>方法进行处理，当使用安卓、IOS、Postman 等机器客户端访问出现异常时，就进入<code>error()</code>方法处理。</p>
+<p>在<code>errorHtml()</code>方法中会调用父类（<code>AbstractErrorController</code>）的<code>resolveErrorView()</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> ModelAndView <span class="title function_">resolveErrorView</span><span class="params">(HttpServletRequest request, HttpServletResponse response, HttpStatus status,</span></span><br><span class="line"><span class="params">                          Map&lt;String, Object&gt; model)</span> &#123;</span><br><span class="line">  <span class="comment">//获取容器中的所有的错误视图解析器来处理该异常信息</span></span><br><span class="line">  <span class="keyword">for</span> (ErrorViewResolver resolver : <span class="built_in">this</span>.errorViewResolvers) &#123;</span><br><span class="line">    <span class="comment">//调用错误视图解析器的 resolveErrorView 解析到错误视图页面</span></span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> resolver.resolveErrorView(request, status, model);</span><br><span class="line">    <span class="keyword">if</span> (modelAndView != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> modelAndView;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上述源码可以看出，在响应页面的时候，会在父类的<code>resolveErrorView</code>方法中获取容器中所有的<code>ErrorViewResolver</code>对象（错误视图解析器，包括<code>DefaultErrorViewResolver</code>在内），一起来解析异常信息。</p>
+<h2 id="DefaultErrorViewResolver"><a href="#DefaultErrorViewResolver" class="headerlink" title="DefaultErrorViewResolver"></a>DefaultErrorViewResolver</h2><p><code>ErrorMvcAutoConfiguration</code>还向容器中注入了一个默认的错误视图解析器组件<code>DefaultErrorViewResolver</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@ConditionalOnBean(DispatcherServlet.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(ErrorViewResolver.class)</span></span><br><span class="line">DefaultErrorViewResolver <span class="title function_">conventionErrorViewResolver</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DefaultErrorViewResolver</span>(<span class="built_in">this</span>.applicationContext, <span class="built_in">this</span>.resources);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当发出请求的客户端为浏览器时，Spring Boot 会获取容器中所有的<code>ErrorViewResolver</code>对象（错误视图解析器），并分别调用它们的<code>resolveErrorView()</code>方法对异常信息进行解析，其中自然也包括<code>DefaultErrorViewResolver</code>（默认错误信息解析器）。</p>
+<p><code>DefaultErrorViewResolver</code>的部分代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DefaultErrorViewResolver</span> <span class="keyword">implements</span> <span class="title class_">ErrorViewResolver</span>, Ordered &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;HttpStatus.Series, String&gt; SERIES_VIEWS;</span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    Map&lt;HttpStatus.Series, String&gt; views = <span class="keyword">new</span> <span class="title class_">EnumMap</span>&lt;&gt;(HttpStatus.Series.class);</span><br><span class="line">    views.put(Series.CLIENT_ERROR, <span class="string">&quot;4xx&quot;</span>);</span><br><span class="line">    views.put(Series.SERVER_ERROR, <span class="string">&quot;5xx&quot;</span>);</span><br><span class="line">    SERIES_VIEWS = Collections.unmodifiableMap(views);</span><br><span class="line">  &#125;</span><br><span class="line">  ......</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> ModelAndView <span class="title function_">resolveErrorView</span><span class="params">(HttpServletRequest request, HttpStatus status, Map&lt;String, Object&gt; model)</span> &#123;</span><br><span class="line">    <span class="comment">//尝试以错误状态码作为错误页面名进行解析</span></span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> resolve(String.valueOf(status.value()), model);</span><br><span class="line">    <span class="keyword">if</span> (modelAndView == <span class="literal">null</span> &amp;&amp; SERIES_VIEWS.containsKey(status.series())) &#123;</span><br><span class="line">      <span class="comment">//尝试以 4xx 或 5xx 作为错误页面页面进行解析</span></span><br><span class="line">      modelAndView = resolve(SERIES_VIEWS.get(status.series()), model);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span> ModelAndView <span class="title function_">resolve</span><span class="params">(String viewName, Map&lt;String, Object&gt; model)</span> &#123;</span><br><span class="line">    <span class="comment">//错误模板页面，例如 error/404、error/4xx、error/500、error/5xx</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">errorViewName</span> <span class="operator">=</span> <span class="string">&quot;error/&quot;</span> + viewName;</span><br><span class="line">    <span class="comment">//当模板引擎可以解析这些模板页面时，就用模板引擎解析</span></span><br><span class="line">    <span class="type">TemplateAvailabilityProvider</span> <span class="variable">provider</span> <span class="operator">=</span> <span class="built_in">this</span>.templateAvailabilityProviders.getProvider(errorViewName,</span><br><span class="line">            <span class="built_in">this</span>.applicationContext);</span><br><span class="line">    <span class="keyword">if</span> (provider != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//在模板能够解析到模板页面的情况下，返回 errorViewName 指定的视图</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>(errorViewName, model);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//若模板引擎不能解析，则去静态资源文件夹下查找 errorViewName 对应的页面</span></span><br><span class="line">    <span class="keyword">return</span> resolveResource(errorViewName, model);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span> ModelAndView <span class="title function_">resolveResource</span><span class="params">(String viewName, Map&lt;String, Object&gt; model)</span> &#123;</span><br><span class="line">    <span class="comment">//遍历所有静态资源文件夹</span></span><br><span class="line">    <span class="keyword">for</span> (String location : <span class="built_in">this</span>.resources.getStaticLocations()) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">Resource</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="built_in">this</span>.applicationContext.getResource(location);</span><br><span class="line">        <span class="comment">//静态资源文件夹下的错误页面，例如error/404.html、error/4xx.html、error/500.html、error/5xx.html</span></span><br><span class="line">        resource = resource.createRelative(viewName + <span class="string">&quot;.html&quot;</span>);</span><br><span class="line">        <span class="comment">//若静态资源文件夹下存在以上错误页面，则直接返回</span></span><br><span class="line">        <span class="keyword">if</span> (resource.exists()) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>(<span class="keyword">new</span> <span class="title class_">DefaultErrorViewResolver</span>.HtmlResourceView(resource), model);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>DefaultErrorViewResolver</code>解析异常信息的步骤如下：</p>
+<ol>
+<li>根据错误状态码（例如 404、500、400 等），生成一个错误视图<code>error/status</code>，例如<code>error/404、error/500、error/400</code>。</li>
+<li>尝试使用模板引擎解析<code>error/status</code>视图，即尝试从<code>classpath</code>类路径下的<code>templates</code>目录下，查找<code>error/status.html</code>，例如<code>error/404.html、error/500.html、error/400.html</code>。</li>
+<li>若模板引擎能够解析到<code>error/status</code>视图，则将视图和数据封装成<code>ModelAndView</code>返回并结束整个解析流程，否则跳转到第 4 步。</li>
+<li>依次从各个静态资源文件夹中查找<code>error/status.html</code>，若在静态文件夹中找到了该错误页面，则返回并结束整个解析流程，否则跳转到第 5 步。</li>
+<li>将错误状态码（例如 404、500、400 等）转换为<code>4xx</code>或<code>5xx</code>，然后重复前 4 个步骤，若解析成功则返回并结束整个解析流程，否则跳转第 6 步。 </li>
+<li>处理默认的<code>/error</code>请求，使用 Spring Boot 默认的错误页面（<code>Whitelabel Error Page</code>）。</li>
+</ol>
+<h2 id="DefaultErrorAttributes"><a href="#DefaultErrorAttributes" class="headerlink" title="DefaultErrorAttributes"></a>DefaultErrorAttributes</h2><p><code>ErrorMvcAutoConfiguration</code>还向容器中注入了一个组件默认错误属性处理工具<code>DefaultErrorAttributes</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(value = ErrorAttributes.class, search = SearchStrategy.CURRENT)</span></span><br><span class="line"><span class="keyword">public</span> DefaultErrorAttributes <span class="title function_">errorAttributes</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DefaultErrorAttributes</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>DefaultErrorAttributes</code>是 Spring Boot 的默认错误属性处理工具，它可以从请求中获取异常或错误信息，并将其封装为一个<code>Map</code>对象返回，其部分代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DefaultErrorAttributes</span> <span class="keyword">implements</span> <span class="title class_">ErrorAttributes</span>, HandlerExceptionResolver, Ordered &#123;</span><br><span class="line">  ......</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getErrorAttributes</span><span class="params">(WebRequest webRequest, ErrorAttributeOptions options)</span> &#123;</span><br><span class="line">    Map&lt;String, Object&gt; errorAttributes = getErrorAttributes(webRequest, options.isIncluded(Include.STACK_TRACE));</span><br><span class="line">    <span class="keyword">if</span> (!options.isIncluded(Include.EXCEPTION)) &#123;</span><br><span class="line">      errorAttributes.remove(<span class="string">&quot;exception&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!options.isIncluded(Include.STACK_TRACE)) &#123;</span><br><span class="line">      errorAttributes.remove(<span class="string">&quot;trace&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!options.isIncluded(Include.MESSAGE) &amp;&amp; errorAttributes.get(<span class="string">&quot;message&quot;</span>) != <span class="literal">null</span>) &#123;</span><br><span class="line">      errorAttributes.remove(<span class="string">&quot;message&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!options.isIncluded(Include.BINDING_ERRORS)) &#123;</span><br><span class="line">      errorAttributes.remove(<span class="string">&quot;errors&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> errorAttributes;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span> Map&lt;String, Object&gt; <span class="title function_">getErrorAttributes</span><span class="params">(WebRequest webRequest, <span class="type">boolean</span> includeStackTrace)</span> &#123;</span><br><span class="line">    Map&lt;String, Object&gt; errorAttributes = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;();</span><br><span class="line">    errorAttributes.put(<span class="string">&quot;timestamp&quot;</span>, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    addStatus(errorAttributes, webRequest);</span><br><span class="line">    addErrorDetails(errorAttributes, webRequest, includeStackTrace);</span><br><span class="line">    addPath(errorAttributes, webRequest);</span><br><span class="line">    <span class="keyword">return</span> errorAttributes;</span><br><span class="line">  &#125;</span><br><span class="line">  ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Spring Boot 默认的<code>Error</code>控制器（<code>BasicErrorController</code>）处理错误时，会调用<code>DefaultErrorAttributes</code>的<code>getErrorAttributes()</code>方法获取错误或异常信息，并封装成<code>model</code>数据（<code>Map</code>对象），返回到页面或 JSON 数据中。该<code>model</code>数据主要包含以下属性：</p>
+<ul>
+<li><code>timestamp</code>：时间戳；</li>
+<li><code>status</code>：错误状态码</li>
+<li><code>error</code>：错误的提示</li>
+<li><code>exception</code>：导致请求处理失败的异常对象</li>
+<li><code>message</code>：错误&#x2F;异常消息</li>
+<li><code>trace</code>： 错误&#x2F;异常栈信息</li>
+<li><code>path</code>:错误&#x2F;异常抛出时所请求的URL路径</li>
+</ul>
+<p>所有通过<code>DefaultErrorAttributes</code>封装到<code>model</code>数据中的属性，都可以直接在页面或 JSON 中获取。</p>
+<h1 id="全局异常处理"><a href="#全局异常处理" class="headerlink" title="全局异常处理"></a>全局异常处理</h1><p>Spring Boot 已经提供了一套默认的异常处理机制，但是 Spring Boot 提供的默认异常处理机制却并不一定适合我们实际的业务场景，因此，我们通常会根据自身的需要对 Spring Boot 全局异常进行统一定制，例如定制错误页面，定制错误数据等。</p>
+<h2 id="定制错误页面"><a href="#定制错误页面" class="headerlink" title="定制错误页面"></a>定制错误页面</h2><p>我们可以通过以下 3 种方式定制 Spring Boot 错误页面：</p>
+<ul>
+<li>自定义<code>error.html</code></li>
+<li>自定义动态错误页面</li>
+<li>自定义静态错误页面</li>
+</ul>
+<h3 id="自定义-error-html"><a href="#自定义-error-html" class="headerlink" title="自定义 error.html"></a>自定义 error.html</h3><p>我们可以直接在模板引擎文件夹（<code>/resources/templates</code>）下创建<code>error.html</code>，覆盖 Spring Boot 默认的错误视图页面（<code>Whitelabel Error Page</code>）。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>自定义 error.html<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>自定义 error.html<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>status：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;status&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>error：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;error&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>timestamp：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;timestamp&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>message：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;message&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>path：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;path&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="自定义错误页面"><a href="#自定义错误页面" class="headerlink" title="自定义错误页面"></a>自定义错误页面</h3><p>如果 Sprng Boot 项目使用了模板引擎，当程序发生异常时，Spring Boot 的默认错误视图解析器（<code>DefaultErrorViewResolver</code>）就会解析模板引擎文件夹（<code>resources/templates/</code>）下<code>error</code>目录中的错误视图页面。</p>
+<p>我们可以根据错误状态码（例如 404、500、400 等等）的不同，分别创建不同的动态错误页面（例如<code>404.html、500.html、400.html</code>等等），并将它们存放在模板引擎文件夹下的<code>error</code>目录中。当发生异常时，Spring Boot 会根据其错误状态码精确匹配到对应的错误页面上。</p>
+<p>我们还可以使用<code>4xx.html</code>和<code>5xx.html</code>作为动态错误页面的文件名，并将它们存放在模板引擎文件夹下的<code>error</code>目录中，来模糊匹配对应类型的所有错误，例如 404、400 等错误状态码以“4”开头的所有异常，都会解析到动态错误页面<code>4xx.html</code>上。</p>
+<h3 id="错误页面优先级"><a href="#错误页面优先级" class="headerlink" title="错误页面优先级"></a>错误页面优先级</h3><p>以上 5 种方式均可以定制 Spring Boot 错误页面，且它们的优先级顺序为：自定义动态错误页面（精确匹配）&gt;自定义静态错误页面（精确匹配）&gt;自定义动态错误页面（模糊匹配）&gt;自定义静态错误页面（模糊匹配）&gt;自定义<code>error.html</code>。</p>
+<p>当遇到错误时，Spring Boot 会按照优先级由高到低，依次查找解析错误页，一旦找到可用的错误页面，则直接返回客户端展示。</p>
+<h2 id="定制错误数据"><a href="#定制错误数据" class="headerlink" title="定制错误数据"></a>定制错误数据</h2><p>Spring Boot 提供了一套默认的异常处理机制，其主要流程如下：</p>
+<ul>
+<li>发生异常时，将请求转发到<code>/error</code>，交由<code>BasicErrorController</code>（Spring Boot 默认的<code>Error</code>控制器） 进行处理；</li>
+<li><code>BasicErrorController</code>根据客户端的不同，自动适配返回的响应形式，浏览器客户端返回错误页面，机器客户端返回 JSON 数据。</li>
+<li><code>BasicErrorController</code>处理异常时，会调用<code>DefaultErrorAttributes</code>（默认的错误属性处理工具） 的<code>getErrorAttributes()</code>方法获取错误数据。</li>
+</ul>
+<p>我们还可以定制 Spring Boot 的错误数据，具体步骤如下。</p>
+<ul>
+<li>自定义异常处理类，将请求转发到<code>/error</code>，交由 Spring Boot 底层（<code>BasicErrorController</code>）进行处理，自动适配浏览器客户端和机器客户端。</li>
+<li>通过继承<code>DefaultErrorAttributes</code>来定义一个错误属性处理工具，并在原来的基础上添加自定义的错误数据。</li>
+</ul>
+<h3 id="1-自定义异常处理类"><a href="#1-自定义异常处理类" class="headerlink" title="1. 自定义异常处理类"></a>1. 自定义异常处理类</h3><p>被<code>@ControllerAdvice</code>注解的类可以用来实现全局异常处理，这是 Spring MVC 中提供的功能，在 Spring Boot 中可以直接使用。</p>
+<p>1）在<code>net.biancheng.net.exception</code>包内，创建一个名为<code>UserNotExistException</code>的异常类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.exception;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 自定义异常</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserNotExistException</span> <span class="keyword">extends</span> <span class="title class_">RuntimeException</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">UserNotExistException</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(<span class="string">&quot;用户不存在！&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2）在<code>IndexController</code>添加以下方法，触发<code>UserNotExistException</code>异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">  ......</span><br><span class="line">  <span class="meta">@GetMapping(value = &#123;&quot;/testException&quot;&#125;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">testException</span><span class="params">(String user)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;user&quot;</span>.equals(user)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UserNotExistException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//跳转到登录页 login.html</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;login&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3）在<code>net.biancheng.www.controller</code>中，创建一个名为<code>MyExceptionHandler</code>异常处理类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.controller;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.exception.UserNotExistException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyExceptionHandler</span> &#123;</span><br><span class="line">  <span class="meta">@ExceptionHandler(UserNotExistException.class)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">handleException</span><span class="params">(Exception e, HttpServletRequest request)</span> &#123;</span><br><span class="line">    Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">//向 request 对象传入错误状态码</span></span><br><span class="line">    request.setAttribute(<span class="string">&quot;javax.servlet.error.status_code&quot;</span>,<span class="number">500</span>);</span><br><span class="line">    <span class="comment">//根据当前处理的异常，自定义的错误数据</span></span><br><span class="line">    map.put(<span class="string">&quot;code&quot;</span>, <span class="string">&quot;user.notexist&quot;</span>);</span><br><span class="line">    map.put(<span class="string">&quot;message&quot;</span>, e.getMessage());</span><br><span class="line">    <span class="comment">//将自定的错误数据传入 request 域中</span></span><br><span class="line">    request.setAttribute(<span class="string">&quot;ext&quot;</span>,map);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;forward:/error&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-自定义错误属性处理工具"><a href="#2-自定义错误属性处理工具" class="headerlink" title="2. 自定义错误属性处理工具"></a>2. 自定义错误属性处理工具</h3><p>1）在<code>net.biancheng.www.componet</code>包内，创建一个错误属性处理工具类<code>MyErrorAttributes</code>（继承<code>DefaultErrorAttributes</code>），通过该类我们便可以添加自定义的错误数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.componet;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.web.error.ErrorAttributeOptions;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.web.servlet.error.DefaultErrorAttributes;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.request.WebRequest;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="comment">//向容器中添加自定义的储物属性处理工具</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyErrorAttributes</span> <span class="keyword">extends</span> <span class="title class_">DefaultErrorAttributes</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getErrorAttributes</span><span class="params">(WebRequest webRequest, ErrorAttributeOptions options)</span> &#123;</span><br><span class="line">    Map&lt;String, Object&gt; errorAttributes = <span class="built_in">super</span>.getErrorAttributes(webRequest, options);</span><br><span class="line">    <span class="comment">//添加自定义的错误数据</span></span><br><span class="line">    errorAttributes.put(<span class="string">&quot;company&quot;</span>, <span class="string">&quot;www.biancheng.net&quot;</span>);</span><br><span class="line">    <span class="comment">//获取 MyExceptionHandler 传入 request 域中的错误数据</span></span><br><span class="line">    <span class="type">Map</span> <span class="variable">ext</span> <span class="operator">=</span> (Map) webRequest.getAttribute(<span class="string">&quot;ext&quot;</span>, <span class="number">0</span>);</span><br><span class="line">    errorAttributes.put(<span class="string">&quot;ext&quot;</span>, ext);</span><br><span class="line">    <span class="keyword">return</span> errorAttributes;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2）在<code>templates/error</code>目录下，创建动态错误页面<code>5xx.html</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">xmlns:th</span>=<span class="string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>自定义 error.html<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>status：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;status&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>error：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;error&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>timestamp：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;timestamp&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>message：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;message&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>path：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;path&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--取出定制的错误信息--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>以下为定制错误数据：<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>company：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;company&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>code：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;ext.code&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>path：<span class="tag">&lt;<span class="name">span</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;ext.message&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>3）启动 Spring Boot，访问<code>http://localhost:8080/testException?user=user</code>。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/09/11/java/SpringBoot/SpringBoot%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Boot/" rel="tag">Spring Boot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/09/12/java/SpringBoot/SpringBoot%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SpringBoot 数据库配置
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/09/04/java/SpringBoot/YAML%E6%95%99%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">YAML教程</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

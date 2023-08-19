@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>SQL 存储过程 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-SQL/SQL 存储过程"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SQL 存储过程
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/02/13/SQL/SQL%20%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time datetime="2020-02-13T07:14:27.000Z" itemprop="datePublished">2020-02-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="什么是存储过程，如何创建一个存储过程"><a href="#什么是存储过程，如何创建一个存储过程" class="headerlink" title="什么是存储过程，如何创建一个存储过程"></a>什么是存储过程，如何创建一个存储过程</h1><p>存储过程的思想很简单，就是 SQL 语句的封装。一旦存储过程被创建出来，使用它就像使用函数一样简单，我们直接通过调用存储过程名即可。存储过程实际上由 SQL 语句和流控制语句共同组成。</p>
+<p>我们先来看下如何定义一个存储过程：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名称 ([参数列表])</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  需要执行的语句</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>在这里，我们使用<code>CREATE PROCEDURE</code>创建一个存储过程，后面是存储过程的名称，以及过程所带的参数，可以包括输入参数和输出参数。最后由<code>BEGIN</code>和<code>END</code>来定义我们所要执行的语句块。</p>
+<p>和视图一样，我们可以删除已经创建的存储过程，使用的是<code>DROP PROCEDURE</code>。如果要更新存储过程，我们需要使用<code>ALTER PROCEDURE</code>。</p>
+<p>知道了如何创建，更新和删除一个存储过程，下面我们来看下如何实现一个简单的存储过程。比如我想做一个累加运算，计算<code>1+2+…+n</code>等于多少，我们可以通过参数<code>n</code>来表示想要累加的个数，那么如何用存储过程实现这一目的呢？这里我做一个<code>add_num</code>的存储过程，具体的代码如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> `add_num`(<span class="keyword">IN</span> n <span class="type">INT</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">DECLARE</span> i <span class="type">INT</span>;</span><br><span class="line">  <span class="keyword">DECLARE</span> sum <span class="type">INT</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">SET</span> i <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">SET</span> sum <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">  WHILE i <span class="operator">&lt;=</span> n DO</span><br><span class="line">    <span class="keyword">SET</span> sum <span class="operator">=</span> sum <span class="operator">+</span> i;</span><br><span class="line">    <span class="keyword">SET</span> i <span class="operator">=</span> i <span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">  <span class="keyword">END</span> WHILE;</span><br><span class="line">  <span class="keyword">SELECT</span> sum;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>当我们需要再次使用这个存储过程的时候，直接使用<code>CALL add_num(50);</code>即可。这里我传入的参数为 50，也就是统计<code>1+2+…+50 </code>的积累之和，查询结果为：</p>
+<table>
+<thead>
+<tr>
+<th align="center">sum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1275</td>
+</tr>
+</tbody></table>
+<p>这就是一个简单的存储过程，除了理解<code>1+2+…+n</code>的实现过程，还有两点你需要理解，一个是<code>DELIMITER</code>定义语句的结束符，另一个是存储过程的三种参数类型。</p>
+<p>我们先来看下<code>DELIMITER</code>的作用。如果你使用 Navicat 这个工具来管理 MySQL 执行存储过程，那么直接执行上面这段代码就可以了。如果用的是 MySQL，你还需要用<code>DELIMITER</code>来临时定义新的结束符。因为默认情况下 SQL 采用（;）作为结束符，这样当存储过程中的每一句 SQL 结束之后，采用（;）作为结束符，就相当于告诉 SQL 可以执行这一句了。但是存储过程是一个整体，我们不希望 SQL 逐条执行，而是采用存储过程整段执行的方式，因此我们就需要临时定义新的<code>DELIMITER</code>，新的结束符可以用（&#x2F;&#x2F;）或者（$$）。如果你用的是 MySQL，那么上面这段代码，应该写成下面这样：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> `add_num`(<span class="keyword">IN</span> n <span class="type">INT</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">DECLARE</span> i <span class="type">INT</span>;</span><br><span class="line">  <span class="keyword">DECLARE</span> sum <span class="type">INT</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">SET</span> i <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">SET</span> sum <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">  WHILE i <span class="operator">&lt;=</span> n DO</span><br><span class="line">    <span class="keyword">SET</span> sum <span class="operator">=</span> sum <span class="operator">+</span> i;</span><br><span class="line">    <span class="keyword">SET</span> i <span class="operator">=</span> i <span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">  <span class="keyword">END</span> WHILE;</span><br><span class="line">  <span class="keyword">SELECT</span> sum;</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
+<p>首先我用（&#x2F;&#x2F;）作为结束符，又在整个存储过程结束后采用了（&#x2F;&#x2F;）作为结束符号，告诉 SQL 可以执行了，然后再将结束符还原成默认的（;）。</p>
+<p>需要注意的是，如果你用的是 Navicat 工具，那么在编写存储过程的时候，Navicat 会自动设置<code>DELIMITER</code>为其他符号，我们不需要再进行<code>DELIMITER</code>的操作。</p>
+<p>我们再来看下存储过程的 3 种参数类型。在刚才的存储过程中，我们使用了<code>IN</code>类型的参数，另外还有<code>OUT</code>类型和<code>INOUT</code>类型，作用如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数类型</th>
+<th align="center">是否返回</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>IN</code></td>
+<td align="center">否</td>
+<td align="center">向存储过程传入参数，存储过程中修改该参数的值，不能被返回</td>
+</tr>
+<tr>
+<td align="center"><code>OUT</code></td>
+<td align="center">是</td>
+<td align="center">把存储过程计算的结果放到该参数中，调用者可以得到返回值</td>
+</tr>
+<tr>
+<td align="center"><code>INOUT</code></td>
+<td align="center">是</td>
+<td align="center"><code>IN</code>和<code>OUT</code>的结合，既用于存储过程的传入参数，同时又可以把计算结果放到参数中，调用者可以得到返回值</td>
+</tr>
+</tbody></table>
+<p><code>IN</code>和<code>OUT</code>的结合，既用于存储过程的传入参数，同时又可以把计算结果放到参数中，调用者可以得到返回值。</p>
+<p>你能看到，<code>IN</code>参数必须在调用存储过程时指定，而在存储过程中修改该参数的值不能被返回。而<code>OUT</code>参数和<code>INOUT</code>参数可以在存储过程中被改变，并可返回。</p>
+<p>举个例子，这里会用到王者荣耀的英雄数据表<code>heros</code>。假设我想创建一个存储类型<code>get_hero_scores</code>，用来查询某一类型英雄中的最大的最大生命值，最小的最大魔法值，以及平均最大攻击值，那么该怎么写呢？</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> `get_hero_scores`(</span><br><span class="line">  <span class="keyword">OUT</span> max_max_hp <span class="type">FLOAT</span>,</span><br><span class="line">  <span class="keyword">OUT</span> min_max_mp <span class="type">FLOAT</span>,</span><br><span class="line">  <span class="keyword">OUT</span> avg_max_attack <span class="type">FLOAT</span>,  </span><br><span class="line">  s <span class="type">VARCHAR</span>(<span class="number">255</span>)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="built_in">MAX</span>(hp_max), <span class="built_in">MIN</span>(mp_max), <span class="built_in">AVG</span>(attack_max) <span class="keyword">FROM</span> heros <span class="keyword">WHERE</span> role_main <span class="operator">=</span> s <span class="keyword">INTO</span> max_max_hp, min_max_mp, avg_max_attack;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<p>你能看到我定义了 4 个参数类型，其中 3 个为<code>OUT</code>类型，分别为<code>max_max_hp、min_max_mp</code>和<code>avg_max_attack</code>，另一个参数<code>s</code>为<code>IN</code>类型。</p>
+<p>这里我们从<code>heros</code>数据表中筛选主要英雄定位为<code>s</code>的英雄数据，即筛选条件为<code>role_main=s</code>，提取这些数据中的最大的最大生命值，最小的最大魔法值，以及平均最大攻击值，分别赋值给变量<code>max_max_hp、min_max_mp</code>和<code>avg_max_attack</code>。</p>
+<p>然后我们就可以调用存储过程，使用下面这段代码即可：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CALL</span> get_hero_scores(<span class="variable">@max</span>_max_hp, <span class="variable">@min</span>_max_mp, <span class="variable">@avg</span>_max_attack, <span class="string">&#x27;战士&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> <span class="variable">@max</span>_max_hp, <span class="variable">@min</span>_max_mp, <span class="variable">@avg</span>_max_attack;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<table>
+<thead>
+<tr>
+<th align="center">@max_max_hp</th>
+<th align="center">@min_max_mp</th>
+<th align="center">@avg_max_attack</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">8050</td>
+<td align="center">0</td>
+<td align="center">342.1666564941406</td>
+</tr>
+</tbody></table>
+<h1 id="流控制语句"><a href="#流控制语句" class="headerlink" title="流控制语句"></a>流控制语句</h1><p>常用的流控制语句：</p>
+<ol>
+<li><code>BEGIN…END</code>：<code>BEGIN…END</code>中间包含了多个语句，每个语句都以（;）号为结束符。</li>
+<li><code>DECLARE</code>：<code>DECLARE</code>用来声明变量，使用的位置在于<code>BEGIN…END</code>语句中间，而且需要在其他语句使用之前进行变量的声明。</li>
+<li><code>SET</code>：赋值语句，用于对变量进行赋值。</li>
+<li><code>SELECT…INTO</code>：把从数据表中查询的结果存放到变量中，也就是为变量赋值。</li>
+<li><code>IF…THEN…ENDIF</code>：条件判断语句，我们还可以在<code>IF…THEN…ENDIF</code>中使用<code>ELSE</code>和<code>ELSEIF</code>来进行条件判断。</li>
+<li><code>CASE：CASE</code>语句用于多条件的分支判断，使用的语法是下面这样的。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CASE</span> </span><br><span class="line">	  <span class="keyword">WHEN</span> expression1 <span class="keyword">THEN</span> ...</span><br><span class="line">	  <span class="keyword">WHEN</span> expression2 <span class="keyword">THEN</span> ...</span><br><span class="line">	  ...</span><br><span class="line">  <span class="keyword">ELSE</span> </span><br><span class="line">  <span class="comment">--ELSE 语句可以加，也可以不加。加的话代表的所有条件都不满足时采用的方式。</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure></li>
+<li><code>LOOP、LEAVE</code>和<code>ITERATE：LOOP</code>是循环语句，使用<code>LEAVE</code>可以跳出循环，使用<code>ITERATE</code>则可以进入下一次循环。你可以把<code>LEAVE</code>理解为<code>BREAK</code>，把<code>ITERATE</code>理解为<code>CONTINUE</code>。</li>
+<li><code>REPEAT…UNTIL…END REPEAT</code>：这是一个循环语句，首先会执行一次循环，然后在<code>UNTIL</code>中进行表达式的判断，如果满足条件就退出，即<code>END REPEAT</code>；如果条件不满足，则会就继续执行循环，直到满足退出条件为止。</li>
+<li><code>WHILE…DO…END WHILE</code>：这也是循环语句，和<code>REPEAT</code>循环不同的是，这个语句需要先进行条件判断，如果满足条件就进行循环，如果不满足条件就退出循环。</li>
+</ol>
+<h1 id="关于存储过程使用的争议"><a href="#关于存储过程使用的争议" class="headerlink" title="关于存储过程使用的争议"></a>关于存储过程使用的争议</h1><p>尽管存储过程有诸多优点，但是对于存储过程的使用，一直都存在着很多争议，比如有些公司对于大型项目要求使用存储过程，而有些公司在手册中明确禁止使用存储过程，为什么这些公司对存储过程的使用需求差别这么大呢？</p>
+<p>我们得从存储过程的特点来找答案。</p>
+<p>你能看到存储过程有很多好处。</p>
+<p>首先存储过程可以一次编译多次使用。存储过程只在创造时进行编译，之后的使用都不需要重新编译，这就提升了 SQL 的执行效率。其次它可以减少开发工作量。将代码封装成模块，实际上是编程的核心思想之一，这样可以把复杂的问题拆解成不同的模块，然后模块之间可以重复使用，在减少开发工作量的同时，还能保证代码的结构清晰。还有一点，存储过程的安全性强，我们在设定存储过程的时候可以设置对用户的使用权限，这样就和视图一样具有较强的安全性。最后它可以减少网络传输量，因为代码封装到存储过程中，每次使用只需要调用存储过程即可，这样就减少了网络传输量。同时在进行相对复杂的数据库操作时，原本需要使用一条一条的 SQL 语句，可能要连接多次数据库才能完成的操作，现在变成了一次存储过程，只需要连接一次即可。</p>
+<p>存储过程虽然有诸如上面的好处，但缺点也是很明显的。</p>
+<p>它的可移植性差，存储过程不能跨数据库移植，比如在 MySQL、Oracle 和 SQL Server 里编写的存储过程，在换成其他数据库时都需要重新编写。</p>
+<p>其次调试困难，只有少数 DBMS 支持存储过程的调试。对于复杂的存储过程来说，开发和维护都不容易。</p>
+<p>此外，存储过程的版本管理也很困难，比如数据表索引发生变化了，可能会导致存储过程失效。我们在开发软件的时候往往需要进行版本管理，但是存储过程本身没有版本控制，版本迭代更新的时候很麻烦。</p>
+<p>最后它不适合高并发的场景，高并发的场景需要减少数据库的压力，有时数据库会采用分库分表的方式，而且对可扩展性要求很高，在这种情况下，存储过程会变得难以维护，增加数据库的压力，显然就不适用了。</p>
+<p>存储过程既方便，又有局限性。尽管不同的公司对存储过程的态度不一，但是对于我们开发人员来说，不论怎样，掌握存储过程都是必备的技能之一。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/02/13/SQL/SQL%20%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/03/02/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94HTTP%E6%BC%94%E8%BF%9B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            浏览器工作原理——HTTP演进
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/02/12/SQL/SQL%20%E8%A7%86%E5%9B%BE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SQL 视图</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

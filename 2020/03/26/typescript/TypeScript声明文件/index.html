@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>TypeScript声明文件 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-typescript/TypeScript声明文件"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  TypeScript声明文件
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/03/26/typescript/TypeScript%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6/" class="article-date">
+  <time datetime="2020-03-26T02:21:16.000Z" itemprop="datePublished">2020-03-26</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/typescript/">typescript</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">8.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">33 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="声明文件"><a href="#声明文件" class="headerlink" title="声明文件"></a>声明文件</h1><p>当使用第三方库时，我们需要引用它的声明文件，才能获得对应的代码补全、接口提示等功能。</p>
+<h2 id="什么是声明语句"><a href="#什么是声明语句" class="headerlink" title="什么是声明语句"></a>什么是声明语句</h2><p>假如我们想使用第三方库 jQuery，一种常见的方式是在 html 中通过<code>&lt;script&gt;</code>标签引入 jQuery，然后就可以使用全局变量 $ 或 jQuery 了。</p>
+<p>我们通常这样获取一个 id 是 foo 的元素：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#foo&#x27;</span>);</span><br><span class="line"><span class="comment">// or</span></span><br><span class="line"><span class="title function_">jQuery</span>(<span class="string">&#x27;#foo&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>但是在 ts 中，编译器并不知道 $ 或 jQuery 是什么东西1：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">jQuery</span>(<span class="string">&#x27;#foo&#x27;</span>);</span><br><span class="line"><span class="comment">// ERROR: Cannot find name &#x27;jQuery&#x27;.</span></span><br></pre></td></tr></table></figure>
+<p>这时，我们需要使用 declare var 来定义它的类型2：</p>
+<p>declare var jQuery: (selector: string) &#x3D;&gt; any;<br>​<br>jQuery(‘#foo’);<br>上例中，declare var 并没有真的定义一个变量，只是定义了全局变量 jQuery 的类型，仅仅会用于编译时的检查，在编译结果中会被删除。它编译结果是：</p>
+<p>jQuery(‘#foo’);<br>除了 declare var 之外，还有其他很多种声明语句，将会在后面详细介绍。</p>
+<p>什么是声明文件<br>通常我们会把声明语句放到一个单独的文件（jQuery.d.ts）中，这就是声明文件3：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare var jQuery: (selector: string) =&gt; any;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br></pre></td></tr></table></figure>
+<p>声明文件必需以 .d.ts 为后缀。</p>
+<p>一般来说，ts 会解析项目中所有的 *.ts 文件，当然也包含以 .d.ts 结尾的文件。所以当我们将 jQuery.d.ts 放到项目中时，其他所有 *.ts 文件就都可以获得 jQuery 的类型定义了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/path/to/project</span><br><span class="line">├── src</span><br><span class="line">|  ├── index.ts</span><br><span class="line">|  └── jQuery.d.ts</span><br><span class="line">└── tsconfig.json</span><br></pre></td></tr></table></figure>
+<p>假如仍然无法解析，那么可以检查下 tsconfig.json 中的 files、include 和 exclude 配置，确保其包含了 jQuery.d.ts 文件。</p>
+<p>这里只演示了全局变量这种模式的声明文件，假如是通过模块导入的方式使用第三方库的话，那么引入声明文件又是另一种方式了，将会在后面详细介绍。</p>
+<p>第三方声明文件<br>当然，jQuery 的声明文件不需要我们定义了，社区已经帮我们定义好了：jQuery in DefinitelyTyped。</p>
+<p>我们可以直接下载下来使用，但是更推荐的是使用 @types 统一管理第三方库的声明文件。</p>
+<p>@types 的使用方式很简单，直接用 npm 安装对应的声明模块即可，以 jQuery 举例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @types/jquery --save-dev</span><br></pre></td></tr></table></figure>
+<p>可以在这个页面搜索你需要的声明文件。</p>
+<p>书写声明文件<br>当一个第三方库没有提供声明文件时，我们就需要自己书写声明文件了。前面只介绍了最简单的声明文件内容，而真正书写一个声明文件并不是一件简单的事，以下会详细介绍如何书写声明文件。</p>
+<p>在不同的场景下，声明文件的内容和使用方式会有所区别。</p>
+<p>库的使用场景主要有以下几种：</p>
+<p>​全局变量：通过<code>&lt;script&gt;</code>标签引入第三方库，注入全局变量</p>
+<p>​npm 包：通过<code>import foo from &#39;foo&#39;</code>导入，符合 ES6 模块规范</p>
+<p>​UMD 库：既可以通过<code>&lt;script&gt;</code>标签引入，又可以通过 import 导入</p>
+<p>​直接扩展全局变量：通过<code>&lt;script&gt;</code>标签引入后，改变一个全局变量的结构</p>
+<p>​在 npm 包或 UMD 库中扩展全局变量：引用 npm 包或 UMD 库后，改变一个全局变量的结构</p>
+<p>​模块插件：通过<code>&lt;script&gt;</code>或 import 导入后，改变另一个模块的结构</p>
+<p>全局变量<br>全局变量是最简单的一种场景，之前举的例子就是通过<code>&lt;script&gt;</code>标签引入 jQuery，注入全局变量 $ 和 jQuery。</p>
+<p>使用全局变量的声明文件时，如果是以 npm install @types&#x2F;xxx –save-dev 安装的，则不需要任何配置。如果是将声明文件直接存放于当前项目中，则建议和其他源码一起放到 src 目录下（或者对应的源码目录下）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/path/to/project</span><br><span class="line">├── src</span><br><span class="line">|  ├── index.ts</span><br><span class="line">|  └── jQuery.d.ts</span><br><span class="line">└── tsconfig.json</span><br></pre></td></tr></table></figure>
+<p>如果没有生效，可以检查下 tsconfig.json 中的 files、include 和 exclude 配置，确保其包含了 jQuery.d.ts 文件。</p>
+<p>全局变量的声明文件主要有以下几种语法：</p>
+<p>​declare var 声明全局变量</p>
+<p>​declare function 声明全局方法</p>
+<p>​declare class 声明全局类</p>
+<p>​declare enum 声明全局枚举类型</p>
+<p>​declare namespace 声明（含有子属性的）全局对象</p>
+<p>​interface 和 type 声明全局类型</p>
+<p>declare var<br>在所有的声明语句中，declare var 是最简单的，如之前所学，它能够用来定义一个全局变量的类型。与其类似的，还有 declare let 和 declare const，使用 let 与使用 var 没有什么区别：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare let jQuery: (selector: string) =&gt; any;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br><span class="line">// 使用 declare let 定义的 jQuery 类型，允许修改这个全局变量</span><br><span class="line">jQuery = function(selector) &#123;</span><br><span class="line">    return document.querySelector(selector);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>而当我们使用 const 定义时，表示此时的全局变量是一个常量，不允许再去修改它的值了4：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare const jQuery: (selector: string) =&gt; any;</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br><span class="line">// 使用 declare const 定义的 jQuery 类型，禁止修改这个全局变量</span><br><span class="line">jQuery = function(selector) &#123;</span><br><span class="line">    return document.querySelector(selector);</span><br><span class="line">&#125;;</span><br><span class="line">// ERROR: Cannot assign to &#x27;jQuery&#x27; because it is a constant or a read-only property.</span><br></pre></td></tr></table></figure>
+<p>一般来说，全局变量都是禁止修改的常量，所以大部分情况都应该使用 const 而不是 var 或 let。</p>
+<p>需要注意的是，声明语句中只能定义类型，切勿在声明语句中定义具体的实现5：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">declare const jQuery = function(selector) &#123;</span><br><span class="line">    return document.querySelector(selector);</span><br><span class="line">&#125;;</span><br><span class="line">// ERROR: An implementation cannot be declared in ambient contexts.</span><br></pre></td></tr></table></figure>
+<p>declare function<br>declare function 用来定义全局函数的类型。jQuery 其实就是一个函数，所以也可以用 function 来定义：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare function jQuery(selector: string): any;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br></pre></td></tr></table></figure>
+<p>在函数类型的声明语句中，函数重载也是支持的6：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare function jQuery(selector: string): any;</span><br><span class="line">declare function jQuery(domReadyCallback: () =&gt; any): any;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br><span class="line">jQuery(function() &#123;</span><br><span class="line">    alert(&#x27;Dom Ready!&#x27;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>declare class<br>当全局变量是一个类的时候，我们用 declare class 来定义它的类型7：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/Animal.d.ts</span><br><span class="line">​</span><br><span class="line">declare class Animal &#123;</span><br><span class="line">    name: string;</span><br><span class="line">    constructor(name: string);</span><br><span class="line">    sayHi(): string;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">let cat = new Animal(&#x27;Tom&#x27;);</span><br></pre></td></tr></table></figure>
+<p>同样的，declare class 语句也只能用来定义类型，不能用来定义具体的实现，比如定义 sayHi 方法的具体实现则会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/Animal.d.ts</span><br><span class="line">​</span><br><span class="line">declare class Animal &#123;</span><br><span class="line">    name: string;</span><br><span class="line">    constructor(name: string);</span><br><span class="line">    sayHi() &#123;</span><br><span class="line">        return `My name is $&#123;this.name&#125;`;</span><br><span class="line">    &#125;;</span><br><span class="line">    // ERROR: An implementation cannot be declared in ambient contexts.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>declare enum<br>使用 declare enum 定义的枚举类型也称作外部枚举（Ambient Enums），举例如下8：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// src/Directions.d.ts</span><br><span class="line">​</span><br><span class="line">declare enum Directions &#123;</span><br><span class="line">    Up,</span><br><span class="line">    Down,</span><br><span class="line">    Left,</span><br><span class="line">    Right</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];</span><br></pre></td></tr></table></figure>
+<p>与其他全局变量的类型声明一致，declare enum 仅用来定义类型，而不是具体的值。</p>
+<p>Directions.d.ts 仅仅会用于编译时的检查，声明文件里的内容在编译结果中会被删除。它编译结果是：</p>
+<p>var directions &#x3D; [Directions.Up, Directions.Down, Directions.Left, Directions.Right];<br>其中 Directions 是由第三方库定义好的全局变量。</p>
+<p>declare namespace<br>namespace 是 ts 早期时为了解决模块化而创造的关键字，中文称为命名空间。</p>
+<p>由于历史遗留原因，在早期还没有 ES6 的时候，ts 提供了一种模块化方案，使用 module 关键字表示内部模块。但由于后来 ES6 也使用了 module 关键字，ts 为了兼容 ES6，使用 namespace 替代了自己的 module，更名为命名空间。</p>
+<p>随着 ES6 的广泛应用，现在已经不建议再使用 ts 中的 namespace，而推荐使用 ES6 的模块化方案了，故我们不再需要学习 namespace 的使用了。</p>
+<p>namespace 被淘汰了，但是在声明文件中，declare namespace 还是比较常用的，它用来表示全局变量是一个对象，包含很多子属性。</p>
+<p>比如 jQuery 是一个全局变量，它是一个对象，提供了一个 jQuery.ajax 方法可以调用，那么我们就应该使用 declare namespace jQuery 来声明这个拥有多个子属性的全局变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    function ajax(url: string, settings?: any): void;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery.ajax(&#x27;/api/get_something&#x27;);</span><br></pre></td></tr></table></figure>
+<p>注意，在 declare namespace 内部，我们直接使用 function ajax 来声明函数，而不是使用 declare function ajax。类似的，也可以使用 const, class, enum 等语句9：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    function ajax(url: string, settings?: any): void;</span><br><span class="line">    const version: number;</span><br><span class="line">    class Event &#123;</span><br><span class="line">        blur(eventType: EventType): void</span><br><span class="line">    &#125;</span><br><span class="line">    enum EventType &#123;</span><br><span class="line">        CustomClick</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery.ajax(&#x27;/api/get_something&#x27;);</span><br><span class="line">console.log(jQuery.version);</span><br><span class="line">const e = new jQuery.Event();</span><br><span class="line">e.blur(jQuery.EventType.CustomClick);</span><br></pre></td></tr></table></figure>
+<p>嵌套的命名空间</p>
+<p>如果对象拥有深层的层级，则需要用嵌套的 namespace 来声明深层的属性的类型10：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    function ajax(url: string, settings?: any): void;</span><br><span class="line">    namespace fn &#123;</span><br><span class="line">        function extend(object: any): void;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery.ajax(&#x27;/api/get_something&#x27;);</span><br><span class="line">jQuery.fn.extend(&#123;</span><br><span class="line">    check: function() &#123;</span><br><span class="line">        return this.each(function() &#123;</span><br><span class="line">            this.checked = true;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>假如 jQuery 下仅有 fn 这一个属性（没有 ajax 等其他属性或方法），则可以不需要嵌套 namespace11：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare namespace jQuery.fn &#123;</span><br><span class="line">    function extend(object: any): void;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery.fn.extend(&#123;</span><br><span class="line">    check: function() &#123;</span><br><span class="line">        return this.each(function() &#123;</span><br><span class="line">            this.checked = true;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>interface 和 type<br>除了全局变量之外，可能有一些类型我们也希望能暴露出来。在类型声明文件中，我们可以直接使用 interface 或 type 来声明一个全局的接口或类型12：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">interface AjaxSettings &#123;</span><br><span class="line">    method?: &#x27;GET&#x27; | &#x27;POST&#x27;</span><br><span class="line">    data?: any;</span><br><span class="line">&#125;</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    function ajax(url: string, settings?: AjaxSettings): void;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话，在其他文件中也可以使用这个接口或类型了：</p>
+<p>&#x2F;&#x2F; src&#x2F;index.ts<br>​<br>let settings: AjaxSettings &#x3D; {<br>    method: ‘POST’,<br>    data: {<br>        name: ‘foo’<br>    }<br>};<br>jQuery.ajax(‘&#x2F;api&#x2F;post_something’, settings);<br>type 与 interface 类似，不再赘述。</p>
+<p>防止命名冲突</p>
+<p>暴露在最外层的 interface 或 type 会作为全局类型作用于整个项目中，我们应该尽可能的减少全局变量或全局类型的数量。故最好将他们放到 namespace 下13：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    interface AjaxSettings &#123;</span><br><span class="line">        method?: &#x27;GET&#x27; | &#x27;POST&#x27;</span><br><span class="line">        data?: any;</span><br><span class="line">    &#125;</span><br><span class="line">    function ajax(url: string, settings?: AjaxSettings): void;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意，在使用这个 interface 的时候，也应该加上 jQuery 前缀：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">let settings: jQuery.AjaxSettings = &#123;</span><br><span class="line">    method: &#x27;POST&#x27;,</span><br><span class="line">    data: &#123;</span><br><span class="line">        name: &#x27;foo&#x27;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">jQuery.ajax(&#x27;/api/post_something&#x27;, settings);</span><br></pre></td></tr></table></figure>
+<p>声明合并<br>假如 jQuery 既是一个函数，可以直接被调用 jQuery(‘#foo’)，又是一个对象，拥有子属性 jQuery.ajax()（事实确实如此），那么我们可以组合多个声明语句，它们会不冲突的合并起来14：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// src/jQuery.d.ts</span><br><span class="line">​</span><br><span class="line">declare function jQuery(selector: string): any;</span><br><span class="line">declare namespace jQuery &#123;</span><br><span class="line">    function ajax(url: string, settings?: any): void;</span><br><span class="line">&#125;</span><br><span class="line">// src/index.ts</span><br><span class="line">​</span><br><span class="line">jQuery(&#x27;#foo&#x27;);</span><br><span class="line">jQuery.ajax(&#x27;/api/get_something&#x27;);</span><br></pre></td></tr></table></figure>
+<p>关于声明合并的更多用法，可以查看声明合并章节。<br>npm 包<br>一般我们通过 import foo from ‘foo’ 导入一个 npm 包，这是符合 ES6 模块规范的。<br>在我们尝试给一个 npm 包创建声明文件之前，需要先看看它的声明文件是否已经存在。一般来说，npm 包的声明文件可能存在于两个地方：<br>与该 npm 包绑定在一起。判断依据是 package.json 中有 types 字段，或者有一个 index.d.ts 声明文件。这种模式不需要额外安装其他包，是最为推荐的，所以以后我们自己创建 npm 包的时候，最好也将声明文件与 npm 包绑定在一起。<br>发布到 @types 里。我们只需要尝试安装一下对应的 @types 包就知道是否存在该声明文件，安装命令是 npm install @types&#x2F;foo –save-dev。这种模式一般是由于 npm 包的维护者没有提供声明文件，所以只能由其他人将声明文件发布到 @types 里了。<br>假如以上两种方式都没有找到对应的声明文件，那么我们就需要自己为它写声明文件了。由于是通过 import 语句导入的模块，所以声明文件存放的位置也有所约束，一般有两种方案：<br>创建一个 node_modules&#x2F;@types&#x2F;foo&#x2F;index.d.ts 文件，存放 foo 模块的声明文件。这种方式不需要额外的配置，但是 node_modules 目录不稳定，代码也没有被保存到仓库中，无法回溯版本，有不小心被删除的风险，故不太建议用这种方案，一般只用作临时测试。<br>创建一个 types 目录，专门用来管理自己写的声明文件，将 foo 的声明文件放到 types&#x2F;foo&#x2F;index.d.ts 中。这种方式需要配置下 tsconfig.json 中的 paths 和 baseUrl 字段。<br>目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/path/to/project</span><br><span class="line">├── src</span><br><span class="line">|  └── index.ts</span><br><span class="line">├── types</span><br><span class="line">|  └── foo</span><br><span class="line">|     └── index.d.ts</span><br><span class="line">└── tsconfig.json</span><br></pre></td></tr></table></figure>
+<p>tsconfig.json 内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;module&quot;</span><span class="punctuation">:</span> <span class="string">&quot;commonjs&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;paths&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;*&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;types/*&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>如此配置之后，通过 import 导入 foo 的时候，也会去 types 目录下寻找对应的模块的声明文件了。<br>注意 module 配置可以有很多种选项，不同的选项会影响模块的导入导出模式。这里我们使用了 commonjs 这个最常用的选项，后面的教程也都默认使用的这个选项。<br>不管采用了以上两种方式中的哪一种，我都强烈建议大家将书写好的声明文件（通过给第三方库发 pull request，或者直接提交到 @types 里）发布到开源社区中，享受了这么多社区的优秀的资源，就应该在力所能及的时候给出一些回馈。只有所有人都参与进来，才能让 ts 社区更加繁荣。<br>npm 包的声明文件主要有以下几种语法：<br>export 导出变量<br>export namespace 导出（含有子属性的）对象<br>export default ES6 默认导出<br>export &#x3D; commonjs 导出模块<br>export<br>npm 包的声明文件与全局变量的声明文件有很大区别。在 npm 包的声明文件中，使用 declare 不再会声明一个全局变量，而只会在当前文件中声明一个局部变量。只有在声明文件中使用 export 导出，然后在使用方 import 导入后，才会应用到这些类型声明。<br>export 的语法与普通的 ts 中的语法类似，区别仅在于声明文件中禁止定义具体的实现15：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// types/foo/index.d.ts</span><br><span class="line"></span><br><span class="line">export const name: string;</span><br><span class="line">export function getName(): string;</span><br><span class="line">export class Animal &#123;</span><br><span class="line">    constructor(name: string);</span><br><span class="line">    sayHi(): string;</span><br><span class="line">&#125;</span><br><span class="line">export enum Directions &#123;</span><br><span class="line">    Up,</span><br><span class="line">    Down,</span><br><span class="line">    Left,</span><br><span class="line">    Right</span><br><span class="line">&#125;</span><br><span class="line">export interface Options &#123;</span><br><span class="line">    data: any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应的导入和使用模块应该是这样：</p>
+<p>&#x2F;&#x2F; src&#x2F;index.ts</p>
+<p>import { name, getName, Animal, Directions, Options } from ‘foo’;</p>
+<p>console.log(name);<br>let myName &#x3D; getName();<br>let cat &#x3D; new Animal(‘Tom’);<br>let directions &#x3D; [Directions.Up, Directions.Down, Directions.Left, Directions.Right];<br>let options: Options &#x3D; {<br>    data: {<br>        name: ‘foo’<br>    }<br>};<br>混用 declare 和 export<br>我们也可以使用 declare 先声明多个变量，最后再用 export 一次性导出。上例的声明文件可以等价的改写为16：<br>&#x2F;&#x2F; types&#x2F;foo&#x2F;index.d.ts</p>
+<p>declare const name: string;<br>declare function getName(): string;<br>declare class Animal {<br>    constructor(name: string);<br>    sayHi(): string;<br>}<br>declare enum Directions {<br>    Up,<br>    Down,<br>    Left,<br>    Right<br>}<br>interface Options {<br>    data: any;<br>}</p>
+<p>export { name, getName, Animal, Directions, Options };<br>注意，与全局变量的声明文件类似，interface 前是不需要 declare 的。<br>export namespace<br>与 declare namespace 类似，export namespace 用来导出一个拥有子属性的对象17：<br>&#x2F;&#x2F; types&#x2F;foo&#x2F;index.d.ts</p>
+<p>export namespace foo {<br>    const name: string;<br>    namespace bar {<br>        function baz(): string;<br>    }<br>}<br>&#x2F;&#x2F; src&#x2F;index.ts</p>
+<p>import { foo } from ‘foo’;</p>
+<p>console.log(foo.name);<br>foo.bar.baz();<br>export default<br>在 ES6 模块系统中，使用 export default 可以导出一个默认值，使用方可以用 import foo from ‘foo’ 而不是 import { foo } from ‘foo’ 来导入这个默认值。<br>在类型声明文件中，export default 用来导出默认值的类型18：<br>&#x2F;&#x2F; types&#x2F;foo&#x2F;index.d.ts</p>
+<p>export default function foo(): string;<br>&#x2F;&#x2F; src&#x2F;index.ts</p>
+<p>import foo from ‘foo’;</p>
+<p>foo();<br>注意，只有 function、class 和 interface 可以直接默认导出，其他的变量需要先定义出来，再默认导出19：<br>&#x2F;&#x2F; types&#x2F;foo&#x2F;index.d.ts</p>
+<p>export default enum Directions {<br>&#x2F;&#x2F; ERROR: Expression expected.<br>    Up,<br>    Down,<br>    Left,<br>    Right<br>}<br>上例中 export default enum 是错误的语法，需要使用 declare enum 定义出来，然后使用 export default 导出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// types/foo/index.d.ts</span><br><span class="line"></span><br><span class="line">declare enum Directions &#123;</span><br><span class="line">    Up,</span><br><span class="line">    Down,</span><br><span class="line">    Left,</span><br><span class="line">    Right</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default Directions;</span><br></pre></td></tr></table></figure>
+<p>针对这种默认导出，我们一般会将导出语句放在整个声明文件的最前面20：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// types/foo/index.d.ts</span><br><span class="line"></span><br><span class="line">export default Directions;</span><br><span class="line"></span><br><span class="line">declare enum Directions &#123;</span><br><span class="line">    Up,</span><br><span class="line">    Down,</span><br><span class="line">    Left,</span><br><span class="line">    Right</span><br><span class="line">&#125;</span><br><span class="line">export =</span><br></pre></td></tr></table></figure>
+<p>在 commonjs 规范中，我们用以下方式来导出一个模块：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 整体导出</span><br><span class="line">module.exports = foo;</span><br><span class="line">// 单个导出</span><br><span class="line">exports.bar = bar;</span><br><span class="line">在 ts 中，针对这种模块导出，有多种方式可以导入，第一种方式是 const ... = require：</span><br><span class="line">// 整体导入</span><br><span class="line">const foo = require(&#x27;foo&#x27;);</span><br><span class="line">// 单个导入</span><br><span class="line">const bar = require(&#x27;foo&#x27;).bar;</span><br><span class="line">第二种方式是 import ... from，注意针对整体导出，需要使用 import * as 来导入：</span><br><span class="line">// 整体导入</span><br><span class="line">import * as foo from &#x27;foo&#x27;;</span><br><span class="line">// 单个导入</span><br><span class="line">import &#123; bar &#125; from &#x27;foo&#x27;;</span><br><span class="line">第三种方式是 import ... require，这也是 ts 官方推荐的方式：</span><br><span class="line">// 整体导入</span><br><span class="line">import foo = require(&#x27;foo&#x27;);</span><br><span class="line">// 单个导入</span><br><span class="line">import bar = foo.bar;</span><br></pre></td></tr></table></figure>
+<p>对于这种使用 commonjs 规范的库，假如要为它写类型声明文件的话，就需要使用到 export &#x3D; 这种语法了21：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/foo/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> = foo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>): <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> foo &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">bar</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，上例中使用了 export &#x3D; 之后，就不能再单个导出 export { bar } 了。所以我们通过声明合并，使用 declare namespace foo 来将 bar 合并到 foo 里。<br>准确地讲，export &#x3D; 不仅可以用在声明文件中，也可以用在普通的 ts 文件中。实际上，import … require 和 export &#x3D; 都是 ts 为了兼容 AMD 规范和 commonjs 规范而创立的新语法，由于并不常用也不推荐使用，所以这里就不详细介绍了，感兴趣的可以看官方文档。<br>由于很多第三方库是 commonjs 规范的，所以声明文件也就不得不用到 export &#x3D; 这种语法了。但是还是需要再强调下，相比与 export &#x3D;，我们更推荐使用 ES6 标准的 export default 和 export。<br>UMD 库<br>既可以通过<code>&lt;script&gt;</code>标签引入，又可以通过 import 导入的库，称为 UMD 库。相比于 npm 包的类型声明文件，我们需要额外声明一个全局变量，为了实现这种方式，ts 提供了一个新语法 export as namespace。<br>export as namespace<br>一般使用 export as namespace 时，都是先有了 npm 包的声明文件，再基于它添加一条 export as namespace 语句，即可将声明好的一个变量声明为全局变量，举例如下22：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/foo/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">as</span> <span class="keyword">namespace</span> foo;</span><br><span class="line">export = foo;</span><br><span class="line"></span><br><span class="line">declare function foo(): string;</span><br><span class="line">declare <span class="keyword">namespace</span> foo &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">bar</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然它也可以与 export default 一起使用：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/foo/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">as</span> <span class="keyword">namespace</span> foo;</span><br><span class="line">export default foo;</span><br><span class="line"></span><br><span class="line">declare function foo(): string;</span><br><span class="line">declare <span class="keyword">namespace</span> foo &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">bar</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接扩展全局变量<br>有的第三方库扩展了一个全局变量，可是此全局变量的类型却没有相应的更新过来，就会导致 ts 编译错误，此时就需要扩展全局变量的类型。比如扩展 String 类型23：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">String</span> &#123;</span><br><span class="line">    <span class="title function_">prependHello</span>(): <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;foo&#x27;</span>.<span class="title function_">prependHello</span>();</span><br></pre></td></tr></table></figure>
+<p>通过声明合并，使用 interface String 即可给 String 添加属性或方法。<br>也可以使用 declare namespace 给已有的命名空间添加类型声明24：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/jquery-plugin/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JQuery</span> &#123;</span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">CustomOptions</span> &#123;</span><br><span class="line">        <span class="attr">bar</span>: <span class="built_in">string</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">JQueryStatic</span> &#123;</span><br><span class="line">    <span class="title function_">foo</span>(<span class="attr">options</span>: <span class="title class_">JQuery</span>.<span class="property">CustomOptions</span>): <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line">jQuery.<span class="title function_">foo</span>(&#123;</span><br><span class="line">    <span class="attr">bar</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在 npm 包或 UMD 库中扩展全局变量<br>如之前所说，对于一个 npm 包或者 UMD 库的声明文件，只有 export 导出的类型声明才能被导入。所以对于 npm 包或 UMD 库，如果导入此库之后会扩展全局变量，则需要使用另一种语法在声明文件中扩展全局变量的类型，那就是 declare global。<br>declare global<br>使用 declare global 可以在 npm 包或者 UMD 库的声明文件中扩展全局变量的类型25：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/foo/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">global</span> &#123;</span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">String</span> &#123;</span><br><span class="line">        <span class="title function_">prependHello</span>(): <span class="built_in">string</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;&#125;;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;bar&#x27;</span>.<span class="title function_">prependHello</span>();</span><br></pre></td></tr></table></figure>
+<p>注意即使此声明文件不需要导出任何东西，仍然需要导出一个空对象，用来告诉编译器这是一个模块的声明文件，而不是一个全局变量的声明文件。<br>模块插件<br>有时通过 import 导入一个模块插件，可以改变另一个原有模块的结构。此时如果原有模块已经有了类型声明文件，而插件模块没有类型声明文件，就会导致类型不完整，缺少插件部分的类型。ts 提供了一个语法 declare module，它可以用来扩展原有模块的类型。<br>declare module<br>如果是需要扩展原有模块的话，需要在类型声明文件中先引用原有模块，再使用 declare module 扩展原有模块26：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/moment-plugin/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> moment <span class="keyword">from</span> <span class="string">&#x27;moment&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&#x27;moment&#x27;</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>): moment.<span class="property">CalendarKey</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> moment <span class="keyword">from</span> <span class="string">&#x27;moment&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;moment-plugin&#x27;</span>;</span><br><span class="line"></span><br><span class="line">moment.<span class="title function_">foo</span>();</span><br></pre></td></tr></table></figure>
+<p>declare module 也可用于在一个文件中一次性声明多个模块的类型27：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/foo-bar.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&#x27;foo&#x27;</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">        <span class="attr">foo</span>: <span class="built_in">string</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&#x27;bar&#x27;</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>): <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Foo</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> bar <span class="keyword">from</span> <span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">f</span>: <span class="title class_">Foo</span>;</span><br><span class="line">bar.<span class="title function_">bar</span>();</span><br></pre></td></tr></table></figure>
+<p>声明文件中的依赖<br>一个声明文件有时会依赖另一个声明文件中的类型，比如在前面的 declare module 的例子中，我们就在声明文件中导入了 moment，并且使用了 moment.CalendarKey 这个类型：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/moment-plugin/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> moment <span class="keyword">from</span> <span class="string">&#x27;moment&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&#x27;moment&#x27;</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>): moment.<span class="property">CalendarKey</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了可以在声明文件中通过 import 导入另一个声明文件中的类型之外，还有一个语法也可以用来导入另一个声明文件，那就是三斜线指令。<br>三斜线指令<br>与 namespace 类似，三斜线指令也是 ts 在早期版本中为了描述模块之间的依赖关系而创造的语法。随着 ES6 的广泛应用，现在已经不建议再使用 ts 中的三斜线指令来声明模块之间的依赖关系了。<br>但是在声明文件中，它还是有一定的用武之地。<br>类似于声明文件中的 import，它可以用来导入另一个声明文件。与 import 的区别是，当且仅当在以下几个场景下，我们才需要使用三斜线指令替代 import：<br>当我们在书写一个全局变量的声明文件时<br>当我们需要依赖一个全局变量的声明文件时<br>书写一个全局变量的声明文件<br>这些场景听上去很拗口，但实际上很好理解——在全局变量的声明文件中，是不允许出现 import, export 关键字的。一旦出现了，那么他就会被视为一个 npm 包或 UMD 库，就不再是全局变量的声明文件了。故当我们在书写一个全局变量的声明文件时，如果需要引用另一个库的类型，那么就必须用三斜线指令了28：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/jquery-plugin/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// &lt;reference types=&quot;jquery&quot; /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">options: JQuery.AjaxSettings</span>): <span class="built_in">string</span>;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>(&#123;&#125;);</span><br></pre></td></tr></table></figure>
+<p>三斜线指令的语法如上，&#x2F;&#x2F;&#x2F; 后面使用 xml 的格式添加了对 jquery 类型的依赖，这样就可以在声明文件中使用 JQuery.AjaxSettings 类型了。<br>注意，三斜线指令必须放在文件的最顶端，三斜线指令的前面只允许出现单行或多行注释。<br>依赖一个全局变量的声明文件<br>在另一个场景下，当我们需要依赖一个全局变量的声明文件时，由于全局变量不支持通过 import 导入，当然也就必须使用三斜线指令来引入了29：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types/node-plugin/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// &lt;reference types=&quot;node&quot; /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">p: NodeJS.Process</span>): <span class="built_in">string</span>;</span><br><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; foo &#125; <span class="keyword">from</span> <span class="string">&#x27;node-plugin&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">foo</span>(<span class="variable language_">global</span>.<span class="property">process</span>);</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，我们通过三斜线指引入了 node 的类型，然后在声明文件中使用了 NodeJS.Process 这个类型。最后在使用到 foo 的时候，传入了 node 中的全局变量 process。<br>由于引入的 node 中的类型都是全局变量的类型，它们是没有办法通过 import 来导入的，所以这种场景下也只能通过三斜线指令来引入了。<br>以上两种使用场景下，都是由于需要书写或需要依赖全局变量的声明文件，所以必须使用三斜线指令。在其他的一些不是必要使用三斜线指令的情况下，就都需要使用 import 来导入。<br>拆分声明文件<br>当我们的全局变量的声明文件太大时，可以通过拆分为多个文件，然后在一个入口文件中将它们一一引入，来提高代码的可维护性。比如 jQuery 的声明文件就是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// node_modules/@types/jquery/index.d.ts</span><br><span class="line"></span><br><span class="line">/// &lt;reference types=&quot;sizzle&quot; /&gt;</span><br><span class="line">/// &lt;reference path=&quot;JQueryStatic.d.ts&quot; /&gt;</span><br><span class="line">/// &lt;reference path=&quot;JQuery.d.ts&quot; /&gt;</span><br><span class="line">/// &lt;reference path=&quot;misc.d.ts&quot; /&gt;</span><br><span class="line">/// &lt;reference path=&quot;legacy.d.ts&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>export &#x3D; jQuery;<br>其中用到了 types 和 path 两种不同的指令。它们的区别是：types 用于声明对另一个库的依赖，而 path 用于声明对另一个文件的依赖。<br>上例中，sizzle 是与 jquery 平行的另一个库，所以需要使用 types&#x3D;”sizzle” 来声明对它的依赖。而其他的三斜线指令就是将 jquery 的声明拆分到不同的文件中了，然后在这个入口文件中使用 path&#x3D;”foo” 将它们一一引入。<br>其他三斜线指令<br>除了这两种三斜线指令之外，还有其他的三斜线指令，比如 &#x2F;&#x2F;&#x2F; <reference no-default-lib="true"/>, &#x2F;&#x2F;&#x2F; <amd-module /> 等，但它们都是废弃的语法，故这里就不介绍了，详情可见官网。<br>自动生成声明文件<br>如果库的源码本身就是由 ts 写的，那么在使用 tsc 脚本将 ts 编译为 js 的时候，添加 declaration 选项，就可以同时也生成 .d.ts 声明文件了。<br>我们可以在命令行中添加 –declaration（简写 -d），或者在 tsconfig.json 中添加 declaration 选项。这里以 tsconfig.json 为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;compilerOptions&quot;: &#123;</span><br><span class="line">        &quot;module&quot;: &quot;commonjs&quot;,</span><br><span class="line">        &quot;outDir&quot;: &quot;lib&quot;,</span><br><span class="line">        &quot;declaration&quot;: true,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上例中我们添加了 outDir 选项，将 ts 文件的编译结果输出到 lib 目录下，然后添加了 declaration 选项，设置为 true，表示将会由 ts 文件自动生成 .d.ts 声明文件，也会输出到 lib 目录下。<br>运行 tsc 之后，目录结构如下30：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/path/to/project</span><br><span class="line">├── lib</span><br><span class="line">|  ├── bar</span><br><span class="line">|  |  ├── index.d.ts</span><br><span class="line">|  |  └── index.js</span><br><span class="line">|  ├── index.d.ts</span><br><span class="line">|  └── index.js</span><br><span class="line">├── src</span><br><span class="line">|  ├── bar</span><br><span class="line">|  |  └── index.ts</span><br><span class="line">|  └── index.ts</span><br><span class="line">├── package.json</span><br><span class="line">└── tsconfig.json</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，src 目录下有两个 ts 文件，分别是 src&#x2F;index.ts 和 src&#x2F;bar&#x2F;index.ts，它们被编译到 lib 目录下的同时，也会生成对应的两个声明文件 lib&#x2F;index.d.ts 和 lib&#x2F;bar&#x2F;index.d.ts。它们的内容分别是：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&#x27;./bar&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// src/bar/index.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;bar&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// lib/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&#x27;./bar&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>): <span class="built_in">string</span>;</span><br><span class="line"><span class="comment">// lib/bar/index.d.ts</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>): <span class="built_in">string</span>;</span><br></pre></td></tr></table></figure>
+<p>可见，自动生成的声明文件基本保持了源码的结构，而将具体实现去掉了，生成了对应的类型声明。<br>使用 tsc 自动生成声明文件时，每个 ts 文件都会对应一个 .d.ts 声明文件。这样的好处是，使用方不仅可以在使用 import foo from ‘foo’ 导入默认的模块时获得类型提示，还可以在使用 import bar from ‘foo&#x2F;lib&#x2F;bar’ 导入一个子模块时，也获得对应的类型提示。<br>除了 declaration 选项之外，还有几个选项也与自动生成声明文件有关，这里只简单列举出来，不做详细演示了：<br>declarationDir 设置生成 .d.ts 文件的目录<br>declarationMap 对每个 .d.ts 文件，都生成对应的 .d.ts.map（sourcemap）文件<br>emitDeclarationOnly 仅生成 .d.ts 文件，不生成 .js 文件<br>发布声明文件<br>当我们为一个库写好了声明文件之后，下一步就是将它发布出去了。<br>此时有两种方案：<br>将声明文件和源码放在一起<br>将声明文件发布到 @types 下<br>这两种方案中优先选择第一种方案。保持声明文件与源码在一起，使用时就不需要额外增加单独的声明文件库的依赖了，而且也能保证声明文件的版本与源码的版本保持一致。<br>仅当我们在给别人的仓库添加类型声明文件，但原作者不愿意合并 pull request 时，才需要使用第二种方案，将声明文件发布到 @types 下。<br>将声明文件和源码放在一起<br>如果声明文件是通过 tsc 自动生成的，那么无需做任何其他配置，只需要把编译好的文件也发布到 npm 上，使用方就可以获取到类型提示了。<br>如果是手动写的声明文件，那么需要满足以下条件之一，才能被正确的识别：<br>给 package.json 中的 types 或 typings 字段指定一个类型声明文件地址<br>在项目根目录下，编写一个 index.d.ts 文件<br>针对入口文件（package.json 中的 main 字段指定的入口文件），编写一个同名不同后缀的 .d.ts 文件<br>第一种方式是给 package.json 中的 types 或 typings 字段指定一个类型声明文件地址。比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;foo&quot;,</span><br><span class="line">    &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">    &quot;main&quot;: &quot;lib/index.js&quot;,</span><br><span class="line">    &quot;types&quot;: &quot;foo.d.ts&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>指定了 types 为 foo.d.ts 之后，导入此库的时候，就会去找 foo.d.ts 作为此库的类型声明文件了。<br>typings 与 types 一样，只是另一种写法。<br>如果没有指定 types 或 typings，那么就会在根目录下寻找 index.d.ts 文件，将它视为此库的类型声明文件。<br>如果没有找到 index.d.ts 文件，那么就会寻找入口文件（package.json 中的 main 字段指定的入口文件）是否存在对应同名不同后缀的 .d.ts 文件。<br>比如 package.json 是这样时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;foo&quot;,</span><br><span class="line">    &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">    &quot;main&quot;: &quot;lib/index.js&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就会先识别 package.json 中是否存在 types 或 typings 字段。发现不存在，那么就会寻找是否存在 index.d.ts 文件。如果还是不存在，那么就会寻找是否存在 lib&#x2F;index.d.ts 文件。假如说连 lib&#x2F;index.d.ts 都不存在的话，就会被认为是一个没有提供类型声明文件的库了。<br>有的库为了支持导入子模块，比如 import bar from ‘foo&#x2F;lib&#x2F;bar’，就需要额外再编写一个类型声明文件 lib&#x2F;bar.d.ts 或者 lib&#x2F;bar&#x2F;index.d.ts，这与自动生成声明文件类似，一个库中同时包含了多个类型声明文件。<br>将声明文件发布到 @types 下<br>如果我们是在给别人的仓库添加类型声明文件，但原作者不愿意合并 pull request，那么就需要将声明文件发布到 @types 下。<br>与普通的 npm 模块不同，@types 是统一由 DefinitelyTyped 管理的。要将声明文件发布到 @types 下，就需要给 DefinitelyTyped 创建一个 pull-request，其中包含了类型声明文件，测试代码，以及 tsconfig.json 等。<br>pull-request 需要符合它们的规范，并且通过测试，才能被合并，稍后就会被自动发布到 @types 下。<br>在 DefinitelyTyped 中创建一个新的类型声明，需要用到一些工具，DefinitelyTyped 的文档中已经有了详细的介绍，这里就不赘述了，以官方文档为准。<br>如果大家有此类需求，可以参考下笔者提交的 pull-request 。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/03/26/typescript/TypeScript%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/03/29/typescript/tsconfig.json%E9%85%8D%E7%BD%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            tsconfig.json配置
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/03/25/utils/vscode%E9%85%8D%E7%BD%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">vscode配置</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

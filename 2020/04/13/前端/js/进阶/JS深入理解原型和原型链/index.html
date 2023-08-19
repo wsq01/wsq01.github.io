@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS深入理解原型和原型链 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/进阶/JS深入理解原型和原型链"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS深入理解原型和原型链
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" class="article-date">
+  <time datetime="2020-04-13T01:22:50.000Z" itemprop="datePublished">2020-04-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">6 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h1><h2 id="原型对象的理解"><a href="#原型对象的理解" class="headerlink" title="原型对象的理解"></a>原型对象的理解</h2><h4 id="函数对象的-prototype-属性"><a href="#函数对象的-prototype-属性" class="headerlink" title="函数对象的 prototype 属性"></a>函数对象的 prototype 属性</h4><p>我们创建的每一个函数都有一个<code>prototype</code>属性，这个属性是一个指针，指向一个对象。这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法，简单来说，该函数实例化的所有对象的<code>__proto__</code>的属性指向这个对象，它是该函数所有实例化对象的原型。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为原型对象添加方法</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayName</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img1.png" class="">
+<h4 id="constructor-属性"><a href="#constructor-属性" class="headerlink" title="constructor 属性"></a>constructor 属性</h4><p>当函数创建，<code>prototype</code>属性指向一个原型对象时，在默认情况下，这个原型对象将会获得一个<code>constructor</code>属性，这个属性是一个指针，指向<code>prototype</code>所在的函数对象。<br>也就是<code>Person.prototype.constructor</code>指向<code>Person</code>函数对象。</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img2.png" class="">
+<h4 id="对象的-proto-属性"><a href="#对象的-proto-属性" class="headerlink" title="对象的__proto__属性"></a>对象的<code>__proto__</code>属性</h4><p>当我们调用构造函数创建一个新实例后，在这个实例的内部将包含一个指针，指向构造函数的原型对象，这个指针叫<code>[[Prototype]]</code>。所有的对象都含有<code>[[Prototype]]</code>属性，指向它们的原型对象。可以通过对象的<code>__proto__</code>属性来访问。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> student = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(student.<span class="property">__proto__</span> === <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>从上面我们可以看出，这个连接是存在于实例与构造函数的原型对象之间的，而不是存在于实例和构造函数之间的。</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img3.png" class="">
+
+<h4 id="prototype和-proto-的区别"><a href="#prototype和-proto-的区别" class="headerlink" title="prototype和__proto__的区别"></a>prototype和__proto__的区别</h4><img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/8.png" class="">
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;&#125;;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property"><span class="keyword">prototype</span></span>);  <span class="comment">//undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>);  <span class="comment">//Object &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b.<span class="property"><span class="keyword">prototype</span></span>);  <span class="comment">//b &#123;&#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b.<span class="property">__proto__</span>);  <span class="comment">//function() &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<h4 id="proto-属性指向谁"><a href="#proto-属性指向谁" class="headerlink" title="__proto__属性指向谁"></a>__proto__属性指向谁</h4><p><code>__proto__</code>的指向取决于对象创建时的实现方式。</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/9.png" class="">
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*1、字面量方式*/</span></span><br><span class="line"><span class="keyword">var</span> a = &#123;&#125;;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>);  <span class="comment">//Object &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span> === a.<span class="property">constructor</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*2、构造器方式*/</span></span><br><span class="line"><span class="keyword">var</span> A = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title function_">A</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>); <span class="comment">//A &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span> === a.<span class="property">constructor</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*3、Object.create()方式*/</span></span><br><span class="line"><span class="keyword">var</span> a1 = &#123;<span class="attr">a</span>:<span class="number">1</span>&#125;</span><br><span class="line"><span class="keyword">var</span> a2 = <span class="title class_">Object</span>.<span class="title function_">create</span>(a1);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a2.<span class="property">__proto__</span>); <span class="comment">//Object &#123;a: 1&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a2.<span class="property">__proto__</span> === a1.<span class="property">constructor</span>.<span class="property"><span class="keyword">prototype</span></span>); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+<h2 id="原型属性"><a href="#原型属性" class="headerlink" title="原型属性"></a>原型属性</h2><h4 id="属性访问"><a href="#属性访问" class="headerlink" title="属性访问"></a>属性访问</h4><p>每当代码读取对象的某个属性时，首先会在对象本身搜索这个属性，如果找到该属性就返回该属性的值，如果没有找到，则继续搜索该对象对应的原型对象，以此类推下去。<br>因为这样的搜索过程，因此我们如果在实例中添加一个属性时，这个属性就会屏蔽原型对象中保存的同名属性，因为在实例中搜索到该属性后就不会再向后搜索了。</p>
+<h4 id="属性判断"><a href="#属性判断" class="headerlink" title="属性判断"></a>属性判断</h4><p>在属性确认存在的情况下，我们可以使用<code>hasOwnProperty()</code>方法来判断一个属性是存在于实例中，还是存在于原型中。这个方法只有在给定属性存在于实例中时，才会返回<code>true</code>。<br>判断一个属性是否存在，我们可以使用<code>in</code>操作符，它会在对象能够访问给定属性时返回<code>true</code>，无论该属性存在于实例还是原型中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hasPrototypeProperty</span>(<span class="params">object, name</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> !object.<span class="title function_">hasOwnProperty</span>(name) &amp;&amp; (name <span class="keyword">in</span> object);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">name</span> = <span class="string">&quot;laker&quot;</span> ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> student = <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(student.<span class="property">name</span>); <span class="comment">// laker</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">hasPrototypeProperty</span>(student, <span class="string">&quot;name&quot;</span>)); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">student.<span class="property">name</span> = <span class="string">&quot;xiaoming&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(student.<span class="property">name</span>); <span class="comment">//xiaoming 屏蔽了原型对象中的 name 属性</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">hasPrototypeProperty</span>(student, <span class="string">&quot;name&quot;</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h4 id="for-in-循环"><a href="#for-in-循环" class="headerlink" title="for-in 循环"></a>for-in 循环</h4><p>在使用<code>for-in</code>循环时，返回的是所有能够通过对象访问的、可枚举的属性，其中包括了存在于实例中的属性，也包括了存在于原型中的属性。<br>需要注意的一点是，屏蔽了实例中不可枚举属性的实例属性也会在<code>for-in</code>循环中返回。</p>
+<h4 id="所有属性获取"><a href="#所有属性获取" class="headerlink" title="所有属性获取"></a>所有属性获取</h4><p>如果想要获得对象上所有可枚举的实例属性，可以使用<code>Object.keys()</code>方法，这个方法接收一个对象作为参数，返回一个包含所有可枚举属性的字符串数组。<br>如果想要获取所有的实例属性，无论它是否可以枚举，我们可以使用<code>Object.getOwnPropertyNames()</code>方法。</p>
+<h1 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h1><h2 id="原型链理解"><a href="#原型链理解" class="headerlink" title="原型链理解"></a>原型链理解</h2><p>原型链是实现继承的主要方法。其基本思想是利用一个引用类型继承另一个引用类型的属性和方法。</p>
+<p>原型链的主要实现方法是让构造函数的<code>prototype</code>对象等于另一个类型的实例，此时的<code>prototype</code>对象因为是实例，因此将包含一个指向另一个原型的指针，相应地另一个原型中也包含着一个指向另一个构造函数的指针。假如另一个原型又是另一个类型的实例，那么上述关系依然成立，如此层层递进，就构成了实例与类型的链条。这就是原型链的基本概念。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Super</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Middle</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Sub</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="title class_">Middle</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">Super</span>();</span><br><span class="line"><span class="title class_">Sub</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">Middle</span>();</span><br><span class="line"><span class="keyword">var</span> suber = <span class="keyword">new</span> <span class="title class_">Sub</span>();</span><br></pre></td></tr></table></figure>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img4.png" class="">
+<h2 id="默认的原型"><a href="#默认的原型" class="headerlink" title="默认的原型"></a>默认的原型</h2><p>所有的引用类型都继承了<code>Object</code>，这个继承就是通过原型链来实现的。所有函数的默认原型都是<code>Object</code>的实例，因此默认原型都会包含一个内部指针，指向<code>Object.Prototype</code>。这也正是所有的自定义类型都会继承<code>toString()</code>、<code>valueOf()</code>等默认方法的根本原因。</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img5.png" class="">
+<p><code>Object.prototype</code>就是原型链的终点了，<code>Object.prototype.__proto__</code>返回的是一个<code>null</code>空对象，这就意味着原型链的结束。</p>
+<h2 id="函数也是对象"><a href="#函数也是对象" class="headerlink" title="函数也是对象"></a>函数也是对象</h2><p>其实上面的原型链还少了一部分。因为在 JavaScript 中，函数也是对象，那么函数也应该有它的原型对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Foo</span>(<span class="params">who</span>) &#123;</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">me</span> = who;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Foo</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">identify</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">&quot;I am &quot;</span> + <span class="variable language_">this</span>.<span class="property">me</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Bar</span>(<span class="params">who</span>) &#123;</span><br><span class="line"><span class="title class_">Foo</span>.<span class="title function_">call</span>( <span class="variable language_">this</span>, who );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Bar</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Object</span>.<span class="title function_">create</span>( <span class="title class_">Foo</span>.<span class="property"><span class="keyword">prototype</span></span> );</span><br><span class="line"></span><br><span class="line"><span class="title class_">Bar</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">speak</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line"><span class="title function_">alert</span>( <span class="string">&quot;Hello, &quot;</span> + <span class="variable language_">this</span>.<span class="title function_">identify</span>() + <span class="string">&quot;.&quot;</span> );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b1 = <span class="keyword">new</span> <span class="title class_">Bar</span>( <span class="string">&quot;b1&quot;</span> );</span><br><span class="line"><span class="keyword">var</span> b2 = <span class="keyword">new</span> <span class="title class_">Bar</span>( <span class="string">&quot;b2&quot;</span> );</span><br><span class="line"></span><br><span class="line">b1.<span class="title function_">speak</span>();</span><br><span class="line">b2.<span class="title function_">speak</span>();</span><br></pre></td></tr></table></figure>
+<p>我们先看一下不包含函数原型的以上实例所包含的原型链的关系图：</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img6.png" class="">
+
+<p>下面是加入了函数原型后的原型链的关系图。</p>
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/img7.png" class="">
+
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> A = <span class="keyword">function</span>(<span class="params"></span>)&#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title function_">A</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>); <span class="comment">//A &#123;&#125;（即构造器function A 的原型对象）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>); <span class="comment">//Object &#123;&#125;（即构造器function Object 的原型对象）</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">__proto__</span>.<span class="property">__proto__</span>.<span class="property">__proto__</span>); <span class="comment">//null</span></span><br></pre></td></tr></table></figure>
+
+<img src="/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/10.png" class="">
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/04/14/vue/vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B7%B1%E5%85%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            vue生命周期深入
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/12/MySQL/MySQL%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL数据表的基本操作</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

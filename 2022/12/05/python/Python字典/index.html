@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Python字典 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/Python字典"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Python字典
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/12/05/python/Python%E5%AD%97%E5%85%B8/" class="article-date">
+  <time datetime="2022-12-05T07:18:21.000Z" itemprop="datePublished">2022-12-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Python 字典（<code>dict</code>）是一种无序的、可变的序列，它的元素以“键值对（<code>key-value</code>）”的形式存储。相对地，列表（<code>list</code>）和元组（<code>tuple</code>）都是有序的序列，它们的元素在底层是挨着存放的。</p>
+<p>字典类型是 Python 中唯一的映射类型。</p>
+<p>字典中，习惯将各元素对应的索引称为键（<code>key</code>），各个键对应的元素称为值（<code>value</code>），键及其关联的值称为“键值对”。</p>
+<p>总的来说，字典类型所具有的主要特征如表。</p>
+<table>
+<thead>
+<tr>
+<th align="center">主要特征</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">通过键而不是通过索引来读取元素</td>
+<td align="center">字典类型有时也称为关联数组或者散列表（hash）。它是通过键将一系列的值联系起来的，这样就可以通过键从字典中获取指定项，但不能通过索引来获取。</td>
+</tr>
+<tr>
+<td align="center">字典是任意数据类型的无序集合</td>
+<td align="center">和列表、元组不同，通常会将索引值 0 对应的元素称为第一个元素，而字典中的元素是无序的。</td>
+</tr>
+<tr>
+<td align="center">字典是可变的，并且可以任意嵌套</td>
+<td align="center">字典可以在原处增长或者缩短（无需生成一个副本），并且它支持任意深度的嵌套，即字典存储的值也可以是列表或其它的字典。</td>
+</tr>
+<tr>
+<td align="center">字典中的键必须唯一</td>
+<td align="center">字典中，不支持同一个键出现多次，否则只会保留最后一个键值对。</td>
+</tr>
+<tr>
+<td align="center">字典中的键必须不可变</td>
+<td align="center">字典中每个键值对的键是不可变的，只能使用数字、字符串或者元组，不能使用列表。</td>
+</tr>
+</tbody></table>
+<p>Python 中的字典类型相当于 Java 或者 C++ 中的 Map 对象。</p>
+<p>和列表、元组一样，字典也有它自己的类型。Python 中，字典的数据类型为 dict，通过 type() 函数即可查看：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;one&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;two&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;three&#x27;</span>: <span class="number">3</span>&#125;  <span class="comment">#a是一个字典类型</span></span><br><span class="line"><span class="built_in">type</span>(a) <span class="comment"># &lt;class &#x27;dict&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="创建字典"><a href="#创建字典" class="headerlink" title="创建字典"></a>创建字典</h1><h2 id="1-使用-创建字典"><a href="#1-使用-创建字典" class="headerlink" title="1.使用 { } 创建字典"></a>1.使用 { } 创建字典</h2><p>由于字典中每个元素都包含两部分，分别是键（<code>key</code>）和值（<code>value</code>），因此在创建字典时，键和值之间使用冒号<code>:</code>分隔，相邻元素之间使用逗号<code>,</code>分隔，所有元素放在大括号<code>&#123; &#125;</code>中。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname = &#123;<span class="string">&#x27;key&#x27;</span>:<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;key2&#x27;</span>:<span class="string">&#x27;value2&#x27;</span>, ..., <span class="string">&#x27;keyn&#x27;</span>:valuen&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>dictname</code>表示字典变量名，<code>keyn: valuen</code>表示各个元素的键值对。需要注意的是，同一字典中的各个键必须唯一，不能重复。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用字符串作为key</span></span><br><span class="line">scores = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">92</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">84</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(scores) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;英语&#x27;: 92, &#x27;语文&#x27;: 84&#125;</span></span><br><span class="line"><span class="comment">#使用元组和数字作为key</span></span><br><span class="line">dict1 = &#123;(<span class="number">20</span>, <span class="number">30</span>): <span class="string">&#x27;great&#x27;</span>, <span class="number">30</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]&#125;</span><br><span class="line"><span class="built_in">print</span>(dict1) <span class="comment"># &#123;(20, 30): &#x27;great&#x27;, 30: [1, 2, 3]&#125;</span></span><br><span class="line"><span class="comment">#创建空元组</span></span><br><span class="line">dict2 = &#123;&#125;</span><br><span class="line"><span class="built_in">print</span>(dict2) <span class="comment"># &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，字典的键可以是整数、字符串或者元组，只要符合唯一和不可变的特性就行；字典的值可以是 Python 支持的任意数据类型。</p>
+<h2 id="2-通过-fromkeys-方法创建字典"><a href="#2-通过-fromkeys-方法创建字典" class="headerlink" title="2.通过 fromkeys() 方法创建字典"></a>2.通过 fromkeys() 方法创建字典</h2><p>还可以使用<code>dict</code>字典类型提供的<code>fromkeys()</code>方法创建带有默认值的字典：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname = <span class="built_in">dict</span>.fromkeys(<span class="built_in">list</span>，value=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>list</code>参数表示字典中所有键的列表（<code>list</code>）；<code>value</code>参数表示默认值，如果不写，则为空值<code>None</code>。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">knowledge = [<span class="string">&#x27;语文&#x27;</span>, <span class="string">&#x27;数学&#x27;</span>, <span class="string">&#x27;英语&#x27;</span>]</span><br><span class="line">scores = <span class="built_in">dict</span>.fromkeys(knowledge, <span class="number">60</span>)</span><br><span class="line"><span class="built_in">print</span>(scores) <span class="comment"># &#123;&#x27;语文&#x27;: 60, &#x27;英语&#x27;: 60, &#x27;数学&#x27;: 60&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>knowledge</code>列表中的元素全部作为了<code>scores</code>字典的键，而各个键对应的值都是 60。这种创建方式通常用于初始化字典，设置<code>value</code>的默认值。</p>
+<h2 id="3-通过-dict-映射函数创建字典"><a href="#3-通过-dict-映射函数创建字典" class="headerlink" title="3.通过 dict() 映射函数创建字典"></a>3.通过 dict() 映射函数创建字典</h2><p>通过<code>dict()</code>函数创建字典的写法有多种，下面列出了常用的几种方式，它们创建的都是同一个字典<code>a</code>。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 写法1</span></span><br><span class="line"><span class="comment"># str 表示字符串类型的键，value 表示键对应的值。使用此方式创建字典时，字符串不能带引号。</span></span><br><span class="line">a = <span class="built_in">dict</span>(str1=value1, str2=value2, str3=value3)	</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写法2</span></span><br><span class="line"><span class="comment">#方式1</span></span><br><span class="line">demo = [(<span class="string">&#x27;two&#x27;</span>,<span class="number">2</span>), (<span class="string">&#x27;one&#x27;</span>,<span class="number">1</span>), (<span class="string">&#x27;three&#x27;</span>,<span class="number">3</span>)]</span><br><span class="line"><span class="comment">#方式2</span></span><br><span class="line">demo = [[<span class="string">&#x27;two&#x27;</span>,<span class="number">2</span>], [<span class="string">&#x27;one&#x27;</span>,<span class="number">1</span>], [<span class="string">&#x27;three&#x27;</span>,<span class="number">3</span>]]</span><br><span class="line"><span class="comment">#方式3</span></span><br><span class="line">demo = ((<span class="string">&#x27;two&#x27;</span>,<span class="number">2</span>), (<span class="string">&#x27;one&#x27;</span>,<span class="number">1</span>), (<span class="string">&#x27;three&#x27;</span>,<span class="number">3</span>))</span><br><span class="line"><span class="comment">#方式4</span></span><br><span class="line">demo = ([<span class="string">&#x27;two&#x27;</span>,<span class="number">2</span>], [<span class="string">&#x27;one&#x27;</span>,<span class="number">1</span>], [<span class="string">&#x27;three&#x27;</span>,<span class="number">3</span>])</span><br><span class="line">a = <span class="built_in">dict</span>(demo)</span><br><span class="line"><span class="comment"># 向 dict() 函数传入列表或元组，而它们中的元素又各自是包含 2 个元素的列表或元组，其中第一个元素作为键，第二个元素作为值。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法3</span></span><br><span class="line">keys = [<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="string">&#x27;three&#x27;</span>] <span class="comment">#还可以是字符串或元组</span></span><br><span class="line">values = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] <span class="comment">#还可以是字符串或元组</span></span><br><span class="line">a = <span class="built_in">dict</span>( <span class="built_in">zip</span>(keys, values) )</span><br><span class="line"><span class="comment"># 通过应用 dict() 函数和 zip() 函数，可将前两个列表转换为对应的字典。</span></span><br></pre></td></tr></table></figure>
+<p>注意，无论采用以上哪种方式创建字典，字典中各元素的键都只能是字符串、元组或数字，不能是列表。列表是可变的，不能作为键。</p>
+<p>如果不为<code>dict()</code>函数传入任何参数，则代表创建一个空的字典：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建空的字典</span></span><br><span class="line">d = <span class="built_in">dict</span>()</span><br><span class="line"><span class="built_in">print</span>(d) <span class="comment"># &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<h1 id="访问字典"><a href="#访问字典" class="headerlink" title="访问字典"></a>访问字典</h1><p>列表和元组是通过下标来访问元素的，而字典不同，它通过键来访问对应的值。因为字典中的元素是无序的，每个元素的位置都不固定，所以字典也不能像列表和元组那样，采用切片的方式一次性访问多个元素。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname[key]</span><br></pre></td></tr></table></figure>
+<p>其中，<code>dictname</code>表示字典变量的名字，<code>key</code>表示键名。注意，键必须是存在的，否则会抛出异常。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tup = ([<span class="string">&#x27;two&#x27;</span>,<span class="number">26</span>], [<span class="string">&#x27;one&#x27;</span>,<span class="number">88</span>], [<span class="string">&#x27;three&#x27;</span>,<span class="number">100</span>], [<span class="string">&#x27;four&#x27;</span>,-<span class="number">59</span>])</span><br><span class="line">dic = <span class="built_in">dict</span>(tup)</span><br><span class="line"><span class="built_in">print</span>(dic[<span class="string">&#x27;one&#x27;</span>])  <span class="comment">#键存在</span></span><br><span class="line"><span class="built_in">print</span>(dic[<span class="string">&#x27;five&#x27;</span>])  <span class="comment">#键不存在</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">88</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">    File &quot;C:\Users\mozhiyan\Desktop\demo.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">        print(dic[&#x27;five&#x27;])  #键不存在</span><br><span class="line">KeyError: &#x27;five&#x27;</span><br></pre></td></tr></table></figure>
+<p>除了上面这种方式外，Python 更推荐使用<code>dict</code>类型提供的<code>get()</code>方法来获取指定键对应的值。当指定的键不存在时，<code>get()</code>方法不会抛出异常。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname.get(key[,default])</span><br></pre></td></tr></table></figure>
+<p>其中，<code>dictname</code>表示字典变量的名字；<code>key</code>表示指定的键；<code>default</code>用于指定要查询的键不存在时，此方法返回的默认值，如果不手动指定，会返回<code>None</code>。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="built_in">dict</span>(two=<span class="number">0.65</span>, one=<span class="number">88</span>, three=<span class="number">100</span>, four=-<span class="number">59</span>)</span><br><span class="line"><span class="built_in">print</span>( a.get(<span class="string">&#x27;one&#x27;</span>) ) <span class="comment"># 88</span></span><br></pre></td></tr></table></figure>
+<p>注意，当键不存在时，<code>get()</code>返回空值<code>None</code>，如果想明确地提示用户该键不存在，那么可以手动设置<code>get()</code>的第二个参数：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="built_in">dict</span>(two=<span class="number">0.65</span>, one=<span class="number">88</span>, three=<span class="number">100</span>, four=-<span class="number">59</span>)</span><br><span class="line"><span class="built_in">print</span>( a.get(<span class="string">&#x27;five&#x27;</span>, <span class="string">&#x27;该键不存在&#x27;</span>) ) <span class="comment"># 该键不存在</span></span><br></pre></td></tr></table></figure>
+<h1 id="删除字典"><a href="#删除字典" class="headerlink" title="删除字典"></a>删除字典</h1><p>和删除列表、元组一样，手动删除字典也可以使用<code>del</code>关键字：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="built_in">dict</span>(two=<span class="number">0.65</span>, one=<span class="number">88</span>, three=<span class="number">100</span>, four=-<span class="number">59</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="keyword">del</span> a</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#x27;two&#x27;: 0.65, &#x27;one&#x27;: 88, &#x27;three&#x27;: 100, &#x27;four&#x27;: -59&#125;</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">    File &quot;C:\Users\mozhiyan\Desktop\demo.py&quot;, line 4, in &lt;module&gt;</span><br><span class="line">        print(a)</span><br><span class="line">NameError: name &#x27;a&#x27; is not defined</span><br></pre></td></tr></table></figure>
+<p>Python 自带垃圾回收功能，会自动销毁不用的字典，所以一般不需要通过<code>del</code>来手动删除。</p>
+<h1 id="字典基本操作"><a href="#字典基本操作" class="headerlink" title="字典基本操作"></a>字典基本操作</h1><p>由于字典属于可变序列，所以我们可以任意操作字典中的键值对。Python 中，常见的字典操作有以下几种：</p>
+<ul>
+<li>向现有字典中添加新的键值对。</li>
+<li>修改现有字典中的键值对。</li>
+<li>从现有字典中删除指定的键值对。</li>
+<li>判断现有字典中是否存在指定的键值对。</li>
+</ul>
+<p>字典是由一个一个的<code>key-value</code>构成的，<code>key</code>是找到数据的关键，Python 对字典的操作都是通过<code>key</code>来完成的。</p>
+<h2 id="字典添加键值对"><a href="#字典添加键值对" class="headerlink" title="字典添加键值对"></a>字典添加键值对</h2><p>为字典添加新的键值对很简单，直接给不存在的<code>key</code>赋值即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname[key] = value</span><br></pre></td></tr></table></figure>
+<p>对各个部分的说明：</p>
+<ul>
+<li><code>dictname</code>表示字典名称。</li>
+<li><code>key</code>表示新的键。</li>
+<li><code>value</code>表示新的值，只要是 Python 支持的数据类型都可以。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>:<span class="number">95</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95&#125;</span></span><br><span class="line"><span class="comment">#添加新键值对</span></span><br><span class="line">a[<span class="string">&#x27;语文&#x27;</span>] = <span class="number">89</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89&#125;</span></span><br><span class="line"><span class="comment">#再次添加新键值对</span></span><br><span class="line">a[<span class="string">&#x27;英语&#x27;</span>] = <span class="number">90</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="字典修改键值对"><a href="#字典修改键值对" class="headerlink" title="字典修改键值对"></a>字典修改键值对</h2><p>Python 字典中键（<code>key</code>）的名字不能被修改，我们只能修改值（<code>value</code>）。</p>
+<p>字典中各元素的键必须是唯一的，因此，如果新添加元素的键与已存在元素的键相同，那么键所对应的值就会被新的值替换掉，以此达到修改元素值的目的。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90&#125;</span></span><br><span class="line">a[<span class="string">&#x27;语文&#x27;</span>] = <span class="number">100</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 100, &#x27;英语&#x27;: 90&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，字典中没有再添加一个<code>&#123;&#39;语文&#39;:100&#125;</code>键值对，而是对原有键值对<code>&#123;&#39;语文&#39;: 89&#125;</code>中的<code>value</code>做了修改。</p>
+<h2 id="Python字典删除键值对"><a href="#Python字典删除键值对" class="headerlink" title="Python字典删除键值对"></a>Python字典删除键值对</h2><p>如果要删除字典中的键值对，还是可以使用<code>del</code>语句。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用del语句删除键值对</span></span><br><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="keyword">del</span> a[<span class="string">&#x27;语文&#x27;</span>]</span><br><span class="line"><span class="keyword">del</span> a[<span class="string">&#x27;数学&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;英语&#x27;: 90&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="判断字典中是否存在指定键值对"><a href="#判断字典中是否存在指定键值对" class="headerlink" title="判断字典中是否存在指定键值对"></a>判断字典中是否存在指定键值对</h2><p>如果要判断字典中是否存在指定键值对，首先应判断字典中是否有对应的键。判断字典是否包含指定键值对的键，可以使用<code>in</code>或<code>not in</code>运算符。<br>需要指出的是，对于<code>dict</code>而言，<code>in</code>或<code>not in</code>运算符都是基于<code>key</code>来判断的。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="comment"># 判断 a 中是否包含名为&#x27;数学&#x27;的key</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;数学&#x27;</span> <span class="keyword">in</span> a) <span class="comment"># True</span></span><br><span class="line"><span class="comment"># 判断 a 是否包含名为&#x27;物理&#x27;的key</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;物理&#x27;</span> <span class="keyword">in</span> a) <span class="comment"># False</span></span><br></pre></td></tr></table></figure>
+<p>通过<code>in</code>（或<code>not in</code>）运算符，我们可以很轻易地判断出现有字典中是否包含某个键，如果存在，由于通过键可以很轻易的获取对应的值，因此很容易就能判断出字典中是否有指定的键值对。</p>
+<h1 id="字典方法"><a href="#字典方法" class="headerlink" title="字典方法"></a>字典方法</h1><p>字典的数据类型为<code>dict</code>，我们可使用<code>dir(dict)</code>来查看该类型包含哪些方法：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dir</span>(<span class="built_in">dict</span>)</span><br><span class="line">[<span class="string">&#x27;clear&#x27;</span>, <span class="string">&#x27;copy&#x27;</span>, <span class="string">&#x27;fromkeys&#x27;</span>, <span class="string">&#x27;get&#x27;</span>, <span class="string">&#x27;items&#x27;</span>, <span class="string">&#x27;keys&#x27;</span>, <span class="string">&#x27;pop&#x27;</span>, <span class="string">&#x27;popitem&#x27;</span>, <span class="string">&#x27;setdefault&#x27;</span>, <span class="string">&#x27;update&#x27;</span>, <span class="string">&#x27;values&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="keys-、values-和-items-方法"><a href="#keys-、values-和-items-方法" class="headerlink" title="keys()、values() 和 items() 方法"></a>keys()、values() 和 items() 方法</h2><p>这三个方法都用来获取字典中的特定数据：</p>
+<ul>
+<li><code>keys()</code>方法用于返回字典中的所有键（<code>key</code>）；</li>
+<li><code>values()</code>方法用于返回字典中所有键对应的值（<code>value</code>）；</li>
+<li><code>items()</code>用于返回字典中所有的键值对（<code>key-value</code>）。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scores = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(scores.keys()) <span class="comment"># dict_keys([&#x27;数学&#x27;, &#x27;语文&#x27;, &#x27;英语&#x27;])</span></span><br><span class="line"><span class="built_in">print</span>(scores.values()) <span class="comment"># dict_values([95, 89, 90])</span></span><br><span class="line"><span class="built_in">print</span>(scores.items()) <span class="comment"># dict_items([(&#x27;数学&#x27;, 95), (&#x27;语文&#x27;, 89), (&#x27;英语&#x27;, 90)])</span></span><br></pre></td></tr></table></figure>
+<p>可以发现，<code>keys()、values()</code>和<code>items()</code>返回值的类型分别为<code>dict_keys、dict_values</code>和<code>dict_items</code>。</p>
+<p>需要注意的是，它们的返回值并不是我们常见的列表或者元组类型，因为 Python 3.x 不希望用户直接操作这几个方法的返回值。</p>
+<p>如果想使用这三个方法返回的数据，一般有下面两种方案：</p>
+<ol>
+<li>使用<code>list()</code>函数，将它们返回的数据转换成列表：<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line">b = <span class="built_in">list</span>(a.keys())</span><br><span class="line"><span class="built_in">print</span>(b) <span class="comment"># [&#x27;数学&#x27;, &#x27;语文&#x27;, &#x27;英语&#x27;]</span></span><br></pre></td></tr></table></figure></li>
+<li>使用<code>for in</code>循环遍历它们的返回值：<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> a.keys():</span><br><span class="line">    <span class="built_in">print</span>(k,end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n---------------&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> v <span class="keyword">in</span> a.values():</span><br><span class="line">    <span class="built_in">print</span>(v,end=<span class="string">&#x27; &#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n---------------&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> k,v <span class="keyword">in</span> a.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;key:&quot;</span>,k,<span class="string">&quot; value:&quot;</span>,v)</span><br></pre></td></tr></table></figure>
+运行结果为：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数学 语文 英语</span><br><span class="line">---------------</span><br><span class="line">95 89 90</span><br><span class="line">---------------</span><br><span class="line">key: 数学  value: 95</span><br><span class="line">key: 语文  value: 89</span><br><span class="line">key: 英语  value: 90</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="copy-方法"><a href="#copy-方法" class="headerlink" title="copy() 方法"></a>copy() 方法</h2><p><code>copy()</code>方法返回一个字典的拷贝，也即返回一个具有相同键值对的新字典：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;one&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;two&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;three&#x27;</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]&#125;</span><br><span class="line">b = a.copy()</span><br><span class="line"><span class="built_in">print</span>(b) <span class="comment"># &#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 2, &#x27;three&#x27;: [1, 2, 3]&#125;</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>copy()</code>方法将字典<code>a</code>的数据全部拷贝给了字典<code>b</code>。</p>
+<p>注意，<code>copy()</code>方法所遵循的拷贝原理，既有深拷贝，也有浅拷贝。拿拷贝字典<code>a</code>为例，<code>copy()</code>方法只会对最表层的键值对进行深拷贝，也就是说，它会再申请一块内存用来存放<code>&#123;&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: []&#125;</code>；而对于某些列表类型的值来说，此方法对其做的是浅拷贝，也就是说，<code>b</code>中的<code>[1,2,3]</code>的值不是自己独有，而是和<code>a</code>共有。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;one&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;two&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;three&#x27;</span>: [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]&#125;</span><br><span class="line">b = a.copy()</span><br><span class="line"><span class="comment">#向 a 中添加新键值对，由于b已经提前将 a 所有键值对都深拷贝过来，因此 a 添加新键值对，不会影响 b。</span></span><br><span class="line">a[<span class="string">&#x27;four&#x27;</span>]=<span class="number">100</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 2, &#x27;three&#x27;: [1, 2, 3], &#x27;four&#x27;: 100&#125;</span></span><br><span class="line"><span class="built_in">print</span>(b) <span class="comment"># &#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 2, &#x27;three&#x27;: [1, 2, 3]&#125;</span></span><br><span class="line"><span class="comment">#由于 b 和 a 共享[1,2,3]（浅拷贝），因此移除 a 中列表中的元素，也会影响 b。</span></span><br><span class="line">a[<span class="string">&#x27;three&#x27;</span>].remove(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 2, &#x27;three&#x27;: [2, 3], &#x27;four&#x27;: 100&#125;</span></span><br><span class="line"><span class="built_in">print</span>(b) <span class="comment"># &#123;&#x27;one&#x27;: 1, &#x27;two&#x27;: 2, &#x27;three&#x27;: [2, 3]&#125;</span></span><br></pre></td></tr></table></figure>
+<p>从运行结果不难看出，对<code>a</code>增加新键值对，<code>b</code>不变；而修改<code>a</code>某键值对中列表内的元素，<code>b</code>也会相应改变。</p>
+<h2 id="update-方法"><a href="#update-方法" class="headerlink" title="update() 方法"></a>update() 方法</h2><p><code>update()</code>方法可以使用一个字典所包含的键值对来更新己有的字典。</p>
+<p>在执行<code>update()</code>方法时，如果被更新的字典中己包含对应的键值对，那么原<code>value</code>会被覆盖；如果被更新的字典中不包含对应的键值对，则该键值对被添加进去。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;one&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;two&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;three&#x27;</span>: <span class="number">3</span>&#125;</span><br><span class="line">a.update(&#123;<span class="string">&#x27;one&#x27;</span>:<span class="number">4.5</span>, <span class="string">&#x27;four&#x27;</span>: <span class="number">9.3</span>&#125;)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;one&#x27;: 4.5, &#x27;two&#x27;: 2, &#x27;three&#x27;: 3, &#x27;four&#x27;: 9.3&#125;</span></span><br></pre></td></tr></table></figure>
+<p>从运行结果可以看出，由于被更新的字典中已包含<code>key</code>为<code>one</code>的键值对，因此更新时该键值对的<code>value</code>将被改写；而被更新的字典中不包含<code>key</code>为<code>four</code>的键值对，所以更新时会为原字典增加一个新的键值对。</p>
+<h2 id="pop-和-popitem-方法"><a href="#pop-和-popitem-方法" class="headerlink" title="pop() 和 popitem() 方法"></a>pop() 和 popitem() 方法</h2><p><code>pop()</code>和<code>popitem()</code>都用来删除字典中的键值对，不同的是，<code>pop()</code>用来删除指定的键值对，而<code>popitem()</code>用来随机删除一个键值对：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dictname.pop(key)</span><br><span class="line">dictname.popitem()</span><br></pre></td></tr></table></figure>
+<p>其中，<code>dictname</code>表示字典名称，<code>key</code>表示键。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>, <span class="string">&#x27;化学&#x27;</span>: <span class="number">83</span>, <span class="string">&#x27;生物&#x27;</span>: <span class="number">98</span>, <span class="string">&#x27;物理&#x27;</span>: <span class="number">89</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;化学&#x27;: 83, &#x27;生物&#x27;: 98, &#x27;物理&#x27;: 89&#125;</span></span><br><span class="line">a.pop(<span class="string">&#x27;化学&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;生物&#x27;: 98, &#x27;物理&#x27;: 89&#125;</span></span><br><span class="line">a.popitem()</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;生物&#x27;: 98&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="对-popitem-的说明"><a href="#对-popitem-的说明" class="headerlink" title="对 popitem() 的说明"></a>对 popitem() 的说明</h3><p>其实，说<code>popitem()</code>随机删除字典中的一个键值对是不准确的，虽然字典是一种无须的列表，但键值对在底层也是有存储顺序的，<code>popitem()</code>总是弹出底层中的最后一个<code>key-value</code>，这和列表的<code>pop()</code>方法类似，都实现了数据结构中“出栈”的操作。</p>
+<h2 id="setdefault-方法"><a href="#setdefault-方法" class="headerlink" title="setdefault() 方法"></a>setdefault() 方法</h2><p><code>setdefault()</code>方法用来返回某个<code>key</code>对应的<code>value</code>：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dictname.setdefault(key, defaultvalue)</span><br></pre></td></tr></table></figure>
+<p>说明，<code>dictname</code>表示字典名称，<code>key</code>表示键，<code>defaultvalue</code>表示默认值（可以不写，不写的话是<code>None</code>）。</p>
+<p>当指定的<code>key</code>不存在时，<code>setdefault()</code>会先为这个不存在的<code>key</code>设置一个默认的<code>defaultvalue</code>，然后再返回<code>defaultvalue</code>。</p>
+<p>也就是说，<code>setdefault()</code>方法总能返回指定<code>key</code>对应的<code>value</code>：</p>
+<ul>
+<li>如果该<code>key</code>存在，那么直接返回该<code>key</code>对应的<code>value</code>；</li>
+<li>如果该<code>key</code>不存在，那么先为该<code>key</code>设置默认的<code>defaultvalue</code>，然后再返回该<code>key</code>对应的<code>defaultvalue</code>。</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&#x27;数学&#x27;</span>: <span class="number">95</span>, <span class="string">&#x27;语文&#x27;</span>: <span class="number">89</span>, <span class="string">&#x27;英语&#x27;</span>: <span class="number">90</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90&#125;</span></span><br><span class="line"><span class="comment">#key不存在，指定默认值</span></span><br><span class="line">a.setdefault(<span class="string">&#x27;物理&#x27;</span>, <span class="number">94</span>)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;物理&#x27;: 94&#125;</span></span><br><span class="line"><span class="comment">#key不存在，不指定默认值</span></span><br><span class="line">a.setdefault(<span class="string">&#x27;化学&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;物理&#x27;: 94, &#x27;化学&#x27;: None&#125;</span></span><br><span class="line"><span class="comment">#key存在，指定默认值</span></span><br><span class="line">a.setdefault(<span class="string">&#x27;数学&#x27;</span>, <span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># &#123;&#x27;数学&#x27;: 95, &#x27;语文&#x27;: 89, &#x27;英语&#x27;: 90, &#x27;物理&#x27;: 94, &#x27;化学&#x27;: None&#125;</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/12/05/python/Python%E5%AD%97%E5%85%B8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/12/06/python/%E7%B1%BB%E7%89%B9%E6%AE%8A%E6%88%90%E5%91%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Python类特殊成员
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/12/04/python/Python%E5%85%83%E7%BB%84/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python元组</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

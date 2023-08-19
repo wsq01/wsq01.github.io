@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/Three.js/Three.js光源"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2023/04/13/%E5%89%8D%E7%AB%AF/js/Three.js/Three.js%E5%85%89%E6%BA%90/" class="article-date">
+  <time datetime="2023-04-13T06:25:50.713Z" itemprop="datePublished">2023-04-13</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">4 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <table>
+<thead>
+<tr>
+<th align="center">光源名称</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">AmbientLight</td>
+<td align="center">它的颜色会添加到整个场景和所有对象的当前颜色上</td>
+</tr>
+<tr>
+<td align="center">PointLight</td>
+<td align="center">从一个点向各个方向发射的光源</td>
+</tr>
+<tr>
+<td align="center">SportLight</td>
+<td align="center">这种光源有聚光的效果，类似台灯、手电筒</td>
+</tr>
+<tr>
+<td align="center">DirectionalLight</td>
+<td align="center">平行光是沿着特定方向发射的光</td>
+</tr>
+<tr>
+<td align="center">HemisphereLight</td>
+<td align="center">可以用来创建更加自然的室外光线、模拟反光面和光线微弱的天空</td>
+</tr>
+</tbody></table>
+<h1 id="AmbientLight-环境光"><a href="#AmbientLight-环境光" class="headerlink" title="AmbientLight(环境光)"></a>AmbientLight(环境光)</h1><p>环境光会均匀的照亮场景中的所有物体。环境光会影响整个场景。环境光的光线没有特定的来源，而且这个光源也不会影响阴影的生成，即环境光不能用来投射阴影，因为它没有方向。</p>
+<p>不能将环境光作为场景中的唯一光源，需要配合其他光源使用，目的是弱化阴影或添加一些颜色。</p>
+<h2 id="创建AmbientLight"><a href="#创建AmbientLight" class="headerlink" title="创建AmbientLight"></a>创建AmbientLight</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">AmbientLight</span>( <span class="attr">color</span>: <span class="title class_">Integer</span>, <span class="attr">intensity</span>: <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>color</code>：(参数可选）颜色的<code>rgb</code>数值。缺省值为<code>0xffffff</code>。</li>
+<li><code>intensity</code>：(参数可选)光照的强度。缺省值为 1。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ambiColor = <span class="string">&quot;#0c0c0c&quot;</span></span><br><span class="line"><span class="keyword">var</span> ambientLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">AmbientLight</span>(ambiColor)</span><br><span class="line">scene.<span class="title function_">add</span>(ambientLight)</span><br></pre></td></tr></table></figure>
+<h1 id="PointLight-点光源"><a href="#PointLight-点光源" class="headerlink" title="PointLight(点光源)"></a>PointLight(点光源)</h1><p>点光源从一个点向各个方向发射的光源。一个常见的例子是模拟一个灯泡发出的光。该光源可以投射阴影。</p>
+<h2 id="创建点光源"><a href="#创建点光源" class="headerlink" title="创建点光源"></a>创建点光源</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PointLight</span>( <span class="attr">color</span>: <span class="title class_">Integer</span>, <span class="attr">intensity</span>: <span class="title class_">Float</span>, <span class="attr">distance</span>: <span class="title class_">Number</span>, <span class="attr">decay</span>: <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>color</code>：光源颜色(可选参数)，十六进制光照颜色，缺省值<code>0xffffff</code>。</li>
+<li><code>intensity</code>：光照强度(可选参数)，当设置为 0 时，什么都看不到，设成 2，得到的是两倍的亮度，缺省值 1。</li>
+<li><code>distance</code>：光源照射的距离，这个距离表示从光源到光照强度为 0 的位置。 当设置为 0 时，光永远不会消失(距离无穷大)。缺省值 0。</li>
+<li><code>decay</code>：沿着光照距离的衰退量。缺省值 1。在<code>physically correct</code>模式中，<code>decay = 2</code>。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pointColor = <span class="string">&quot;#ccffcc&quot;</span></span><br><span class="line"><span class="keyword">var</span> pointLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PointLight</span>(pointColor)</span><br><span class="line">pointLight.<span class="property">distance</span> = <span class="number">100</span></span><br><span class="line">scene.<span class="title function_">add</span>(pointLight)</span><br></pre></td></tr></table></figure>
+<h1 id="SpotLight-聚光灯"><a href="#SpotLight-聚光灯" class="headerlink" title="SpotLight(聚光灯)"></a>SpotLight(聚光灯)</h1><p>光线从一个点沿一个方向射出，随着光线照射的变远，光线圆锥体的尺寸也逐渐增大。该光源可以投射阴影。</p>
+<h2 id="创建聚光灯"><a href="#创建聚光灯" class="headerlink" title="创建聚光灯"></a>创建聚光灯</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">SpotLight</span>( <span class="attr">color</span>: <span class="title class_">Integer</span>, <span class="attr">intensity</span>: <span class="title class_">Float</span>, <span class="attr">distance</span>: <span class="title class_">Float</span>, <span class="attr">angle</span>: <span class="title class_">Radians</span>, <span class="attr">penumbra</span>: <span class="title class_">Float</span>, <span class="attr">decay</span>: <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>color</code>：(可选参数)十六进制光照颜色。 缺省值<code>0xffffff</code>。</li>
+<li><code>intensity</code>：(可选参数)光照强度。 缺省值 1。</li>
+<li><code>distance</code>：从光源发出光的最大距离，其强度根据光源的距离线性衰减。</li>
+<li><code>angle</code>：光线散射角度，最大为<code>Math.PI/2</code>。</li>
+<li><code>penumbra</code>：聚光锥的半影衰减百分比。在 0 和 1 之间的值，默认为 0。</li>
+<li><code>decay</code>：沿着光照距离的衰减量。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pointColor = <span class="string">&quot;#ffffff&quot;</span></span><br><span class="line"><span class="keyword">var</span> spotLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">SpotLight</span>(pointColor)</span><br><span class="line">spotLight.<span class="property">position</span>.<span class="title function_">set</span>(-<span class="number">40</span>, <span class="number">60</span>, -<span class="number">10</span>)</span><br><span class="line">spotLight.<span class="property">castShadow</span> = <span class="literal">true</span></span><br><span class="line">spotLight.<span class="property">shadowCameraNear</span> = <span class="number">2</span></span><br><span class="line">spotLight.<span class="property">shadowCameraFar</span> = <span class="number">200</span></span><br><span class="line">spotLight.<span class="property">shadowCameraFov</span> = <span class="number">30</span></span><br><span class="line">spotLight.<span class="property">target</span> = plane</span><br><span class="line">spotLight.<span class="property">distance</span> = <span class="number">0</span></span><br><span class="line">spotLight.<span class="property">angle</span> = <span class="number">0.4</span></span><br><span class="line"></span><br><span class="line">scene.<span class="title function_">add</span>(spotLight);</span><br></pre></td></tr></table></figure>
+<h1 id="DirectionalLight-平行光"><a href="#DirectionalLight-平行光" class="headerlink" title="DirectionalLight(平行光)"></a>DirectionalLight(平行光)</h1><p>平行光是沿着特定方向发射的光。这种光的表现像是无限远，从它发出的光线都是平行的。常常用平行光来模拟太阳光的效果；太阳足够远，因此我们可以认为太阳的位置是无限远，所以我们认为从太阳发出的光线也都是平行的。平行光可以投射阴影。</p>
+<h2 id="创建平行光"><a href="#创建平行光" class="headerlink" title="创建平行光"></a>创建平行光</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">DirectionalLight</span>( <span class="attr">color</span>: <span class="title class_">Integer</span>, <span class="attr">intensity</span>: <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pointColor = <span class="string">&quot;#ff5808&quot;</span></span><br><span class="line"><span class="keyword">var</span> directionalLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">DirectionalLight</span>(pointColor)</span><br><span class="line">directionalLight.<span class="property">position</span>.<span class="title function_">set</span>(-<span class="number">40</span>, <span class="number">60</span>, -<span class="number">10</span>)</span><br><span class="line">directionalLight.<span class="property">castShadow</span> = <span class="literal">true</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraNear</span> = <span class="number">2</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraFar</span> = <span class="number">200</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraLeft</span> = -<span class="number">50</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraRight</span> = <span class="number">50</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraTop</span> = <span class="number">50</span></span><br><span class="line">directionalLight.<span class="property">shadowCameraBottom</span> = -<span class="number">50</span></span><br><span class="line"></span><br><span class="line">directionalLight.<span class="property">distance</span> = <span class="number">0</span></span><br><span class="line">directionalLight.<span class="property">intensity</span> = <span class="number">0.5</span></span><br><span class="line">directionalLight.<span class="property">shadowMapHeight</span> = <span class="number">1024</span></span><br><span class="line">directionalLight.<span class="property">shadowMapWidth</span> = <span class="number">1024</span></span><br><span class="line"></span><br><span class="line">scene.<span class="title function_">add</span>(directionalLight)</span><br></pre></td></tr></table></figure>
+<h1 id="半球光-HemisphereLight"><a href="#半球光-HemisphereLight" class="headerlink" title="半球光(HemisphereLight)"></a>半球光(HemisphereLight)</h1><p>光源直接放置于场景之上，光照颜色从天空光线颜色渐变到地面光线颜色。半球光不能投射阴影。</p>
+<h2 id="创建半球光"><a href="#创建半球光" class="headerlink" title="创建半球光"></a>创建半球光</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">HemisphereLight</span>( <span class="attr">skyColor</span>: <span class="title class_">Integer</span>, <span class="attr">groundColor</span>: <span class="title class_">Integer</span>, <span class="attr">intensity</span>: <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>skyColor</code>：(可选参数) 天空中发出光线的颜色。缺省值<code>0xffffff</code>。</li>
+<li><code>groundColor</code>：(可选参数) 地面发出光线的颜色。缺省值<code>0xffffff</code>。</li>
+<li><code>intensity</code>：(可选参数) 光照强度。缺省值 1。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hemiLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">HemisphereLight</span>(<span class="number">0x0000ff</span>, <span class="number">0x00ff00</span>, <span class="number">0.6</span>)</span><br><span class="line">hemiLight.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">500</span>, <span class="number">0</span>)</span><br><span class="line">scene.<span class="title function_">add</span>(hemiLight)</span><br></pre></td></tr></table></figure>
+<h1 id="平面光光源（RectAreaLight）"><a href="#平面光光源（RectAreaLight）" class="headerlink" title="平面光光源（RectAreaLight）"></a>平面光光源（RectAreaLight）</h1><p>平面光光源从一个矩形平面上均匀地发射光线。这种光源可以用来模拟像明亮的窗户或者条状灯光光源。</p>
+<p>注意事项:</p>
+<ul>
+<li>不支持阴影。</li>
+<li>只支持<code>MeshStandardMaterial</code>和<code>MeshPhysicalMaterial</code>两种材质。</li>
+<li>你必须在你的场景中加入<code>RectAreaLightUniformsLib</code>，并调用<code>init()</code>。</li>
+</ul>
+<h2 id="创建平面光"><a href="#创建平面光" class="headerlink" title="创建平面光"></a>创建平面光</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">RectAreaLight</span>( color : <span class="title class_">Integer</span>, intensity : <span class="title class_">Float</span>, width : <span class="title class_">Float</span>, height : <span class="title class_">Float</span> )</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>color</code>：(可选参数) 十六进制数字表示的光照颜色。缺省值为<code>0xffffff</code>。</li>
+<li><code>intensity</code>：(可选参数) 光源强度／亮度。缺省值为 1。</li>
+<li><code>width</code>：(可选参数) 光源宽度。缺省值为 10。</li>
+<li><code>height</code>：(可选参数) 光源高度。缺省值为 10。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> areaLight = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">RectAreaLight</span>(<span class="number">0xff0000</span>, <span class="number">3</span>)</span><br><span class="line">areaLight.<span class="property">position</span>.<span class="title function_">set</span>(-<span class="number">10</span>, <span class="number">10</span>, -<span class="number">35</span>)</span><br><span class="line">areaLight.<span class="property">rotation</span>.<span class="title function_">set</span>(-<span class="title class_">Math</span>.<span class="property">PI</span> / <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">areaLight.<span class="property">width</span> = <span class="number">4</span></span><br><span class="line">areaLight.<span class="property">height</span> = <span class="number">9.9</span></span><br><span class="line">scene.<span class="title function_">add</span>(areaLight)</span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/04/13/%E5%89%8D%E7%AB%AF/js/Three.js/Three.js%E5%85%89%E6%BA%90/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/04/13/%E5%89%8D%E7%AB%AF/js/Three.js/Three.js%E5%87%A0%E4%BD%95%E4%BD%93/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/04/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E9%98%B2%E7%81%AB%E5%A2%99/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">防火墙</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>vue router进阶 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-vue/vue router进阶"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  vue router进阶
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/10/15/vue/vue%20router%E8%BF%9B%E9%98%B6/" class="article-date">
+  <time datetime="2019-10-15T09:32:41.000Z" itemprop="datePublished">2019-10-15</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vue/">vue</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">14 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="导航守卫"><a href="#导航守卫" class="headerlink" title="导航守卫"></a>导航守卫</h1><p>导航表示路由正在发生改变。<code>vue-router</code>提供的导航守卫主要用来通过跳转或取消的方式守卫导航。有多种机会植入路由导航过程中：全局的，单个路由独享的，或者组件级的。<br>参数或查询的改变并不会触发进入&#x2F;离开的导航守卫。你可以通过观察<code>$route</code>对象来应对这些变化，或使用<code>beforeRouteUpdate</code>的组件内守卫。</p>
+<h2 id="全局前置守卫"><a href="#全局前置守卫" class="headerlink" title="全局前置守卫"></a>全局前置守卫</h2><p>可以使用<code>router.beforeEach</code>注册一个全局前置守卫。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123; ... &#125;)</span><br><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>当一个导航触发时，全局前置守卫按照创建顺序调用。守卫是异步解析执行，此时导航在所有守卫<code>resolve</code>完之前一直处于等待中。<br>每个守卫方法接收三个参数：</p>
+<ul>
+<li><code>to:Route</code>：即将要进入的目标路由对象</li>
+<li><code>from:Route</code>：当前导航正要离开的路由</li>
+<li><code>next:Function</code>：一定要调用该方法来<code>resolve</code>这个钩子。执行效果依赖<code>next</code>方法的调用参数。<ul>
+<li><code>next()</code>: 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是<code>confirmed</code>（确认的）。</li>
+<li><code>next(false)</code>：中断当前的导航。如果浏览器的URL改变了（可能是用户手动或者浏览器后退按钮），那么URL地址会重置到<code>from</code>路由对应的地址。</li>
+<li><code>next(&#39;/&#39;)</code>或者<code>next(&#123;path:&#39;/&#39;&#125;)</code>：跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。你可以向<code>next</code>传递任意位置对象，且允许设置诸如<code>replace:true</code>、<code>name:&#39;home&#39;</code>之类的选项以及任何用在<code>router-link</code>的<code>to prop</code>或<code>router.push</code>中的选项。</li>
+<li><code>next(error)</code>：如果传入<code>next</code>的参数是一个<code>Error</code>实例，则导航会被终止且该错误会被传递给<code>router.onError()</code>注册过的回调。</li>
+</ul>
+</li>
+</ul>
+<p>确保要调用<code>next</code>方法，否则钩子就不会被<code>resolved</code>。</p>
+<h2 id="全局解析守卫"><a href="#全局解析守卫" class="headerlink" title="全局解析守卫"></a>全局解析守卫</h2><p>可以用<code>router.beforeResolve</code>注册一个全局守卫。这和<code>router.beforeEach</code>类似，区别是在导航被确认之前，同时在所有组件内守卫和异步路由组件被解析之后，解析守卫就被调用。</p>
+<h2 id="全局后置钩子"><a href="#全局后置钩子" class="headerlink" title="全局后置钩子"></a>全局后置钩子</h2><p>也可以注册全局后置钩子，然而和守卫不同的是，这些钩子不会接受<code>next</code>函数也不会改变导航本身。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">afterEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="路由独享的守卫"><a href="#路由独享的守卫" class="headerlink" title="路由独享的守卫"></a>路由独享的守卫</h2><p>可以在路由配置上直接定义<code>beforeEnter</code>守卫。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/foo&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">Foo</span>,</span><br><span class="line">      <span class="attr">beforeEnter</span>: <span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这些守卫与全局前置守卫的方法参数是一样的。</p>
+<h2 id="组件内的守卫"><a href="#组件内的守卫" class="headerlink" title="组件内的守卫"></a>组件内的守卫</h2><p>可以在路由组件内直接定义以下路由导航守卫。</p>
+<ul>
+<li><code>beforeRouteEnter</code></li>
+<li><code>beforeRouteUpdate</code></li>
+<li><code>beforeRouteLeave</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Foo</span> = &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="string">`...`</span>,</span><br><span class="line">  beforeRouteEnter (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">    <span class="comment">// 在渲染该组件的对应路由被 confirm 前调用</span></span><br><span class="line">    <span class="comment">// 不！能！获取组件实例 `this`</span></span><br><span class="line">    <span class="comment">// 因为当守卫执行前，组件实例还没被创建</span></span><br><span class="line">  &#125;,</span><br><span class="line">  beforeRouteUpdate (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">    <span class="comment">// 在当前路由改变，但是该组件被复用时调用</span></span><br><span class="line">    <span class="comment">// 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，</span></span><br><span class="line">    <span class="comment">// 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。</span></span><br><span class="line">    <span class="comment">// 可以访问组件实例 `this`</span></span><br><span class="line">  &#125;,</span><br><span class="line">  beforeRouteLeave (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">    <span class="comment">// 导航离开该组件的对应路由时调用</span></span><br><span class="line">    <span class="comment">// 可以访问组件实例 `this`</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>beforeRouteEnter</code>守卫不能访问<code>this</code>，因为守卫在导航确认前被调用,因此即将登场的新组件还没被创建。<br>不过，可以通过传一个回调给<code>next</code>来访问组件实例。在导航被确认的时候执行回调，并且把组件实例作为回调方法的参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">beforeRouteEnter (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">  <span class="title function_">next</span>(<span class="function"><span class="params">vm</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 通过 `vm` 访问组件实例</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意<code>beforeRouteEnter</code>是支持给<code>next</code>传递回调的唯一守卫。对于<code>beforeRouteUpdate</code>和<code>beforeRouteLeave</code>来说，<code>this</code>已经可用了，所以不支持传递回调，因为没有必要了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">beforeRouteUpdate (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">  <span class="comment">// just use `this`</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = to.<span class="property">params</span>.<span class="property">name</span></span><br><span class="line">  <span class="title function_">next</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个离开守卫通常用来禁止用户在还未保存修改前突然离开。该导航可以通过<code>next(false)</code>来取消。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">beforeRouteLeave (to, <span class="keyword">from</span> , next) &#123;</span><br><span class="line">  <span class="keyword">const</span> answer = <span class="variable language_">window</span>.<span class="title function_">confirm</span>(<span class="string">&#x27;Do you really want to leave? you have unsaved changes!&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (answer) &#123;</span><br><span class="line">    <span class="title function_">next</span>()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_">next</span>(<span class="literal">false</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="完整的导航解析流程"><a href="#完整的导航解析流程" class="headerlink" title="完整的导航解析流程"></a>完整的导航解析流程</h2><ol>
+<li>导航被触发。</li>
+<li>在失活的组件里调用离开守卫。</li>
+<li>调用全局的<code>beforeEach</code>守卫。</li>
+<li>在重用的组件里调用<code>beforeRouteUpdate</code>守卫。</li>
+<li>在路由配置里调用<code>beforeEnter</code>。</li>
+<li>解析异步路由组件。</li>
+<li>在被激活的组件里调用<code>beforeRouteEnter</code>。</li>
+<li>调用全局的<code>beforeResolve</code>守卫。</li>
+<li>导航被确认。</li>
+<li>调用全局的<code>afterEach</code>钩子。</li>
+<li>触发DOM更新。</li>
+<li>用创建好的实例调用<code>beforeRouteEnter</code>守卫中传给<code>next</code>的回调函数。</li>
+</ol>
+<h1 id="路由元信息"><a href="#路由元信息" class="headerlink" title="路由元信息"></a>路由元信息</h1><p>定义路由的时候可以配置<code>meta</code>字段。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/foo&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="title class_">Foo</span>,</span><br><span class="line">      <span class="attr">children</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">path</span>: <span class="string">&#x27;bar&#x27;</span>,</span><br><span class="line">          <span class="attr">component</span>: <span class="title class_">Bar</span>,</span><br><span class="line">          <span class="attr">meta</span>: &#123; <span class="attr">requiresAuth</span>: <span class="literal">true</span> &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>我们称呼<code>routes</code>配置中的每个路由对象为路由记录。路由记录可以是嵌套的，因此，当一个路由匹配成功后，他可能匹配多个路由记录。<br>例如，根据上面的路由配置，<code>/foo/bar</code>这个URL将会匹配父路由记录以及子路由记录。<br>一个路由匹配到的所有路由记录会暴露为<code>$route</code>对象（还有在导航守卫中的路由对象）的<code>$route.matched</code>数组。因此，我们需要遍历<code>$route.matched</code>来检查路由记录中的<code>meta</code>字段。<br>下面例子展示在全局导航守卫中检查元字段。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (to.<span class="property">matched</span>.<span class="title function_">some</span>(<span class="function"><span class="params">record</span> =&gt;</span> record.<span class="property">meta</span>.<span class="property">requiresAuth</span>)) &#123;</span><br><span class="line">    <span class="comment">// this route requires auth, check if logged in</span></span><br><span class="line">    <span class="comment">// if not, redirect to login page.</span></span><br><span class="line">    <span class="keyword">if</span> (!auth.<span class="title function_">loggedIn</span>()) &#123;</span><br><span class="line">      <span class="title function_">next</span>(&#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>,</span><br><span class="line">        <span class="attr">query</span>: &#123; <span class="attr">redirect</span>: to.<span class="property">fullPath</span> &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="title function_">next</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_">next</span>() <span class="comment">// 确保一定要调用 next()</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="过渡动效"><a href="#过渡动效" class="headerlink" title="过渡动效"></a>过渡动效</h1><p><code>&lt;router-view&gt;</code>是基本的动态组件，所以我们可以用<code>&lt;transition&gt;</code>组件给它添加一些过渡效果。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">router-view</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="单个路由的过渡"><a href="#单个路由的过渡" class="headerlink" title="单个路由的过渡"></a>单个路由的过渡</h2><p>上面的用法会给所有路由设置一样的过渡效果，如果你想让每个路由组件有各自的过渡效果，可以在各路由组件内使用<code>&lt;transition&gt;</code>并设置不同的<code>name</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Foo</span> = &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;transition name=&quot;slide&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;div class=&quot;foo&quot;&gt;...&lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;/transition&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Bar</span> = &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;transition name=&quot;fade&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;div class=&quot;bar&quot;&gt;...&lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;/transition&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="基于路由的动态过渡"><a href="#基于路由的动态过渡" class="headerlink" title="基于路由的动态过渡"></a>基于路由的动态过渡</h2><p>还可以基于当前路由与目标路由的变化关系，动态设置过渡效果：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 使用动态的 transition name --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">transition</span> <span class="attr">:name</span>=<span class="string">&quot;transitionName&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">router-view</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接着在父组件内</span></span><br><span class="line"><span class="comment">// watch $route 决定使用哪种过渡</span></span><br><span class="line"><span class="attr">watch</span>: &#123;</span><br><span class="line">  <span class="string">&#x27;$route&#x27;</span> (to, <span class="keyword">from</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> toDepth = to.<span class="property">path</span>.<span class="title function_">split</span>(<span class="string">&#x27;/&#x27;</span>).<span class="property">length</span></span><br><span class="line">    <span class="keyword">const</span> fromDepth = <span class="keyword">from</span>.<span class="property">path</span>.<span class="title function_">split</span>(<span class="string">&#x27;/&#x27;</span>).<span class="property">length</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">transitionName</span> = toDepth &lt; fromDepth ? <span class="string">&#x27;slide-right&#x27;</span> : <span class="string">&#x27;slide-left&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="数据获取"><a href="#数据获取" class="headerlink" title="数据获取"></a>数据获取</h1><p>有时候，进入某个路由后，需要从服务器获取数据。例如，在渲染用户信息时，你需要从服务器获取用户的数据。我们可以通过两种方式来实现：</p>
+<ul>
+<li>导航完成之后获取：先完成导航，然后在接下来的组件生命周期钩子中获取数据。在数据获取期间显示加载中之类的指示。</li>
+<li>导航完成之前获取：导航完成前，在路由进入的守卫中获取数据，在数据获取成功后执行导航。</li>
+</ul>
+<h2 id="导航完成后获取数据"><a href="#导航完成后获取数据" class="headerlink" title="导航完成后获取数据"></a>导航完成后获取数据</h2><p>使用这种方式时，会马上导航和渲染组件，然后在组件的<code>created</code>钩子中获取数据。这让我们有机会在数据获取期间展示一个<code>loading</code>状态，还可以在不同视图间展示不同的<code>loading</code>状态。<br>假设我们有一个<code>Post</code>组件，需要基于<code>$route.params.id</code>获取文章数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;post&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;loading&quot; v-if=&quot;loading&quot;&gt;</span><br><span class="line">      Loading...</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div v-if=&quot;error&quot; class=&quot;error&quot;&gt;</span><br><span class="line">      &#123;&#123; error &#125;&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div v-if=&quot;post&quot; class=&quot;content&quot;&gt;</span><br><span class="line">      &lt;h2&gt;&#123;&#123; post.title &#125;&#125;&lt;/h2&gt;</span><br><span class="line">      &lt;p&gt;&#123;&#123; post.body &#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data () &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      loading: false,</span><br><span class="line">      post: null,</span><br><span class="line">      error: null</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  created () &#123;</span><br><span class="line">    // 组件创建完后获取数据，</span><br><span class="line">    // 此时 data 已经被 observed 了</span><br><span class="line">    this.fetchData()</span><br><span class="line">  &#125;,</span><br><span class="line">  watch: &#123;</span><br><span class="line">    // 如果路由有变化，会再次执行该方法</span><br><span class="line">    &#x27;$route&#x27;: &#x27;fetchData&#x27;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    fetchData () &#123;</span><br><span class="line">      this.error = this.post = null</span><br><span class="line">      this.loading = true</span><br><span class="line">      getPost(this.$route.params.id, (err, post) =&gt; &#123;</span><br><span class="line">        this.loading = false</span><br><span class="line">        if (err) &#123;</span><br><span class="line">          this.error = err.toString()</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          this.post = post</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="在导航完成前获取数据"><a href="#在导航完成前获取数据" class="headerlink" title="在导航完成前获取数据"></a>在导航完成前获取数据</h2><p>通过这种方式，我们在导航转入新的路由前获取数据。我们可以在接下来的组件的<code>beforeRouteEnter</code>守卫中获取数据，当数据获取成功后只调用<code>next</code>方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">post</span>: <span class="literal">null</span>,</span><br><span class="line">      <span class="attr">error</span>: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  beforeRouteEnter (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">    <span class="title function_">getPost</span>(to.<span class="property">params</span>.<span class="property">id</span>, <span class="function">(<span class="params">err, post</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">next</span>(<span class="function"><span class="params">vm</span> =&gt;</span> vm.<span class="title function_">setData</span>(err, post))</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 路由改变前，组件就已经渲染完了</span></span><br><span class="line">  <span class="comment">// 逻辑稍稍不同</span></span><br><span class="line">  beforeRouteUpdate (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">post</span> = <span class="literal">null</span></span><br><span class="line">    <span class="title function_">getPost</span>(to.<span class="property">params</span>.<span class="property">id</span>, <span class="function">(<span class="params">err, post</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">setData</span>(err, post)</span><br><span class="line">      <span class="title function_">next</span>()</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">methods</span>: &#123;</span><br><span class="line">    setData (err, post) &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">error</span> = err.<span class="title function_">toString</span>()</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">post</span> = post</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在为后面的视图获取数据时，用户会停留在当前的界面，因此建议在数据获取期间，显示一些进度条或者别的指示。如果数据获取失败，同样有必要展示一些全局的错误提醒。</p>
+<h1 id="滚动行为"><a href="#滚动行为" class="headerlink" title="滚动行为"></a>滚动行为</h1><p>使用前端路由，当切换到新路由时，想要页面滚到顶部，或者是保持原先的滚动位置，就像重新加载页面那样。<code>vue-router</code>能做到，而且更好，它让你可以自定义路由切换时页面如何滚动。<br>注意: 这个功能只在支持<code>history.pushState</code>的浏览器中可用。</p>
+<p>当创建一个<code>Router</code>实例，你可以提供一个<code>scrollBehavior</code>方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [...],</span><br><span class="line">  scrollBehavior (to, <span class="keyword">from</span>, savedPosition) &#123;</span><br><span class="line">    <span class="comment">// return 期望滚动到哪个的位置</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>scrollBehavior</code>方法接收<code>to</code>和<code>from</code>路由对象。第三个参数 <code>savedPosition</code> 当且仅当<code>popstate</code>导航 (通过浏览器的 前进&#x2F;后退 按钮触发) 时才可用。<br>这个方法返回滚动位置的对象信息，长这样：</p>
+<ul>
+<li><code>&#123; x: number, y: number &#125;</code></li>
+<li><code>&#123; selector: string, offset?: &#123; x:number,y:number &#125;&#125;</code> (<code>offset</code>只在2.6.0+支持)</li>
+</ul>
+<p>如果返回一个<code>falsy</code> (<code>falsy</code>不是 <code>false</code>)的值，或者是一个空对象，那么不会发生滚动。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scrollBehavior (to, <span class="keyword">from</span>, savedPosition) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于所有路由导航，简单地让页面滚动到顶部。<br>返回<code>savedPosition</code>，在按下后退&#x2F;前进按钮时，就会像浏览器的原生表现那样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scrollBehavior (to, <span class="keyword">from</span>, savedPosition) &#123;</span><br><span class="line">  <span class="keyword">if</span> (savedPosition) &#123;</span><br><span class="line">    <span class="keyword">return</span> savedPosition</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模拟滚动到锚点的行为。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scrollBehavior (to, <span class="keyword">from</span>, savedPosition) &#123;</span><br><span class="line">  <span class="keyword">if</span> (to.<span class="property">hash</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">selector</span>: to.<span class="property">hash</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以利用路由元信息更细颗粒度地控制滚动。</p>
+<h2 id="异步滚动"><a href="#异步滚动" class="headerlink" title="异步滚动"></a>异步滚动</h2><p>你也可以返回一个<code>Promise</code>来得出预期的位置描述：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scrollBehavior (to, <span class="keyword">from</span>, savedPosition) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(&#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;)</span><br><span class="line">    &#125;, <span class="number">500</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将其挂载到从页面级别的过渡组件的事件上，令其滚动行为和页面过渡一起良好运行是可能的。</p>
+<h1 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h1><p>当打包构建应用时，Javascript包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。<br>结合Vue的异步组件和Webpack的代码分割功能，轻松实现路由组件的懒加载。<br>首先，可以将异步组件定义为返回一个<code>Promise</code>的工厂函数 (该函数返回的<code>Promise</code>应该<code>resolve</code>组件本身)：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Foo</span> = (<span class="params"></span>) =&gt; <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(&#123; <span class="comment">/* 组件定义对象 */</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>第二，在 Webpack中，我们可以使用动态<code>import</code>语法来定义代码分块点：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>(<span class="string">&#x27;./Foo.vue&#x27;</span>) <span class="comment">// 返回 Promise</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：如果您使用的是Babel，你将需要添加<code>syntax-dynamic-import</code>插件，才能使Babel可以正确地解析语法。</p>
+</blockquote>
+<p>结合这两者，这就是如何定义一个能够被Webpack自动代码分割的异步组件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Foo</span> = (<span class="params"></span>) =&gt; <span class="keyword">import</span>(<span class="string">&#x27;./Foo.vue&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>在路由配置中什么都不需要改变，只需要像往常一样使用<code>Foo</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/foo&#x27;</span>, <span class="attr">component</span>: <span class="title class_">Foo</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="把组件按组分块"><a href="#把组件按组分块" class="headerlink" title="把组件按组分块"></a>把组件按组分块</h2><p>有时候我们想把某个路由下的所有组件都打包在同个异步块(<code>chunk</code>)中。只需要使用命名<code>chunk</code>，一个特殊的注释语法来提供<code>chunk name</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Foo</span> = (<span class="params"></span>) =&gt; <span class="keyword">import</span>(<span class="comment">/* webpackChunkName: &quot;group-foo&quot; */</span> <span class="string">&#x27;./Foo.vue&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Bar</span> = (<span class="params"></span>) =&gt; <span class="keyword">import</span>(<span class="comment">/* webpackChunkName: &quot;group-foo&quot; */</span> <span class="string">&#x27;./Bar.vue&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Baz</span> = (<span class="params"></span>) =&gt; <span class="keyword">import</span>(<span class="comment">/* webpackChunkName: &quot;group-foo&quot; */</span> <span class="string">&#x27;./Baz.vue&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>Webpack会将任何一个异步模块与相同的块名称组合到相同的异步块中。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/10/15/vue/vue%20router%E8%BF%9B%E9%98%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/10/16/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94DOM%E6%A0%91%E3%80%81CSSOM%E3%80%81%E5%88%86%E5%B1%82%E5%92%8C%E5%90%88%E6%88%90%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            浏览器工作原理——DOM树、CSSOM、分层和合成机制
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/10/15/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">浏览器工作原理——渲染流程</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

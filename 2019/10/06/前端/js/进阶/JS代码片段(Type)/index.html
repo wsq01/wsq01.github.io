@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS代码片段(Type) |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/进阶/JS代码片段(Type)"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS代码片段(Type)
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/10/06/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Type)/" class="article-date">
+  <time datetime="2019-10-06T13:31:05.000Z" itemprop="datePublished">2019-10-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h1><h2 id="getType"><a href="#getType" class="headerlink" title="getType"></a>getType</h2><p>返回值的原生类型。<br>返回值小写的构造函数名称，如果值为<code>undefined</code>或<code>null</code>，则返回<code>undefined</code>或<code>null</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">getType</span> = v =&gt;</span><br><span class="line">  v === <span class="literal">undefined</span> ? <span class="string">&#x27;undefined&#x27;</span> : v === <span class="literal">null</span> ? <span class="string">&#x27;null&#x27;</span> : v.<span class="property">constructor</span>.<span class="property">name</span>.<span class="title function_">toLowerCase</span>()</span><br><span class="line"></span><br><span class="line"><span class="title function_">getType</span>(<span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])) <span class="comment">// &#x27;set&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="is"><a href="#is" class="headerlink" title="is"></a>is</h2><p>检查提供的值是否属于指定类型。<br>使用<code>array.prototype.includes()</code>确保该值不是<code>undefined</code>或<code>null</code>，并将该值的构造函数属性与类型进行比较，以检查提供的值是否属于指定的类型。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">is</span> = (<span class="params">type, val</span>) =&gt; ![, <span class="literal">null</span>].<span class="title function_">includes</span>(val) &amp;&amp; val.<span class="property">constructor</span> === type;</span><br><span class="line"></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Array</span>, [<span class="number">1</span>]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">ArrayBuffer</span>, <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Map</span>, <span class="keyword">new</span> <span class="title class_">Map</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">RegExp</span>, <span class="regexp">/./g</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Set</span>, <span class="keyword">new</span> <span class="title class_">Set</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">WeakMap</span>, <span class="keyword">new</span> <span class="title class_">WeakMap</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">WeakSet</span>, <span class="keyword">new</span> <span class="title class_">WeakSet</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">String</span>, <span class="string">&#x27;&#x27;</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">String</span>, <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&#x27;&#x27;</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Number</span>, <span class="number">1</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Number</span>, <span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">1</span>)); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Boolean</span>, <span class="literal">true</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">is</span>(<span class="title class_">Boolean</span>, <span class="keyword">new</span> <span class="title class_">Boolean</span>(<span class="literal">true</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isArray"><a href="#isArray" class="headerlink" title="isArray"></a>isArray</h2><p>检查给定的参数是否是一个数组。<br>使用<code>Array.isArray()</code>来检查一个值是否为一个数组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isArray</span> = val =&gt; <span class="title class_">Array</span>.<span class="title function_">isArray</span>(val)</span><br><span class="line"></span><br><span class="line"><span class="title function_">isArray</span>([<span class="number">1</span>]) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isArrayLike"><a href="#isArrayLike" class="headerlink" title="isArrayLike"></a>isArrayLike</h2><p>检查提供的参数是否是类数组（即可迭代）。<br>检查提供的参数是否不为空，以及其<code>symbol.iterator</code>属性是否为函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isArrayLike</span> = obj =&gt; obj != <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> obj[<span class="title class_">Symbol</span>.<span class="property">iterator</span>] === <span class="string">&#x27;function&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isArrayLike</span>(<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.className&#x27;</span>)) <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isArrayLike</span>(<span class="string">&#x27;abc&#x27;</span>) <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isArrayLike</span>(<span class="literal">null</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isBoolean"><a href="#isBoolean" class="headerlink" title="isBoolean"></a>isBoolean</h2><p>检查给定的参数是否是一个原生的布尔值。<br>使用<code>typeof</code>来检查一个值是否为一个布尔值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isBoolean</span> = val =&gt; <span class="keyword">typeof</span> val === <span class="string">&#x27;boolean&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isBoolean</span>(<span class="literal">null</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isBoolean</span>(<span class="literal">false</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isEmpty"><a href="#isEmpty" class="headerlink" title="isEmpty"></a>isEmpty</h2><p>如果值为空对象、集合、没有可枚举属性或是任何不被视为集合的类型，则返回<code>true</code>。<br>检查提供的值是否为空或其长度是否等于0。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isEmpty</span> = val =&gt; val == <span class="literal">null</span> || !(<span class="title class_">Object</span>.<span class="title function_">keys</span>(val) || val).<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isEmpty</span>([]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isEmpty</span>(&#123;&#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isEmpty</span>(<span class="string">&#x27;&#x27;</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isEmpty</span>([<span class="number">1</span>, <span class="number">2</span>]); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isEmpty</span>(&#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">2</span> &#125;); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isEmpty</span>(<span class="string">&#x27;text&#x27;</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isEmpty</span>(<span class="number">123</span>); <span class="comment">// true - type is not considered a collection</span></span><br><span class="line"><span class="title function_">isEmpty</span>(<span class="literal">true</span>); <span class="comment">// true - type is not considered a collection</span></span><br></pre></td></tr></table></figure>
+<h2 id="isFunction"><a href="#isFunction" class="headerlink" title="isFunction"></a>isFunction</h2><p>检查给定的参数是否是一个函数。<br>使用<code>typeof</code>来检查一个值是否为一个函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isFunction</span> = val =&gt; <span class="keyword">typeof</span> val === <span class="string">&#x27;function&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isFunction</span>(<span class="string">&#x27;x&#x27;</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isFunction</span>(<span class="function"><span class="params">x</span> =&gt;</span> x); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isNil"><a href="#isNil" class="headerlink" title="isNil"></a>isNil</h2><p>如果指定的值为空或未定义，则返回<code>true</code>，否则返回<code>false</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isNil</span> = val =&gt; val === <span class="literal">undefined</span> || val === <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isNil</span>(<span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isNil</span>(<span class="literal">undefined</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isNull"><a href="#isNull" class="headerlink" title="isNull"></a>isNull</h2><p>如果指定的值为<code>null</code>，则返回<code>true</code>；否则返回<code>false</code>。<br>使用严格等号运算符来检查<code>val</code>值是否等于<code>null</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isNull</span> = val =&gt; val === <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isNull</span>(<span class="literal">null</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isNumber"><a href="#isNumber" class="headerlink" title="isNumber"></a>isNumber</h2><p>检查给定的参数是否是一个数字。<br>使用<code>typeof</code>来检查一个值是否为一个数字。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isNumber</span> = val =&gt; <span class="keyword">typeof</span> val === <span class="string">&#x27;number&#x27;</span> &amp;&amp; val === val;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isNumber</span>(<span class="number">1</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isNumber</span>(<span class="string">&#x27;1&#x27;</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isNumber</span>(<span class="title class_">NaN</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isObject"><a href="#isObject" class="headerlink" title="isObject"></a>isObject</h2><p>如果传递的值是一个对象，则返回一个布尔值。<br>使用<code>Object</code>构造函数为给定值创建对象包装。 如果该值为<code>null</code>或<code>undefined</code>，则创建并返回一个空对象。否则，返回一个对应于给定值的类型的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isObject</span> = obj =&gt; obj === <span class="title class_">Object</span>(obj);</span><br><span class="line"></span><br><span class="line"><span class="title function_">isObject</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObject</span>([]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObject</span>([<span class="string">&#x27;Hello!&#x27;</span>]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObject</span>(&#123; <span class="attr">a</span>: <span class="number">1</span> &#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObject</span>(&#123;&#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObject</span>(<span class="literal">true</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>其他方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isObject</span> = obj =&gt; obj !== <span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> obj === <span class="string">&#x27;object&#x27;</span> || <span class="keyword">typeof</span> obj === <span class="string">&#x27;function&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="isObjectLike"><a href="#isObjectLike" class="headerlink" title="isObjectLike"></a>isObjectLike</h2><p>检查值是否类对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isObjectLike</span> = val =&gt; val !== <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> val === <span class="string">&#x27;object&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isObjectLike</span>(&#123;&#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObjectLike</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isObjectLike</span>(<span class="function"><span class="params">x</span> =&gt;</span> x); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isObjectLike</span>(<span class="literal">null</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isPlainObject"><a href="#isPlainObject" class="headerlink" title="isPlainObject"></a>isPlainObject</h2><p>检查提供的值是否是由对象构造函数创建的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isPlainObject</span> = val =&gt; !!val &amp;&amp; <span class="keyword">typeof</span> val === <span class="string">&#x27;object&#x27;</span> &amp;&amp; val.<span class="property">constructor</span> === <span class="title class_">Object</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isPlainObject</span>(&#123; <span class="attr">a</span>: <span class="number">1</span> &#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPlainObject</span>(<span class="keyword">new</span> <span class="title class_">Map</span>()); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isPrimitive"><a href="#isPrimitive" class="headerlink" title="isPrimitive"></a>isPrimitive</h2><p>返回一个布尔值，确定传递的值是否为原始值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isPrimitive</span> = val =&gt; <span class="title class_">Object</span>(val) !== val;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isPrimitive</span>(<span class="literal">null</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPrimitive</span>(<span class="number">50</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPrimitive</span>(<span class="string">&#x27;Hello!&#x27;</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPrimitive</span>(<span class="literal">false</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPrimitive</span>(<span class="title class_">Symbol</span>()); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPrimitive</span>([]); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>其他方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isPrimitive</span> = val =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> val === <span class="string">&#x27;string&#x27;</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> val === <span class="string">&#x27;number&#x27;</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> val === <span class="string">&#x27;boolean&#x27;</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> val === <span class="string">&#x27;undefined&#x27;</span> ||</span><br><span class="line">    <span class="keyword">typeof</span> val === <span class="string">&#x27;symbol&#x27;</span> ||</span><br><span class="line">    val === <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="isPromiseLike"><a href="#isPromiseLike" class="headerlink" title="isPromiseLike"></a>isPromiseLike</h2><p>如果一个对象看起来像一个<code>Promise</code>，则返回<code>true</code>，否则返回<code>false</code> 。<br>检查对象是不为<code>null</code>，它的<code>typeof</code>是否匹配<code>object</code>或<code>function</code> ，如果它有<code>.then</code>属性，这也是一个<code>function</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isPromiseLike</span> = obj =&gt;</span><br><span class="line">  obj !== <span class="literal">null</span> &amp;&amp;</span><br><span class="line">  (<span class="keyword">typeof</span> obj === <span class="string">&#x27;object&#x27;</span> || <span class="keyword">typeof</span> obj === <span class="string">&#x27;function&#x27;</span>) &amp;&amp;</span><br><span class="line">  <span class="keyword">typeof</span> obj.<span class="property">then</span> === <span class="string">&#x27;function&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isPromiseLike</span>(&#123;</span><br><span class="line">  <span class="attr">then</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isPromiseLike</span>(<span class="literal">null</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isPromiseLike</span>(&#123;&#125;); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="isString"><a href="#isString" class="headerlink" title="isString"></a>isString</h2><p>检查给定的参数是否是一个字符串。<br>使用<code>typeof</code>来检查一个值是否为一个字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isString</span> = val =&gt; <span class="keyword">typeof</span> val === <span class="string">&#x27;string&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isString</span>(<span class="string">&#x27;10&#x27;</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isSymbol"><a href="#isSymbol" class="headerlink" title="isSymbol"></a>isSymbol</h2><p>检查给定的参数是否是一个<code>symbol</code>。<br>使用<code>typeof</code>来检查一个值是否为一个<code>symbol</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isSymbol</span> = val =&gt; <span class="keyword">typeof</span> val === <span class="string">&#x27;symbol&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isSymbol</span>(<span class="title class_">Symbol</span>(<span class="string">&#x27;x&#x27;</span>)); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isUndefined"><a href="#isUndefined" class="headerlink" title="isUndefined"></a>isUndefined</h2><p>检查给定的参数是否是一个<code>undefined</code>。<br>使用严格等号运算符来检查<code>val</code>值是否等于<code>undefined</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isUndefined</span> = val =&gt; val === <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isUndefined</span>(<span class="literal">undefined</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="isValidJSON"><a href="#isValidJSON" class="headerlink" title="isValidJSON"></a>isValidJSON</h2><p>检查提供的参数是否是有效的JSON。<br>使用<code>JSON.parse()</code>和<code>try... catch</code>块来检查提供的参数是否是有效的JSON。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isValidJSON</span> = str =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="title class_">JSON</span>.<span class="title function_">parse</span>(str);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">isValidJSON</span>(<span class="string">&#x27;&#123;&quot;name&quot;:&quot;Adam&quot;,&quot;age&quot;:20&#125;&#x27;</span>); <span class="comment">// true</span></span><br><span class="line"><span class="title function_">isValidJSON</span>(<span class="string">&#x27;&#123;&quot;name&quot;:&quot;Adam&quot;,age:&quot;20&quot;&#125;&#x27;</span>); <span class="comment">// false</span></span><br><span class="line"><span class="title function_">isValidJSON</span>(<span class="literal">null</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="castArray"><a href="#castArray" class="headerlink" title="castArray"></a>castArray</h2><p>如果提供的值不是数组，则将其强制转换为数组。<br>使用<code>array.prototype.isarray()</code>确定<code>val</code>是一个数组，并将其按原样返回，或相应地封装在数组中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">castArray</span> = val =&gt; (<span class="title class_">Array</span>.<span class="title function_">isArray</span>(val) ? val : [val]);</span><br><span class="line"></span><br><span class="line"><span class="title function_">castArray</span>(<span class="string">&#x27;foo&#x27;</span>); <span class="comment">// [&#x27;foo&#x27;]</span></span><br><span class="line"><span class="title function_">castArray</span>([<span class="number">1</span>]); <span class="comment">// [1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="cloneRegExp"><a href="#cloneRegExp" class="headerlink" title="cloneRegExp"></a>cloneRegExp</h2><p>克隆一个正则表达式。<br>使用<code>new RegExp()</code>，<code>RegExp.source</code>和<code>RegExp.flags</code>来克隆给定的正则表达式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">cloneRegExp</span> = regExp =&gt; <span class="keyword">new</span> <span class="title class_">RegExp</span>(regExp.<span class="property">source</span>, regExp.<span class="property">flags</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> regExp = <span class="regexp">/lorem ipsum/gi</span>;</span><br><span class="line"><span class="keyword">const</span> regExp2 = <span class="title function_">cloneRegExp</span>(regExp); <span class="comment">// /lorem ipsum/gi</span></span><br></pre></td></tr></table></figure>
+<h2 id="coalesce"><a href="#coalesce" class="headerlink" title="coalesce"></a>coalesce</h2><p>返回第一个非<code>null/undefined</code>的参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">coalesce</span> = (<span class="params">...args</span>) =&gt; args.<span class="title function_">find</span>(<span class="function"><span class="params">_</span> =&gt;</span> ![<span class="literal">undefined</span>, <span class="literal">null</span>].<span class="title function_">includes</span>(_));</span><br><span class="line"></span><br><span class="line"><span class="title function_">coalesce</span>(<span class="literal">null</span>, <span class="literal">undefined</span>, <span class="string">&#x27;&#x27;</span>, <span class="title class_">NaN</span>, <span class="string">&#x27;Waldo&#x27;</span>); <span class="comment">// &quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="coalesceFactory"><a href="#coalesceFactory" class="headerlink" title="coalesceFactory"></a>coalesceFactory</h2><p>返回自定义的<code>coalesce</code>函数，该函数返回从提供的参数验证函数返回<code>true</code>的第一个参数。<br>使用<code>Array.find()</code>返回从提供的参数验证函数返回<code>true</code>的第一个参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">coalesceFactory</span> = valid =&gt; <span class="function">(<span class="params">...args</span>) =&gt;</span> args.<span class="title function_">find</span>(valid);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> customCoalesce = <span class="title function_">coalesceFactory</span>(<span class="function"><span class="params">_</span> =&gt;</span> ![<span class="literal">null</span>, <span class="literal">undefined</span>, <span class="string">&#x27;&#x27;</span>, <span class="title class_">NaN</span>].<span class="title function_">includes</span>(_));</span><br><span class="line"><span class="title function_">customCoalesce</span>(<span class="literal">undefined</span>, <span class="literal">null</span>, <span class="title class_">NaN</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;Waldo&#x27;</span>); <span class="comment">// &quot;Waldo&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="extendHex"><a href="#extendHex" class="headerlink" title="extendHex"></a>extendHex</h2><p>将3位数的颜色代码扩展为6位数的颜色代码。<br>使用<code>Array.map(), String.split()</code>和<code>Array.join()</code>加入映射数组，将3位RGB十六进制颜色代码转换为6位数形式。<code>Array.slice()</code>用于从字符串开始删除#，因为输出中已经默认添加了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">extendHex</span> = shortHex =&gt;</span><br><span class="line">  <span class="string">&#x27;#&#x27;</span> +</span><br><span class="line">  shortHex</span><br><span class="line">    .<span class="title function_">slice</span>(shortHex.<span class="title function_">startsWith</span>(<span class="string">&#x27;#&#x27;</span>) ? <span class="number">1</span> : <span class="number">0</span>)</span><br><span class="line">    .<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    .<span class="title function_">map</span>(<span class="function"><span class="params">x</span> =&gt;</span> x + x)</span><br><span class="line">    .<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">extendHex</span>(<span class="string">&#x27;#03f&#x27;</span>); <span class="comment">// &#x27;#0033ff&#x27;</span></span><br><span class="line"><span class="title function_">extendHex</span>(<span class="string">&#x27;05a&#x27;</span>); <span class="comment">// &#x27;#0055aa&#x27;</span></span><br></pre></td></tr></table></figure>
+<h2 id="httpGet"><a href="#httpGet" class="headerlink" title="httpGet"></a>httpGet</h2><p>向传递的URL发出一个<code>GET</code>请求。<br>使用<code>XMLHttpRequest</code> web API向给定的<code>url</code>发出<code>get</code>请求。 通过调用给定的<code>callback</code>和<code>responseText</code>来处理<code>onload</code>事件。 通过运行提供的<code>err</code>函数，处理<code>onerror</code>事件。省略第四个参数<code>err</code>，默认将错误记录到控制台的<code>error</code>流。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">httpGet</span> = (<span class="params">url, callback, err = <span class="variable language_">console</span>.error</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> request = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  request.<span class="title function_">open</span>(<span class="string">&#x27;GET&#x27;</span>, url, <span class="literal">true</span>);</span><br><span class="line">  request.<span class="property">onload</span> = <span class="function">() =&gt;</span> <span class="title function_">callback</span>(request.<span class="property">responseText</span>);</span><br><span class="line">  request.<span class="property">onerror</span> = <span class="function">() =&gt;</span> <span class="title function_">err</span>(request);</span><br><span class="line">  request.<span class="title function_">send</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">httpGet</span>(</span><br><span class="line">  <span class="string">&#x27;https://jsonplaceholder.typicode.com/posts/1&#x27;</span>,</span><br><span class="line">  <span class="variable language_">console</span>.<span class="property">log</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="httpPost"><a href="#httpPost" class="headerlink" title="httpPost"></a>httpPost</h2><p>对传递的URL发出一个<code>POST</code>请求。<br>使用<code>XMLHttpRequest</code> web api对给定的<code>url</code>发出一个<code>post</code>请求。 用<code>setRequestHeader</code>方法设置<code>HTTP</code>请求头的值。通过调用给定的<code>callback</code>和<code>responseText</code>来处理<code>onload</code>事件。 通过运行提供的<code>err</code>函数，处理<code>onerror</code>事件。 省略第三个参数<code>data</code>，不发送数据到提供的<code>url</code> 。 省略第四个参数<code>err</code>，默认将错误记录到控制台的<code>error</code>流。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">httpPost</span> = (<span class="params">url, data, callback, err = <span class="variable language_">console</span>.error</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> request = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  request.<span class="title function_">open</span>(<span class="string">&#x27;POST&#x27;</span>, url, <span class="literal">true</span>);</span><br><span class="line">  request.<span class="title function_">setRequestHeader</span>(<span class="string">&#x27;Content-type&#x27;</span>, <span class="string">&#x27;application/json; charset=utf-8&#x27;</span>);</span><br><span class="line">  request.<span class="property">onload</span> = <span class="function">() =&gt;</span> <span class="title function_">callback</span>(request.<span class="property">responseText</span>);</span><br><span class="line">  request.<span class="property">onerror</span> = <span class="function">() =&gt;</span> <span class="title function_">err</span>(request);</span><br><span class="line">  request.<span class="title function_">send</span>(data);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> newPost = &#123;</span><br><span class="line">  <span class="attr">userId</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1337</span>,</span><br><span class="line">  <span class="attr">title</span>: <span class="string">&#x27;Foo&#x27;</span>,</span><br><span class="line">  <span class="attr">body</span>: <span class="string">&#x27;bar bar bar&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> data = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(newPost);</span><br><span class="line"><span class="title function_">httpPost</span>(</span><br><span class="line">  <span class="string">&#x27;https://jsonplaceholder.typicode.com/posts&#x27;</span>,</span><br><span class="line">  data,</span><br><span class="line">  <span class="variable language_">console</span>.<span class="property">log</span></span><br><span class="line">);</span><br><span class="line"><span class="title function_">httpPost</span>(</span><br><span class="line">  <span class="string">&#x27;https://jsonplaceholder.typicode.com/posts&#x27;</span>,</span><br><span class="line">  <span class="literal">null</span>, <span class="comment">// does not send a body</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="property">log</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="isBrowser"><a href="#isBrowser" class="headerlink" title="isBrowser"></a>isBrowser</h2><p>确定当前运行时环境是否为浏览器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isBrowser</span> = (<span class="params"></span>) =&gt; ![<span class="keyword">typeof</span> <span class="variable language_">window</span>, <span class="keyword">typeof</span> <span class="variable language_">document</span>].<span class="title function_">includes</span>(<span class="string">&#x27;undefined&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">isBrowser</span>(); <span class="comment">// true (browser)</span></span><br><span class="line"><span class="title function_">isBrowser</span>(); <span class="comment">// false (Node)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="prettyBytes"><a href="#prettyBytes" class="headerlink" title="prettyBytes"></a>prettyBytes</h2><p>将字节数转换为可读的字符串。<br>根据存取字节数常用的单位构建一个数组字典。使用<code>Number.toPrecision()</code>将数字截断为一定数量的数字。将构建、美化好的字符串返回，并考虑提供的选项以及是否为负值。省略第二个参数<code>precision</code>，使用默认精度为3的数字。省略第三个参数<code>addSpace</code>，默认情况下在数字和单位之间添加空格。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">prettyBytes</span> = (<span class="params">num, precision = <span class="number">3</span>, addSpace = <span class="literal">true</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="variable constant_">UNITS</span> = [<span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;KB&#x27;</span>, <span class="string">&#x27;MB&#x27;</span>, <span class="string">&#x27;GB&#x27;</span>, <span class="string">&#x27;TB&#x27;</span>, <span class="string">&#x27;PB&#x27;</span>, <span class="string">&#x27;EB&#x27;</span>, <span class="string">&#x27;ZB&#x27;</span>, <span class="string">&#x27;YB&#x27;</span>];</span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Math</span>.<span class="title function_">abs</span>(num) &lt; <span class="number">1</span>) <span class="keyword">return</span> num + (addSpace ? <span class="string">&#x27; &#x27;</span> : <span class="string">&#x27;&#x27;</span>) + <span class="variable constant_">UNITS</span>[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">const</span> exponent = <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">log10</span>(num &lt; <span class="number">0</span> ? -num : num) / <span class="number">3</span>), <span class="variable constant_">UNITS</span>.<span class="property">length</span> - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">const</span> n = <span class="title class_">Number</span>(((num &lt; <span class="number">0</span> ? -num : num) / <span class="number">1000</span> ** exponent).<span class="title function_">toPrecision</span>(precision));</span><br><span class="line">  <span class="keyword">return</span> (num &lt; <span class="number">0</span> ? <span class="string">&#x27;-&#x27;</span> : <span class="string">&#x27;&#x27;</span>) + n + (addSpace ? <span class="string">&#x27; &#x27;</span> : <span class="string">&#x27;&#x27;</span>) + <span class="variable constant_">UNITS</span>[exponent];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">prettyBytes</span>(<span class="number">1000</span>); <span class="comment">// &quot;1 KB&quot;</span></span><br><span class="line"><span class="title function_">prettyBytes</span>(-<span class="number">27145424323.5821</span>, <span class="number">5</span>); <span class="comment">// &quot;-27.145 GB&quot;</span></span><br><span class="line"><span class="title function_">prettyBytes</span>(<span class="number">123456789</span>, <span class="number">3</span>, <span class="literal">false</span>); <span class="comment">// &quot;123MB&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="randomHexColorCode"><a href="#randomHexColorCode" class="headerlink" title="randomHexColorCode"></a>randomHexColorCode</h2><p>生成一个随机的十六进制颜色代码。<br>使用<code>Math.random</code>生成一个随机的24位（6x4位）十六进制数。使用位操作符，然后使用<code>toString(16)</code>将其转换为十六进制字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">randomHexColorCode</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> n = (<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">0xfffff</span> * <span class="number">1000000</span>).<span class="title function_">toString</span>(<span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;#&#x27;</span> + n.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">6</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">randomHexColorCode</span>(); <span class="comment">// &quot;#e34155&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="serializeCookie"><a href="#serializeCookie" class="headerlink" title="serializeCookie"></a>serializeCookie</h2><p>将一个<code>cookie name-value</code>对序列化为<code>Set-Cookie</code>头字符串。<br>使用模板字面量和<code>encodeURIComponent()</code>来创建合适的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const serializeCookie = (name, val) =&gt; `$&#123;encodeURIComponent(name)&#125;=$&#123;encodeURIComponent(val)&#125;`;</span><br><span class="line"></span><br><span class="line">serializeCookie(&#x27;foo&#x27;, &#x27;bar&#x27;); // &#x27;foo=bar&#x27;</span><br></pre></td></tr></table></figure>
+<h2 id="timeTaken"><a href="#timeTaken" class="headerlink" title="timeTaken"></a>timeTaken</h2><p>计算一个函数执行的时间。<br>使用<code>console.time()</code>和<code>console.timeEnd()</code>来测量开始和结束时间之间的差，以确定回调执行的时间。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">timeTaken</span> = callback =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">time</span>(<span class="string">&#x27;timeTaken&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> r = <span class="title function_">callback</span>();</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">timeEnd</span>(<span class="string">&#x27;timeTaken&#x27;</span>);</span><br><span class="line">  <span class="keyword">return</span> r;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">timeTaken</span>(<span class="function">() =&gt;</span> <span class="title class_">Math</span>.<span class="title function_">pow</span>(<span class="number">2</span>, <span class="number">10</span>)); </span><br><span class="line"><span class="comment">// 1024, (logged): timeTaken: 0.02099609375ms</span></span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2019/10/06/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Type)/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/10/11/%E5%89%8D%E7%AB%AF/js/%E6%B7%B1%E5%85%A5/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E2%80%94%E2%80%94Chrome%E6%9E%B6%E6%9E%84/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            浏览器工作原理——Chrome架构
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/10/05/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Object%E3%80%81Function)/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">JS代码片段(Object、Function)</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

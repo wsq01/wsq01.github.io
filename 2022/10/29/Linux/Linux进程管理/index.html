@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Linux/Linux进程管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.554Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">17 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="进程启动的方式"><a href="#进程启动的方式" class="headerlink" title="进程启动的方式"></a>进程启动的方式</h1><p>在 Linux 系统中，每个进程都有一个唯一的进程号（PID），方便系统识别和调度进程。通过简单地输出运行程序的程序名，就可以运行该程序，其实也就是启动了一个进程。</p>
+<p>总体来说，启动一个进程主要有 2 种途径，分别是通过手工启动和通过调度启动（事先进行设置，根据用户要求，进程可以自行启动），接下来就一一介绍这 2 中方式。</p>
+<h2 id="Linux手工启动进程"><a href="#Linux手工启动进程" class="headerlink" title="Linux手工启动进程"></a>Linux手工启动进程</h2><p>手工启动进程指的是由用户输入命令直接启动一个进程，根据所启动的进程类型和性质的不同，其又可以细分为前台启动和后台启动 2 种方式。</p>
+<h3 id="前台启动进程"><a href="#前台启动进程" class="headerlink" title="前台启动进程"></a>前台启动进程</h3><p>这是手工启动进程最常用的方式，因为当用户输入一个命令并运行，就已经启动了一个进程，而且是一个前台的进程，此时系统其实已经处于一个多进程的状态（一个是 Shell 进程，另一个是新启动的进程）。</p>
+<p>假如启动一个比较耗时的进程，然后再把该进程挂起，并使用 ps 命令查看，就会看到该进程在 ps 显示列表中，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# find / -name demo.jpg &lt;--在根目录下查找 demo.jpg 文件，比较耗时</span><br><span class="line">#此处省略了该命令的部分输出信息</span><br><span class="line">#按“CTRL+Z”组合键，即可将该进程挂起</span><br><span class="line">[root@localhost ~]# ps &lt;--查看正在运行的进程</span><br><span class="line">PID  TTY      TIME   CMD</span><br><span class="line">2573 pts/0  00:00:00 bash</span><br><span class="line">2587 pts/0  00:00:01 find</span><br><span class="line">2588 pts/0  00:00:00 ps</span><br></pre></td></tr></table></figure>
+<p>将进程挂起，指的是将前台运行的进程放到后台，并且暂停其运行。</p>
+<p>通过运行<code>ps</code>命令查看进程信息，可以看到，刚刚执行的<code>find</code>命令的进程号为 2587，同时<code>ps</code>进程的进程号为 2588。</p>
+<h3 id="后台启动进程"><a href="#后台启动进程" class="headerlink" title="后台启动进程"></a>后台启动进程</h3><p>进程直接从后台运行，用的相对较少，除非该进程非常耗时，且用户也不急着需要其运行结果的时候，例如，用户需要启动一个需要长时间运行的格式化文本文件的进程，为了不使整个 Shell 在格式化过程中都处于“被占用”状态，从后台启动这个进程是比较明智的选择。</p>
+<p>从后台启动进程，其实就是在命令结尾处添加一个 “ &amp;” 符号（注意，&amp; 前面有空格）。输入命令并运行之后，Shell 会提供给我们一个数字，此数字就是该进程的进程号。然后直接就会出现提示符，用户就可以继续完成其他工作，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# find / -name install.log &amp;</span><br><span class="line">[1] 1920</span><br><span class="line">#[1]是工作号，1920是进程号</span><br></pre></td></tr></table></figure>
+<p>以上介绍了手工启动的 2 种方式，实际上它们有个共同的特点，就是新进程都是由当前 Shell 这个进程产生的，换句话说，是 Shell 创建了新进程，于是称这种关系为进程间的父子关系，其中 Shell 是父进程，新进程是子进程。</p>
+<p>值得一提的是，一个父进程可以有多个子进程，通常子进程结束后才能继续父进程；当然，如果是从后台启动，父进程就不用等待子进程了。</p>
+<h2 id="Linux调度启动进程"><a href="#Linux调度启动进程" class="headerlink" title="Linux调度启动进程"></a>Linux调度启动进程</h2><p>在 Linux 系统中，任务可以被配置在指定的时间、日期或者系统平均负载量低于指定值时自动启动。</p>
+<p>例如，Linux 预配置了重要系统任务的运行，以便可以使系统能够实时被更新，系统管理员也可以使用自动化的任务来定期对重要数据进行备份。</p>
+<p>实现调度启动进程的方法有很多，例如通过 crontab、at 等命令。</p>
+<h1 id="ps命令：查看正在运行的进程"><a href="#ps命令：查看正在运行的进程" class="headerlink" title="ps命令：查看正在运行的进程"></a>ps命令：查看正在运行的进程</h1><p>ps 命令是最常用的监控进程的命令，通过此命令可以查看系统中所有运行进程的详细信息。</p>
+<p>ps 命令有多种不同的使用方法，这常常给初学者带来困惑。在各种 Linux 论坛上，询问 ps 命令语法的帖子屡见不鲜，而出现这样的情况，还要归咎于 UNIX 悠久的历史和庞大的派系。在不同的 Linux 发行版上，ps 命令的语法各不相同，为此，Linux 采取了一个折中的方法，即融合各种不同的风格，兼顾那些已经习惯了其它系统上使用 ps  命令的用户。</p>
+<p>ps 命令的基本格式如下：<br>[root@localhost ~]# ps aux<br>#查看系统中所有的进程，使用 BS 操作系统格式<br>[root@localhost ~]# ps -le<br>#查看系统中所有的进程，使用 Linux 标准命令格式</p>
+<p>选项：<br>a：显示一个终端的所有进程，除会话引线外；<br>u：显示进程的归属用户及内存的使用情况；<br>x：显示没有控制终端的进程；<br>-l：长格式显示更加详细的信息；<br>-e：显示所有进程；<br>可以看到，ps 命令有些与众不同，它的部分选项不能加入”-“，比如命令”ps aux”，其中”aux”是选项，但是前面不能带“-”。</p>
+<p>大家如果执行 “man ps” 命令，则会发现 ps 命令的帮助为了适应不同的类 UNIX 系统，可用格式非常多，不方便记忆。所以，我建议大家记忆几个固定选项即可。比如：<br>“ps aux” 可以查看系统中所有的进程；<br>“ps -le” 可以查看系统中所有的进程，而且还能看到进程的父进程的 PID 和进程优先级；<br>“ps -l” 只能看到当前 Shell 产生的进程；</p>
+<p>有这三个命令就足够了，下面分别来查看。</p>
+<p>【例 1】<br>[root@localhost ~]# ps aux<br>#查看系统中所有的进程<br>USER PID %CPU %MEM  VSZ  RSS   TTY STAT START TIME COMMAND<br>root   1  0.0  0.2 2872 1416   ?   Ss   Jun04 0:02 &#x2F;sbin&#x2F;init<br>root   2  0.0  0.0    0    0   ?    S   Jun04 0:00 [kthreadd]<br>root   3  0.0  0.0    0    0   ?    S   Jun04 0:00 [migration&#x2F;0]<br>root   4  0.0  0.0    0    0   ?    S   Jun04 0:00 [ksoftirqd&#x2F;0]<br>…省略部分输出…<br>表 1 中罗列出了以上输出信息中各列的具体含义。</p>
+<p>表 1 ps命令输出信息含义<br>表头	含义<br>USER	该进程是由哪个用户产生的。<br>PID	进程的 ID。<br>%CPU	该进程占用 CPU 资源的百分比，占用的百分比越高，进程越耗费资源。<br>%MEM	该进程占用物理内存的百分比，占用的百分比越高，进程越耗费资源。<br>VSZ	该进程占用虚拟内存的大小，单位为 KB。<br>RSS	该进程占用实际物理内存的大小，单位为 KB。<br>TTY	该进程是在哪个终端运行的。其中，tty1 ~ tty7 代表本地控制台终端（可以通过 Alt+F1 ~ F7 快捷键切换不同的终端），tty1~tty6 是本地的字符界面终端，tty7 是图形终端。pts&#x2F;0 ~ 255 代表虚拟终端，一般是远程连接的终端，第一个远程连接占用 pts&#x2F;0，第二个远程连接占用 pts&#x2F;1，依次増长。<br>STAT	进程状态。常见的状态有以下几种：<br>-D：不可被唤醒的睡眠状态，通常用于 I&#x2F;O 情况。<br>-R：该进程正在运行。<br>-S：该进程处于睡眠状态，可被唤醒。<br>-T：停止状态，可能是在后台暂停或进程处于除错状态。<br>-W：内存交互状态（从 2.6 内核开始无效）。<br>-X：死掉的进程（应该不会出现）。<br>-Z：僵尸进程。进程已经中止，但是部分程序还在内存当中。<br>-&lt;：高优先级（以下状态在 BSD 格式中出现）。<br>-N：低优先级。<br>-L：被锁入内存。<br>-s：包含子进程。<br>-l：多线程（小写 L）。<br>-+：位于后台。<br>START	该进程的启动时间。<br>TIME	该进程占用 CPU 的运算时间，注意不是系统时间。<br>COMMAND	产生此进程的命令名。<br>【例 2】”ps aux”命令可以看到系统中所有的进程，”ps -le”命令也能看到系统中所有的进程。由于 “-l” 选项的作用，所以 “ps -le” 命令能够看到更加详细的信息，比如父进程的 PID、优先级等。但是这两个命令的基本作用是一致的，掌握其中一个就足够了。<br>[root@localhost ~]# ps -le<br>F S UID PID PPID C  PRI Nl ADDR  SZ WCHAN TTY      TIME  CMD<br>4 S   0   1    0 0  80   0 -    718 -     ?    00:00:02  init<br>1 S   0   2    0 0  80   0 -      0 -     ?    00:00:00  kthreadd<br>1 S   0   3    2 0 -40   - -      0 -     ?    00:00:00  migration&#x2F;0<br>1 S   0   4    2 0  80   0 -      0 -     ?    00:00:00  ksoflirqd&#x2F;0<br>1 S   0   5    2 0 -40   - -      0 -     ?    00:00:00  migration&#x2F;0<br>…省略部分输出…<br>表 2 罗列出以上输出信息中各列的含义。</p>
+<p>表 2 ps -le 命令输出信息<br>表头	含义<br>F	进程标志，说明进程的权限，常见的标志有两个:<br>1：进程可以被复制，但是不能被执行；<br>4：进程使用超级用户权限；<br>S	进程状态。具体的状态和”psaux”命令中的 STAT 状态一致；<br>UID	运行此进程的用户的 ID；<br>PID	进程的 ID；<br>PPID	父进程的 ID；<br>C	该进程的 CPU 使用率，单位是百分比；<br>PRI	进程的优先级，数值越小，该进程的优先级越高，越早被 CPU 执行；<br>NI	进程的优先级，数值越小，该进程越早被执行；<br>ADDR	该进程在内存的哪个位置；<br>SZ	该进程占用多大内存；<br>WCHAN	该进程是否运行。”-“代表正在运行；<br>TTY	该进程由哪个终端产生；<br>TIME	该进程占用 CPU 的运算时间，注意不是系统时间；<br>CMD	产生此进程的命令名；<br>【例 3】如果不想看到所有的进程，只想查看一下当前登录产生了哪些进程，那只需使用 “ps -l” 命令就足够了：<br>[root@localhost ~]# ps -l<br>#查看当前登录产生的进程<br>F S UID   PID  PPID C PRI NI ADDR SZ WCHAN TTY       TIME CMD<br>4 S 0   18618 18614 0  80  0 - 1681  -     pts&#x2F;1 00:00:00 bash<br>4 R 0   18683 18618 4  80  0 - 1619  -     pts&#x2F;1 00:00:00 ps<br>可以看到，这次从 pts&#x2F;1 虚拟终端登录，只产生了两个进程：一个是登录之后生成的 Shell，也就是 bash；另一个是正在执行的 ps 命令。</p>
+<p>我们再来说说僵尸进程。僵尸进程的产生一般是由于进程非正常停止或程序编写错误，导致子进程先于父进程结束，而父进程又没有正确地回收子进程，从而造成子进程一直存在于内存当中，这就是僵尸进程。</p>
+<p>僵尸进程会对主机的稳定性产生影响，所以，在产生僵尸进程后，一定要对产生僵尸进程的软件进行优化，避免一直产生僵尸进程；对于已经产生的僵尸进程，可以在查找出来之后强制中止。</p>
+<h1 id="top命令：持续监听进程运行状态"><a href="#top命令：持续监听进程运行状态" class="headerlink" title="top命令：持续监听进程运行状态"></a>top命令：持续监听进程运行状态</h1><h1 id="pstree命令：查看进程树"><a href="#pstree命令：查看进程树" class="headerlink" title="pstree命令：查看进程树"></a>pstree命令：查看进程树</h1><h1 id="lsof命令：列出进程调用或打开的文件信息"><a href="#lsof命令：列出进程调用或打开的文件信息" class="headerlink" title="lsof命令：列出进程调用或打开的文件信息"></a>lsof命令：列出进程调用或打开的文件信息</h1><h1 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h1><h1 id="nice和renice命令：改变进程优先级"><a href="#nice和renice命令：改变进程优先级" class="headerlink" title="nice和renice命令：改变进程优先级"></a>nice和renice命令：改变进程优先级</h1><h1 id="常用信号（进程间通信）"><a href="#常用信号（进程间通信）" class="headerlink" title="常用信号（进程间通信）"></a>常用信号（进程间通信）</h1><p>进程的管理主要是指进程的关闭与重启。我们一般关闭或重启软件，都是关闭或重启它的程序，而不是直接操作进程的。比如，要重启 apache 服务，一般使用命令”service httpd restart”重启 apache的程序。</p>
+<p>那么，可以通过直接管理进程来关闭或重启 apache 吗？答案是肯定的，这时就要依赖进程的信号（Signal）了。我们需要给予该进程号，告诉进程我们想要让它做什么。</p>
+<p>系统中可以识别的信号较多，我们可以使用命令”kill -l”或”man 7 signal”来查询。命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#kill -l</span><br><span class="line">1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP</span><br><span class="line">6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR1</span><br><span class="line">11)SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15)SIGTERM 16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP 21) SIGTTIN 22) SIGTTOU 23) SIGURG</span><br><span class="line">24) SIGXCPU 25) SIGXFSZ 26) SIGVTALRM 27) SIGPROF 28) SIGWINCH 29) SIGIO 30) SIGPWR 31) SIGSYS 34) SIGRTMIN 35) SIGRTMIN+1 36) SIGRTMIN+2 37) SIGRTMIN+3 38) SIGRTMIN +4 39) SIGRTMIN +5 40) SIGRTMIN+6 41)SIGRTMIN+7 42) SIGRTMIN+8 43) SIGRTMIN +9 44) SIGRTMIN +10 45) SIGRTMIN+11 46) SIGRTMIN+1247) SIGRTMIN+13 48) SIGRTMIN +14 49) SIGRTMIN +15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12 53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9 56) SIGRTMAX-8 57) SIGRTMAX-7 58) SIGRTMAX-6 59) SIGRTMAX-5 60) SIGRTMAX-4 61) SIGRTMAX-3 62) SIGRTMAX-2 63) SIGRTMAX-1 64) SIGRTMAX</span><br></pre></td></tr></table></figure>
+<p>常见的进程信号：</p>
+<p>| 信号代号 |  信号名称 | 说 明 |</p>
+<p>| 1	       | SIGHUP    | 该信号让进程立即关闭.然后重新读取配置文件之后重启 |<br>| 2        | SIGINT    | 程序中止信号，用于中止前台进程。相当于输出 Ctrl+C 快捷键 |<br>| 8        | SIGFPE    | 在发生致命的算术运算错误时发出。不仅包括浮点运算错误，还包括溢出及除数为 0 等其他所有的算术运算错误 |<br>| 9        | SIGKILL   | 用来立即结束程序的运行。本信号不能被阻塞、处理和忽略。般用于强制中止进程 |<br>| 14       | SIGALRM   | 时钟定时信号，计算的是实际的时间或时钟时间。alarm 函数使用该信号 |<br>| 15       | SIGTERM   | 正常结束进程的信号，kill 命令的默认信号。如果进程已经发生了问题，那么这 个信号是无法正常中止进程的，这时我们才会尝试 SIGKILL 信号，也就是信号 9 |<br>| 18       | SIGCONT   | 该信号可以让暂停的进程恢复执行。本信号不能被阻断 |<br>| 19       | SIGSTOP   | 该信号可以暂停前台进程，相当于输入 Ctrl+Z 快捷键。本信号不能被阻断 |</p>
+<p>其中最重要的就是 “1”、”9”、”15”这三个信号，我们只需要记住这三个信号即可。</p>
+<h1 id="kill命令：终止进程"><a href="#kill命令：终止进程" class="headerlink" title="kill命令：终止进程"></a>kill命令：终止进程</h1><p><code>kill</code>命令只是用来向进程发送一个信号，至于这个信号是什么，是用户指定的。</p>
+<p>也就是说，<code>kill</code>命令的执行原理是这样的，<code>kill</code>命令会向操作系统内核发送一个信号（多是终止信号）和目标进程的<code>PID</code>，然后系统内核根据收到的信号类型，对指定进程进行相应的操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# kill [信号] PID</span><br></pre></td></tr></table></figure>
+<p><code>kill</code>命令是按照<code>PID</code>来确定进程的，所以<code>kill</code>命令只能识别<code>PID</code>，而不能识别进程名。Linux 定义了几十种不同类型的信号，可以使用<code>kill -l</code>命令查看所有信号及其编号。</p>
+<p><code>kill</code>命令常用信号及其含义：</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号编号</th>
+<th align="center">信号名</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">EXIT</td>
+<td align="center">程序退出时收到该信息。</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">HUP</td>
+<td align="center">挂掉电话线或终端连接的挂起信号，这个信号也会造成某些进程在没有终止的情况下重新初始化。</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">INT</td>
+<td align="center">表示结束进程，但并不是强制性的，常用的 “Ctrl+C” 组合键发出就是一个 kill -2 的信号。</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">QUIT</td>
+<td align="center">退出。</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">KILL</td>
+<td align="center">杀死进程，即强制结束进程。</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">SEGV</td>
+<td align="center">段错误。</td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td align="center">TERM</td>
+<td align="center">正常结束进程，是 kill 命令的默认信号。</td>
+</tr>
+</tbody></table>
+<p>需要注意的是，表中省略了各个信号名称的前缀<code>SIG</code>，也就是说，<code>SIGTERM</code>和<code>TERM</code>这两种写法都对，<code>kill</code>命令都可以理解。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><h4 id="标准-kill-命令"><a href="#标准-kill-命令" class="headerlink" title="标准 kill 命令"></a>标准 kill 命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~】# service httpd start</span><br><span class="line">#启动RPM包默认安装的apache服务</span><br><span class="line">[root@localhost ~]# pstree -p 丨 grep httpd | grep -v &quot;grep&quot;</span><br><span class="line">#查看 httpd 的进程树及 PID。grep 命令査看 httpd 也会生成包含&quot;httpd&quot;关键字的进程，所以使用“-v”反向选择包含“grep”关键字的进程，这里使用 pstree 命令来查询进程，当然也可以使用 ps 和 top 命令</span><br><span class="line">|-httpd(2246)-+-httpd(2247)</span><br><span class="line">|    |-httpd(2248)</span><br><span class="line">|    |-httpd(2249)</span><br><span class="line">|    |-httpd(2250)</span><br><span class="line">|    |-httpd(2251)</span><br><span class="line">[root@localhost ~]# kill 2248</span><br><span class="line">#杀死PID是2248的httpd进程，默认信号是15，正常停止</span><br><span class="line">#如果默认信号15不能杀死进程，则可以尝试-9信号，强制杀死进程</span><br><span class="line">[root@localhost ~]# pstree -p | grep httpd | grep -v &quot;grep&quot;</span><br><span class="line">|-httpd(2246&gt;-+-httpd(2247)</span><br><span class="line">|    |-httpd(2249)</span><br><span class="line">|    |-httpd(2250)</span><br><span class="line">|    |-httpd(2251)</span><br><span class="line">#PID是2248的httpd进程消失了</span><br></pre></td></tr></table></figure>
+<h4 id="使用“-1”信号，让进程重启。"><a href="#使用“-1”信号，让进程重启。" class="headerlink" title="使用“-1”信号，让进程重启。"></a>使用“-1”信号，让进程重启。</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# kill -1 2246</span><br><span class="line">使用“-1 (数字1)”信号，让httpd的主进程重新启动</span><br><span class="line">[root@localhost ~]# pstree -p | grep httpd | grep -v &quot;grep&quot;</span><br><span class="line">|-httpd(2246)-+-httpd(2270)</span><br><span class="line">|    |-httpd(2271)</span><br><span class="line">|    |-httpd(2272)</span><br><span class="line">|    |-httpd(2273)</span><br><span class="line">|    |-httpd(2274)</span><br><span class="line">#子httpd进程的PID都更换了，说明httpd进程已经重启了一次</span><br></pre></td></tr></table></figure>
+<h4 id="使用“-19”信号，让进程暂停。"><a href="#使用“-19”信号，让进程暂停。" class="headerlink" title="使用“-19”信号，让进程暂停。"></a>使用“-19”信号，让进程暂停。</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vi test.sh #使用vi命令编辑一个文件，不要退出</span><br><span class="line">[root@localhost ~]# ps aux | grep &quot;vi&quot; | grep -v &quot;grep&quot;</span><br><span class="line">root 2313 0.0 0.2 7116 1544 pts/1 S+ 19:2.0 0:00 vi test.sh</span><br><span class="line">#换一个不同的终端，查看一下这个进程的状态。进程状态是S（休眠）和+（位于后台），因为是在另一个终端运行的命令</span><br><span class="line">[root@localhost ~]# kill -19 2313</span><br><span class="line">#使用-19信号，让PID为2313的进程暂停。相当于在vi界面按 Ctrl+Z 快捷键</span><br><span class="line">[root@localhost ~]# ps aux | grep &quot;vi&quot; | grep -v &quot;grep&quot;</span><br><span class="line">root 2313 0.0 0.2 7116 1580 pts/1 T 19:20 0:00 vi test.sh</span><br><span class="line">#注意2313进程的状态，变成了 T（暂停）状态。这时切换回vi的终端,发现vi命令已经暂停，又回到了命令提示符，不过2313进程就会卡在后台。如果想要恢复，可以使用&quot;kill -9 2313”命令强制中止进程，</span><br></pre></td></tr></table></figure>
+<p>使用<code>kill</code>命令一定可以终止一个进程吗？</p>
+<p>答案是否定的。<code>kill</code>命令只是“发送”一个信号，因此，只有当信号被程序成功“捕获”，系统才会执行<code>kill</code>命令指定的操作；反之，如果信号被“封锁”或者“忽略”，则<code>kill</code>命令将会失效。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/Linux/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/MySQL/MySQL%E9%9D%A2%E8%AF%95%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/Docker/Docker%20Compose/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

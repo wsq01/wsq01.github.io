@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JDBC 入门 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/JDBC/JDBC入门"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JDBC 入门
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/03/java/JDBC/JDBC%E5%85%A5%E9%97%A8/" class="article-date">
+  <time datetime="2021-03-03T10:01:52.000Z" itemprop="datePublished">2021-03-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JDBC/">JDBC</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">8 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><code>JDBC</code>代表 Java 数据库连接(<code>Java Database Connectivity</code>)，<code>JDBC</code>是用于在 Java 语言编程中与数据库连接的 API。</p>
+<p><code>JDBC</code>库中所包含的 API 通常使用于：</p>
+<ul>
+<li>连接到数据库</li>
+<li>创建<code>SQL</code>或 MySQL 语句</li>
+<li>在数据库中执行<code>SQL</code>或 MySQL 查询</li>
+<li>查看和修改数据库中的数据记录</li>
+</ul>
+<h1 id="常见的JDBC组件"><a href="#常见的JDBC组件" class="headerlink" title="常见的JDBC组件"></a>常见的JDBC组件</h1><p>JDBC API提供以下接口和类：</p>
+<ol>
+<li><code>DriverManager</code><br>此类管理数据库驱动程序列表。 使用通信子协议将来自 Java 应用程序的连接请求与适当的数据库驱动程序进行匹配。在<code>JDBC</code>下识别某个子协议的第一个驱动程序将用于建立数据库连接。</li>
+<li><code>Driver</code><br>此接口处理与数据库服务器的通信。<code>Driver</code>接口由数据库厂家提供，使用<code>DriverManager</code>对象来管理这种类型的对象。</li>
+<li><code>Connection</code><br>此接口具有用于联系数据库的所有方法。 连接(<code>Connection</code>)对象表示通信上下文，即，与数据库的所有通信仅通过连接对象。</li>
+<li><code>Statement</code><br>使用从此接口创建的对象将SQL语句提交到数据库。 除了执行存储过程之外，一些派生接口还接受参数。</li>
+<li><code>ResultSet</code><br>在使用<code>Statement</code>对象执行SQL查询后，这些对象保存从数据库检索的数据。 它作为一个迭代器并可移动<code>ResultSet</code>对象查询的数据。</li>
+<li><code>SQLException</code><br>此类处理数据库应用程序中发生的任何错误。</li>
+</ol>
+<h1 id="创建JDBC应用程序"><a href="#创建JDBC应用程序" class="headerlink" title="创建JDBC应用程序"></a>创建JDBC应用程序</h1><p>建立一个<code>JDBC</code>应用程序，分六个步骤进行：</p>
+<h2 id="1-导入包"><a href="#1-导入包" class="headerlink" title="1. 导入包"></a>1. 导入包</h2><p>在程序中导入编程所需的 JDBC 类。大多数情况下，使用<code>import java.sql.*</code>就足够了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br></pre></td></tr></table></figure>
+<h2 id="2-注册JDBC驱动程序"><a href="#2-注册JDBC驱动程序" class="headerlink" title="2. 注册JDBC驱动程序"></a>2. 注册JDBC驱动程序</h2><p>需要初始化驱动程序，这样就可以打开与数据库的通信。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="3-打开一个连接"><a href="#3-打开一个连接" class="headerlink" title="3. 打开一个连接"></a>3. 打开一个连接</h2><p>使用<code>DriverManager.getConnection()</code>方法来创建一个<code>Connection</code>对象，它代表一个数据库的物理连接：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 3: Open a connection</span></span><br><span class="line"><span class="comment">//  Database credentials</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;pwd123456&quot;</span>;</span><br><span class="line">System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> DriverManager.getConnection(DB_URL,USER,PASS);</span><br></pre></td></tr></table></figure>
+<h2 id="4-执行一个查询"><a href="#4-执行一个查询" class="headerlink" title="4. 执行一个查询"></a>4. 执行一个查询</h2><p>需要使用一个类型为<code>Statement</code>或<code>PreparedStatement</code>的对象，并提交一个 SQL 语句到数据库执行查询。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">stmt = conn.createStatement();</span><br><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br></pre></td></tr></table></figure>
+<p>如果要执行一个 SQL 语句：<code>UPDATE，INSERT</code>或<code>DELETE</code>语句，需要用<code>executeUpdate</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">stmt = conn.createStatement();</span><br><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;DELETE FROM Employees&quot;</span>;</span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeUpdate(sql);</span><br></pre></td></tr></table></figure>
+<h2 id="5-从结果集中提取数据"><a href="#5-从结果集中提取数据" class="headerlink" title="5. 从结果集中提取数据"></a>5. 从结果集中提取数据</h2><p>从数据库中获取查询结果的数据。可以使用适当的<code>ResultSet.getXXX()</code>方法来检索的数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 5: Extract data from result set</span></span><br><span class="line"><span class="keyword">while</span>(rs.next()) &#123;</span><br><span class="line">   <span class="comment">//Retrieve by column name</span></span><br><span class="line">   <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">   <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">   <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">   <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">   <span class="comment">//Display values</span></span><br><span class="line">   System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">   System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">   System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">   System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="6-释放资源"><a href="#6-释放资源" class="headerlink" title="6. 释放资源"></a>6. 释放资源</h2><p>清理环境资源在使用 JDBC 与数据交互操作数据库中的数据后，应该明确地关闭所有的数据库资源以减少资源的浪费，对依赖于 JVM 的垃圾收集：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 6: Clean-up environment</span></span><br><span class="line">rs.close();</span><br><span class="line">stmt.close();</span><br><span class="line">conn.close();</span><br></pre></td></tr></table></figure>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//STEP 1. Import required packages</span></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FirstExample</span> &#123;</span><br><span class="line">  <span class="comment">// JDBC driver name and database URL</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">JDBC_DRIVER</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;  </span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DB_URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost/test&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//  Database credentials -- 数据库名和密码自己修改</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USER</span> <span class="operator">=</span> <span class="string">&quot;username&quot;</span>;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASS</span> <span class="operator">=</span> <span class="string">&quot;password&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">//STEP 2: Register JDBC driver</span></span><br><span class="line">      Class.forName(<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 3: Open a connection</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Connecting to database...&quot;</span>);</span><br><span class="line">      conn = DriverManager.getConnection(DB_URL,USER,PASS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 4: Execute a query</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Creating statement...&quot;</span>);</span><br><span class="line">      stmt = conn.createStatement();</span><br><span class="line">      String sql;</span><br><span class="line">      sql = <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line">      <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//STEP 5: Extract data from result set</span></span><br><span class="line">      <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">        <span class="comment">//Retrieve by column name</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">id</span>  <span class="operator">=</span> rs.getInt(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> rs.getInt(<span class="string">&quot;age&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;first&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;last&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Display values</span></span><br><span class="line">        System.out.print(<span class="string">&quot;ID: &quot;</span> + id);</span><br><span class="line">        System.out.print(<span class="string">&quot;, Age: &quot;</span> + age);</span><br><span class="line">        System.out.print(<span class="string">&quot;, First: &quot;</span> + first);</span><br><span class="line">        System.out.println(<span class="string">&quot;, Last: &quot;</span> + last);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//STEP 6: Clean-up environment</span></span><br><span class="line">      rs.close();</span><br><span class="line">      stmt.close();</span><br><span class="line">      conn.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span>(SQLException se) &#123;</span><br><span class="line">      <span class="comment">//Handle errors for JDBC</span></span><br><span class="line">      se.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">      <span class="comment">//Handle errors for Class.forName</span></span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">      <span class="comment">//finally block used to close resources</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(stmt!=<span class="literal">null</span>)</span><br><span class="line">          stmt.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span>(SQLException se2)&#123;</span><br><span class="line">      &#125;<span class="comment">// nothing we can do</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(conn!=<span class="literal">null</span>)</span><br><span class="line">          conn.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span>(SQLException se)&#123;</span><br><span class="line">        se.printStackTrace();</span><br><span class="line">      &#125;<span class="comment">//end finally try</span></span><br><span class="line">    &#125;<span class="comment">//end try</span></span><br><span class="line">    System.out.println(<span class="string">&quot;Goodbye!&quot;</span>);</span><br><span class="line">  &#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end FirstExample</span></span><br></pre></td></tr></table></figure>
+<h1 id="JDBC-数据类型"><a href="#JDBC-数据类型" class="headerlink" title="JDBC 数据类型"></a>JDBC 数据类型</h1><p>JDBC驱动程序将 Java 数据类型转换为适当的JDBC类型，然后将其发送到数据库。它为大多数数据类型提供并使用默认映射。例如，Java <code>int</code>类型会被转换为 SQL <code>INTEGER</code>。 创建默认映射以提供到驱动程序时保持一致性。</p>
+<p>下表总结了当调用<code>PreparedStatement</code>或<code>CallableStatement</code>对象或<code>ResultSet.updateXXX()</code>方法的<code>setXXX()</code>方法时，将 Java 数据类型转换为的默认 JDBC 数据类型。</p>
+<table>
+<thead>
+<tr>
+<th align="center">SQL类型</th>
+<th align="center">JDBC&#x2F;Java类型</th>
+<th align="center">setXXX</th>
+<th align="center">updateXXX</th>
+<th align="center">getXXX</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">VARCHAR</td>
+<td align="center">java.lang.String</td>
+<td align="center">setString</td>
+<td align="center">updateString</td>
+<td align="center">getString</td>
+</tr>
+<tr>
+<td align="center">CHAR</td>
+<td align="center">java.lang.String</td>
+<td align="center">setString</td>
+<td align="center">updateString</td>
+<td align="center">getString</td>
+</tr>
+<tr>
+<td align="center">LONGVARCHAR java.lang.String</td>
+<td align="center">setString</td>
+<td align="center">updateString</td>
+<td align="center">getString</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">BIT</td>
+<td align="center">boolean</td>
+<td align="center">setBoolean</td>
+<td align="center">updateBoolean</td>
+<td align="center">getBoolean</td>
+</tr>
+<tr>
+<td align="center">NUMERIC</td>
+<td align="center">java.math.BigDecimal</td>
+<td align="center">setBigDecimal</td>
+<td align="center">updateBigDecimal</td>
+<td align="center">getBigDecimal</td>
+</tr>
+<tr>
+<td align="center">TINYINT</td>
+<td align="center">byte</td>
+<td align="center">setByte</td>
+<td align="center">updateByte</td>
+<td align="center">getByte</td>
+</tr>
+<tr>
+<td align="center">SMALLINT short</td>
+<td align="center">setShort</td>
+<td align="center">updateShort</td>
+<td align="center">getShort</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">INTEGER</td>
+<td align="center">int</td>
+<td align="center">setInt</td>
+<td align="center">updateInt</td>
+<td align="center">getInt</td>
+</tr>
+<tr>
+<td align="center">BIGINT</td>
+<td align="center">long</td>
+<td align="center">setLong</td>
+<td align="center">updateLong</td>
+<td align="center">getLong</td>
+</tr>
+<tr>
+<td align="center">REAL</td>
+<td align="center">float</td>
+<td align="center">setFloat</td>
+<td align="center">updateFloat</td>
+<td align="center">getFloat</td>
+</tr>
+<tr>
+<td align="center">FLOAT</td>
+<td align="center">float</td>
+<td align="center">setFloat</td>
+<td align="center">updateFloat</td>
+<td align="center">getFloat</td>
+</tr>
+<tr>
+<td align="center">DOUBLE</td>
+<td align="center">double</td>
+<td align="center">setDouble</td>
+<td align="center">updateDouble</td>
+<td align="center">getDouble</td>
+</tr>
+<tr>
+<td align="center">VARBINARY</td>
+<td align="center">byte[]</td>
+<td align="center">setBytes</td>
+<td align="center">updateBytes</td>
+<td align="center">getBytes</td>
+</tr>
+<tr>
+<td align="center">BINARY</td>
+<td align="center">byte[]</td>
+<td align="center">setBytes</td>
+<td align="center">updateBytes</td>
+<td align="center">getBytes</td>
+</tr>
+<tr>
+<td align="center">DATE</td>
+<td align="center">java.sql.Date</td>
+<td align="center">setDate</td>
+<td align="center">updateDate</td>
+<td align="center">getDate</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">java.sql.Time</td>
+<td align="center">setTime</td>
+<td align="center">updateTime</td>
+<td align="center">getTime</td>
+</tr>
+<tr>
+<td align="center">TIMESTAMP</td>
+<td align="center">java.sql.Timestamp</td>
+<td align="center">setTimestamp</td>
+<td align="center">updateTimestamp</td>
+<td align="center">getTimestamp</td>
+</tr>
+<tr>
+<td align="center">CLOB</td>
+<td align="center">java.sql.Clob</td>
+<td align="center">setClob</td>
+<td align="center">updateClob</td>
+<td align="center">getClob</td>
+</tr>
+<tr>
+<td align="center">BLOB</td>
+<td align="center">java.sql.Blob</td>
+<td align="center">setBlob</td>
+<td align="center">updateBlob</td>
+<td align="center">getBlob</td>
+</tr>
+<tr>
+<td align="center">ARRAY</td>
+<td align="center">java.sql.Array</td>
+<td align="center">setArray</td>
+<td align="center">updateArray</td>
+<td align="center">getArray</td>
+</tr>
+<tr>
+<td align="center">REF</td>
+<td align="center">java.sql.Ref</td>
+<td align="center">SetRef</td>
+<td align="center">updateRef</td>
+<td align="center">getRef</td>
+</tr>
+<tr>
+<td align="center">STRUCT</td>
+<td align="center">java.sql.Struct</td>
+<td align="center">SetStruct</td>
+<td align="center">updateStruct</td>
+<td align="center">getStruct</td>
+</tr>
+</tbody></table>
+<h2 id="日期和时间数据类型"><a href="#日期和时间数据类型" class="headerlink" title="日期和时间数据类型"></a>日期和时间数据类型</h2><p><code>java.sql.Date</code>类映射到SQL <code>DATE</code>类型，<code>java.sql.Time</code>和<code>java.sql.Timestamp</code>类分别映射到SQL <code>TIME</code>和SQL <code>TIMESTAMP</code>数据类型。</p>
+<p>以下示例显示了<code>Date</code>和<code>Time</code>类如何格式化为标准 Java 日期和时间值以匹配 SQL 数据类型要求。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.Date;</span><br><span class="line"><span class="keyword">import</span> java.sql.Time;</span><br><span class="line"><span class="keyword">import</span> java.sql.Timestamp;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SqlDateTime</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//Get standard date and time</span></span><br><span class="line">    java.util.<span class="type">Date</span> <span class="variable">javaDate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.util.Date();</span><br><span class="line">    <span class="type">long</span> <span class="variable">javaTime</span> <span class="operator">=</span> javaDate.getTime();</span><br><span class="line">    System.out.println(<span class="string">&quot;The Java Date is:&quot;</span> + javaDate.toString());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Get and display SQL DATE</span></span><br><span class="line">    java.sql.<span class="type">Date</span> <span class="variable">sqlDate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.sql.Date(javaTime);</span><br><span class="line">    System.out.println(<span class="string">&quot;The SQL DATE is: &quot;</span> + sqlDate.toString());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Get and display SQL TIME</span></span><br><span class="line">    java.sql.<span class="type">Time</span> <span class="variable">sqlTime</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">java</span>.sql.Time(javaTime);</span><br><span class="line">    System.out.println(<span class="string">&quot;The SQL TIME is: &quot;</span> + sqlTime.toString());</span><br><span class="line">    <span class="comment">//Get and display SQL TIMESTAMP</span></span><br><span class="line">    java.sql.<span class="type">Timestamp</span> <span class="variable">sqlTimestamp</span> <span class="operator">=</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">java</span>.sql.Timestamp(javaTime);</span><br><span class="line">    System.out.println(<span class="string">&quot;The SQL TIMESTAMP is: &quot;</span> + sqlTimestamp.toString());</span><br><span class="line">  &#125;<span class="comment">//end main</span></span><br><span class="line">&#125;<span class="comment">//end SqlDateTime</span></span><br></pre></td></tr></table></figure>
+<h2 id="处理NULL值"><a href="#处理NULL值" class="headerlink" title="处理NULL值"></a>处理NULL值</h2><p>SQL使用<code>NULL</code>值和 Java 使用<code>null</code>是不同的概念。 所以，要在 Java 中处理SQL <code>NULL</code>值，可以使用三种策略：</p>
+<ul>
+<li>避免使用返回原始数据类型的<code>getXXX()</code>方法。</li>
+<li>对原始数据类型使用包装类，并使用<code>ResultSet</code>对象的<code>wasNull()</code>方法来测试接收<code>getXXX()</code>方法的返回值的包装器类变量是否应设置为<code>null</code>。</li>
+<li>使用原始数据类型和<code>ResultSet</code>对象的<code>wasNull()</code>方法来测试接收到由<code>getXXX()</code>方法返回的值的原始变量是否应设置为表示<code>NULL</code>的可接受值。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Statement</span> <span class="variable">stmt</span> <span class="operator">=</span> conn.createStatement( );</span><br><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;SELECT id, first, last, age FROM Employees&quot;</span>;</span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> stmt.executeQuery(sql);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">id</span> <span class="operator">=</span> rs.getInt(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">if</span>( rs.wasNull( ) ) &#123;</span><br><span class="line">  id = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/03/03/java/JDBC/JDBC%E5%85%A5%E9%97%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDBC/" rel="tag">JDBC</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/03/05/java/JDBC/JDBC%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JDBC 数据库连接
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/02/21/java/IDEA/IDEA%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">IDEA快捷键</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

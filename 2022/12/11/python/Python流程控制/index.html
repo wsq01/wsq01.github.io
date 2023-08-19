@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Python流程控制 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-python/Python流程控制"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Python流程控制
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/12/11/python/Python%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="article-date">
+  <time datetime="2022-12-11T11:53:21.000Z" itemprop="datePublished">2022-12-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">16 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="if-else条件语句"><a href="#if-else条件语句" class="headerlink" title="if else条件语句"></a>if else条件语句</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">if 表达式：</span><br><span class="line">  代码块</span><br><span class="line"></span><br><span class="line">if 表达式：</span><br><span class="line">  代码块 1</span><br><span class="line">else：</span><br><span class="line">  代码块 2</span><br><span class="line"></span><br><span class="line">if 表达式 1：</span><br><span class="line">  代码块 1</span><br><span class="line">elif 表达式 2：</span><br><span class="line">  代码块 2</span><br><span class="line">elif 表达式 3：</span><br><span class="line">  代码块 3</span><br><span class="line">...//其它elif语句</span><br><span class="line">else：</span><br><span class="line">  代码块 n</span><br></pre></td></tr></table></figure>
+<h1 id="if-else-如何判断表达式是否成立"><a href="#if-else-如何判断表达式是否成立" class="headerlink" title="if else 如何判断表达式是否成立"></a>if else 如何判断表达式是否成立</h1><p><code>if</code>和<code>elif</code>后面的“表达式”的形式是很自由的，只要表达式有一个结果，不管这个结果是什么类型，Python 都能判断它是“真”还是“假”。</p>
+<p>布尔类型（<code>bool</code>）只有两个值，分别是<code>True</code>和<code>False</code>，Python 会把<code>True</code>当做“真”，把<code>False</code>当做“假”。</p>
+<p>对于数字，Python 会把 0 和 0.0 当做“假”，把其它值当做“真”。</p>
+<p>对于其它类型，当对象为空或者为<code>None</code>时，Python 会把它们当做“假”，其它情况当做真。比如，下面的表达式都是不成立的：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>  <span class="comment">#空字符串</span></span><br><span class="line">[]  <span class="comment">#空列表</span></span><br><span class="line">()  <span class="comment">#空元组</span></span><br><span class="line">&#123;&#125;  <span class="comment">#空字典</span></span><br><span class="line"><span class="literal">None</span>  <span class="comment">#空值</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">b = <span class="literal">False</span></span><br><span class="line"><span class="keyword">if</span> b:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;b是True&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;b是False&#x27;</span>)</span><br><span class="line"></span><br><span class="line">n = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> n:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;n不是零值&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;n是零值&#x27;</span>)</span><br><span class="line"></span><br><span class="line">s = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">if</span> s:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;s不是空字符串&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;s是空字符串&#x27;</span>)</span><br><span class="line"></span><br><span class="line">l = []</span><br><span class="line"><span class="keyword">if</span> l:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;l不是空列表&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;l是空列表&#x27;</span>)</span><br><span class="line"></span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">if</span> d:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;d不是空字典&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;d是空字典&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;函数被调用&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> func():</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;func()返回值不是空&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;func()返回值为空&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">b是False</span><br><span class="line">n是零值</span><br><span class="line">s是空字符串</span><br><span class="line">l是空列表</span><br><span class="line">d是空字典</span><br><span class="line">函数被调用</span><br><span class="line">func()返回值为空</span><br></pre></td></tr></table></figure>
+<p>说明：对于没有<code>return</code>语句的函数，返回值为空，也即<code>None</code>。</p>
+<h1 id="pass语句"><a href="#pass语句" class="headerlink" title="pass语句"></a>pass语句</h1><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="built_in">int</span>( <span class="built_in">input</span>(<span class="string">&quot;请输入你的年龄：&quot;</span>) )</span><br><span class="line"><span class="keyword">if</span> age &lt; <span class="number">12</span> :</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;婴幼儿&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">12</span> <span class="keyword">and</span> age &lt; <span class="number">18</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;青少年&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">18</span> <span class="keyword">and</span> age &lt; <span class="number">30</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;成年人&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">30</span> <span class="keyword">and</span> age &lt; <span class="number">50</span>:</span><br><span class="line">  <span class="comment">#<span class="doctag">TODO:</span> 成年人</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;老年人&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>当年龄大于等于 30 并且小于 50 时，我们没有使用<code>print()</code>语句，而是使用了一个注释，希望以后再处理成年人的情况。当 Python 执行到该<code>elif</code>分支时，会跳过注释，什么都不执行。</p>
+<p>但是 Python 提供了一种更加专业的做法，就是空语句<code>pass</code>。<code>pass</code>是 Python 中的关键字，用来让解释器跳过此处，什么都不做。</p>
+<p>就像上面的情况，有时候程序需要占一个位置，或者放一条语句，但又不希望这条语句做任何事情，此时就可以通过<code>pass</code>语句来实现。使用<code>pass</code>语句比使用注释更加优雅。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="built_in">int</span>( <span class="built_in">input</span>(<span class="string">&quot;请输入你的年龄：&quot;</span>) )</span><br><span class="line"><span class="keyword">if</span> age &lt; <span class="number">12</span> :</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;婴幼儿&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">12</span> <span class="keyword">and</span> age &lt; <span class="number">18</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;青少年&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">18</span> <span class="keyword">and</span> age &lt; <span class="number">30</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;成年人&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &gt;= <span class="number">30</span> <span class="keyword">and</span> age &lt; <span class="number">50</span>:</span><br><span class="line">  <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;老年人&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="assert断言函数"><a href="#assert断言函数" class="headerlink" title="assert断言函数"></a>assert断言函数</h1><p><code>assert</code>语句，又称断言语句，可以看做是功能缩小版的<code>if</code>语句，它用于判断某个表达式的值，如果值为真，则程序可以继续往下执行；反之，Python 解释器会报<code>AssertionError</code>错误。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert 表达式</span><br></pre></td></tr></table></figure>
+<p><code>assert</code>语句的执行流程可以用<code>if</code>判断语句表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if 表达式==True:</span><br><span class="line">  程序继续执行</span><br><span class="line">else:</span><br><span class="line">  程序报 AssertionError 错误</span><br></pre></td></tr></table></figure>
+<p>明明<code>assert</code>会令程序崩溃，为什么还要使用它呢？这是因为，与其让程序在晚些时候崩溃，不如在错误条件出现时，就直接让程序崩溃，这有利于我们对程序排错，提高程序的健壮性。</p>
+<p>因此，<code>assert</code>语句通常用于检查用户的输入是否符合规定，还经常用作程序初期测试和调试过程中的辅助工具。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mathmark = <span class="built_in">int</span>(<span class="built_in">input</span>())</span><br><span class="line"><span class="comment">#断言数学考试分数是否位于正常范围内</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">0</span> &lt;= mathmark &lt;= <span class="number">100</span></span><br><span class="line"><span class="comment">#只有当 mathmark 位于 [0,100]范围内，程序才会继续执行</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;数学考试分数为：&quot;</span>, mathmark)</span><br></pre></td></tr></table></figure>
+<p>运行该程序，测试数据如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">90</span><br><span class="line">数学考试分数为： 90</span><br></pre></td></tr></table></figure>
+<p>再次执行该程序，测试数据为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">159</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;C:\Users\mengma\Desktop\file.py&quot;, line 3, in &lt;module&gt;</span><br><span class="line">    assert 0 &lt;= mathmark &lt;= 100</span><br><span class="line">AssertionError</span><br></pre></td></tr></table></figure>
+<p>可以看到，当<code>assert</code>语句后的表达式值为真时，程序继续执行；反之，程序停止执行，并报<code>AssertionError</code>错误。</p>
+<h1 id="while循环语句"><a href="#while循环语句" class="headerlink" title="while循环语句"></a>while循环语句</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">while 条件表达式：</span><br><span class="line">  代码块</span><br></pre></td></tr></table></figure>
+<h1 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for 迭代变量 in 字符串|列表|元组|字典|集合：</span><br><span class="line">  代码块</span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;计算 1+2+...+100 的结果为：&quot;</span>)</span><br><span class="line"><span class="comment">#保存累加结果的变量</span></span><br><span class="line">result = <span class="number">0</span></span><br><span class="line"><span class="comment">#逐个获取从 1 到 100 这些值，并做累加操作</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">101</span>):</span><br><span class="line">  result += i</span><br><span class="line"><span class="built_in">print</span>(result)</span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my_list = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line"><span class="keyword">for</span> ele <span class="keyword">in</span> my_list:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;ele =&#x27;</span>, ele)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ele = 1</span><br><span class="line">ele = 2</span><br><span class="line">ele = 3</span><br><span class="line">ele = 4</span><br><span class="line">ele = 5</span><br></pre></td></tr></table></figure>
+<h1 id="循环结构中else用法"><a href="#循环结构中else用法" class="headerlink" title="循环结构中else用法"></a>循环结构中else用法</h1><p>Python 中，无论是<code>while</code>循环还是<code>for</code>循环，其后都可以紧跟着一个<code>else</code>代码块，它的作用是当循环条件为<code>False</code>跳出循环时，程序会最先执行<code>else</code>代码块中的代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python&quot;</span></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i &lt; <span class="built_in">len</span>(add):</span><br><span class="line">  <span class="built_in">print</span>(add[i],end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">  i = i + <span class="number">1</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;\n执行 else 代码块&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">执行 else 代码块</span><br></pre></td></tr></table></figure>
+<p>上面程序中，当<code>i==len(add)</code>结束循环时（确切的说，是在结束循环之前），Python 解释器会执行<code>while</code>循环后的<code>else</code>代码块。</p>
+<p>修改上面程序，去掉<code>else</code>代码块：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python&quot;</span></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i &lt; <span class="built_in">len</span>(add):</span><br><span class="line">  <span class="built_in">print</span>(add[i],end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">  i = i + <span class="number">1</span></span><br><span class="line"><span class="comment">#原本位于 else 代码块中的代码</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n执行 else 代码块&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">执行 else 代码块</span><br></pre></td></tr></table></figure>
+<p>那么，<code>else</code>代码块真的没有用吗？当然不是。</p>
+<p>当然，我们也可以为<code>for</code>循环添加一个<code>else</code>代码块：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span>  add:</span><br><span class="line">  <span class="built_in">print</span>(i,end=<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;\n执行 else 代码块&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">执行 else 代码块</span><br></pre></td></tr></table></figure>
+<h1 id="break"><a href="#break" class="headerlink" title="break"></a>break</h1><p>在执行<code>while</code>循环或者<code>for</code>循环时，只要循环条件满足，程序将会一直执行循环体，不停地转圈。但在某些场景，我们可能希望在循环结束前就强制结束循环，Python 提供了 2 种强制离开当前循环体的办法：</p>
+<ul>
+<li>使用<code>continue</code>语句，可以跳过执行本次循环体中剩余的代码，转而执行下一次的循环。</li>
+<li>使用<code>break</code>语句，可以完全终止当前循环。</li>
+</ul>
+<p><code>break</code>语句可以立即终止当前循环的执行，跳出当前所在的循环结构。无论是<code>while</code>循环还是<code>for</code>循环，只要执行<code>break</code>语句，就会直接结束当前正在执行的循环体。</p>
+<p><code>break</code>语句的语法非常简单，只需要在相应<code>while</code>或<code>for</code>语句中直接加入即可。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python,shell&quot;</span></span><br><span class="line"><span class="comment"># 一个简单的for循环</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> add:</span><br><span class="line">  <span class="keyword">if</span> i == <span class="string">&#x27;,&#x27;</span> :</span><br><span class="line">    <span class="comment">#终止循环</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">  <span class="built_in">print</span>(i,end=<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n执行循环体外的代码&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">执行循环体外的代码</span><br></pre></td></tr></table></figure>
+<p>分析上面程序不难看出，当循环至<code>add</code>字符串中的逗号（<code>,</code>）时，程序执行<code>break</code>语句，其会直接终止当前的循环，跳出循环体。</p>
+<p><code>break</code>语句一般会结合<code>if</code>语句进行搭配使用，表示在某种条件下跳出循环体。</p>
+<p>注意，<code>for</code>循环后也可以配备一个<code>else</code>语句。这种情况下，如果使用<code>break</code>语句跳出循环体，不会执行<code>else</code>中包含的代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python,shell&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> add:</span><br><span class="line">  <span class="keyword">if</span> i == <span class="string">&#x27;,&#x27;</span> :</span><br><span class="line">    <span class="comment">#终止循环</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line">  <span class="built_in">print</span>(i,end=<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;执行 else 语句中的代码&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n执行循环体外的代码&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">执行循环体外的代码</span><br></pre></td></tr></table></figure>
+<p>从输出结果可以看出，使用<code>break</code>跳出当前循环体之后，该循环后的<code>else</code>代码块也不会被执行。但是，如果将<code>else</code>代码块中的代码直接放在循环体的后面，则该部分代码将会被执行。</p>
+<p>另外，对于嵌套的循环结构来说，<code>break</code>语句只会终止所在循环体的执行，而不会作用于所有的循环体。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python,shell&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">  <span class="keyword">for</span> j <span class="keyword">in</span> add:</span><br><span class="line">    <span class="keyword">if</span> j == <span class="string">&#x27;,&#x27;</span>:</span><br><span class="line">      <span class="keyword">break</span>   </span><br><span class="line">    <span class="built_in">print</span>(j,end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;\n跳出内循环&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">跳出内循环</span><br><span class="line">python</span><br><span class="line">跳出内循环</span><br><span class="line">python</span><br><span class="line">跳出内循环</span><br></pre></td></tr></table></figure>
+<p>分析上面程序，每当执行内层循环时，只要循环至<code>add</code>字符串中的逗号（<code>,</code>）就会执行<code>break</code>语句，它会立即停止执行当前所在的内存循环体，转而继续执行外层循环。</p>
+<p>在嵌套循环结构中，如何同时跳出内层循环和外层循环呢？最简单的方法就是借用一个<code>bool</code>类型的变量。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python,shell&quot;</span></span><br><span class="line"><span class="comment">#提前定义一个 bool 变量，并为其赋初值</span></span><br><span class="line">flag = <span class="literal">False</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">  <span class="keyword">for</span> j <span class="keyword">in</span> add:</span><br><span class="line">    <span class="keyword">if</span> j == <span class="string">&#x27;,&#x27;</span>:</span><br><span class="line">      <span class="comment">#在 break 前，修改 flag 的值</span></span><br><span class="line">      flag = <span class="literal">True</span></span><br><span class="line">      <span class="keyword">break</span>   </span><br><span class="line">    <span class="built_in">print</span>(j,end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&quot;\n跳出内循环&quot;</span>)</span><br><span class="line">  <span class="comment">#在外层循环体中再次使用 break</span></span><br><span class="line">  <span class="keyword">if</span> flag == <span class="literal">True</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;跳出外层循环&quot;</span>)</span><br><span class="line">    <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，通过借助一个<code>bool</code>类型的变量<code>flag</code>，在跳出内循环时更改<code>flag</code>的值，同时在外层循环体中，判断<code>flag</code>的值是否发生改动，如有改动，则再次执行<code>break</code>跳出外层循环；反之，则继续执行外层循环。</p>
+<p>因此，上面程序的执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">跳出内循环</span><br><span class="line">跳出外层循环</span><br></pre></td></tr></table></figure>
+<p>当然，这里仅跳出了 2 层嵌套循环，此方法支持跳出多层嵌套循环。</p>
+<h1 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h1><p>和<code>break</code>语句相比，<code>continue</code>语句的作用则没有那么强大，它只会终止执行本次循环中剩下的代码，直接从下一次循环继续执行。</p>
+<p><code>continue</code>语句的用法和<code>break</code>语句一样，只要<code>while</code>或<code>for</code>语句中的相应位置加入即可。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">add = <span class="string">&quot;python,shell&quot;</span></span><br><span class="line"><span class="comment"># 一个简单的for循环</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> add:</span><br><span class="line">  <span class="keyword">if</span> i == <span class="string">&#x27;,&#x27;</span> :</span><br><span class="line">    <span class="comment"># 忽略本次循环的剩下语句</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    <span class="keyword">continue</span></span><br><span class="line">  <span class="built_in">print</span>(i,end=<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">shell</span><br></pre></td></tr></table></figure>
+<p>可以看到，当遍历<code>add</code>字符串至逗号（<code>,</code>）时，会进入<code>if</code>判断语句执行<code>print()</code>语句和<code>continue</code>语句。其中，<code>print()</code>语句起到换行的作用，而<code>continue</code>语句会使 Python 解释器忽略执行第 8 行代码，直接从下一次循环开始执行。</p>
+<h1 id="zip函数"><a href="#zip函数" class="headerlink" title="zip函数"></a>zip函数</h1><p><code>zip()</code>函数是 Python 内置函数之一，它可以将多个序列（列表、元组、字典、集合、字符串以及<code>range()</code>区间构成的列表）“压缩”成一个<code>zip</code>对象。所谓“压缩”，其实就是将这些序列中对应位置的元素重新组合，生成一个个新的元组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zip(iterable, ...)</span><br></pre></td></tr></table></figure>
+<p>其中<code>iterable,...</code>表示多个列表、元组、字典、集合、字符串，甚至还可以为<code>range()</code>区间。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">my_list = [<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>]</span><br><span class="line">my_tuple = (<span class="number">21</span>,<span class="number">22</span>,<span class="number">23</span>)</span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">zip</span>(my_list,my_tuple)])</span><br><span class="line">my_dic = &#123;<span class="number">31</span>:<span class="number">2</span>,<span class="number">32</span>:<span class="number">4</span>,<span class="number">33</span>:<span class="number">5</span>&#125;</span><br><span class="line">my_set = &#123;<span class="number">41</span>,<span class="number">42</span>,<span class="number">43</span>,<span class="number">44</span>&#125;</span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">zip</span>(my_dic)])</span><br><span class="line">my_pychar = <span class="string">&quot;python&quot;</span></span><br><span class="line">my_shechar = <span class="string">&quot;shell&quot;</span></span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">zip</span>(my_pychar,my_shechar)])</span><br></pre></td></tr></table></figure>
+<p>程序执行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[(11, 21), (12, 22), (13, 23)]</span><br><span class="line">[(31,), (32,), (33,)]</span><br><span class="line">[(&#x27;p&#x27;, &#x27;s&#x27;), (&#x27;y&#x27;, &#x27;h&#x27;), (&#x27;t&#x27;, &#x27;e&#x27;), (&#x27;h&#x27;, &#x27;l&#x27;), (&#x27;o&#x27;, &#x27;l&#x27;)]</span><br></pre></td></tr></table></figure>
+<p>在使用<code>zip()</code>函数“压缩”多个序列时，它会分别取各序列中第 1 个元素、第 2 个元素、… 第<code>n</code>个元素，各自组成新的元组。需要注意的是，当多个序列中元素个数不一致时，会以最短的序列为准进行压缩。</p>
+<p>另外，对于<code>zip()</code>函数返回的<code>zip</code>对象，既可以像上面程序那样，通过遍历提取其存储的元组，也可以向下面程序这样，通过调用<code>list()</code>函数将<code>zip()</code>对象强制转换成列表：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my_list = [<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>]</span><br><span class="line">my_tuple = (<span class="number">21</span>,<span class="number">22</span>,<span class="number">23</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">zip</span>(my_list,my_tuple))) <span class="comment"># [(11, 21), (12, 22), (13, 23)]</span></span><br></pre></td></tr></table></figure>
+<h1 id="reversed函数"><a href="#reversed函数" class="headerlink" title="reversed函数"></a>reversed函数</h1><p><code>reserved()</code>是 Pyton 内置函数之一，其功能是对于给定的序列（包括列表、元组、字符串以及<code>range(n)</code>区间），该函数可以返回一个逆序序列的迭代器（用于遍历该逆序序列）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reversed(seq)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>seq</code>可以是列表，元素，字符串以及<code>range()</code>生成的区间列表。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将列表进行逆序</span></span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">reversed</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>])]) <span class="comment"># [5, 4, 3, 2, 1]</span></span><br><span class="line"><span class="comment">#将元组进行逆序</span></span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">reversed</span>((<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>))]) <span class="comment"># [5, 4, 3, 2, 1]</span></span><br><span class="line"><span class="comment">#将字符串进行逆序</span></span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="string">&quot;abcdefg&quot;</span>)]) <span class="comment"># [&#x27;g&#x27;, &#x27;f&#x27;, &#x27;e&#x27;, &#x27;d&#x27;, &#x27;c&#x27;, &#x27;b&#x27;, &#x27;a&#x27;]</span></span><br><span class="line"><span class="comment">#将 range() 生成的区间列表进行逆序</span></span><br><span class="line"><span class="built_in">print</span>([x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(<span class="number">10</span>))]) <span class="comment"># [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</span></span><br></pre></td></tr></table></figure>
+<p>除了使用列表推导式的方式，还可以使用<code>list()</code>函数，将<code>reversed()</code>函数逆序返回的迭代器，直接转换成列表。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#将列表进行逆序</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">reversed</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]))) <span class="comment"># [5, 4, 3, 2, 1]</span></span><br></pre></td></tr></table></figure>
+
+<p>再次强调，使用<code>reversed()</code>函数进行逆序操作，并不会修改原来序列中元素的顺序：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line"><span class="comment">#将列表进行逆序</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(<span class="built_in">reversed</span>(a))) <span class="comment"># [5, 4, 3, 2, 1]</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;a=&quot;</span>,a) <span class="comment"># a=[1, 2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
+<h1 id="sorted函数"><a href="#sorted函数" class="headerlink" title="sorted函数"></a>sorted函数</h1><p><code>sorted()</code>作为 Python 内置函数之一，其功能是对序列（列表、元组、字典、集合、还包括字符串）进行排序。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span> = <span class="built_in">sorted</span>(iterable, key=<span class="literal">None</span>, reverse=<span class="literal">False</span>)  </span><br></pre></td></tr></table></figure>
+<p>其中，<code>iterable</code>表示指定的序列，<code>key</code>参数可以自定义排序规则；<code>reverse</code>参数指定以升序（<code>False</code>，默认）还是降序（<code>True</code>）进行排序。<code>sorted()</code>函数会返回一个排好序的列表。</p>
+<p>注意，<code>key</code>参数和<code>reverse</code>参数是可选参数，即可以使用，也可以忽略。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#对列表进行排序</span></span><br><span class="line">a = [<span class="number">5</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a)) <span class="comment"># [1, 2, 3, 4, 5]</span></span><br><span class="line"><span class="comment">#对元组进行排序</span></span><br><span class="line">a = (<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a)) <span class="comment"># [1, 2, 3, 4, 5]</span></span><br><span class="line"><span class="comment">#字典默认按照key进行排序</span></span><br><span class="line">a = &#123;<span class="number">4</span>:<span class="number">1</span>, <span class="number">5</span>:<span class="number">2</span>, <span class="number">3</span>:<span class="number">3</span>, <span class="number">2</span>:<span class="number">6</span>, <span class="number">1</span>:<span class="number">8</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a.items())) <span class="comment"># [(1, 8), (2, 6), (3, 3), (4, 1), (5, 2)]</span></span><br><span class="line"><span class="comment">#对集合进行排序</span></span><br><span class="line">a = &#123;<span class="number">1</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a)) <span class="comment"># [1, 2, 3, 4, 5]</span></span><br><span class="line"><span class="comment">#对字符串进行排序</span></span><br><span class="line">a = <span class="string">&quot;51423&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a)) <span class="comment"># [&#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27;, &#x27;4&#x27;, &#x27;5&#x27;]</span></span><br></pre></td></tr></table></figure>
+<p>再次强调，使用<code>sorted()</code>函数对序列进行排序，并不会在原序列的基础进行修改，而是会重新生成一个排好序的列表。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#对列表进行排序</span></span><br><span class="line">a = [<span class="number">5</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a)) <span class="comment"># [1, 2, 3, 4, 5]</span></span><br><span class="line"><span class="comment">#再次输出原来的列表 a</span></span><br><span class="line"><span class="built_in">print</span>(a) <span class="comment"># [5, 3, 4, 2, 1]</span></span><br></pre></td></tr></table></figure>
+<p>显然，<code>sorted()</code>函数不会改变所传入的序列，而是返回一个新的、排序好的列表。</p>
+<p>除此之外，<code>sorted()</code>函数默认对序列中元素进行升序排序，通过手动将其<code>reverse</code>参数值改为<code>True</code>，可实现降序排序。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#对列表进行排序</span></span><br><span class="line">a = [<span class="number">5</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(a, reverse=<span class="literal">True</span>)) <span class="comment"># [5, 4, 3, 2, 1]</span></span><br></pre></td></tr></table></figure>
+<p>另外在调用<code>sorted()</code>函数时，还可传入一个<code>key</code>参数，它可以接受一个函数，该函数的功能是指定<code>sorted()</code>函数按照什么标准进行排序。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chars=[<span class="string">&#x27;python&#x27;</span>, <span class="string">&#x27;shell&#x27;</span>, <span class="string">&#x27;java&#x27;</span>, <span class="string">&#x27;golang&#x27;</span>]</span><br><span class="line"><span class="comment">#默认排序</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(chars)) <span class="comment"># [&#x27;golang&#x27;, &#x27;java&#x27;, &#x27;python&#x27;, &#x27;shell&#x27;]</span></span><br><span class="line"><span class="comment">#自定义按照字符串长度排序</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(chars,key=<span class="keyword">lambda</span> x:<span class="built_in">len</span>(x))) <span class="comment"># [&#x27;java&#x27;, &#x27;shell&#x27;, &#x27;python&#x27;, &#x27;golang&#x27;]</span></span><br></pre></td></tr></table></figure>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/12/11/python/Python%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/12/13/python/Python%E5%87%BD%E6%95%B0%E5%92%8Clambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Python函数和lambda表达式
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/12/09/python/Python%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Python字符串常用方法</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

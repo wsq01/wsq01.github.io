@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>分组密码的模式 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-密码技术/分组密码的模式"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  分组密码的模式
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/" class="article-date">
+  <time datetime="2020-12-14T08:57:13.000Z" itemprop="datePublished">2020-12-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/">密码技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>AES 和 DES 都属于分组密码，它们只能加密固定长度的明文，如果要加密任意长度的明文，就需要对分组密码进行迭代，而分组密码的迭代方法就称为分组密码的模式。</p>
+<p>分组密码有很多种模式，如果模式的选择不恰当，就无法充分保证机密性。</p>
+<h1 id="分组密码的模式"><a href="#分组密码的模式" class="headerlink" title="分组密码的模式"></a>分组密码的模式</h1><h2 id="分组密码与流密码"><a href="#分组密码与流密码" class="headerlink" title="分组密码与流密码"></a>分组密码与流密码</h2><p>密码算法可以分为分组密码和流密码两种。</p>
+<p>分组密码时每次只能处理特定长度的一块数据的一类密码算法。这里的一块就称为分组。此外，一个分组的比特数就称为分组长度。</p>
+<p>例如 DES 和 3DES 的分组长度都是 64 比特，这些密码算法一次只能加密 64 比特的明文，并生成 64 比特的密文。</p>
+<p>AES 的分组长度为 128 比特，因此 AES 一次可加密 128 比特的明文，并生成 128 比特的密文。</p>
+<p>流密码是对数据流进行连续处理的一类密码算法。流密码中一般以 1 比特、8 比特或 32 比特等为单位进行加密和解密。</p>
+<p>分组密码处理完一个分组就结束了，因此不需要通过内部状态来记录加密的进度。流密码是对一串数据流进行连续处理，因此需要保持内部状态。</p>
+<h2 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h2><p>分组密码算法只能加密固定长度的分组，但我们需要加密的明文长度可能会超过分组密码的分组长度，这时就需要对分组密码算法进行迭代，以便将一段很长的明文全部加密。而迭代的方法就称为分组密码的模式。</p>
+<p>分组密码的主要模式有5种：</p>
+<ul>
+<li>ECB 模式：<code>Electronic CodeBook mode</code>（电子密码本模式）</li>
+<li>CBC 模式：<code>Cipher Block Chaining mode</code>（密码分组链接模式）</li>
+<li>CFB 模式：<code>Cipher FeedBack mode</code>（密文反馈模式）</li>
+<li>OFB 模式：<code>Output FeedBack mode</code>（输出反馈模式）</li>
+<li>CTR 模式：<code>CounTeR mode</code>（计数器模式）</li>
+</ul>
+<h2 id="明文分组和密文分组"><a href="#明文分组和密文分组" class="headerlink" title="明文分组和密文分组"></a>明文分组和密文分组</h2><p>明文分组是指分组密码算法中作为加密对象的明文。明文分组的长度与分组密码算法的分组长度是相等的。</p>
+<p>密文分组是指使用分组密码算法将明文分组加密之后所生成的密文。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img1.png" class="">
+
+<h1 id="ECB-模式"><a href="#ECB-模式" class="headerlink" title="ECB 模式"></a>ECB 模式</h1><p>ECB 模式由于存在弱点因此通常不会被使用。</p>
+<p>在 ECB 模式中，将明文分组加密之后的结果将直接成为密文分组。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img2.png" class="" title="ECB 模式">
+
+<p>使用 ECB 模式加密时，相同的明文分组会被转换为相同的密文分组，也就是说，我们可以将其理解为是一个巨大的“明文分组-&gt;密文分组”的对应表，因此 ECB 模式也称为电子密码本模式。</p>
+<p>当最后一个明文分组的内容小于分组长度时，需要用一些特定的数据进行填充(<code>padding</code>)。</p>
+<h2 id="ECB-模式的特点"><a href="#ECB-模式的特点" class="headerlink" title="ECB 模式的特点"></a>ECB 模式的特点</h2><p>ECB 模式中，明文分组和密文分组是一一对应的关系，因此，如果明文中存在多个相同的明文分组，则这些明文分组最终都将被转换为相同的密文分组。这样一来，只要观察下密文，就可以知道明文中存在怎样的重复组合，并可以以此为线索来破译密码，因此 ECB 模式是不安全的。</p>
+<h1 id="CBC-模式"><a href="#CBC-模式" class="headerlink" title="CBC 模式"></a>CBC 模式</h1><p>在 CBC 模式中，首先将明文分组与前一个密文分组进行 XOR 运算，然后再进行加密。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img3.png" class="" title="CBC 模式">
+
+<p>如果将一个分组的加密过程分离出来，我们就可以很容易的比较出 ECB 模式和 CBC 模式的区别：ECB 模式只进行了加密，CBC 模式在加密之前进行了一次 XOR。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img4.png" class="" title="ECB 模式 和 CBC 模式比较">
+
+<h2 id="初始化向量"><a href="#初始化向量" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>当加密第一个明文分组时，由于不存在“前一个密文分组”，因此需要事先准备一个长度为一个分组的比特序列来代替“前一个密文分组”，这个比特序列称为初始化向量(<code>Initialization Vector</code>)，通常缩写为<code>IV</code>。</p>
+<p>一般来说，每次加密时都会随机产生一个不同的比特序列来作为初始化向量。</p>
+<h2 id="CBC模式的特点"><a href="#CBC模式的特点" class="headerlink" title="CBC模式的特点"></a>CBC模式的特点</h2><p>明文分组在加密之前一定会与“前一个密文分组”进行 XOR 运算，因此，即便明文分组 1 和 2 的值是相等的，密文分组 1 和 2 的值也不一定是相等的。这样一来，ECB 模式的缺陷在 CBC 模式中就不存在了。</p>
+<p>在 CBC 模式的加密过程中，无法单独对一个中间的明文分组进行加密。例如，如果要生成密文分组 3，则至少需要凑齐明文分组 1、2、3.</p>
+<p>在 CBC 模式的解密过程中，现在假设 CBC 模式加密的密文分组中有一个分组损坏了，在这种情况下，只要密文分组的长度没有发生变化，则解密时最多只会有两个分组受到数据损坏的影响。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img7.png" class="">
+
+<p>假设 CBC 模式的密文分组中有一些比特缺失了，那么即便只是缺失了 1 比特，也会导致密文分组的长度发生变化，此后的分组发生错位，这样一来，缺失比特的位置之后的密文分组也就全部无法解密了。</p>
+<h2 id="对CBC模式的攻击"><a href="#对CBC模式的攻击" class="headerlink" title="对CBC模式的攻击"></a>对CBC模式的攻击</h2><p>假如主动攻击者的目的是通过修改密文来操纵解密后的明文。如果攻击者能够对初始化向量中的任意比特进行反转（即将 1 变为 0，0 变为 1），则明文分组（解密后得到的明文分组）中相应的比特也会被反转。这是因为在 CBC 模式的解密过程中，第一个明文分组会和初始化向量进行 XOR 运算。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img8.png" class="">
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img9.png" class="">
+
+<p>这样，攻击者就可以对初始化向量进行攻击。</p>
+<h2 id="填充提示攻击"><a href="#填充提示攻击" class="headerlink" title="填充提示攻击"></a>填充提示攻击</h2><p>填充提示攻击是一种利用分组密码中的填充部分来进行攻击的方法。在分组密码中，当明文长度不为分组长度的整数倍时，需要在最后一个分组中填充一些数据使其凑满一个分组长度。在填充提示攻击中，攻击者会反复发送一段密文，每次发送时都对填充的数据进行少许改变。由于接收者（服务器）在无法正确解密时会返回一个错误信息，攻击者通过这一错误消息就可以获得一部分与明文相关的信息。这一攻击方式并不仅限于 CBC 模式，而是适用于所有需要进行分组填充的模式。</p>
+<h2 id="对初始化向量（IV）攻击"><a href="#对初始化向量（IV）攻击" class="headerlink" title="对初始化向量（IV）攻击"></a>对初始化向量（IV）攻击</h2><p>初始化向量<code>IV</code>必须使用不可预测的随机数</p>
+<h2 id="CBC-模式的应用实例"><a href="#CBC-模式的应用实例" class="headerlink" title="CBC 模式的应用实例"></a>CBC 模式的应用实例</h2><p>SSL&#x2F;TLS 就是使用 CBC 模式来确保通信的机密性的，如使用 CBC 模式三重 DES 的 3DES_EDE_CBC 以及 CBC 模式 256 比特 AES 的 AES_256_CBC等。</p>
+<h1 id="CFB-模式"><a href="#CFB-模式" class="headerlink" title="CFB 模式"></a>CFB 模式</h1><p>在 CFB 模式中，前一个密文分组会被送回到密码算法的输入端。所谓反馈，指的就是返回输入端的意思。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img10.png" class="">
+
+<p>在 ECB 模式和 CBC 模式中，明文分组都是通过密码算法进行加密的，然而，在 CFB 模式中，明文分组并没有通过密码算法来直接进行加密。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img11.png" class="" title="CBC 模式与 CFB 模式的对比">
+
+<h2 id="初始化向量-1"><a href="#初始化向量-1" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>在生成第一个密文分组时，由于不存在前一个输出的数据，因此需要使用初始化向量来代替，这一点和 CBC 模式是相同的。一般来说，我们需要在每次加密时生成一个不同的随机比特序列用作初始化向量。</p>
+<h2 id="CFB-模式与流密码"><a href="#CFB-模式与流密码" class="headerlink" title="CFB 模式与流密码"></a>CFB 模式与流密码</h2><p>CFB 模式的结构与一次性密码本是非常相似的。一次性密码本是通过将明文与随机比特序列进行 XOR 运算来生成密文的。而 CFB 模式则是通过将明文分组与密码算法的输出进行 XOR 运算来生成密文分组的。在通过 XOR 来进行加密这一点上，两者是非常相似的。</p>
+<p>在 CFB 模式中，密码算法的输出相当于一次性密码本中的随机比特序列。由于密码算法的输出是通过计算得到的，并不是真正的随机数，因此 CFB 模式不可能像一次性密码本那样具备理论上不可破译的性质。</p>
+<p>CFB 模式中由密码算法所生成的比特序列称为密钥流。在 CFB 模式中，密码算法就相当于用来生成密钥流的伪随机数生成器，而初始化向量就相当于伪随机数生成器的种子。</p>
+<p>在 CFB 模式中，明文数据可以被逐比特加密，因此我们可以将 CFB 模式看做是一种使用分组密码来实现流密码的方式。</p>
+<h2 id="对-CFB-模式的攻击"><a href="#对-CFB-模式的攻击" class="headerlink" title="对 CFB 模式的攻击"></a>对 CFB 模式的攻击</h2><p>对 CFB 模式可以实施重放攻击。</p>
+<p>有一天，发送者向接收者发送了一条消息，这条消息由 4 个密文分组组成。主动攻击者将该消息中的后 3 个密文分组保存了下来。转天，发送者又向接收者发送了内容不同的 4 个密文分组（假设发送者使用了相同的密钥）。攻击者用昨天保存下来的 3 个密文分组将今天发送的后 3 个密文分组进行了替换。</p>
+<p>于是，当接收者解密时，4 个分组中就只有第一个可以解密成正确的明文分组，第二个会出错，而第三个和第四个则变成了被攻击者替换的内容。攻击者没有破解密码就成功的将以前的电文混入了新电文中。而第二个分组出错到底是通信错误还是被人攻击造成的，接收者是无法做出判断的。要做出这样的判断，需要使用消息认证码。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img12.png" class="" title="对 CFB 进行重放攻击">
+
+<h1 id="OFB-模式"><a href="#OFB-模式" class="headerlink" title="OFB 模式"></a>OFB 模式</h1><p>在 OFB 模式中，密码算法的输出会反馈到密码算法的输入中。</p>
+<p>OFB 模式并不是通过密码算法对明文直接进行加密的，而是通过将明文分组和密码算法的输出进行 XOR 来产生密文分组的。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img13.png" class="">
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img14.png" class="">
+
+<h2 id="初始化向量-2"><a href="#初始化向量-2" class="headerlink" title="初始化向量"></a>初始化向量</h2><p>和 CBC 模式、CFB 模式一样，OFB 模式也需要使用初始化向量(IV)。需要在每次加密时生成一个不同的随机比特序列用作初始化向量。</p>
+<h2 id="CFB-模式与-OFB-模式对比"><a href="#CFB-模式与-OFB-模式对比" class="headerlink" title="CFB 模式与 OFB 模式对比"></a>CFB 模式与 OFB 模式对比</h2><p>OFB 模式和 CFB 模式的区别仅仅在于密码算法的输入。</p>
+<p>CFB 模式中，密码算法的输入是前一个密文分组，也就是将密文分组反馈到密码算法中，因此有了密文反馈模式这个名字。</p>
+<p>OFB 模式中，密码算法的输入是密码算法的前一个输出，也就是将输出反馈给密码算法，因此有了输出反馈模式这个名字。</p>
+<p>如果将一个分组抽出来对 CFB 模式和 OFB 模式进行一个对比，就可以很容易看出它们之间的差异。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img15.png" class="">
+
+<p>由于 CFB 模式中是对密文分组进行反馈的，因此必须从第一个明文分组开始按顺序进行加密，也就是说无法跳过明文分组 1 而先对明文分组 2 进行加密。</p>
+<p>相对的，在 OFB 模式中，XOR 所需要的比特序列（密钥流）可以事先通过密码算法生成，和明文分组无关。只要提前准备好所需的密钥流，则在实际从明文生成密文的过程中，就完全不需要动用密码算法了，只要将明文与密文流进行 XOR 就可以了。和 AES 等密码算法相比，XOR 运算的速度非常快。这就意味着只要提前准备好密钥流就可以快速完成加密。换个角度看，生成密钥流的操作和进行 XOR 运算的操作是可以并行的。</p>
+<h1 id="CTR-模式"><a href="#CTR-模式" class="headerlink" title="CTR 模式"></a>CTR 模式</h1><p>CTR 模式是一种通过将逐次累加的计数器进行加密来生成密钥流的流密码。</p>
+<p>CTR 模式中，每个分组对应一个逐次累加的计数器，并通过对计数器进行加密来生成密钥流。也就是说，最终的密文分组是通过将计数器加密得到的比特序列与明文分组进行 XOR 得到的。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img5.png" class="">
+
+<h2 id="计数器的生成方法"><a href="#计数器的生成方法" class="headerlink" title="计数器的生成方法"></a>计数器的生成方法</h2><p>每次加密都会生成一个不同的值(<code>nonce</code>)来作为计数器的初始值。当分组长度为 128 比特（16字节）时，计数器初始值可能是像下面这样的形式。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img6.png" class="">
+
+<p>其中前 8 个字节为<code>nonce</code>，这个值在每次加密时必须都是不同的。后 8 个字节为分组序号，这个部分是会逐次累加的。</p>
+<p>在加密的过程中，计数器的值会产生如下变化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 01 // 明文分组1的计数器（初始值）</span><br><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 02 // 明文分组2的计数器</span><br><span class="line">66 1F 98 CD 37 A3 8B 4B 00 00 00 00 00 00 00 03 // 明文分组3的计数器</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>由于计数器的值每次都不同，因此每个分组中将计数器进行加密所得到的密钥流也是不同的。也就是说，这种方法就是用分组密码来模拟生成随机的比特序列。</p>
+<h2 id="OFB-模式与-CTR-模式的对比"><a href="#OFB-模式与-CTR-模式的对比" class="headerlink" title="OFB 模式与 CTR 模式的对比"></a>OFB 模式与 CTR 模式的对比</h2><p>CTR 模式和 OFB 模式一样，都属于流密码。如果我们将单个分组的加密过程拿出来，那么 OFB 模式和 CTR 模式之间的差异还是很容易理解的。OFB 模式是将加密的输出反馈到输入，而 CTR 模式则是将计数器的值用作输入。</p>
+<img src="/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/img16.png" class="">
+
+<h2 id="CTR-模式的特点"><a href="#CTR-模式的特点" class="headerlink" title="CTR 模式的特点"></a>CTR 模式的特点</h2><p>CTR 模式的加密和解密使用了完全相同的结构，因此在程序实现上比较容易。</p>
+<p>此外，CTR 模式中可以以任意顺序对分组进行加密和解密，因此在加密和解密时需要用到的计数器的值可以由<code>nonce</code>和分组序号直接计算出来。这一性质是 OFB 模式所不具备的。</p>
+<p>能够以任意顺序处理分组，就意味着能够实现并行计算。在支持并行计算的系统中，CTR 模式的速度非常快。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/12/14/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/" rel="tag">密码技术</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/12/15/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            单向散列函数
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">对称密码</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

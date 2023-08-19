@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Shell/Bash 循环"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2023/07/17/Shell/Bash%20%E5%BE%AA%E7%8E%AF/" class="article-date">
+  <time datetime="2023-07-17T01:14:35.236Z" itemprop="datePublished">2023-07-17</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Bash 提供三种循环语法<code>for</code>、<code>while</code>和<code>until</code>。</p>
+<h1 id="while-循环"><a href="#while-循环" class="headerlink" title="while 循环"></a>while 循环</h1><p><code>while</code>循环有一个判断条件，只要符合条件，就不断循环执行指定的语句。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> condition; <span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，只要满足条件<code>condition</code>，就会执行命令<code>commands</code>。然后，再次判断是否满足条件<code>condition</code>，只要满足，就会一直执行下去。只有不满足条件，才会退出循环。</p>
+<p>循环条件<code>condition</code>可以使用<code>test</code>命令，跟if结构的判断条件写法一致。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">number=0</span><br><span class="line"><span class="keyword">while</span> [ <span class="string">&quot;<span class="variable">$number</span>&quot;</span> -lt 10 ]; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Number = <span class="variable">$number</span>&quot;</span></span><br><span class="line">  number=$((number + <span class="number">1</span>))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，只要变量<code>$number</code>小于 10，就会不断加 1，直到<code>$number</code>等于 10，然后退出循环。</p>
+<p>关键字<code>do</code>可以跟<code>while</code>不在同一行，这时两者之间不需要使用分号分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&#x27;Hi, while looping ...&#x27;</span>;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面的例子会无限循环，可以按下<code>Ctrl + c</code>停止。</p>
+<p><code>while</code>循环写成一行，也是可以的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&#x27;Hi, while looping ...&#x27;</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><code>while</code>的条件部分也可以是执行一个命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">while</span> <span class="built_in">echo</span> <span class="string">&#x27;ECHO&#x27;</span>; <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&#x27;Hi, while looping ...&#x27;</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，判断条件是<code>echo &#39;ECHO&#39;</code>。由于这个命令总是执行成功，所以上面命令会产生无限循环。</p>
+<p><code>while</code>的条件部分可以执行任意数量的命令，但是执行结果的真伪只看最后一个命令的执行结果。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">while</span> <span class="literal">true</span>; <span class="literal">false</span>; <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&#x27;Hi, looping ...&#x27;</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面代码运行后，不会有任何输出，因为<code>while</code>的最后一个命令是<code>false</code>。</p>
+<h1 id="until-循环"><a href="#until-循环" class="headerlink" title="until 循环"></a>until 循环</h1><p><code>until</code>循环与<code>while</code>循环恰好相反，只要不符合判断条件（判断条件失败），就不断循环执行指定的语句。一旦符合判断条件，就退出循环。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">until condition; <span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>关键字<code>do</code>可以与<code>until</code>不写在同一行，这时两者之间不需要分号分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">until condition</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ until <span class="literal">false</span>; <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&#x27;Hi, until looping ...&#x27;</span>; <span class="keyword">done</span></span><br><span class="line">Hi, until looping ...</span><br><span class="line">Hi, until looping ...</span><br><span class="line">Hi, until looping ...</span><br><span class="line">^C</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>until</code>的部分一直为<code>false</code>，导致命令无限运行，必须按下<code>Ctrl + c</code>终止。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">number=0</span><br><span class="line">until [ <span class="string">&quot;<span class="variable">$number</span>&quot;</span> -ge 10 ]; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Number = <span class="variable">$number</span>&quot;</span></span><br><span class="line">  number=$((number + <span class="number">1</span>))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，只要变量<code>number</code>小于 10，就会不断加 1，直到<code>number</code>大于等于 10，就退出循环。</p>
+<p><code>until</code>的条件部分也可以是一个命令，表示在这个命令执行成功之前，不断重复尝试。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">until <span class="built_in">cp</span> <span class="variable">$1</span> <span class="variable">$2</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&#x27;Attempt to copy failed. waiting...&#x27;</span></span><br><span class="line">  <span class="built_in">sleep</span> 5</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子表示，只要<code>cp $1 $2</code>这个命令执行不成功，就5秒钟后再尝试一次，直到成功为止。</p>
+<p><code>until</code>循环都可以转为<code>while</code>循环，只要把条件设为否定即可。上面这个例子可以改写如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ! <span class="built_in">cp</span> <span class="variable">$1</span> <span class="variable">$2</span>; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&#x27;Attempt to copy failed. waiting...&#x27;</span></span><br><span class="line">  <span class="built_in">sleep</span> 5</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>一般来说，<code>until</code>用得比较少，完全可以统一都使用<code>while</code>。</p>
+<h1 id="for…in-循环"><a href="#for…in-循环" class="headerlink" title="for…in 循环"></a>for…in 循环</h1><p><code>for...in</code>循环用于遍历列表的每一项。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> variable <span class="keyword">in</span> list</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面语法中，<code>for</code>循环会依次从<code>list</code>列表中取出一项，作为变量<code>variable</code>，然后在循环体中进行处理。</p>
+<p>关键词<code>do</code>可以跟<code>for</code>写在同一行，两者使用分号分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> variable <span class="keyword">in</span> list; <span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> word1 word2 word3; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>word1 word2 word3</code>是一个包含三个单词的列表，变量<code>i</code>依次等于<code>word1、word2、word3</code>，命令<code>echo $i</code>则会相应地执行三次。</p>
+<p>列表可以由通配符产生。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> *.png; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">ls</span> -l <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>*.png</code>会替换成当前目录中所有 PNG 图片文件，变量<code>i</code>会依次等于每一个文件。</p>
+<p>列表也可以通过子命令产生。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">count=0</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">cat</span> ~/.bash_profile); <span class="keyword">do</span></span><br><span class="line">  count=$((count + <span class="number">1</span>))</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Word <span class="variable">$count</span> (<span class="variable">$i</span>) contains <span class="subst">$(echo -n $i | wc -c)</span> characters&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>cat ~/.bash_profile</code>命令会输出<code>~/.bash_profile</code>文件的内容，然后通过遍历每一个词，计算该文件一共包含多少个词，以及每个词有多少个字符。</p>
+<p><code>in list</code>的部分可以省略，这时list默认等于脚本的所有参数<code>$@</code>。但是，为了可读性，最好还是不要省略，参考下面的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> filename; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$filename</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 等同于</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span> ; <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$filename</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>在函数体中也是一样的，<code>for...in</code>循环省略<code>in list</code>的部分，则<code>list</code>默认等于函数的所有参数。</p>
+<h1 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h1><p><code>for</code>循环还支持 C 语言的循环语法。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (( expression1; expression2; expression3 )); <span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>expression1</code>用来初始化循环条件，<code>expression2</code>用来决定循环结束的条件，<code>expression3</code>在每次循环迭代的末尾执行，用于更新值。</p>
+<blockquote>
+<p>注意，循环条件放在双重圆括号之中。另外，圆括号之中使用变量，不必加上美元符号<code>$</code>。</p>
+</blockquote>
+<p>它等同于下面的<code>while</code>循环。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(( expression1 ))</span><br><span class="line"><span class="keyword">while</span> (( expression2 )); <span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line">  (( expression3 ))</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (( i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i=i+<span class="number">1</span> )); <span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><code>for</code>条件部分的三个语句，都可以省略。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((;;))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">read</span> var</span><br><span class="line">  <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$var</span>&quot;</span> = <span class="string">&quot;.&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">break</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面脚本会反复读取命令行输入，直到用户输入了一个点（<code>.</code>）为止，才会跳出循环。</p>
+<h1 id="break，continue"><a href="#break，continue" class="headerlink" title="break，continue"></a>break，continue</h1><p>Bash 提供了两个内部命令<code>break</code>和<code>continue</code>，用来在循环内部跳出循环。</p>
+<p><code>break</code>命令立即终止循环，程序继续执行循环块之后的语句，即不再执行剩下的循环。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> number <span class="keyword">in</span> 1 2 3 4 5 6</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;number is <span class="variable">$number</span>&quot;</span></span><br><span class="line">  <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$number</span>&quot;</span> = <span class="string">&quot;3&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">break</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p><code>continue</code>命令立即终止本轮循环，开始执行下一轮循环。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> -p <span class="string">&quot;What file do you want to test?&quot;</span> filename</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">if</span> [ ! -e <span class="string">&quot;<span class="variable">$filename</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;The file does not exist.&quot;</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;You entered a valid file..&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，只要用户输入的文件不存在，<code>continue</code>命令就会生效，直接进入下一轮循环（让用户重新输入文件名），不再执行后面的打印语句。</p>
+<h1 id="select-结构"><a href="#select-结构" class="headerlink" title="select 结构"></a>select 结构</h1><p><code>select</code>结构主要用来生成简单的菜单。它的语法与<code>for...in</code>循环基本一致。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select name</span><br><span class="line">[<span class="keyword">in</span> list]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  commands</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>Bash 会对<code>select</code>依次进行下面的处理。</p>
+<ol>
+<li><code>select</code>生成一个菜单，内容是列表<code>list</code>的每一项，并且每一项前面还有一个数字编号。</li>
+<li>Bash 提示用户选择一项，输入它的编号。</li>
+<li>用户输入以后，Bash 会将该项的内容存在变量<code>name</code>，该项的编号存入环境变量<code>REPLY</code>。如果用户没有输入，就按回车键，Bash 会重新输出菜单，让用户选择。</li>
+<li>执行命令体<code>commands</code>。</li>
+<li>执行结束后，回到第一步，重复这个过程。</li>
+</ol>
+<p>下面是一个例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># select.sh</span></span><br><span class="line"></span><br><span class="line">select brand <span class="keyword">in</span> Samsung Sony iphone symphony Walton</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;You have chosen <span class="variable">$brand</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>执行上面的脚本，Bash 会输出一个品牌的列表，让用户选择。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ./select.sh</span><br><span class="line">1) Samsung</span><br><span class="line">2) Sony</span><br><span class="line">3) iphone</span><br><span class="line">4) symphony</span><br><span class="line">5) Walton</span><br><span class="line"><span class="comment">#?</span></span><br></pre></td></tr></table></figure>
+<p>如果用户没有输入编号，直接按回车键。Bash 就会重新输出一遍这个菜单，直到用户按下<code>Ctrl + c</code>，退出执行。</p>
+<p><code>select</code>可以与<code>case</code>结合，针对不同项，执行不同的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Which Operating System do you like?&quot;</span></span><br><span class="line"></span><br><span class="line">select os <span class="keyword">in</span> Ubuntu LinuxMint Windows8 Windows10 WindowsXP</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">case</span> <span class="variable">$os</span> <span class="keyword">in</span></span><br><span class="line">    <span class="string">&quot;Ubuntu&quot;</span>|<span class="string">&quot;LinuxMint&quot;</span>)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;I also use <span class="variable">$os</span>.&quot;</span></span><br><span class="line">    ;;</span><br><span class="line">    <span class="string">&quot;Windows8&quot;</span> | <span class="string">&quot;Windows10&quot;</span> | <span class="string">&quot;WindowsXP&quot;</span>)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;Why don&#x27;t you try Linux?&quot;</span></span><br><span class="line">    ;;</span><br><span class="line">    *)</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;Invalid entry.&quot;</span></span><br><span class="line">      <span class="built_in">break</span></span><br><span class="line">    ;;</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>case</code>针对用户选择的不同项，执行不同的命令。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/07/17/Shell/Bash%20%E5%BE%AA%E7%8E%AF/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/17/Shell/Bash%20%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/14/Shell/Bash%20%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Bash 条件判断</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

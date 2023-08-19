@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/MyBatis/MyBatis与Spring整合"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/MyBatis/MyBatis%E4%B8%8ESpring%E6%95%B4%E5%90%88/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.735Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="导入相关JAR包"><a href="#导入相关JAR包" class="headerlink" title="导入相关JAR包"></a>导入相关JAR包</h1><p>实现 MyBatis 与 Spring 的整合需要导入相关 JAR 包，包括 MyBatis、Spring 以及其他 JAR 包。<br>1）MyBatis 框架所需的 JAR 包<br>MyBatis 框架所需的 JAR 包包括它的核心包和依赖包。<br>2）Spring 框架所需的 JAR 包<br>Spring 框架所需的 JAR 包包括它的核心模块 JAR、AOP 开发使用的 JAR、JDBC 和事务的 JAR 包（其中依赖包不需要再导入，因为 MyBatis 已提供），具体如下：<br>aopalliance-1.0.jar<br>aspectjweaver-1.6.9.jar<br>spring-aop-3.2.13.RELEASE.jar<br>spring-aspects-3.2.13.RELEASE.jar<br>spring-beans-3.2.13.RELEASE.jar<br>spring-context-3.2.13.RELEASE.jar<br>spring-core-3.2.13.RELEASE.jar<br>spring-expression-3.2.13.RELEASE.jar<br>spring-jdbc-3.2.13.RELEASE.jar<br>spring-tx-3.2.13.RELEASE.jar<br>3）MyBatis 与 Spring 整合的中间 JAR 包<br>该中间 JAR 包的版本为 mybatis-spring-1.3.1.jar。<br>4）数据库驱动 JAR 包<br>MySQL 数据库驱动包为 mysql-connector-java-5.1.25-bin.jar。<br>5）数据源所需的 JAR 包<br>在整合时使用的是 DBCP 数据源，需要准备 DBCP 和连接池的 JAR 包。</p>
+<p>DBCP 的 JAR 包为 commons-dbcp2-2.2.0.jar。</p>
+<p>连接池的 JAR 包为 commons-pool2-2.5.0.jar。</p>
+<h1 id="在Spring中配置MyBatis工厂"><a href="#在Spring中配置MyBatis工厂" class="headerlink" title="在Spring中配置MyBatis工厂"></a>在Spring中配置MyBatis工厂</h1><p>通过与 Spring 的整合，MyBatis 的 SessionFactory 交由 Spring 来构建，在构建时需要在 Spring 的配置文件中添加如下代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--配置数据源--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;dataSource&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.apache.commons.dbcp.BasicDataSource&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driverClassName&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://127.0.0.1:3306/springtest?seUnicode=true<span class="symbol">&amp;amp;</span>characterEncoding=utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1128&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 最大连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;maxTotal&quot;</span> <span class="attr">value</span>=<span class="string">&quot;30&quot;</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 最大空闲连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;maxIdle&quot;</span> <span class="attr">value</span>=<span class="string">&quot;10&quot;</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 初始化连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;initialSize&quot;</span> <span class="attr">value</span>=<span class="string">&quot;5&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 配置SqlSessionFactoryBean --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;sqlSessionFactory&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引用数据源组件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;dataSource&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;dataSource&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引用MyBatis配置文件中的配置 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;configLocation&quot;</span> <span class="attr">value</span>=<span class="string">&quot;classpath:mybatis-config.xml&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用 Spring 管理 MyBatis 的数据操作接口<br>使用 Spring 管理 MyBatis 数据操作接口的方式有多种，其中最常用、最简洁的一种是基于 MapperScannerConfigurer 的整合。该方式需要在 Spring 的配置文件中加入以下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Mapper代理开发，使用Spring自动扫描MyBatis的接口并装配 （Sprinh将指定包中的所有被@Mapper注解标注的接口自动装配为MyBatis的映射接口） --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- mybatis-spring组件的扫描器，com.dao只需要接口（接口方法与SQL映射文件中的相同） --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;basePackage&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.dao&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;sqlSessionFactoryBeanName&quot;</span> <span class="attr">value</span>=<span class="string">&quot;sqlSessionFactory&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><h3 id="1-创建应用并导入相关-JAR-包"><a href="#1-创建应用并导入相关-JAR-包" class="headerlink" title="1.创建应用并导入相关 JAR 包"></a>1.创建应用并导入相关 JAR 包</h3><p>创建一个名为 MyBatis-Spring 的 Web 应用，并将《MyBatis与Spring的整合步骤》教程的 JAR 导入 &#x2F;WEB-INF&#x2F;lib 目录下。</p>
+<h3 id="2-创建持久化类"><a href="#2-创建持久化类" class="headerlink" title="2.创建持久化类"></a>2.创建持久化类</h3><p>在 src 目录下创建一个名为 com.po 的包，将《第一个MyBatis程序》教程的持久化类复制到包中。</p>
+<h3 id="3-创建-SQL-映射文件和-MyBatis-核心配置文件"><a href="#3-创建-SQL-映射文件和-MyBatis-核心配置文件" class="headerlink" title="3.创建 SQL 映射文件和 MyBatis 核心配置文件"></a>3.创建 SQL 映射文件和 MyBatis 核心配置文件</h3><p>在 src 目录下创建一个名为 com.mybatis 的包，在该包中创建 MyBatis 核心配置文件 mybatis-config.xml 和 SQL 映射文件 UserMapper.xml。</p>
+<p>UserMapper.xml 的代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span></span></span><br><span class="line"><span class="meta"><span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.dao.UserDao&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--根据uid查询一个用户信息 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserById&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;Integer&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com..po.MyUser&quot;</span>&gt;</span></span><br><span class="line">        select * from user where uid = #&#123;uid&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 查询所有用户信息 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAllUser&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.po.MyUser&quot;</span>&gt;</span></span><br><span class="line">        select * from user</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 添加一个用户，#&#123;uname&#125;为 com.mybatis.po.MyUser 的属性值 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;addUser&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.po.MyUser&quot;</span>&gt;</span></span><br><span class="line">    insert into user (uname,usex) values(#&#123;uname&#125;,#&#123;usex&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--修改一个用户 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateUser&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com..po.MyUser&quot;</span>&gt;</span></span><br><span class="line">        update user set uname = #&#123;uname&#125;,usex = #&#123;usex&#125; where uid = #&#123;uid&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 删除一个用户 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteUser&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;Integer&quot;</span>&gt;</span></span><br><span class="line">        delete from user where uid = #&#123;uid&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>mybatis-config.xml</code>的代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">configuration</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 告诉MyBatis到哪里去找映射文件 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;com/mybatis/UserMapper.xml&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="创建数据访问接口"><a href="#创建数据访问接口" class="headerlink" title="创建数据访问接口"></a>创建数据访问接口</h3><p>在<code>src</code>目录下创建一个名为<code>com.dao</code>的包，在该包中创建<code>UserDao</code>接口，并将接口使用<code>@Mapper</code>注解为<code>Mapper</code>，接口中的方法与 SQL 映射文件一致。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.dao;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"><span class="keyword">import</span> com.po.MyUser;</span><br><span class="line"><span class="meta">@Repository(&quot;userDao&quot;)</span></span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 使用Spring自动扫描MyBatis的接口并装配 （Spring将指定包中所有被@Mapper注解标注的接口自动装配为MyBatis的映射接口</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserDao</span> &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 接口方法对应的SQL映射文件UserMapper.xml中的id</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="keyword">public</span> MyUser <span class="title function_">selectUserById</span><span class="params">(Integer uid)</span>;</span><br><span class="line">  <span class="keyword">public</span> List&lt;MyUser&gt; <span class="title function_">selectAllUser</span><span class="params">()</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addUser</span><span class="params">(MyUser user)</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">updateUser</span><span class="params">(MyUser user)</span>;</span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">deleteUser</span><span class="params">(Integer uid)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建日志文件"><a href="#创建日志文件" class="headerlink" title="创建日志文件"></a>创建日志文件</h3><p>在<code>src</code>目录下创建日志文件<code>log4j.properties</code>：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Global logging configuration</span></span><br><span class="line"><span class="string">log4j.rootLogger=ERROR,stdout</span></span><br><span class="line"><span class="comment"># MyBatis logging configuration...</span></span><br><span class="line"><span class="string">log4j.logger.com.mybatis=DEBUG</span></span><br><span class="line"><span class="comment"># Console output...</span></span><br><span class="line"><span class="string">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span></span><br><span class="line"><span class="string">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span></span><br><span class="line"><span class="string">log4j.appender.stdout.layout.ConversionPattern=%5p</span> [<span class="string">%t</span>] <span class="bullet">-</span> <span class="string">%m%n</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-创建控制层"><a href="#6-创建控制层" class="headerlink" title="6.创建控制层"></a>6.创建控制层</h3><p>在<code>src</code>目录下创建一个名为<code>com.controller</code>的包，在包中创建<code>UserController</code>类，在该类中调用数据访问接口中的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.controller;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> com.dao.UserDao;</span><br><span class="line"><span class="keyword">import</span> com.po.MyUser;</span><br><span class="line"><span class="meta">@Controller(&quot;userController&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  <span class="keyword">private</span> UserDao userDao;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 查询一个用户</span></span><br><span class="line">    <span class="type">MyUser</span> <span class="variable">auser</span> <span class="operator">=</span> userDao.selectUserById(<span class="number">1</span>);</span><br><span class="line">    System.out.println(auser);</span><br><span class="line">    System.out.println(<span class="string">&quot;============================&quot;</span>);</span><br><span class="line">    <span class="comment">// 添加一个用户</span></span><br><span class="line">    <span class="type">MyUser</span> <span class="variable">addmu</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyUser</span>();</span><br><span class="line">    addmu.setUname(<span class="string">&quot;陈恒&quot;</span>);</span><br><span class="line">    addmu.setUsex(<span class="string">&quot;男&quot;</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">add</span> <span class="operator">=</span> userDao.addUser(addmu);</span><br><span class="line">    System.out.println(<span class="string">&quot;添加了&quot;</span> + add + <span class="string">&quot;条记录&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;============================&quot;</span>);</span><br><span class="line">    <span class="comment">// 修改一个用户</span></span><br><span class="line">    <span class="type">MyUser</span> <span class="variable">updatemu</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyUser</span>();</span><br><span class="line">    updatemu.setUid(<span class="number">1</span>);</span><br><span class="line">    updatemu.setUname(<span class="string">&quot;张三&quot;</span>);</span><br><span class="line">    updatemu.setUsex(<span class="string">&quot;女&quot;</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">up</span> <span class="operator">=</span> userDao.updateUser(updatemu);</span><br><span class="line">    System.out.println(<span class="string">&quot;修改了&quot;</span> + up + <span class="string">&quot;条记录&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;============================&quot;</span>);</span><br><span class="line">    <span class="comment">// 删除一个用户</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">dl</span> <span class="operator">=</span> userDao.deleteUser(<span class="number">9</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;删除了&quot;</span> + dl + <span class="string">&quot;条记录&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;============================&quot;</span>);</span><br><span class="line">    <span class="comment">// 查询所有用户</span></span><br><span class="line">    List&lt;MyUser&gt; list = userDao.selectAllUser();</span><br><span class="line">    <span class="keyword">for</span> (MyUser myUser : list) &#123;</span><br><span class="line">      System.out.println(myUser);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="7-创建-Spring-的配置文件"><a href="#7-创建-Spring-的配置文件" class="headerlink" title="7.创建 Spring 的配置文件"></a>7.创建 Spring 的配置文件</h3><p>在<code>src</code>目录下创建配置文件<code>applicationContext.xml</code>，在配置文件中配置数据源、MyBatis 工厂以及 Mapper 代理开发等信息。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:tx</span>=<span class="string">&quot;http://www.springframework.org/schema/tx&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:aop</span>=<span class="string">&quot;http://www.springframework.org/schema/aop&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  </span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/context/spring-context.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/tx</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/tx/spring-tx-2.5.xsd</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/aop</span></span></span><br><span class="line"><span class="string"><span class="tag">          http://www.springframework.org/schema/aop/spring-aop-2.5.xsd&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 指定需要扫描的包（包括子包），使注解生效 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.dao&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.controller&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;dataSource&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.apache.commons.dbcp.BasicDataSource&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driverClassName&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://127.0.0.1:3306/smbms?useUnicode=true<span class="symbol">&amp;amp;</span>characterEncoding=utf-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1128&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 最大连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;maxTotal&quot;</span> <span class="attr">value</span>=<span class="string">&quot;30&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 最大空闲连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;maxIdle&quot;</span> <span class="attr">value</span>=<span class="string">&quot;10&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 初始化连接数 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;initialSize&quot;</span> <span class="attr">value</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 添加事务支持 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;txManager&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;dataSource&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;dataSource&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 注册事务管理驱动 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tx:annotation-driven</span> <span class="attr">transaction-manager</span>=<span class="string">&quot;txManager&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 配置SqlSessionFactoryBean --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;sqlSessionFactory&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引用数据源组件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;dataSource&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;dataSource&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 引用MyBatis配置文件中的配置 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;configLocation&quot;</span> <span class="attr">value</span>=<span class="string">&quot;classpath:com/mybatis/mybatis-config.xml&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Mapper代理开发，使用Spring自动扫描MyBatis的接口并装配 （Sprinh将指定包中的所有被@Mapper注解标注的接口自动装配为MyBatis的映射接口） --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- mybatis-spring组件的扫描器，com.dao只需要接口（接口方法与SQL映射文件中的相同） --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;basePackage&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.dao&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;sqlSessionFactoryBeanName&quot;</span> <span class="attr">value</span>=<span class="string">&quot;sqlSessionFactory&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-创建测试类"><a href="#8-创建测试类" class="headerlink" title="8.创建测试类"></a>8.创建测试类</h3><p>在<code>com.controller</code>包中创建测试类<code>TestController</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestController</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">xmlPath</span> <span class="operator">=</span> <span class="string">&quot;applicationContext.xml&quot;</span>;</span><br><span class="line">    <span class="type">ApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathXmlApplicationContext</span>(xmlPath);</span><br><span class="line">    <span class="type">UserController</span> <span class="variable">uc</span> <span class="operator">=</span> (UserController) applicationContext.getBean(<span class="string">&quot;userController&quot;</span>);</span><br><span class="line">    uc.test();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/MyBatis/MyBatis%E4%B8%8ESpring%E6%95%B4%E5%90%88/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/Spring/SpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E8%A8%80/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/Maven/Maven%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

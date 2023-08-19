@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>MySQL 用户管理 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-MySQL/MySQL用户管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL 用户管理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/31/MySQL/MySQL%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2020-05-31T03:48:16.000Z" itemprop="datePublished">2020-05-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">10.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">43 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>MySQL 是一个多用户数据库，具有功能强大的访问控制系统，可以为不同用户指定不同权限。</p>
+<h1 id="user权限表"><a href="#user权限表" class="headerlink" title="user权限表"></a>user权限表</h1><p>MySQL 在安装时会自动创建一个名为<code>mysql</code>的数据库，<code>mysql</code>数据库中存储的都是用户权限表。用户登录以后，MySQL 会根据这些权限表的内容为每个用户赋予相应的权限。</p>
+<p><code>user</code>表是 MySQL 中最重要的一个权限表，用来记录允许连接到服务器的账号信息。需要注意的是，在<code>user</code>表里启用的所有权限都是全局级的，适用于所有数据库。</p>
+<p>user 表中的字段大致可以分为 4 类，分别是用户列、权限列、安全列和资源控制列。</p>
+<h2 id="用户列"><a href="#用户列" class="headerlink" title="用户列"></a>用户列</h2><p>用户列存储了用户连接 MySQL 数据库时需要输入的信息。需要注意的是 MySQL 5.7 版本不再使用<code>Password</code>来作为密码的字段，而改成了<code>authentication_string</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Host</td>
+<td align="center">char(60)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">主机名</td>
+</tr>
+<tr>
+<td align="center">User</td>
+<td align="center">char(32)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">用户名</td>
+</tr>
+<tr>
+<td align="center">authentication_string</td>
+<td align="center">text</td>
+<td align="center">YES</td>
+<td align="center">无</td>
+<td align="center">密码</td>
+</tr>
+</tbody></table>
+<p>用户登录时，如果这 3 个字段同时匹配，MySQL 数据库系统才会允许其登录。创建新用户时，也是设置这 3 个字段的值。修改用户密码时，实际就是修改<code>user</code>表的<code>authentication_string</code>字段的值。因此，这 3 个字段决定了用户能否登录。</p>
+<h2 id="权限列"><a href="#权限列" class="headerlink" title="权限列"></a>权限列</h2><p>权限列的字段决定了用户的权限，用来描述在全局范围内允许对数据和数据库进行的操作。</p>
+<p>权限大致分为两大类，分别是高级管理权限和普通权限：</p>
+<ul>
+<li>高级管理权限主要对数据库进行管理，例如关闭服务的权限、超级权限和加载用户等；</li>
+<li>普通权限主要操作数据库，例如查询权限、修改权限等。</li>
+</ul>
+<p><code>user</code>表的权限列包括<code>Select_priv、Insert_ priv</code>等以<code>priv</code>结尾的字段，这些字段值的数据类型为<code>ENUM</code>，可取的值只有<code>Y</code>和<code>N</code>：<code>Y</code>表示该用户有对应的权限，<code>N</code>表示该用户没有对应的权限。从安全角度考虑，这些字段的默认值都为<code>N</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Select_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以通过SELECT 命令查询数据</td>
+</tr>
+<tr>
+<td align="center">Insert_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以通过 INSERT 命令插入数据</td>
+</tr>
+<tr>
+<td align="center">Update_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以通过UPDATE 命令修改现有数据</td>
+</tr>
+<tr>
+<td align="center">Delete_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以通过DELETE 命令删除现有数据</td>
+</tr>
+<tr>
+<td align="center">Create_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建新的数据库和表</td>
+</tr>
+<tr>
+<td align="center">Drop_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以删除现有数据库和表</td>
+</tr>
+<tr>
+<td align="center">Reload_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以执行刷新和重新加载MySQL所用的各种内部缓存的特定命令，包括日志、权限、主机、查询和表</td>
+</tr>
+<tr>
+<td align="center">Shutdown_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以关闭MySQL服务器。将此权限提供给root账户之外的任何用户时，都应当非常谨慎</td>
+</tr>
+<tr>
+<td align="center">Process_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以通过SHOW PROCESSLIST命令查看其他用户的进程</td>
+</tr>
+<tr>
+<td align="center">File_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以执行SELECT INTO OUTFILE和LOAD DATA INFILE命令</td>
+</tr>
+<tr>
+<td align="center">Grant_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以将自己的权限再授予其他用户</td>
+</tr>
+<tr>
+<td align="center">References_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建外键约束</td>
+</tr>
+<tr>
+<td align="center">Index_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以对索引进行增删查</td>
+</tr>
+<tr>
+<td align="center">Alter_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以重命名和修改表结构</td>
+</tr>
+<tr>
+<td align="center">Show_db_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以查看服务器上所有数据库的名字，包括用户拥有足够访问权限的数据库</td>
+</tr>
+<tr>
+<td align="center">Super_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以执行某些强大的管理功能，例如通过KILL命令删除用户进程；使用SET GLOBAL命令修改全局MySQL变量，执行关于复制和日志的各种命令。（超级 权限）</td>
+</tr>
+<tr>
+<td align="center">Create_tmp_table_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建临时表</td>
+</tr>
+<tr>
+<td align="center">Lock_tables_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以使用LOCK TABLES命令阻止对表的访问&#x2F;修改</td>
+</tr>
+<tr>
+<td align="center">Execute_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以执行存储过程</td>
+</tr>
+<tr>
+<td align="center">Repl_slave_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以读取用于维护复制数据库环境的二进制日志文件</td>
+</tr>
+<tr>
+<td align="center">Repl_client_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以确定复制从服务器和主服务器的位置</td>
+</tr>
+<tr>
+<td align="center">Create_view_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建视图</td>
+</tr>
+<tr>
+<td align="center">Show_view_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以查看视图</td>
+</tr>
+<tr>
+<td align="center">Create_routine_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以更改或放弃存储过程和函数</td>
+</tr>
+<tr>
+<td align="center">Alter_routine_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以修改或删除存储函数及函数</td>
+</tr>
+<tr>
+<td align="center">Create_user_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以执行CREATE USER命令，这个命令用于创建新的MySQL账户</td>
+</tr>
+<tr>
+<td align="center">Event_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建、修改和删除事件</td>
+</tr>
+<tr>
+<td align="center">Trigger_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建和删除触发器</td>
+</tr>
+<tr>
+<td align="center">Create_tablespace_priv</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">是否可以创建表空间</td>
+</tr>
+</tbody></table>
+<p>如果要修改权限，可以使用<code>GRANT</code>语句为用户赋予一些权限，也可以通过<code>UPDATE</code>语句更新<code>user</code>表的方式来设置权限。</p>
+<h2 id="安全列"><a href="#安全列" class="headerlink" title="安全列"></a>安全列</h2><p>安全列主要用来判断用户是否能够登录成功。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ssl_type</td>
+<td align="center">enum(‘’,’ANY’,<br>‘X509’, ‘SPECIFIED’)</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">支持ssl标准加密安全字段</td>
+</tr>
+<tr>
+<td align="center">ssl_cipher</td>
+<td align="center">blob</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">支持ssl标准加密安全字段</td>
+</tr>
+<tr>
+<td align="center">x509_issuer</td>
+<td align="center">blob</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">支持x509标准字段</td>
+</tr>
+<tr>
+<td align="center">x509_subject</td>
+<td align="center">blob</td>
+<td align="center">NO</td>
+<td align="center"></td>
+<td align="center">支持x509标准字段</td>
+</tr>
+<tr>
+<td align="center">plugin</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">mysql_native_<br>password</td>
+<td align="center">引入plugins以进行用户连接时的密码验证，plugin创建外部&#x2F;代理用户</td>
+</tr>
+<tr>
+<td align="center">password_expired</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">密码是否过期 (N 未过期，y 已过期)</td>
+</tr>
+<tr>
+<td align="center">password_last_changed</td>
+<td align="center">timestamp</td>
+<td align="center">YES</td>
+<td align="center"></td>
+<td align="center">记录密码最近修改的时间</td>
+</tr>
+<tr>
+<td align="center">password_lifetime</td>
+<td align="center">smallint(5)</td>
+<td align="center">unsigned</td>
+<td align="center">YES</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">account_locked</td>
+<td align="center">enum(‘N’,’Y’)</td>
+<td align="center">NO</td>
+<td align="center">N</td>
+<td align="center">用户是否被锁定（Y 锁定，N 未锁定）</td>
+</tr>
+</tbody></table>
+<p>注意：即使<code>password_expired</code>为<code>Y</code>，用户也可以使用密码登录 MySQL，但是不允许做任何操作。</p>
+<p>通常标准的发行版不支持<code>ssl</code>，可以使用<code>SHOW VARIABLES LIKE &quot;have_openssl&quot;</code>语句来查看是否具有<code>ssl</code>功能。如果<code>have_openssl</code>的值为<code>DISABLED</code>，那么则不支持<code>ssl</code>加密功能。</p>
+<h2 id="资源控制列"><a href="#资源控制列" class="headerlink" title="资源控制列"></a>资源控制列</h2><p>资源控制列的字段用来限制用户使用的资源，user 表中的资源控制列：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">max_questions</td>
+<td align="center">int(11)</td>
+<td align="center">unsigned</td>
+<td align="center">NO</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">max_updates</td>
+<td align="center">int(11)</td>
+<td align="center">unsigned</td>
+<td align="center">NO</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">max_connections</td>
+<td align="center">int(11)</td>
+<td align="center">unsigned</td>
+<td align="center">NO</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">max_user_connections</td>
+<td align="center">int(11)</td>
+<td align="center">unsigned</td>
+<td align="center">NO</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<p>以上字段的默认值为 0，表示没有限制。一个小时内用户查询或者连接数量超过资源控制限制，用户将被锁定，直到下一个小时才可以在此执行对应的操作。可以使用<code>GRANT</code>语句更新这些字段的值。</p>
+<h1 id="其它权限表"><a href="#其它权限表" class="headerlink" title="其它权限表"></a>其它权限表</h1><p>在 MySQL 数据库中，权限表除了<code>user</code>表外，还有<code>db</code>表、<code>tables_priv</code>表、<code>columns_priv</code>表和<code>procs_priv</code>表。</p>
+<h2 id="db表"><a href="#db表" class="headerlink" title="db表"></a>db表</h2><p><code>db</code>表中存储了用户对某个数据库的操作权限。表中的字段大致可以分为两类，分别是用户列和权限列。</p>
+<h3 id="用户列-1"><a href="#用户列-1" class="headerlink" title="用户列"></a>用户列</h3><p><code>db</code>表用户列有 3 个字段，分别是<code>Host、User、Db</code>，标识从某个主机连接某个用户对某个数据库的操作权限，这 3 个字段的组合构成了<code>db</code>表的主键。</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Host</td>
+<td align="center">char(60)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">主机名</td>
+</tr>
+<tr>
+<td align="center">Db</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">数据库名</td>
+</tr>
+<tr>
+<td align="center">User</td>
+<td align="center">char(32)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">用户名</td>
+</tr>
+</tbody></table>
+<h3 id="权限列-1"><a href="#权限列-1" class="headerlink" title="权限列"></a>权限列</h3><p><code>db</code>表中的权限列和<code>user</code>表中的权限列大致相同，只是<code>user</code>表中的权限是针对所有数据库的，而<code>db</code>表中的权限只针对指定的数据库。如果希望用户只对某个数据库有操作权限，可以先将<code>user</code>表中对应的权限设置为<code>N</code>，然后在<code>db</code>表中设置对应数据库的操作权限。</p>
+<h2 id="tables-priv表和columns-priv表"><a href="#tables-priv表和columns-priv表" class="headerlink" title="tables_priv表和columns_priv表"></a>tables_priv表和columns_priv表</h2><p><code>tables_priv</code>表用来对单个表进行权限设置，<code>columns_priv</code>表用来对单个数据列进行权限设置。<code>tables_priv</code>表结构如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Host</td>
+<td align="center">char(60)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">主机</td>
+</tr>
+<tr>
+<td align="center">Db</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">数据库名</td>
+</tr>
+<tr>
+<td align="center">User</td>
+<td align="center">char(32)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">用户名</td>
+</tr>
+<tr>
+<td align="center">Table_name</td>
+<td align="center">har(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表名</td>
+</tr>
+<tr>
+<td align="center">Grantor</td>
+<td align="center">char(93)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">修改该记录的用户</td>
+</tr>
+<tr>
+<td align="center">Timestamp</td>
+<td align="center">timestamp</td>
+<td align="center">NO</td>
+<td align="center">CURRENT_TIMESTAMP</td>
+<td align="center">修改该记录的时间</td>
+</tr>
+<tr>
+<td align="center">Table_priv</td>
+<td align="center">set(‘Select’,’Insert’,<br>‘Update’,’Delete’,<br>‘Create’,’Drop’,<br>‘Grant’,’References’,<br>‘Index’,’Alter’,’Create View’,<br>‘Show view’,’Trigger’)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示对表的操 作权限，包括 Select、Insert、Update、Delete、Create、Drop、Grant、References、Index 和 Alter 等</td>
+</tr>
+<tr>
+<td align="center">Column_priv</td>
+<td align="center">set(‘Select’,’Insert’,<br>‘Update’,’References’)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示对表中的列的操作权限，包括 Select、Insert、Update 和 References</td>
+</tr>
+</tbody></table>
+<p><code>columns_priv</code>表结构如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Host</td>
+<td align="center">char(60)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">主机</td>
+</tr>
+<tr>
+<td align="center">Db</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">数据库名</td>
+</tr>
+<tr>
+<td align="center">User</td>
+<td align="center">char(32)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">用户名</td>
+</tr>
+<tr>
+<td align="center">Table_name</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表名</td>
+</tr>
+<tr>
+<td align="center">Column_name</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">数据列名称，用来指定对哪些数据列具有操作权限</td>
+</tr>
+<tr>
+<td align="center">Timestamp</td>
+<td align="center">timestamp</td>
+<td align="center">NO</td>
+<td align="center">CURRENT_TIMESTAMP</td>
+<td align="center">修改该记录的时间</td>
+</tr>
+<tr>
+<td align="center">Column_priv</td>
+<td align="center">set(‘Select’,<br>‘Insert’,<br>‘Update’,<br>‘References’)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示对表中的列的操作权限，包括 Select、Insert、Update 和 References</td>
+</tr>
+</tbody></table>
+<h2 id="procs-priv表"><a href="#procs-priv表" class="headerlink" title="procs_priv表"></a>procs_priv表</h2><p><code>procs_priv</code>表可以对存储过程和存储函数进行权限设置，<code>procs_priv</code>的表结构如表所示：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段名</th>
+<th align="center">字段类型</th>
+<th align="center">是否为空</th>
+<th align="center">默认值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Host</td>
+<td align="center">char(60)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">主机名</td>
+</tr>
+<tr>
+<td align="center">Db</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">数据库名</td>
+</tr>
+<tr>
+<td align="center">User</td>
+<td align="center">char(32)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">用户名</td>
+</tr>
+<tr>
+<td align="center">Routine_name</td>
+<td align="center">char(64)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示存储过程或函数的名称</td>
+</tr>
+<tr>
+<td align="center">Routine_type</td>
+<td align="center">enum(<br>‘FUNCTION’,<br>‘PROCEDURE’)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示存储过程或函数的类型，Routine_type 字段有两个值，分别是 FUNCTION 和 PROCEDURE。FUNCTION 表示这是一个函数；PROCEDURE 表示这是一个存储过程。</td>
+</tr>
+<tr>
+<td align="center">Grantor</td>
+<td align="center">char(93)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">插入或修改该记录的用户</td>
+</tr>
+<tr>
+<td align="center">Proc_priv</td>
+<td align="center">set(<br>‘Execute’,<br>‘Alter Routine’,<br>‘Grant’)</td>
+<td align="center">NO</td>
+<td align="center">无</td>
+<td align="center">表示拥有的权限，包括 Execute、Alter Routine、Grant 3种</td>
+</tr>
+<tr>
+<td align="center">Timestamp</td>
+<td align="center">timestamp</td>
+<td align="center">NO</td>
+<td align="center">CURRENT_TIMESTAMP</td>
+<td align="center">表示记录更新时间</td>
+</tr>
+</tbody></table>
+<h1 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h1><p>MySQL 在安装时，会默认创建一个名为<code>root</code>的用户，该用户拥有超级权限，可以控制整个 MySQL 服务器。</p>
+<p>在对 MySQL 的日常管理和操作中，为了避免有人恶意使用<code>root</code>用户控制数据库，我们通常创建一些具有适当权限的用户，尽可能地不用或少用<code>root</code>用户登录系统，以此来确保数据的安全访问。</p>
+<p>MySQL 提供了以下 3 种方法创建用户：</p>
+<ul>
+<li>使用<code>CREATE USER</code>语句创建用户</li>
+<li>在<code>mysql.user</code>表中添加用户</li>
+<li>使用<code>GRANT</code>语句创建用户</li>
+</ul>
+<h2 id="使用CREATE-USER语句创建用户"><a href="#使用CREATE-USER语句创建用户" class="headerlink" title="使用CREATE USER语句创建用户"></a>使用CREATE USER语句创建用户</h2><p>可以使用<code>CREATE USER</code>语句来创建 MySQL 用户，并设置相应的密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &lt;用户&gt; [ IDENTIFIED BY [ PASSWORD ] &#x27;password&#x27; ] [ ,用户 [ IDENTIFIED BY [ PASSWORD ] &#x27;password&#x27; ]]</span><br></pre></td></tr></table></figure>
+<p>参数说明如下：</p>
+<ol>
+<li>用户<br>指定创建用户账号，格式为<code>user_name&#39;@&#39;host_name</code>。这里的<code>user_name</code>是用户名，<code>host_name</code>为主机名，即用户连接 MySQL 时所用主机的名字。如果在创建的过程中，只给出了用户名，而没指定主机名，那么主机名默认为“%”，表示一组主机，即对所有主机开放权限。</li>
+<li><code>IDENTIFIED BY</code>子句<br>用于指定用户密码。新用户可以没有初始密码，若该用户不设密码，可省略此子句。</li>
+<li><code>PASSWORD &#39;password&#39;</code><br><code>PASSWORD</code>表示使用哈希值设置密码，该参数可选。如果密码是一个普通的字符串，则不需要使用<code>PASSWORD</code>关键字。<code>&#39;password&#39;</code>表示用户登录时使用的密码，需要用单引号括起来。</li>
+</ol>
+<p>使用<code>CREATE USER</code>语句时应注意以下几点：</p>
+<ul>
+<li><code>CREATE USER</code>语句可以不指定初始密码。但是从安全的角度来说，不推荐这种做法。</li>
+<li>使用<code>CREATE USER</code>语句必须拥有<code>mysql</code>数据库的<code>INSERT</code>权限或全局<code>CREATE USER</code>权限。</li>
+<li>使用<code>CREATE USER</code>语句创建一个用户后，MySQL 会在 mysql 数据库的<code>user</code>表中添加一条新记录。</li>
+<li><code>CREATE USER</code>语句可以同时创建多个用户，多个用户用逗号隔开。</li>
+</ul>
+<p>新创建的用户拥有的权限很少，它们只能执行不需要权限的操作。如登录 MySQL、使用 SHOW 语句查询所有存储引擎和字符集的列表等。如果两个用户的用户名相同，但主机名不同，MySQL 会将它们视为两个用户，并允许为这两个用户分配不同的权限集合。</p>
+<p>使用<code>CREATE USER</code>创建一个用户，用户名是<code>test1</code>，密码是<code>test1</code>，主机名是<code>localhost</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;test1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;test1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>在实际应用中，我们应避免明文指定密码，可以通过<code>PASSWORD</code>关键字使用密码的哈希值设置密码。</p>
+<p>在 MySQL 中，可以使用<code>password()</code>函数获取密码的哈希值：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> password(<span class="string">&#x27;test1&#x27;</span>);</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> password(<span class="string">&#x27;test1&#x27;</span>)                         <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="operator">*</span><span class="number">06</span>C0BF5B64ECE2F648B5F048A71903906BA08E5C <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+<p><code>*06C0BF5B64ECE2F648B5F048A71903906BA08E5C</code>就是<code>test1</code>的哈希值。下面创建用户<code>test1</code>，SQL 语句和执行过程如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;test1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>IDENTIFIED <span class="keyword">BY</span> PASSWORD <span class="string">&#x27;*06C0BF5B64ECE2F648B5F048A71903906BA08E5C&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected, <span class="number">1</span> warning (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>执行成功后就可以使用密码<code>test1</code>登录了。</p>
+<h2 id="使用-INSERT-语句新建用户"><a href="#使用-INSERT-语句新建用户" class="headerlink" title="使用 INSERT 语句新建用户"></a>使用 INSERT 语句新建用户</h2><p>可以使用<code>INSERT</code>语句将用户的信息添加到<code>mysql.user</code>表中，但必须拥有对<code>mysql.user</code>表的<code>INSERT</code>权限。通常<code>INSERT</code>语句只添加<code>Host、User</code>和<code>authentication_string</code>这 3 个字段的值。</p>
+<p>MySQL 5.7 的<code>user</code>表中的密码字段从<code>Password</code>变成了<code>authentication_string</code>，如果是 MySQL 5.7 之前的版本，将<code>authentication_string</code>字段替换成<code>Password</code>即可。</p>
+<p>使用<code>INSERT</code>语句创建用户的代码如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> mysql.user(Host, <span class="keyword">User</span>,  authentication_string, ssl_cipher, x509_issuer, x509_subject) <span class="keyword">VALUES</span> (<span class="string">&#x27;hostname&#x27;</span>, <span class="string">&#x27;username&#x27;</span>, PASSWORD(<span class="string">&#x27;password&#x27;</span>), <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>由于<code>mysql</code>数据库的<code>user</code>表中，<code>ssl_cipher、x509_issuer</code>和<code>x509_subject</code>这 3 个字段没有默认值，所以向<code>user</code>表插入新记录时，一定要设置这 3 个字段的值，否则<code>INSERT</code>语句将不能执行。</p>
+<p>下面使用<code>INSERT</code>语句创建名为<code>test2</code>的用户，主机名是<code>localhost</code>，密码也是<code>test2</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> mysql.user(Host, <span class="keyword">User</span>, authentication_string, ssl_cipher, x509_issuer, x509_subject)</span><br><span class="line">       <span class="keyword">VALUES</span> (<span class="string">&#x27;localhost&#x27;</span>, <span class="string">&#x27;test2&#x27;</span>, PASSWORD(<span class="string">&#x27;test2&#x27;</span>), <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">Query OK, <span class="number">1</span> <span class="type">row</span> affected, <span class="number">1</span> warning (<span class="number">0.02</span> sec)</span><br></pre></td></tr></table></figure>
+<p>结果显示，新建用户成功。但是这时如果通过该账户登录 MySQL 服务器，不会登录成功，因为<code>test2</code>用户还没有生效。</p>
+<p>可以使用<code>FLUSH</code>命令让用户生效：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+<p>使用以上命令可以让 MySQL 刷新系统权限相关表。执行<code>FLUSH</code>命令需要<code>RELOAD</code>权限。</p>
+<p>注意：<code>user</code>表中的<code>User</code>和<code>Host</code>字段区分大小写，创建用户时要指定正确的用户名称或主机名。</p>
+<h2 id="使用GRANT语句新建用户"><a href="#使用GRANT语句新建用户" class="headerlink" title="使用GRANT语句新建用户"></a>使用GRANT语句新建用户</h2><p>虽然<code>CREATE USER</code>和<code>INSERT INTO</code>语句都可以创建普通用户，但是这两种方式不便授予用户权限。于是 MySQL 提供了<code>GRANT</code>语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> priv_type <span class="keyword">ON</span> database.table <span class="keyword">TO</span> <span class="keyword">user</span> [IDENTIFIED <span class="keyword">BY</span> [PASSWORD] <span class="string">&#x27;password&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>priv_type</code>参数表示新用户的权限；</li>
+<li><code>database.table</code>参数表示新用户的权限范围，即只能在指定的数据库和表上使用自己的权限；</li>
+<li><code>user</code>参数指定新用户的账号，由用户名和主机名构成；</li>
+<li><code>IDENTIFIED BY</code>关键字用来设置密码；</li>
+<li><code>password</code>参数表示新用户的密码。</li>
+</ul>
+<p>下面使用<code>GRANT</code>语句创建名为<code>test3</code>的用户，主机名为<code>localhost</code>，密码为<code>test3</code>。该用户对所有数据库的所有表都有<code>SELECT</code>权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span><span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;test3&#x27;</span><span class="variable">@localhost</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;test3&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected, <span class="number">1</span> warning (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>*.*</code>表示所有数据库下的所有表。结果显示创建用户成功，且<code>test3</code>用户对所有表都有查询（<code>SELECT</code>）权限。</p>
+<h1 id="修改用户"><a href="#修改用户" class="headerlink" title="修改用户"></a>修改用户</h1><p>在 MySQL 中，我们可以使用<code>RENAME USER</code>语句修改一个或多个已经存在的用户账号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RENAME USER &lt;旧用户&gt; TO &lt;新用户&gt;</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li>&lt;旧用户&gt;：系统中已经存在的 MySQL 用户账号。</li>
+<li>&lt;新用户&gt;：新的 MySQL 用户账号。</li>
+</ul>
+<p>使用<code>RENAME USER</code>语句时应注意以下几点：</p>
+<ul>
+<li><code>RENAME USER</code>语句用于对原有的 MySQL 用户进行重命名。</li>
+<li>若系统中旧账户不存在或者新账户已存在，该语句执行时会出现错误。</li>
+<li>使用<code>RENAME USER</code>语句，必须拥有<code>mysql</code>数据库的<code>UPDATE</code>权限或全局<code>CREATE USER</code>权限。</li>
+</ul>
+<p>使用<code>RENAME USER</code>语句将用户名<code>test1</code>修改为<code>testUser1</code>，主机是<code>localhost</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> RENAME <span class="keyword">USER</span> <span class="string">&#x27;test1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">TO</span> <span class="string">&#x27;testUser1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.03</span> sec)</span><br></pre></td></tr></table></figure>
+<h1 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h1><p>在 MySQL 数据库中，可以使用<code>DROP USER</code>语句删除用户，也可以直接在<code>mysql.user</code>表中删除用户以及相关权限。</p>
+<h2 id="1-使用DROP-USER语句删除普通用户"><a href="#1-使用DROP-USER语句删除普通用户" class="headerlink" title="1. 使用DROP USER语句删除普通用户"></a>1. 使用DROP USER语句删除普通用户</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP USER &lt;用户1&gt; [ , &lt;用户2&gt; ]…</span><br></pre></td></tr></table></figure>
+<p>其中，用户用来指定需要删除的用户账号。</p>
+<p>使用<code>DROP USER</code>语句应注意以下几点：</p>
+<ul>
+<li><code>DROP USER</code>语句可用于删除一个或多个用户，并撤销其权限。</li>
+<li>使用<code>DROP USER</code>语句必须拥有<code>mysql</code>数据库的<code>DELETE</code>权限或全局<code>CREATE USER</code>权限。</li>
+<li>在<code>DROP USER</code>语句的使用中，若没有明确地给出账户的主机名，则该主机名默认为“%”。</li>
+</ul>
+<p>注意：用户的删除不会影响他们之前所创建的表、索引或其他数据库对象，因为 MySQL 并不会记录是谁创建了这些对象。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">&#x27;test1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="2-使用DELETE语句删除普通用户"><a href="#2-使用DELETE语句删除普通用户" class="headerlink" title="2. 使用DELETE语句删除普通用户"></a>2. 使用DELETE语句删除普通用户</h2><p>可以使用<code>DELETE</code>语句直接删除<code>mysql.user</code>表中相应的用户信息，但必须拥有<code>mysql.user</code>表的<code>DELETE</code>权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> mysql.user <span class="keyword">WHERE</span> Host<span class="operator">=</span><span class="string">&#x27;hostname&#x27;</span> <span class="keyword">AND</span> <span class="keyword">User</span><span class="operator">=</span><span class="string">&#x27;username&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p><code>Host</code>和<code>User</code>这两个字段都是<code>mysql.user</code>表的主键。因此，需要两个字段的值才能确定一条记录。</p>
+<p>下面使用<code>DELETE</code>语句删除用户<code>&#39;test2&#39;@&#39;localhost&#39;</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> mysql.user <span class="keyword">WHERE</span> Host<span class="operator">=</span><span class="string">&#x27;localhost&#x27;</span><span class="keyword">AND</span> <span class="keyword">User</span><span class="operator">=</span><span class="string">&#x27;test2&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">1</span> <span class="keyword">rows</span> affected (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>结果显示删除成功。可以使用<code>SELETE</code>语句查询<code>mysql.user</code>表，以确定该用户是否已经成功删除。</p>
+<h1 id="查看用户权限"><a href="#查看用户权限" class="headerlink" title="查看用户权限"></a>查看用户权限</h1><p>在 MySQL 中，可以通过查看<code>mysql.user</code>表中的数据记录来查看相应的用户权限，也可以使用<code>SHOW GRANTS</code>语句查询用户的权限。</p>
+<p><code>mysql</code>数据库下的<code>user</code>表中存储着用户的基本权限，可以使用<code>SELECT</code>语句来查看。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> mysql.user;</span><br></pre></td></tr></table></figure>
+<p>要执行该语句，必须拥有对<code>user</code>表的查询权限。</p>
+<p>注意：新创建的用户只有登录 MySQL 服务器的权限，没有任何其它权限，不能查询<code>user</code>表。</p>
+<p>除了使用<code>SELECT</code>语句之外，还可以使用<code>SHOW GRANTS FOR</code>语句查看权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;hostname&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>下面创建<code>testuser1</code>用户并查询权限：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;testuser1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;testuser1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Grants <span class="keyword">for</span> testuser1<span class="variable">@localhost</span>                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GRANT</span> USAGE <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;testuser1&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>USAGE ON *.*</code>表示该用户对任何数据库和任何表都没有权限。</p>
+<p>下面查询<code>root</code>用户的权限，代码如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Grants <span class="keyword">for</span> root<span class="variable">@localhost</span>                                           <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GRANT</span> PROXY <span class="keyword">ON</span> <span class="string">&#x27;&#x27;</span>@<span class="string">&#x27;&#x27;</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------------------------------------------------------------+</span></span><br><span class="line"><span class="number">2</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h1 id="GRANT：用户授权"><a href="#GRANT：用户授权" class="headerlink" title="GRANT：用户授权"></a>GRANT：用户授权</h1><p>授权就是为某个用户赋予某些权限。例如，可以为新建的用户赋予查询所有数据库和表的权限。MySQL 提供了<code>GRANT</code>语句来为用户设置权限。</p>
+<p>在 MySQL 中，拥有<code>GRANT</code>权限的用户才可以执行<code>GRANT 语句</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GRANT priv_type [(column_list)] ON database.table</span><br><span class="line">TO user [IDENTIFIED BY [PASSWORD] &#x27;password&#x27;]</span><br><span class="line">[, user[IDENTIFIED BY [PASSWORD] &#x27;password&#x27;]] ...</span><br><span class="line">[WITH with_option [with_option]...]</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li><code>priv_type</code>参数表示权限类型；</li>
+<li><code>columns_list</code>参数表示权限作用于哪些列上，省略该参数时，表示作用于整个表；</li>
+<li><code>database.table</code>用于指定权限的级别；</li>
+<li><code>user</code>参数表示用户账户，由用户名和主机名构成，格式是<code>&#39;username&#39;@&#39;hostname&#39;</code>；</li>
+<li><code>IDENTIFIED BY</code>参数用来为用户设置密码；</li>
+<li><code>password</code>参数是用户的新密码。</li>
+</ul>
+<p><code>WITH</code>关键字后面带有一个或多个<code>with_option</code>参数。这个参数有 5 个选项：</p>
+<ul>
+<li><code>GRANT OPTION</code>：被授权的用户可以将这些权限赋予给别的用户；</li>
+<li><code>MAX_QUERIES_PER_HOUR count</code>：设置每个小时可以允许执行<code>count</code>次查询；</li>
+<li><code>MAX_UPDATES_PER_HOUR count</code>：设置每个小时可以允许执行<code>count</code>次更新；</li>
+<li><code>MAX_CONNECTIONS_PER_HOUR count</code>：设置每小时可以建立<code>count</code>个连接;</li>
+<li><code>MAX_USER_CONNECTIONS count</code>：设置单个用户可以同时具有的<code>count</code>个连接。</li>
+</ul>
+<p>MySQL 中可以授予的权限有如下几组：</p>
+<ul>
+<li>列权限，和表中的一个具体列相关。例如，可以使用<code>UPDATE</code>语句更新表<code>students</code>中 name 列的值的权限。</li>
+<li>表权限，和一个具体表中的所有数据相关。例如，可以使用<code>SELECT</code>语句查询表<code>students</code>的所有数据的权限。</li>
+<li>数据库权限，和一个具体的数据库中的所有表相关。例如，可以在已有的数据库<code>mytest</code>中创建新表的权限。</li>
+<li>用户权限，和 MySQL 中所有的数据库相关。例如，可以删除已有的数据库或者创建一个新的数据库的权限。</li>
+</ul>
+<p>对应地，在<code>GRANT</code>语句中可用于指定权限级别的值有以下几类格式：</p>
+<ul>
+<li><code>*</code>：表示当前数据库中的所有表。</li>
+<li><code>*.*</code>：表示所有数据库中的所有表。</li>
+<li><code>db_name.*</code>：表示某个数据库中的所有表，<code>db_name</code>指定数据库名。</li>
+<li><code>db_name.tbl_name</code>：表示某个数据库中的某个表或视图，<code>db_name</code>指定数据库名，<code>tbl_name</code>指定表名或视图名。</li>
+<li><code>db_name.routine_name</code>：表示某个数据库中的某个存储过程或函数，<code>routine_name</code>指定存储过程名或函数名。</li>
+<li><code>TO</code>子句：如果权限被授予给一个不存在的用户，MySQL 会自动执行一条<code>CREATE USER</code>语句来创建这个用户，但同时必须为该用户设置密码。</li>
+</ul>
+<h2 id="权限类型说明"><a href="#权限类型说明" class="headerlink" title="权限类型说明"></a>权限类型说明</h2><ol>
+<li>授予数据库权限时，&lt;权限类型&gt;可以指定为以下值：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">权限名称</th>
+<th align="center">对应user表中的字段</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SELECT</td>
+<td align="center">Select_priv</td>
+<td align="center">表示授予用户可以使用 SELECT 语句访问特定数据库中所有表和视图的权限。</td>
+</tr>
+<tr>
+<td align="center">INSERT</td>
+<td align="center">Insert_priv</td>
+<td align="center">表示授予用户可以使用 INSERT 语句向特定数据库中所有表添加数据行的权限。</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">Delete_priv</td>
+<td align="center">表示授予用户可以使用 DELETE 语句删除特定数据库中所有表的数据行的权限。</td>
+</tr>
+<tr>
+<td align="center">UPDATE</td>
+<td align="center">Update_priv</td>
+<td align="center">表示授予用户可以使用 UPDATE 语句更新特定数据库中所有数据表的值的权限。</td>
+</tr>
+<tr>
+<td align="center">REFERENCES</td>
+<td align="center">References_priv</td>
+<td align="center">表示授予用户可以创建指向特定的数据库中的表外键的权限。</td>
+</tr>
+<tr>
+<td align="center">CREATE</td>
+<td align="center">Create_priv</td>
+<td align="center">表示授权用户可以使用 CREATE TABLE 语句在特定数据库中创建新表的权限。</td>
+</tr>
+<tr>
+<td align="center">ALTER</td>
+<td align="center">Alter_priv</td>
+<td align="center">表示授予用户可以使用 ALTER TABLE 语句修改特定数据库中所有数据表的权限。</td>
+</tr>
+<tr>
+<td align="center">SHOW VIEW</td>
+<td align="center">Show_view_priv</td>
+<td align="center">表示授予用户可以查看特定数据库中已有视图的视图定义的权限。</td>
+</tr>
+<tr>
+<td align="center">CREATE ROUTINE</td>
+<td align="center">Create_routine_priv</td>
+<td align="center">表示授予用户可以为特定的数据库创建存储过程和存储函数的权限。</td>
+</tr>
+<tr>
+<td align="center">ALTER ROUTINE</td>
+<td align="center">Alter_routine_priv</td>
+<td align="center">表示授予用户可以更新和删除数据库中已有的存储过程和存储函数的权限。</td>
+</tr>
+<tr>
+<td align="center">INDEX</td>
+<td align="center">Index_priv</td>
+<td align="center">表示授予用户可以在特定数据库中的所有数据表上定义和删除索引的权限。</td>
+</tr>
+<tr>
+<td align="center">DROP</td>
+<td align="center">Drop_priv</td>
+<td align="center">表示授予用户可以删除特定数据库中所有表和视图的权限。</td>
+</tr>
+<tr>
+<td align="center">CREATE TEMPORARY TABLES</td>
+<td align="center">Create_tmp_table_priv</td>
+<td align="center">表示授予用户可以在特定数据库中创建临时表的权限。</td>
+</tr>
+<tr>
+<td align="center">CREATE VIEW</td>
+<td align="center">Create_view_priv</td>
+<td align="center">表示授予用户可以在特定数据库中创建新的视图的权限。</td>
+</tr>
+<tr>
+<td align="center">EXECUTE ROUTINE</td>
+<td align="center">Execute_priv</td>
+<td align="center">表示授予用户可以调用特定数据库的存储过程和存储函数的权限。</td>
+</tr>
+<tr>
+<td align="center">LOCK TABLES</td>
+<td align="center">Lock_tables_priv</td>
+<td align="center">表示授予用户可以锁定特定数据库的已有数据表的权限。</td>
+</tr>
+<tr>
+<td align="center">ALL 或<br>ALL PRIVILEGES<br>或 SUPER</td>
+<td align="center">Super_priv</td>
+<td align="center">表示以上所有权限&#x2F;超级权限</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>授予表权限时，&lt;权限类型&gt;可以指定为以下值：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">权限名称</th>
+<th align="center">对应user表中的字段</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SELECT</td>
+<td align="center">Select_priv</td>
+<td align="center">授予用户可以使用 SELECT 语句进行访问特定表的权限</td>
+</tr>
+<tr>
+<td align="center">INSERT</td>
+<td align="center">Insert_priv</td>
+<td align="center">授予用户可以使用 INSERT 语句向一个特定表中添加数据行的权限</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">Delete_priv</td>
+<td align="center">授予用户可以使用 DELETE 语句从一个特定表中删除数据行的权限</td>
+</tr>
+<tr>
+<td align="center">DROP</td>
+<td align="center">Drop_priv</td>
+<td align="center">授予用户可以删除数据表的权限</td>
+</tr>
+<tr>
+<td align="center">UPDATE</td>
+<td align="center">Update_priv</td>
+<td align="center">授予用户可以使用 UPDATE 语句更新特定数据表的权限</td>
+</tr>
+<tr>
+<td align="center">ALTER</td>
+<td align="center">Alter_priv</td>
+<td align="center">授予用户可以使用 ALTER TABLE 语句修改数据表的权限</td>
+</tr>
+<tr>
+<td align="center">REFERENCES</td>
+<td align="center">References_priv</td>
+<td align="center">授予用户可以创建一个外键来参照特定数据表的权限</td>
+</tr>
+<tr>
+<td align="center">CREATE</td>
+<td align="center">Create_priv</td>
+<td align="center">授予用户可以使用特定的名字创建一个数据表的权限</td>
+</tr>
+<tr>
+<td align="center">INDEX</td>
+<td align="center">Index_priv</td>
+<td align="center">授予用户可以在表上定义索引的权限</td>
+</tr>
+<tr>
+<td align="center">ALL 或<br>ALL PRIVILEGES<br>或 SUPER</td>
+<td align="center">Super_priv</td>
+<td align="center">所有的权限名</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>授予列权限时，&lt;权限类型&gt;的值只能指定为<code>SELECT、INSERT</code>和<code>UPDATE</code>，同时权限的后面需要加上列名列表<code>column-list</code>。</li>
+<li>最有效率的权限是用户权限。<br>授予用户权限时，&lt;权限类型&gt;除了可以指定为授予数据库权限时的所有值之外，还可以是下面这些值：</li>
+</ol>
+<ul>
+<li><code>CREATE USER</code>：表示授予用户可以创建和删除新用户的权限。</li>
+<li><code>SHOW DATABASES</code>：表示授予用户可以使用<code>SHOW DATABASES</code>语句查看所有已有的数据库的定义的权限。</li>
+</ul>
+<p>使用<code>GRANT</code>语句创建一个新的用户<code>testUser</code>，密码为<code>testPwd</code>。用户<code>testUser</code>对所有的数据有查询、插入权限，并授予<code>GRANT</code>权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">GRANT</span> <span class="keyword">SELECT</span>,<span class="keyword">INSERT</span> <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span></span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">TO</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span></span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;testPwd&#x27;</span></span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected, <span class="number">1</span> warning (<span class="number">0.05</span> sec)</span><br></pre></td></tr></table></figure>
+<p>使用<code>SHOW GRANTS</code>语句查询用户<code>testUser</code>的权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Grants <span class="keyword">for</span> testUser<span class="variable">@localhost</span>                                           <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GRANT</span> <span class="keyword">SELECT</span>, <span class="keyword">INSERT</span> <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-------------------------------------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<p>结果显示，<code>testUser</code>对所有数据库的所有表有查询、插入权限，并可以将这些权限赋予给别的用户。</p>
+<h1 id="REVOKE：删除用户权限"><a href="#REVOKE：删除用户权限" class="headerlink" title="REVOKE：删除用户权限"></a>REVOKE：删除用户权限</h1><p>在 MySQL 中，可以使用<code>REVOKE</code>语句删除某个用户的某些权限（此用户不会被删除），在一定程度上可以保证系统的安全性。</p>
+<p>使用<code>REVOKE</code>语句删除权限的语法格式有两种形式：</p>
+<h2 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h2><p>删除用户某些特定的权限：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> priv_type [(column_list)]...</span><br><span class="line"><span class="keyword">ON</span> database.table</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">user</span> [, <span class="keyword">user</span>]...</span><br></pre></td></tr></table></figure>
+<p><code>REVOKE</code>语句中的参数与<code>GRANT</code>语句的参数意思相同。其中：</p>
+<ul>
+<li><code>priv_type</code>参数表示权限的类型；</li>
+<li><code>column_list</code>参数表示权限作用于哪些列上，没有该参数时作用于整个表上；</li>
+<li><code>user</code>参数由用户名和主机名构成，格式为<code>username&#39;@&#39;hostname&#39;</code>。</li>
+</ul>
+<h2 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h2><p>删除特定用户的所有权限：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">ALL</span> PRIVILEGES, <span class="keyword">GRANT</span> OPTION <span class="keyword">FROM</span> <span class="keyword">user</span> [, <span class="keyword">user</span>] ...</span><br></pre></td></tr></table></figure>
+<p>删除用户权限需要注意以下几点：</p>
+<ul>
+<li><code>REVOKE</code>语法和<code>GRANT</code>语句的语法格式相似，但具有相反的效果。</li>
+<li>要使用<code>REVOKE</code>语句，必须拥有 MySQL 数据库的全局<code>CREATE USER</code>权限或<code>UPDATE</code>权限。</li>
+</ul>
+<p>使用<code>REVOKE</code>语句取消用户<code>testUser</code>的插入权限。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">REVOKE</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">FROM</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> Grants <span class="keyword">for</span> testUser<span class="variable">@localhost</span>                                   <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> <span class="keyword">GRANT</span> <span class="keyword">SELECT</span> <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;testUser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------------------------------------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<h1 id="登录和退出服务器"><a href="#登录和退出服务器" class="headerlink" title="登录和退出服务器"></a>登录和退出服务器</h1><p>启动 MySQL 服务后，可以使用以下命令来登录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql <span class="operator">-</span>h hostname<span class="operator">|</span>hostlP <span class="operator">-</span>p port <span class="operator">-</span>u username <span class="operator">-</span>p DatabaseName <span class="operator">-</span>e &quot;SQL语句&quot;</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>-h</code>：指定连接 MySQL 服务器的地址。可以用两种方式表示，<code>hostname</code>为主机名，<code>hostIP</code>为主机 IP 地址。</li>
+<li><code>-p</code>：指定连接 MySQL 服务器的端口号，<code>port</code>为连接的端口号。MySQL 的默认端口号是 3306，因此如果不指定该参数，默认使用 3306 连接 MySQL 服务器。</li>
+<li><code>-u</code>：指定连接 MySQL 服务器的用户名，<code>username</code>为用户名。</li>
+<li><code>-p</code>：提示输入密码，即提示<code>Enter password</code>。</li>
+<li><code>DatabaseName</code>：指定连接到 MySQL 服务器后，登录到哪一个数据库中。如果没有指定，默认为<code>mysql</code>数据库。</li>
+<li><code>-e</code>：指定需要执行的 SQL 语句，登录 MySQL 服务器后执行这个 SQL 语句，然后退出 MySQL 服务器。</li>
+</ul>
+<p>下面使用<code>root</code>用户登录到<code>test</code>数据库中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\11645&gt;mysql -h localhost -u root -p test</span><br><span class="line">Enter password: ****</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 2</span><br><span class="line">Server version: 5.7.29-log MySQL Community Server (GPL)</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br></pre></td></tr></table></figure>
+<p>上述命令中，通过值<code>localhost</code>指定 MySQL 服务器的地址，参数<code>-u</code>指定了登录 MySQL 服务器的用户账户，参数<code>-p</code>表示会出现输入密码提示信息，最后值<code>test</code>指定了登录成功后要使用的数据库。</p>
+<p>由结果可以看到，输入命令后，会出现“Enter password”提示信息，在这条信息之后输入密码，然后按 Enter 键。密码正确后，就成功登录到 MySQL 服务器了。</p>
+<p>下面使用<code>root</code>用户登录到自己计算机的<code>mysql</code>数据库，同时查询<code>student</code>表的表结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\11645&gt;mysql -h localhost -u root -p test -e&quot;DESC student&quot;</span><br><span class="line">Enter password: ****</span><br><span class="line">+-------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field | Type        | Null | Key | Default | Extra |</span><br><span class="line">+-------+-------------+------+-----+---------+-------+</span><br><span class="line">| id    | int(4)      | NO   | PRI | NULL    |       |</span><br><span class="line">| name  | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| age   | int(4)      | YES  |     | NULL    |       |</span><br><span class="line">| stuno | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">+-------+-------------+------+-----+---------+-------+</span><br></pre></td></tr></table></figure>
+<p>结果显示，执行命令并输入正确密码后，窗口中就会显示出<code>student</code>表的基本结构。</p>
+<p>用户也可以直接在<code>mysql</code>命令的<code>-p</code>后加上登录密码，登录密码与<code>-p</code>之间没有空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\11645&gt;mysql -h localhost -u root -proot</span><br><span class="line">mysql: [Warning] Using a password on the command line interface can be insecure.</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 4</span><br><span class="line">Server version: 5.7.29-log MySQL Community Server (GPL)</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br></pre></td></tr></table></figure>
+<p>上述命令执行后，后面不会提示输入密码。因为<code>-p</code>后面有密码，MySQL 会直接使用这个密码。</p>
+<p>退出 MySQL 服务器的方式很简单，只要在命令行输入<code>EXIT</code>或<code>QUIT</code>即可。“\q”是<code>QUIT</code>的缩写，也可以用来退出 MySQL 服务器。退出后就会显示 Bye。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; QUIT;</span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+<h1 id="root修改普通用户密码"><a href="#root修改普通用户密码" class="headerlink" title="root修改普通用户密码"></a>root修改普通用户密码</h1><p>在 MySQL 中，<code>root</code>用户拥有很高的权限，不仅可以修改自己的密码，还可以修改其他用户的密码。</p>
+<h2 id="使用SET语句修改普通用户的密码"><a href="#使用SET语句修改普通用户的密码" class="headerlink" title="使用SET语句修改普通用户的密码"></a>使用SET语句修改普通用户的密码</h2><p>在 MySQL 中，只有<code>root</code>用户可以通过更新 MySQL 数据库来更改密码。使用<code>root</code>用户登录到 MySQL 服务器后，可以使用<code>SET</code>语句来修改普通用户密码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;hostname&#x27;</span> <span class="operator">=</span> PASSWORD (<span class="string">&#x27;newpwd&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>其中，<code>username</code>参数是普通用户的用户名，<code>hostname</code>参数是普通用户的主机名，<code>newpwd</code>是要更改的新密码。</p>
+<blockquote>
+<p>注意：新密码必须使用<code>PASSWORD()</code>函数来加密，如果不使用<code>PASSWORD()</code>加密，也会执行成功，但是用户会无法登录。</p>
+</blockquote>
+<p>如果是普通用户修改密码，可省略<code>FOR</code>子句来更改自己的密码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> PASSWORD <span class="operator">=</span> PASSWORD(<span class="string">&#x27;newpwd&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>首先创建一个没有密码的<code>testuser</code>用户：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;testuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.14</span> sec)</span><br></pre></td></tr></table></figure>
+<p><code>root</code>用户登录 MySQL 服务器后，再使用<code>SET</code>语句将<code>testuser</code>用户的密码修改为<code>newpwd</code>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">&#x27;testuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="operator">=</span> PASSWORD(&quot;newpwd&quot;);</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected, <span class="number">1</span> warning (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+<p>下面验证<code>testuser</code>用户密码是否修改成功。退出 MySQL 服务器，使用<code>testuser</code>用户登录，输入密码<code>newpwd</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\leovo&gt;mysql -utestuser -p</span><br><span class="line">Enter password: ******</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 15</span><br><span class="line">Server version: 5.7.29-log MySQL Community Server (GPL)</span><br><span class="line"> </span><br><span class="line">Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"> </span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"> </span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br></pre></td></tr></table></figure>
+<p>由运行结果可以看出，<code>testuser</code>用户登录成功，修改密码成功。</p>
+<p>使用<code>testuser</code>用户登录 MySQL 服务器，再使用<code>SET</code>语句将密码更改为<code>newpwd1</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SET PASSWORD = PASSWORD(&#x27;newpwd1&#x27;);</span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>由运行结果可以看出，修改密码成功。</p>
+<h2 id="使用UPDATE语句修改普通用户的密码"><a href="#使用UPDATE语句修改普通用户的密码" class="headerlink" title="使用UPDATE语句修改普通用户的密码"></a>使用UPDATE语句修改普通用户的密码</h2><p>使用<code>root</code>用户登录 MySQL 服务器后，可以使用<code>UPDATE</code>语句修改 MySQL 数据库的<code>user</code>表的<code>authentication_string</code>字段，从而修改普通用户的密码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> MySQL.user <span class="keyword">SET</span> authentication_string <span class="operator">=</span> PASSWORD(&quot;newpwd&quot;) <span class="keyword">WHERE</span> <span class="keyword">User</span> <span class="operator">=</span> &quot;username&quot; <span class="keyword">AND</span> Host <span class="operator">=</span> &quot;hostname&quot;;</span><br></pre></td></tr></table></figure>
+<p>其中，<code>username</code>参数是普通用户的用户名，<code>hostname</code>参数是普通用户的主机名，<code>newpwd</code>是要更改的新密码。</p>
+<blockquote>
+<p>注意，执行<code>UPDATE</code>语句后，需要执行<code>FLUSH PRIVILEGES</code>语句重新加载用户权限。</p>
+</blockquote>
+<p>使用<code>root</code>用户登录 MySQL 服务器，再使用<code>UPDATE</code>语句将<code>testuser</code>用户的密码修改为<code>newpwd2</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; UPDATE MySQL.user SET authentication_string = PASSWORD (&quot;newpwd2&quot;)</span><br><span class="line">    -&gt; WHERE User = &quot;testuser&quot; AND Host = &quot;localhost&quot;;</span><br><span class="line">Query OK, 1 row affected, 1 warning (0.07 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 1</span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br></pre></td></tr></table></figure>
+<p>由运行结果可以看出，密码修改成功。<code>testuser</code>的密码被修改成了<code>newpwd2</code>。使用<code>FLUSH PRIVILEGES</code>重新加载权限后，就可以使用新的密码登录<code>testuser</code>用户了。</p>
+<h2 id="使用-GRANT-语句修改普通用户密码"><a href="#使用-GRANT-语句修改普通用户密码" class="headerlink" title="使用 GRANT 语句修改普通用户密码"></a>使用 GRANT 语句修改普通用户密码</h2><p>除了前面介绍的方法，还可以在全局级别使用<code>GRANT USAGE</code>语句指定某个账户的密码而不影响账户当前的权限。需要注意的是，使用<code>GRANT</code>语句修改密码，必须拥有<code>GRANT</code>权限。一般情况下最好使用该方法来指定或修改密码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> USAGE <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;hostname&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;newpwd&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>其中，<code>username</code>参数是普通用户的用户名，<code>hostname</code>参数是普通用户的主机名，<code>newpwd</code>是要更改的新密码。</p>
+<p>使用<code>root</code>用户登录 MySQL 服务器，再使用<code>GRANT</code>语句将<code>testuser</code>用户的密码修改为<code>newpwd3</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; GRANT USAGE ON *.* TO &#x27;testuser&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;newpwd3&#x27;;</span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.05 sec)</span><br></pre></td></tr></table></figure>
+<h1 id="修改root密码"><a href="#修改root密码" class="headerlink" title="修改root密码"></a>修改root密码</h1><p>在 MySQL 中，<code>root</code>用户拥有很高的权限，因此必须保证<code>root</code>用户密码的安全。修改<code>root</code>用户密码的方式有很多种。</p>
+<h2 id="使用mysqladmin命令在命令行指定新密码"><a href="#使用mysqladmin命令在命令行指定新密码" class="headerlink" title="使用mysqladmin命令在命令行指定新密码"></a>使用mysqladmin命令在命令行指定新密码</h2><p><code>root</code>用户可以使用<code>mysqladmin</code>命令来修改密码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin <span class="operator">-</span>u username <span class="operator">-</span>h hostname <span class="operator">-</span>p password &quot;newpwd&quot;</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<ul>
+<li><code>usermame</code>指需要修改密码的用户名称，在这里指定为<code> root</code>用户；</li>
+<li><code>hostname</code>指需要修改密码的用户主机名，该参数可以不写，默认是<code>localhost</code>；</li>
+<li><code>password</code>为关键字，而不是指旧密码；</li>
+<li><code>newpwd</code>为新设置的密码，必须用双引号括起来。如果使用单引号会引发错误，可能会造成修改后的密码不是你想要的。</li>
+</ul>
+<p>执行完上面的语句，<code>root</code>用户的密码将被修改为<code>newpwd</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\leovo&gt;mysqladmin -u root -p password &quot;rootpwd&quot;</span><br><span class="line">Enter password: ****</span><br><span class="line">mysqladmin: [Warning] Using a password on the command line interface can be insecure.</span><br><span class="line">Warning: Since password will be sent to server in plain text, use ssl connection to ensure password safety.</span><br></pre></td></tr></table></figure>
+<p>运行结果中，输入密码后会提示在命令行界面上使用密码可能不安全的警告信息，因为在命令行输入密码时，MySQL 服务器就会提示这些安全警告信息。</p>
+<h2 id="修改MySQL数据库的user表"><a href="#修改MySQL数据库的user表" class="headerlink" title="修改MySQL数据库的user表"></a>修改MySQL数据库的user表</h2><p>因为所有账户信息都保存在<code>user</code>表中，因此可以直接通过修改<code>user</code>表来改变<code>root</code>用户的密码。</p>
+<p><code>root</code>用户登录到 MySQL 服务器后，可以使用<code>UPDATE</code>语句修改 MySQL 数据库的<code>user</code>表的<code>authentication_string</code>字段，从而修改用户的密码。</p>
+<p>使用<code>UPDATA</code>语句修改<code>root</code>用户密码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> mysql.user <span class="keyword">set</span> authentication_string <span class="operator">=</span> PASSWORD (&quot;rootpwd) WHERE User = &quot;root&quot; and Host=&quot;localhost&quot;;</span><br></pre></td></tr></table></figure>
+<p>新密码必须使用<code>PASSWORD()</code>函数来加密。执行<code>UPDATE</code>语句后，需要执行<code>FLUSH PRIVILEGES</code>语句重新加载用户权限。</p>
+<p>下面使用<code>UPDATE</code>语句将<code>root</code>用户的密码修改为<code>rootpwd2</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">UPDATE</span> mysql.user <span class="keyword">set</span> authentication_string <span class="operator">=</span> password (&quot;rootpwd2&quot;)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> <span class="keyword">User</span> <span class="operator">=</span> &quot;root&quot; <span class="keyword">and</span> Host <span class="operator">=</span> &quot;localhost&quot;;</span><br><span class="line">Query OK, <span class="number">1</span> <span class="type">row</span> affected, <span class="number">0</span> warning (<span class="number">0.00</span> sec)</span><br><span class="line"><span class="keyword">Rows</span> matched: <span class="number">1</span>  Changed: <span class="number">1</span>  Warnings:<span class="number">0</span></span><br><span class="line">mysql<span class="operator">&gt;</span> FLUSH PRIVILEGES;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.06</span> sec)</span><br></pre></td></tr></table></figure>
+<p>退出后就必须使用新密码来登录了。</p>
+<h2 id="使用SET语句修改root用户的密码"><a href="#使用SET语句修改root用户的密码" class="headerlink" title="使用SET语句修改root用户的密码"></a>使用SET语句修改root用户的密码</h2><p><code>SET PASSWORD</code>语句可以用来重新设置其他用户的登录密码或者自己使用的账户的密码。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> PASSWORD <span class="operator">=</span> PASSWORD (&quot;rootpwd&quot;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MySQL&gt; SET PASSWORD = password (&quot;rootpwd3&quot;);</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h1 id="忘记root密码后如何重置"><a href="#忘记root密码后如何重置" class="headerlink" title="忘记root密码后如何重置"></a>忘记root密码后如何重置</h1><p>在忘记 MySQL 密码的情况下，可以通过<code>--skip-grant-tables</code>关闭服务器的认证，然后重置<code>root</code>的密码，具体操作步骤如下。</p>
+<ol>
+<li>关闭正在运行的 MySQL 服务。打开 cmd 进入 MySQL 的<code>bin</code>目录。</li>
+<li>输入<code>mysqld --console --skip-grant-tables --shared-memory</code>命令。<code>–skip-grant-tables</code>会让 MySQL 服务器跳过验证步骤，允许所有用户以匿名的方式，无需做密码验证就可以直接登录 MySQL 服务器，并且拥有所有的操作权限。</li>
+<li>上一个 DOS 窗口不要关闭，打开一个新的 DOS 窗口，此时仅输入 mysql 命令，不需要用户名和密码，即可连接到 MySQL。</li>
+<li>输入命令<code>update mysql.user set authentication_string=password(&#39;root&#39;) where user=&#39;root&#39; and Host =&#39;localhost&#39;;</code>设置新密码。<br>注意：MySQL 5.7 版本中的<code>user</code>表里已经去掉了<code>password</code>字段，改为了<code>authentication_string</code>。</li>
+<li>刷新权限（必须步骤），输入<code>flush privileges;</code>命令。</li>
+<li>因为之前使用<code>--skip-grant-tables</code>启动，所以需要重启 MySQL 服务器去掉<code>--skip-grant-tables</code>。输入无误后输入<code>quit;</code>命令退出 MySQL 服务。</li>
+<li>重启 MySQL 服务，使用用户名<code>root</code>和刚才设置的新密码<code>root</code>登录就可以了。</li>
+</ol>
+<h1 id="修改密码的3种方式"><a href="#修改密码的3种方式" class="headerlink" title="修改密码的3种方式"></a>修改密码的3种方式</h1><p>3 种修改 MySQL 数据库密码的方法。</p>
+<h2 id="1-使用-SET-PASSWORD-命令"><a href="#1-使用-SET-PASSWORD-命令" class="headerlink" title="1. 使用 SET PASSWORD 命令"></a>1. 使用 SET PASSWORD 命令</h2><ol>
+<li>输入命令<code>mysql -u root -p</code>指定<code>root</code>用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的<code>bin</code>目录下登录操作。</li>
+<li>使用<code>SET PASSWORD</code>修改密码命令格式为<code>set password for username @localhost = password(newpwd);</code><br>，其中<code>username</code>为要修改密码的用户名，<code>newpwd</code>为要修改的新密码。</li>
+<li>输入<code>quit;</code>命令退出 MySQL 重新登录，输入新密码“root”登录就可以了；</li>
+</ol>
+<h2 id="2-使用mysqladmin修改密码"><a href="#2-使用mysqladmin修改密码" class="headerlink" title="2. 使用mysqladmin修改密码"></a>2. 使用mysqladmin修改密码</h2><p>使用 mysqladmin 命令修改 MySQL 的<code>root</code>用户密码格式为<code>mysqladmin -u</code>用户名 -p旧密码<code>password</code>新密码。</p>
+<p>注意：下图修改密码的命令中<code>-uroot</code>和<code>-proot</code>是整体，不要写成<code>-u root -p root</code>，<code>-u</code>和<code>root</code>间可以加空格，但是会有警告出现，所以就不要加空格了。</p>
+<h2 id="3-UPDATE直接编辑user表"><a href="#3-UPDATE直接编辑user表" class="headerlink" title="3. UPDATE直接编辑user表"></a>3. UPDATE直接编辑user表</h2><ol>
+<li>输入命令<code>mysql -u root -p</code>指定<code>root</code>用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的<code>bin</code>目录下登录操作。</li>
+<li>输入<code>use mysql;</code>命令连接权限数据库。</li>
+<li>输入命令<code>update mysql.user set authentication_string=password(&#39;新密码&#39;) where user=&#39;用户名&#39; and Host =&#39;localhost&#39;;</code>设置新密码。</li>
+<li>输入<code>flush privileges;</code>命令刷新权限。</li>
+<li>输入<code>quit;</code>命令退出 MySQL 重新登录，此时密码已经修改为刚才输入的新密码了。</li>
+</ol>
+<h1 id="权限控制实现原理"><a href="#权限控制实现原理" class="headerlink" title="权限控制实现原理"></a>权限控制实现原理</h1><p>MySQL 权限表在数据库启动时载入内存，用户通过身份认证后，系统会在内存中进行相应权限的存取。当 MySQL 允许一个用户执行各种操作时，它将首先核实该用户向 MySQL 服务器发送的连接请求，然后确认用户的操作请求是否被允许。</p>
+<p>当用户进行连接时，MySQL 实现权限控制主要有以下两个阶段：</p>
+<h2 id="1-连接核实阶段"><a href="#1-连接核实阶段" class="headerlink" title="1. 连接核实阶段"></a>1. 连接核实阶段</h2><p>登录 MySQL 服务器时，客户端连接请求中会提供用户名称、主机地址和密码，MySQL 服务器会使用<code>user</code>表中的<code>Host、User</code>和<code>authentication_string</code>字段执行身份检查。</p>
+<p>只有客户端请求的主机名和用户名在<code>user</code>表中有匹配的记录，并且密码正确时，MySQL 服务器才会通过身份认证，接受连接，否则拒绝连接。</p>
+<p>MySQL 通过 IP 地址和用户名联合进行身份认证。例如 MySQL 安装后默认创建的用户<code>root@localhost</code>，表示用户<code>root</code>只能从本地（<code>localhost</code>）进行连接时才能通过认证。此用户从其它任何主机对数据库进行连接时都将被拒绝。也就是说，用户名相同，IP 地址不同，MySQL 则将其视为不同的用户。</p>
+<p>服务器接受连接后进入请求核实阶段等待用户请求。如果连接核实没有通过，服务器则完全拒绝访问。</p>
+<h2 id="2-请求核实阶段"><a href="#2-请求核实阶段" class="headerlink" title="2. 请求核实阶段"></a>2. 请求核实阶段</h2><p>建立连接后，服务器进入请求核实阶段，对在此连接上的每个请求，服务器都会检查用户是否有足够的权限来执行它。这正是授权表中的权限列发挥作用的地方。</p>
+<p>权限按照以下权限表的顺序得到数据库权限：<code>user→db→tables_priv→columns_priv→procs_priv</code>。在这几个权限表中，权限范围依次递减，全局权限覆盖局部权限。</p>
+<p>请求核实的过程如下所示：</p>
+<ol>
+<li>用户向 MySQL 发出操作请求。</li>
+<li>MySQL 首先检查<code>user</code>表，匹配<code>User、Host</code>字段值，查看请求的全局权限在 user 表中是否被授权。授权则允许操作执行，如果指定的权限在 user 表中没有被授权。MySQL 将检查<code>db</code>表。</li>
+<li><code>db</code>表是下一安全层级，其中的权限限定于数据库层级，在该层级的<code>SELECT</code>权限允许用户查看指定数据库的所有表中的数据。<br>MySQL 检查<code>db</code>权限表中的权限信息，匹配<code>User、Host</code>字段值，查看请求的数据库级别的权限在<code>db</code>表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。</li>
+<li>MySQL 检查<code>tables_priv</code>权限表中的权限信息，匹配<code>User、Host</code>字段值，查看请求的数据表级别的权限在<code>tables_priv</code>表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。</li>
+<li>MySQL 检查<code>columns_priv</code>权限表中的权限信息，匹配<code>User、Host</code>字段值，查看请求的列级别的权限在<code>columns_priv</code>表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。</li>
+<li>如果所有权限表都检查完毕，还是没有找到允许的权限操作，那么 MySQL 将返回错误信息，即用户请求的操作不能执行，操作失败。</li>
+</ol>
+<p>提示：上面提到 MySQL 通过向下层级的顺序检查权限表，但并不意味着所有的权限都要执行该过程。例如，一个用户登录到 MySQL 服务器之后只执行对 MySQL 的管理操作，此时只涉及管理权限，因此 MySQL 只检查 user 表。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/05/31/MySQL/MySQL%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/06/03/MySQL/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MySQL数据库备份与恢复
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/19/MySQL/MySQL%E9%94%81%E6%9C%BA%E5%88%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MySQL 锁机制</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

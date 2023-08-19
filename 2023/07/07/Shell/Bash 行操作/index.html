@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Bash 行操作 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Shell/Bash 行操作"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Bash 行操作
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/07/Shell/Bash%20%E8%A1%8C%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time datetime="2023-07-07T11:01:14.000Z" itemprop="datePublished">2023-07-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Bash 内置了 Readline 库，具有这个库提供的很多“行操作”功能，比如命令的自动补全，可以大大加快操作速度。</p>
+<p>这个库默认采用 Emacs 快捷键，也可以改成 Vi 快捷键。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">set</span> -o vi</span><br></pre></td></tr></table></figure>
+<p>下面的命令可以改回 Emacs 快捷键。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">set</span> -o emacs</span><br></pre></td></tr></table></figure>
+<p>如果想永久性更改编辑模式（Emacs &#x2F; Vi），可以将命令写在~&#x2F;.inputrc文件，这个文件是 Readline 的配置文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> editing-mode vi</span><br></pre></td></tr></table></figure>
+<p>Bash 默认开启这个库，但是允许关闭。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bash --noediting</span><br></pre></td></tr></table></figure>
+<p>上面命令中，<code>--noediting</code>参数关闭了 Readline 库，启动的 Bash 就不带有行操作功能。</p>
+<h1 id="光标移动"><a href="#光标移动" class="headerlink" title="光标移动"></a>光标移动</h1><p>Readline 提供快速移动光标的快捷键。</p>
+<ul>
+<li><code>Ctrl + a</code>：移到行首。</li>
+<li><code>Ctrl + b</code>：向行首移动一个字符，与左箭头作用相同。</li>
+<li><code>Ctrl + e</code>：移到行尾。</li>
+<li><code>Ctrl + f</code>：向行尾移动一个字符，与右箭头作用相同。</li>
+<li><code>Alt + f</code>：移动到当前单词的词尾。</li>
+<li><code>Alt + b</code>：移动到当前单词的词首。</li>
+</ul>
+<p>上面快捷键的 Alt 键，也可以用 ESC 键代替。</p>
+<h1 id="清除屏幕"><a href="#清除屏幕" class="headerlink" title="清除屏幕"></a>清除屏幕</h1><p><code>Ctrl + l</code>快捷键可以清除屏幕，即将当前行移到屏幕的第一行，与<code>clear</code>命令作用相同。</p>
+<h1 id="编辑操作"><a href="#编辑操作" class="headerlink" title="编辑操作"></a>编辑操作</h1><p>下面的快捷键可以编辑命令行内容。</p>
+<ul>
+<li><code>Ctrl + d</code>：删除光标位置的字符（<code>delete</code>）。</li>
+<li><code>Ctrl + w</code>：删除光标前面的单词。</li>
+<li><code>Ctrl + t</code>：光标位置的字符与它前面一位的字符交换位置（<code>transpose</code>）。</li>
+<li><code>Alt + t</code>：光标位置的词与它前面一位的词交换位置（<code>transpose</code>）。</li>
+<li><code>Alt + l</code>：将光标位置至词尾转为小写（<code>lowercase</code>）。</li>
+<li><code>Alt + u</code>：将光标位置至词尾转为大写（<code>uppercase</code>）。</li>
+</ul>
+<p>使用<code>Ctrl + d</code>的时候，如果当前行没有任何字符，会导致退出当前 Shell，所以要小心。</p>
+<p>剪切和粘贴快捷键如下。</p>
+<ul>
+<li><code>Ctrl + k</code>：剪切光标位置到行尾的文本。</li>
+<li><code>Ctrl + u</code>：剪切光标位置到行首的文本。</li>
+<li><code>Alt + d</code>：剪切光标位置到词尾的文本。</li>
+<li><code>Alt + Backspace</code>：剪切光标位置到词首的文本。</li>
+<li><code>Ctrl + y</code>：在光标位置粘贴文本。</li>
+</ul>
+<p>同样地，Alt 键可以用 Esc 键代替。</p>
+<h1 id="自动补全"><a href="#自动补全" class="headerlink" title="自动补全"></a>自动补全</h1><p>命令输入到一半的时候，可以按一下 Tab 键，Readline 会自动补全命令或路径。比如，输入<code>cle</code>，再按下 Tab 键，Bash 会自动将这个命令补全为<code>clear</code>。</p>
+<p>如果符合条件的命令或路径有多个，就需要连续按两次 Tab 键，Bash 会提示所有符合条件的命令或路径。</p>
+<p>除了命令或路径，Tab 还可以补全其他值。如果一个值以$开头，则按下 Tab 键会补全变量；如果以<code>~</code>开头，则补全用户名；如果以<code>@</code>开头，则补全主机名（<code>hostname</code>），主机名以列在<code>/etc/hosts</code>文件里面的主机为准。</p>
+<p>自动补全相关的快捷键如下。</p>
+<ul>
+<li><code>Tab</code>：完成自动补全。</li>
+<li><code>Alt + ?</code>：列出可能的补全，与连按两次 Tab 键作用相同。</li>
+<li><code>Alt + /</code>：尝试文件路径补全。</li>
+<li><code>Ctrl + x /</code>：先按<code>Ctrl + x</code>，再按&#x2F;，等同于<code>Alt + ?</code>，列出可能的文件路径补全。</li>
+<li><code>Alt + !</code>：命令补全。</li>
+<li><code>Ctrl + x !</code>：先按<code>Ctrl + x</code>，再按!，等同于<code>Alt + !</code>，命令补全。</li>
+<li><code>Alt + ~</code>：用户名补全。</li>
+<li><code>Ctrl + x ~</code>：先按<code>Ctrl + x</code>，再按~，等同于<code>Alt + ~</code>，用户名补全。</li>
+<li><code>Alt + $</code>：变量名补全。</li>
+<li><code>Ctrl + x $</code>：先按<code>Ctrl + x</code>，再按$，等同于<code>Alt + $</code>，变量名补全。</li>
+<li><code>Alt + @</code>：主机名补全。</li>
+<li><code>Ctrl + x @</code>：先按<code>Ctrl + x</code>，再按@，等同于<code>Alt + @</code>，主机名补全。</li>
+<li><code>Alt + *</code>：在命令行一次性插入所有可能的补全。</li>
+<li><code>Alt + Tab</code>：尝试用<code>.bash_history</code>里面以前执行命令，进行补全。</li>
+</ul>
+<p>上面的Alt键也可以用 ESC 键代替。</p>
+<h1 id="操作历史"><a href="#操作历史" class="headerlink" title="操作历史"></a>操作历史</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>Bash 会保留用户的操作历史，即用户输入的每一条命令都会记录。有了操作历史以后，就可以使用方向键的↑和↓，快速浏览上一条和下一条命令。</p>
+<p>退出当前 Shell 的时候，Bash 会将用户在当前 Shell 的操作历史写入<code>~/.bash_history</code>文件，该文件默认储存 500 个操作。</p>
+<p>环境变量<code>HISTFILE</code>总是指向这个文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTFILE</span></span><br><span class="line">/home/me/.bash_history</span><br></pre></td></tr></table></figure>
+<p><code>history</code>命令会输出这个文件的全部内容。用户可以看到最近执行过的所有命令，每条命令之前都有行号。越近的命令，排在越后面。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">history</span></span><br><span class="line">...</span><br><span class="line">498 <span class="built_in">echo</span> Goodbye</span><br><span class="line">499 <span class="built_in">ls</span> ~</span><br><span class="line">500 <span class="built_in">cd</span></span><br></pre></td></tr></table></figure>
+<p>输入命令时，按下<code>Ctrl + r</code>快捷键，就可以搜索操作历史，选择以前执行过的命令。这时键入命令的开头部分，Shell 就会自动在历史文件中，查询并显示最近一条匹配的结果，这时按下回车键，就会执行那条命令。</p>
+<p>下面的方法可以快速执行以前执行过的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> Hello World</span><br><span class="line">Hello World</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> Goodbye</span><br><span class="line">Goodbye</span><br><span class="line"></span><br><span class="line">$ !e</span><br><span class="line"><span class="built_in">echo</span> Goodbye</span><br><span class="line">Goodbye</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>!e</code>表示找出操作历史之中，最近的那一条以<code>e</code>开头的命令并执行。Bash 会先输出那一条命令<code>echo Goodbye</code>，然后直接执行。</p>
+<p>同理，<code>!echo</code>也会执行最近一条以<code>echo</code>开头的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ !<span class="built_in">echo</span></span><br><span class="line"><span class="built_in">echo</span> Goodbye</span><br><span class="line">Goodbye</span><br><span class="line"></span><br><span class="line">$ !<span class="built_in">echo</span> H</span><br><span class="line"><span class="built_in">echo</span> Goodbye H</span><br><span class="line">Goodbye H</span><br><span class="line"></span><br><span class="line">$ !<span class="built_in">echo</span> H G</span><br><span class="line"><span class="built_in">echo</span> Goodbye H G</span><br><span class="line">Goodbye H G</span><br></pre></td></tr></table></figure>
+<p>注意，<code>!string</code>语法只会匹配命令，不会匹配参数。所以<code>!echo H</code>不会执行<code>echo Hello World</code>，而是会执行<code>echo Goodbye</code>，并把参数H附加在这条命令之后。同理，<code>!echo H G</code>也是等同于<code>echo Goodbye</code>命令之后附加H G。</p>
+<p>由于<code>!string</code>语法会扩展成以前执行过的命令，所以含有!的字符串放在双引号里面，必须非常小心，如果它后面有非空格的字符，就很有可能报错。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;I say:\&quot;hello!\&quot;&quot;</span></span><br><span class="line">bash: !\: event not found</span><br></pre></td></tr></table></figure>
+<p>上面的命令会报错，原因是感叹号后面是一个反斜杠，Bash 会尝试寻找，以前是否执行过反斜杠开头的命令，一旦找不到就会报错。解决方法就是在感叹号前面，也加上反斜杠。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;I say:\&quot;hello\!\&quot;&quot;</span></span><br><span class="line">I say:<span class="string">&quot;hello\!&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="history-命令"><a href="#history-命令" class="headerlink" title="history 命令"></a>history 命令</h2><p><code>history</code>命令能显示操作历史，即<code>.bash_history</code>文件的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">history</span></span><br></pre></td></tr></table></figure>
+<p>使用该命令，而不是直接读取<code>.bash_history</code>文件的好处是，它会在所有的操作前加上行号，最近的操作在最后面，行号最大。</p>
+<p>通过定制环境变量<code>HISTTIMEFORMAT</code>，可以显示每个操作的时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> HISTTIMEFORMAT=<span class="string">&#x27;%F %T  &#x27;</span></span><br><span class="line">$ <span class="built_in">history</span></span><br><span class="line">1  2013-06-09 10:40:12   <span class="built_in">cat</span> /etc/issue</span><br><span class="line">2  2013-06-09 10:40:12   clear</span><br></pre></td></tr></table></figure>
+<p>上面代码中，<code>%F</code>相当于<code>%Y - %m - %d</code>，<code>%T</code>相当于<code>%H : %M : %S</code>。</p>
+<p>只要设置<code>HISTTIMEFORMAT</code>这个环境变量，就会在<code>.bash_history</code>文件保存命令的执行时间戳。如果不设置，就不会保存时间戳。</p>
+<p>环境变量<code>HISTSIZE</code>设置保存历史操作的数量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> HISTSIZE=10000</span><br></pre></td></tr></table></figure>
+<p>上面命令设置保存过去 10000 条操作历史。</p>
+<p>如果不希望保存本次操作的历史，可以设置<code>HISTSIZE</code>等于 0。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HISTSIZE=0</span><br></pre></td></tr></table></figure>
+<p>如果<code>HISTSIZE=0</code>写入用户主目录的<code>~/.bashrc</code>文件，那么就不会保留该用户的操作历史。如果写入<code>/etc/profile</code>，整个系统都不会保留操作历史。</p>
+<p>环境变量<code>HISTIGNORE</code>可以设置哪些命令不写入操作历史。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HISTIGNORE=<span class="string">&#x27;pwd:ls:exit&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>上面示例设置，<code>pwd、ls、exit</code>这三个命令不写入操作历史。</p>
+<p>如果想搜索某个以前执行的命令，可以配合<code>grep</code>命令搜索操作历史。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">history</span> | grep /usr/bin</span><br></pre></td></tr></table></figure>
+<p>上面命令返回<code>.bash_history</code>文件里面，那些包含<code>/usr/bin</code>的命令。</p>
+<p>操作历史的每一条记录都有编号。知道了命令的编号以后，可以用感叹号 + 编号执行该命令。如果想要执行<code>.bash_history</code>里面的第 8 条命令，可以像下面这样操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ !8</span><br></pre></td></tr></table></figure>
+<p><code>history</code>命令的<code>-c</code>参数可以清除操作历史。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">history</span> -c</span><br></pre></td></tr></table></figure>
+<h2 id="相关快捷键"><a href="#相关快捷键" class="headerlink" title="相关快捷键"></a>相关快捷键</h2><p>下面是一些与操作历史相关的快捷键。</p>
+<ul>
+<li><code>Ctrl + p</code>：显示上一个命令，与向上箭头效果相同（<code>previous</code>）。</li>
+<li><code>Ctrl + n</code>：显示下一个命令，与向下箭头效果相同（<code>next</code>）。</li>
+<li><code>Alt + &lt;</code>：显示第一个命令。</li>
+<li><code>Alt + &gt;</code>：显示最后一个命令，即当前的命令。</li>
+<li><code>Ctrl + o</code>：执行历史文件里面的当前条目，并自动显示下一条命令。这对重复执行某个序列的命令很有帮助。</li>
+</ul>
+<p>感叹号!的快捷键如下。</p>
+<ul>
+<li><code>!!</code>：执行上一个命令。</li>
+<li><code>!n</code>：<code>n</code>为数字，执行历史文件里面行号为<code>n</code>的命令。</li>
+<li><code>!-n</code>：执行当前命令之前<code>n</code>条的命令。</li>
+<li><code>!string</code>：执行最近一个以指定字符串<code>string</code>开头的命令。</li>
+<li><code>!?string</code>：执行最近一条包含字符串<code>string</code>的命令。</li>
+<li><code>!$</code>：代表上一个命令的最后一个参数。</li>
+<li><code>!*</code>：代表上一个命令的所有参数，即除了命令以外的所有部分。</li>
+<li><code>^string1^string2</code>：执行最近一条包含<code>string1</code>的命令，将其替换成<code>string2</code>。</li>
+</ul>
+<p>下面是!$和!*的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cp</span> a.txt b.txt</span><br><span class="line">$ <span class="built_in">echo</span> !$</span><br><span class="line">b.txt</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">cp</span> a.txt b.txt</span><br><span class="line">$ <span class="built_in">echo</span> !*</span><br><span class="line">a.txt b.txt</span><br></pre></td></tr></table></figure>
+<p>上面示例中，<code>!$</code>代表上一个命令的最后一个参数（<code>b.txt</code>），<code>!*</code>代表上一个命令的所有参数（<code>a.txt b.txt</code>）。</p>
+<p>下面是^string1^string2的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">rm</span> /var/log/httpd/error.log</span><br><span class="line">$ ^error^access</span><br><span class="line"><span class="built_in">rm</span> /var/log/httpd/access.log</span><br></pre></td></tr></table></figure>
+<p>上面示例中，<code>^error^access</code>将最近一条含有<code>error</code>的命令里面的<code>error</code>，替换成<code>access</code>。</p>
+<p>如果希望确定是什么命令，然后再执行，可以打开<code>histverify</code>选项。这样的话，使用!快捷键所产生的命令，会先打印出来，等到用户按下回车键后再执行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">shopt</span> -s histverify</span><br></pre></td></tr></table></figure>
+<h1 id="其他快捷键"><a href="#其他快捷键" class="headerlink" title="其他快捷键"></a>其他快捷键</h1><ul>
+<li><code>Ctrl + j</code>：等同于回车键（LINEFEED）。</li>
+<li><code>Ctrl + m</code>：等同于回车键（CARRIAGE RETURN）。</li>
+<li><code>Ctrl + o</code>：等同于回车键，并展示操作历史的下一个命令。</li>
+<li><code>Ctrl + v</code>：将下一个输入的特殊字符变成字面量，比如回车变成^M。</li>
+<li><code>Ctrl + [</code>：等同于 ESC。</li>
+<li><code>Alt + .</code>：插入上一个命令的最后一个词。</li>
+<li><code>Alt + _</code>：等同于<code>Alt + .</code>。</li>
+</ul>
+<p>上面的<code>Alt + .</code>快捷键，对于很长的文件路径，有时会非常方便。因为 Unix 命令的最后一个参数通常是文件路径。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">mkdir</span> foo_bar</span><br><span class="line">$ <span class="built_in">cd</span> <span class="comment">#按下 Alt + .</span></span><br></pre></td></tr></table></figure>
+<p>上面例子中，在<code>cd</code>命令后按下<code>Alt + .</code>，就会自动插入<code>foo_bar</code>。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/07/07/Shell/Bash%20%E8%A1%8C%E6%93%8D%E4%BD%9C/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bash/" rel="tag">Bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/09/Shell/Bash%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Bash 脚本入门
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/06/Shell/Bash%20%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Bash 算术运算</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

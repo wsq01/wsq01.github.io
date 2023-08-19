@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Bash 变量 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Shell/Bash 变量"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Bash 变量
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/02/Shell/Bash%20%E5%8F%98%E9%87%8F/" class="article-date">
+  <time datetime="2023-07-02T09:42:56.000Z" itemprop="datePublished">2023-07-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">3.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">13 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Bash 变量分成环境变量和自定义变量两类。</p>
+<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>环境变量是 Bash 环境自带的变量，进入 Shell 时已经定义好了，可以直接使用。它们通常是系统定义好的，也可以由用户从父 Shell 传入子 Shell。</p>
+<p><code>env</code>命令或<code>printenv</code>命令，可以显示所有环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">env</span></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ <span class="built_in">printenv</span></span><br></pre></td></tr></table></figure>
+<p>常见的环境变量：</p>
+<ul>
+<li><code>BASHPID</code>：Bash 进程的进程 ID。</li>
+<li><code>BASHOPTS</code>：当前 Shell 的参数，可以用<code>shopt</code>命令修改。</li>
+<li><code>DISPLAY</code>：图形环境的显示器名字，通常是<code>:0</code>，表示 X Server 的第一个显示器。</li>
+<li><code>EDITOR</code>：默认的文本编辑器。</li>
+<li><code>HOME</code>：用户的主目录。</li>
+<li><code>HOST</code>：当前主机的名称。</li>
+<li><code>IFS</code>：词与词之间的分隔符，默认为空格。</li>
+<li><code>LANG</code>：字符集以及语言编码，比如<code>zh_CN.UTF-8</code>。</li>
+<li><code>PATH</code>：由冒号分开的目录列表，当输入可执行程序名后，会搜索这个目录列表。</li>
+<li><code>PS1</code>：Shell 提示符。</li>
+<li><code>PS2</code>： 输入多行命令时，次要的 Shell 提示符。</li>
+<li><code>PWD</code>：当前工作目录。</li>
+<li><code>RANDOM</code>：返回一个 0 到 32767 之间的随机数。</li>
+<li><code>SHELL</code>：Shell 的名字。</li>
+<li><code>SHELLOPTS</code>：启动当前 Shell 的<code>set</code>命令的参数。</li>
+<li><code>TERM</code>：终端类型名，即终端仿真器所用的协议。</li>
+<li><code>UID</code>：当前用户的 ID 编号。</li>
+<li><code>USER</code>：当前用户的用户名。</li>
+</ul>
+<p>很多环境变量很少发生变化，而且是只读的，可以视为常量。由于它们的变量名全部都是大写，所以传统上，如果用户要自己定义一个常量，也会使用全部大写的变量名。</p>
+<blockquote>
+<p>注意，Bash 变量名区分大小写，<code>HOME</code>和<code>home</code>是两个不同的变量。</p>
+</blockquote>
+<p>查看单个环境变量的值，可以使用<code>printenv</code>命令或<code>echo</code>命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">printenv</span> PATH</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<p>注意，<code>printenv</code>命令后面的变量名，不用加前缀<code>$</code>。</p>
+<h2 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h2><p>自定义变量是用户在当前 Shell 里面自己定义的变量，仅在当前 Shell 可用。一旦退出当前 Shell，该变量就不存在了。</p>
+<p><code>set</code>命令可以显示所有变量（包括环境变量和自定义变量），以及所有的 Bash 函数。</p>
+<h1 id="创建变量"><a href="#创建变量" class="headerlink" title="创建变量"></a>创建变量</h1><p>用户创建变量的时候，变量名必须遵守下面的规则：</p>
+<ul>
+<li>字母、数字和下划线字符组成。</li>
+<li>第一个字符必须是一个字母或一个下划线，不能是数字。</li>
+<li>不能使用 Shell 里的关键字。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">variable=value</span><br><span class="line">variable=<span class="string">&#x27;value&#x27;</span></span><br><span class="line">variable=<span class="string">&quot;value&quot;</span></span><br></pre></td></tr></table></figure>
+<p>上面命令中，等号左边是变量名，右边是变量。</p>
+<blockquote>
+<p>注意，等号两边不能有空格。</p>
+</blockquote>
+<p>如果变量的值包含空格，则必须将值放在引号中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myvar=<span class="string">&quot;hello world&quot;</span></span><br></pre></td></tr></table></figure>
+<p>Bash 没有数据类型的概念，所有的变量值都是字符串。</p>
+<p>下面是一些自定义变量的例子。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a=z                     <span class="comment"># 变量 a 赋值为字符串 z</span></span><br><span class="line">b=<span class="string">&quot;a string&quot;</span>            <span class="comment"># 变量值包含空格，就必须放在引号里面</span></span><br><span class="line">c=<span class="string">&quot;a string and <span class="variable">$b</span>&quot;</span>     <span class="comment"># 变量值可以引用其他变量的值</span></span><br><span class="line">d=<span class="string">&quot;\t\ta string\n&quot;</span>      <span class="comment"># 变量值可以使用转义字符</span></span><br><span class="line">e=$(<span class="built_in">ls</span> -l foo.txt)      <span class="comment"># 变量值可以是命令的执行结果</span></span><br><span class="line">f=$((<span class="number">5</span> * <span class="number">7</span>))            <span class="comment"># 变量值可以是数学运算的结果</span></span><br></pre></td></tr></table></figure>
+<p>变量可以重复赋值，后面的赋值会覆盖前面的赋值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ foo=1</span><br><span class="line">$ foo=2</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>如果同一行定义多个变量，必须使用分号<code>;</code>分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ foo=1;bar=2</span><br></pre></td></tr></table></figure>
+<h1 id="读取变量"><a href="#读取变量" class="headerlink" title="读取变量"></a>读取变量</h1><p>读取变量的时候，直接在变量名前加上<code>$</code>就可以了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ foo=bar</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">bar</span><br></pre></td></tr></table></figure>
+<p>每当 Shell 看到以<code>$</code>开头的单词时，就会尝试读取这个变量名对应的值。</p>
+<p>如果变量不存在，Bash 不会报错，而会输出空字符。</p>
+<p>由于<code>$</code>在 Bash 中有特殊含义，把它当作美元符号使用时，一定要非常小心，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> The total is <span class="variable">$100</span>.00</span><br><span class="line">The total is 00.00</span><br></pre></td></tr></table></figure>
+<p>上面命令的原意是输入<code>$100</code>，但是 Bash 将<code>$1</code>解释成了变量，该变量为空，因此输入就变成了 00.00。所以，如果要使用<code>$</code>的原义，需要在<code>$</code>前面放上反斜杠，进行转义。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> The total is \<span class="variable">$100</span>.00</span><br><span class="line">The total is <span class="variable">$100</span>.00</span><br></pre></td></tr></table></figure>
+<p>读取变量的时候，变量名也可以使用花括号<code>&#123;&#125;</code>包围，比如<code>$a</code>也可以写成<code>$&#123;a&#125;</code>。这种写法可以用于变量名与其他字符连用的情况。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ a=foo</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$a_file</span></span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>_file</span><br><span class="line">foo_file</span><br></pre></td></tr></table></figure>
+<p>上面代码中，变量名<code>a_file</code>不会有任何输出，因为 Bash 将其整个解释为变量，而这个变量是不存在的。只有用花括号区分<code>$a</code>，Bash 才能正确解读。</p>
+<p>事实上，读取变量的语法<code>$foo</code>，可以看作是<code>$&#123;foo&#125;</code>的简写形式。</p>
+<p>如果变量的值本身也是变量，可以使用<code>$&#123;!varname&#125;</code>的语法，读取最终的值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ myvar=USER</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$&#123;!myvar&#125;</span></span><br><span class="line">ruanyf</span><br></pre></td></tr></table></figure>
+<p>上面的例子中，变量<code>myvar</code>的值是<code>USER</code>，<code>$&#123;!myvar&#125;</code>的写法将其展开成最终的值。</p>
+<p>如果变量值包含连续空格（或制表符和换行符），最好放在双引号里面读取。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ a=<span class="string">&quot;1 2  3&quot;</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$a</span></span><br><span class="line">1 2 3</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$a</span>&quot;</span></span><br><span class="line">1 2  3</span><br></pre></td></tr></table></figure>
+<p>上面示例中，变量<code>a</code>的值包含两个连续空格。如果直接读取，Shell 会将连续空格合并成一个。只有放在双引号里面读取，才能保持原来的格式。</p>
+<h1 id="删除变量"><a href="#删除变量" class="headerlink" title="删除变量"></a>删除变量</h1><p><code>unset</code>命令用来删除一个变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unset NAME</span><br></pre></td></tr></table></figure>
+<p>这个命令不是很有用。因为不存在的 Bash 变量一律等于空字符串，所以即使<code>unset</code>命令删除了变量，还是可以读取这个变量，值为空字符串。</p>
+<p>所以，删除一个变量，也可以将这个变量设成空字符串。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ foo=<span class="string">&#x27;&#x27;</span></span><br><span class="line">$ foo=</span><br></pre></td></tr></table></figure>
+<p>上面两种写法，都是删除了变量<code>foo</code>。由于不存在的值默认为空字符串，所以后一种写法可以在等号右边不写任何值。</p>
+<h1 id="输出变量，export-命令"><a href="#输出变量，export-命令" class="headerlink" title="输出变量，export 命令"></a>输出变量，export 命令</h1><p>用户创建的变量仅可用于当前 Shell，子 Shell 默认读取不到父 Shell 定义的变量。为了把变量传递给子 Shell，需要使用<code>export</code>命令。这样输出的变量，对于子 Shell 来说就是环境变量。</p>
+<p><code>export</code>命令用来向子 Shell 输出变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME=foo</span><br><span class="line"><span class="built_in">export</span> NAME</span><br></pre></td></tr></table></figure>
+<p>上面命令输出了变量<code>NAME</code>。变量的赋值和输出也可以在一个步骤中完成。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NAME=value</span><br></pre></td></tr></table></figure>
+<p>上面命令执行后，当前 Shell 及随后新建的子 Shell，都可以读取变量<code>$NAME</code>。</p>
+<p>子 Shell 如果修改继承的变量，不会影响父 Shell。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输出变量 $foo</span></span><br><span class="line">$ <span class="built_in">export</span> foo=bar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建子 Shell</span></span><br><span class="line">$ bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取 $foo</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">bar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改继承的变量</span></span><br><span class="line">$ foo=baz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出子 Shell</span></span><br><span class="line">$ <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取 $foo</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">bar</span><br></pre></td></tr></table></figure>
+<p>上面例子中，子 Shell 修改了继承的变量<code>$foo</code>，对父 Shell 没有影响。</p>
+<h1 id="特殊变量"><a href="#特殊变量" class="headerlink" title="特殊变量"></a>特殊变量</h1><p>Bash 提供一些特殊变量。这些变量的值由 Shell 提供，用户不能进行赋值。</p>
+<h2 id=""><a href="#" class="headerlink" title="$?"></a>$?</h2><p><code>$?</code>为上一个命令的退出码，用来判断上一个命令是否执行成功。返回值是 0，表示上一个命令执行成功；如果不是零，表示上一个命令执行失败。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> doesnotexist</span><br><span class="line"><span class="built_in">ls</span>: doesnotexist: No such file or directory</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> $?</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>ls</code>命令查看一个不存在的文件，导致报错。<code>$?</code>为 1，表示上一个命令执行失败。</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title="$$"></a>$$</h2><p><code>$$</code>为当前 Shell 的进程 ID。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $$</span><br><span class="line">10662</span><br></pre></td></tr></table></figure>
+<p>这个特殊变量可以用来命名临时文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOGFILE=/tmp/output_log.$$</span><br></pre></td></tr></table></figure>
+<h2 id="-2"><a href="#-2" class="headerlink" title="$_"></a>$_</h2><p><code>$_</code>为上一个命令的最后一个参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ grep dictionary /usr/share/dict/words</span><br><span class="line">dictionary</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$_</span></span><br><span class="line">/usr/share/dict/words</span><br></pre></td></tr></table></figure>
+<h2 id="-3"><a href="#-3" class="headerlink" title="$!"></a>$!</h2><p><code>$!</code>为最近一个后台执行的异步命令的进程 ID。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ firefox &amp;</span><br><span class="line">[1] 11064</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">echo</span> $!</span><br><span class="line">11064</span><br></pre></td></tr></table></figure>
+<p>上面例子中，firefox 是后台运行的命令，<code>$!</code>返回该命令的进程 ID。</p>
+<h2 id="0"><a href="#0" class="headerlink" title="$0"></a>$0</h2><p><code>$0</code>为当前 Shell 的名称（在命令行直接执行时）或者脚本名（在脚本中执行时）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$0</span></span><br><span class="line">bash</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>$0</code>返回当前运行的是 Bash。</p>
+<h2 id="-4"><a href="#-4" class="headerlink" title="$-"></a>$-</h2><p><code>$-</code>为当前 Shell 的启动参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $-</span><br><span class="line">himBHs</span><br></pre></td></tr></table></figure>
+<h2 id="和"><a href="#和" class="headerlink" title="$@和$#"></a>$@和$#</h2><p><code>$#</code>表示脚本的参数数量，<code>$@</code>表示脚本的参数值。</p>
+<h1 id="变量的默认值"><a href="#变量的默认值" class="headerlink" title="变量的默认值"></a>变量的默认值</h1><p>Bash 提供四个特殊语法，跟变量的默认值有关，目的是保证变量不为空。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;varname:-word&#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面语法的含义是，如果变量<code>varname</code>存在且不为空，则返回它的值，否则返回<code>word</code>。它的目的是返回一个默认值，比如<code>$&#123;count:-0&#125;</code>表示变量<code>count</code>不存在时返回 0。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;varname:=word&#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面语法的含义是，如果变量<code>varname</code>存在且不为空，则返回它的值，否则将它设为<code>word</code>，并且返回<code>word</code>。它的目的是设置变量的默认值，比如<code>$&#123;count:=0&#125;</code>表示变量<code>count</code>不存在时返回 0，且将count设为0。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;varname:+word&#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面语法的含义是，如果变量名存在且不为空，则返回<code>word</code>，否则返回空值。它的目的是测试变量是否存在，比如<code>$&#123;count:+1&#125;</code>表示变量<code>count</code>存在时返回 1（表示<code>true</code>），否则返回空值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;varname:?message&#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面语法的含义是，如果变量<code>varname</code>存在且不为空，则返回它的值，否则打印出<code>varname: message</code>，并中断脚本的执行。如果省略了<code>message</code>，则输出默认的信息<code>“parameter null or not set.”</code>。它的目的是防止变量未定义，比如<code>$&#123;count:?&quot;undefined!&quot;&#125;</code>表示变量<code>count</code>未定义时就中断执行，抛出错误，返回给定的报错信息<code>undefined!</code>。</p>
+<p>上面四种语法如果用在脚本中，变量名的部分可以用数字 1 到 9，表示脚本的参数。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename=<span class="variable">$&#123;1:?&quot;filename missing.&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面代码出现在脚本中，1 表示脚本的第一个参数。如果该参数不存在，就退出脚本并报错。</p>
+<h1 id="declare-命令"><a href="#declare-命令" class="headerlink" title="declare 命令"></a>declare 命令</h1><p><code>declare</code>命令可以声明一些特殊类型的变量，为变量设置一些限制，比如声明只读类型的变量和整数类型的变量。</p>
+<p>它的语法形式如下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare OPTION VARIABLE=value</span><br></pre></td></tr></table></figure>
+<p><code>declare</code>命令的主要参数（<code>OPTION</code>）如下。</p>
+<ul>
+<li><code>-a</code>：声明数组变量。</li>
+<li><code>-f</code>：输出所有函数定义。</li>
+<li><code>-F</code>：输出所有函数名。</li>
+<li><code>-i</code>：声明整数变量。</li>
+<li><code>-l</code>：声明变量为小写字母。</li>
+<li><code>-p</code>：查看变量信息。</li>
+<li><code>-r</code>：声明只读变量。</li>
+<li><code>-u</code>：声明变量为大写字母。</li>
+<li><code>-x</code>：该变量输出为环境变量。</li>
+</ul>
+<p><code>declare</code>命令如果用在函数中，声明的变量只在函数内部有效，等同于<code>local</code>命令。</p>
+<p>不带任何参数时，<code>declare</code>命令输出当前环境的所有变量，包括函数在内，等同于不带有任何参数的<code>set</code>命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ declare</span><br></pre></td></tr></table></figure>
+<h2 id="i-参数"><a href="#i-参数" class="headerlink" title="-i 参数"></a>-i 参数</h2><p><code>-i</code>参数声明整数变量以后，可以直接进行数学运算。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -i val1=12 val2=5</span><br><span class="line">$ <span class="built_in">declare</span> -i result</span><br><span class="line">$ result=val1*val2</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$result</span></span><br><span class="line">60</span><br></pre></td></tr></table></figure>
+<p>上面例子中，如果变量<code>result</code>不声明为整数，<code>val1*val2</code>会被当作字面量，不会进行整数运算。另外，<code>val1</code>和<code>val2</code>其实不需要声明为整数，因为只要<code>result</code>声明为整数，它的赋值就会自动解释为整数运算。</p>
+<p>注意，一个变量声明为整数以后，依然可以被改写为字符串。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -i var=12</span><br><span class="line">$ var=foo</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$var</span></span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+<p>上面例子中，变量<code>var</code>声明为整数，覆盖以后，Bash 不会报错，但会赋以不确定的值，上面的例子中可能输出 0，也可能输出的是 3。</p>
+<h2 id="x-参数"><a href="#x-参数" class="headerlink" title="-x 参数"></a>-x 参数</h2><p><code>-x</code>参数等同于<code>export</code>命令，可以输出一个变量为子 Shell 的环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -x foo</span><br><span class="line"><span class="comment"># 等同于</span></span><br><span class="line">$ <span class="built_in">export</span> foo</span><br></pre></td></tr></table></figure>
+<h2 id="r-参数"><a href="#r-参数" class="headerlink" title="-r 参数"></a>-r 参数</h2><p><code>-r</code>参数可以声明只读变量，无法改变变量值，也不能<code>unset</code>变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -r bar=1</span><br><span class="line"></span><br><span class="line">$ bar=2</span><br><span class="line">bash: bar：只读变量</span><br><span class="line">$ <span class="built_in">echo</span> $?</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">unset</span> bar</span><br><span class="line">bash: bar：只读变量</span><br><span class="line">$ <span class="built_in">echo</span> $?</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>上面例子中，后两个赋值语句都会报错，命令执行失败。</p>
+<h2 id="u-参数"><a href="#u-参数" class="headerlink" title="-u 参数"></a>-u 参数</h2><p><code>-u</code>参数声明变量为大写字母，可以自动把变量值转成大写字母。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -u foo</span><br><span class="line">$ foo=upper</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">UPPER</span><br></pre></td></tr></table></figure>
+<h2 id="l-参数"><a href="#l-参数" class="headerlink" title="-l 参数"></a>-l 参数</h2><p><code>-l</code>参数声明变量为小写字母，可以自动把变量值转成小写字母。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -l bar</span><br><span class="line">$ bar=LOWER</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$bar</span></span><br><span class="line">lower</span><br></pre></td></tr></table></figure>
+<h2 id="p-参数"><a href="#p-参数" class="headerlink" title="-p 参数"></a>-p 参数</h2><p><code>-p</code>参数输出变量信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ foo=hello</span><br><span class="line">$ <span class="built_in">declare</span> -p foo</span><br><span class="line"><span class="built_in">declare</span> -- foo=<span class="string">&quot;hello&quot;</span></span><br><span class="line">$ <span class="built_in">declare</span> -p bar</span><br><span class="line">bar：未找到</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>declare -p</code>可以输出已定义变量的值，对于未定义的变量，会提示找不到。</p>
+<p>如果不提供变量名，<code>declare -p</code>输出所有变量的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -p</span><br></pre></td></tr></table></figure>
+<h2 id="f-参数"><a href="#f-参数" class="headerlink" title="-f 参数"></a>-f 参数</h2><p><code>-f</code>参数输出当前环境的所有函数，包括它的定义。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -f</span><br></pre></td></tr></table></figure>
+<h2 id="F参数"><a href="#F参数" class="headerlink" title="-F参数"></a>-F参数</h2><p><code>-F</code>参数输出当前环境的所有函数名，不包含函数定义。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">declare</span> -F</span><br></pre></td></tr></table></figure>
+<h1 id="readonly-命令"><a href="#readonly-命令" class="headerlink" title="readonly 命令"></a>readonly 命令</h1><p><code>readonly</code>命令等同于<code>declare -r</code>，用来声明只读变量，不能改变变量值，也不能<code>unset</code>变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">readonly</span> foo=1</span><br><span class="line">$ foo=2</span><br><span class="line">bash: foo：只读变量</span><br><span class="line">$ <span class="built_in">echo</span> $?</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>上面例子中，更改只读变量<code>foo</code>会报错，命令执行失败。</p>
+<p><code>readonly</code>命令有三个参数：</p>
+<ul>
+<li><code>-f</code>：声明的变量为函数名。</li>
+<li><code>-p</code>：打印出所有的只读变量。</li>
+<li><code>-a</code>：声明的变量为数组。</li>
+</ul>
+<h1 id="let-命令"><a href="#let-命令" class="headerlink" title="let 命令"></a>let 命令</h1><p><code>let</code>命令声明变量时，可以直接执行算术表达式。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">let</span> foo=1+2</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$foo</span></span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>let</code>命令可以直接计算<code>1 + 2</code>。</p>
+<p><code>let</code>命令的参数表达式如果包含空格，就需要使用引号。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">let</span> <span class="string">&quot;foo = 1 + 2&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>let</code>可以同时对多个变量赋值，赋值表达式之间使用空格分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">let</span> <span class="string">&quot;v1 = 1&quot;</span> <span class="string">&quot;v2 = v1++&quot;</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$v1</span>,<span class="variable">$v2</span></span><br><span class="line">2,1</span><br></pre></td></tr></table></figure>
+<p>上面例子中，<code>let</code>声明了两个变量<code>v1</code>和<code>v2</code>，其中<code>v2</code>等于<code>v1++</code>，表示先返回<code>v1</code>的值，然后<code>v1</code>自增。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/07/02/Shell/Bash%20%E5%8F%98%E9%87%8F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bash/" rel="tag">Bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/04/Shell/Bash%20%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Bash 字符串操作
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/02/Shell/Bash%20%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Bash 基本语法</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

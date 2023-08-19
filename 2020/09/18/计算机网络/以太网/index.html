@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>以太网 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络/以太网"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  以太网
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-date">
+  <time datetime="2020-09-18T03:32:13.000Z" itemprop="datePublished">2020-09-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">15 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>有线局域网中普遍使用以太网，以太网标准简单，传输速率高。</p>
+<h2 id="以太网数据格式"><a href="#以太网数据格式" class="headerlink" title="以太网数据格式"></a>以太网数据格式</h2><p>当今最常用的以太网协议标准是 ETHERNET II 标准。 ETHERNET II 标准定义的数据帧格式如下图。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/3.png" class="">
+
+<ul>
+<li>前导码（<code>Preamble</code>）<br>前导码由 7 个字节组成，每个字节固定为<code>10101010</code>。之后的 1 个字节称为帧起始定界符，这个字节固定为 10101011。这 8 个字节表示以太网帧的开始，也是对端网卡能够确保与其同步的标志。帧起始定界符的最后两位比特被定义为 11，之后就是以太网数据帧的本体。<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/4.png" class=""></li>
+<li>目的地址<br>目的地址由 6 个字节组成，用来标识数据帧的目的设备，类似于快递的收件人地址。</li>
+<li>源地址<br>源地址由 6 个字节组成，用来标识数据帧的始发设备，类似于快递的发件人地址。</li>
+<li>类型<br>类型字段由 2 个字节组成。类型字段是表明上一层（即网络层）的协议类型，可以让接收方使用相同的协议进行数据帧的解封装。</li>
+<li>数据<br>帧头后就是数据。一个数据帧所能容纳的最大数据范围是 46 ～ 1500 个字节。如果数据部分不足 46 个字节，则填充这个数据帧，让它的长度可以满足最小长度的要求。</li>
+<li>FCS（<code>Frame Check Sequence</code>）<br>FCS 由 4 个字节组成，位于数据帧的尾部，用来检查帧是否有所损坏。通过检查 FCS 字段的值将受到噪声干扰的错误帧丢弃。</li>
+</ul>
+<p>数据帧的各字段加起来一共是 64 字节，其中数据是 46 字节。再加上前导码就是 72 字节。因此最小的数据帧是 72 字节。在传输过程中，每个数据帧还有 12 字节的数据帧间隙，所以最小的可传输数据帧长度是 84 字节，即 672 比特。</p>
+<h2 id="以太网数据帧类型"><a href="#以太网数据帧类型" class="headerlink" title="以太网数据帧类型"></a>以太网数据帧类型</h2><table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">单播数据帧</td>
+<td align="center">目的地址是广播和组播以外的数据帧</td>
+</tr>
+<tr>
+<td align="center">广播数据帧</td>
+<td align="center">目的地址是广播地址 (ff:ff:ff:ff) 的数据帧</td>
+</tr>
+<tr>
+<td align="center">组播数据帧</td>
+<td align="center">目的地址是组播地址的数据帧</td>
+</tr>
+<tr>
+<td align="center">不完全帧</td>
+<td align="center">包含头部、长度为63字节及以下的数据帧，由于冲突等原因形成的坏帧</td>
+</tr>
+<tr>
+<td align="center">小巨人帧</td>
+<td align="center">比 1518 字节稍大的数据帧，通常是指 1522 字节的数据帧</td>
+</tr>
+<tr>
+<td align="center">巨型帧</td>
+<td align="center">比 1518 字节大很多的数据帧</td>
+</tr>
+</tbody></table>
+<h1 id="以太网标准"><a href="#以太网标准" class="headerlink" title="以太网标准"></a>以太网标准</h1><p>以太网原本是指使用 CSMA&#x2F;CD 的控制方式，实际速率为<code>10Mbit/s</code>的标准。随着技术的迭代，速率为<code>100Mbit/s</code>的快速以太网和速率为<code>1Gbit/s</code>的千兆以太网逐步登场。从快速以太网开始，采用了全双工通信方式，而不是 CSMA&#x2F;CD 技术的以太网。</p>
+<p>到千兆以太网，半双工通信中还保留了 CSMA&#x2F;CD 技术规范。到了万兆以太网，就彻底移除 CSMA&#x2F;CD 规范，所有通信方式都采用全双工方式。</p>
+<h2 id="以太网的分类"><a href="#以太网的分类" class="headerlink" title="以太网的分类"></a>以太网的分类</h2><img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/1.png" class="">
+
+<h2 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h2><p>IEEE 802.3 标准根据使用的传输线缆和传输速度的不同，有 10BASE-T、10BASE-TX 等名称。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/2.png" class="">
+
+<p>IEEE 802.3 定义的链路速率：</p>
+<table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">传输速率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">1Mbit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">10MBit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">100</td>
+<td align="center">100MBit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">1000</td>
+<td align="center">1GBit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">10G</td>
+<td align="center">10GBit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">40G</td>
+<td align="center">40GBit&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">100G</td>
+<td align="center">100GBit&#x2F;s</td>
+</tr>
+</tbody></table>
+<p>IEEE 802.3 定义的调制方式：</p>
+<table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">调制方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">BASE</td>
+<td align="center">BaseBand（基带信号），1 根线缆只传输 1 个信号</td>
+</tr>
+<tr>
+<td align="center">BROAD</td>
+<td align="center">BroadBand（宽频信号），1 根线缆能传输多个信号</td>
+</tr>
+</tbody></table>
+<p>IEEE 802.3 定义的传输媒介：</p>
+<table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">传输介质</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">5</td>
+<td align="center">最长为 500 米的粗同轴电缆</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">最长为 185 米的细同轴电缆</td>
+</tr>
+<tr>
+<td align="center">T</td>
+<td align="center">Twisted Pair，双绞线</td>
+</tr>
+<tr>
+<td align="center">F</td>
+<td align="center">Fiber，光纤</td>
+</tr>
+<tr>
+<td align="center">K</td>
+<td align="center">Copper Backplane，由铜线组成的背板</td>
+</tr>
+<tr>
+<td align="center">B</td>
+<td align="center">Bi-directional，1 芯单模光缆</td>
+</tr>
+<tr>
+<td align="center">S</td>
+<td align="center">Short Reach(100m)，2 芯多模光缆</td>
+</tr>
+<tr>
+<td align="center">L</td>
+<td align="center">Long Reach(10km)，2 芯单模或多模光缆</td>
+</tr>
+<tr>
+<td align="center">E</td>
+<td align="center">Extended Long Reach(40km)，2 芯单模光缆</td>
+</tr>
+<tr>
+<td align="center">Z</td>
+<td align="center">Long Reach Simple Mode(70km)，2 芯单模光缆</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">Co-axial，2 芯平衡式屏蔽同轴线缆</td>
+</tr>
+<tr>
+<td align="center">P</td>
+<td align="center">PON，1 芯单模光缆，单点到多点</td>
+</tr>
+</tbody></table>
+<p>IEEE 802.3 定义的编码体系：</p>
+<table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">编码体系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">X</td>
+<td align="center">在快速以太网时使用 4B&#x2F;5B 作为分组码 <br>在千兆以太网时使用8B&#x2F;10B 作为分组码</td>
+</tr>
+<tr>
+<td align="center">R</td>
+<td align="center">使用 64B&#x2F;66B 作为分组码</td>
+</tr>
+</tbody></table>
+<p>IEEE 802.3 定义的lane：</p>
+<table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">编码体系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">4 或者 10</td>
+<td align="center">在同轴线缆中表示使用 4 个或 10 个 lane</td>
+</tr>
+<tr>
+<td align="center">N(任意数字)</td>
+<td align="center">在光纤中，lane 还可以表示波长数量，波长为 1 时可以省略</td>
+</tr>
+</tbody></table>
+<h2 id="10Mbit-x2F-s-以太网的主要标准"><a href="#10Mbit-x2F-s-以太网的主要标准" class="headerlink" title="10Mbit&#x2F;s 以太网的主要标准"></a>10Mbit&#x2F;s 以太网的主要标准</h2><table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">制定时间</th>
+<th align="center">IEEE 标准</th>
+<th align="center">传输速率</th>
+<th align="center">编码</th>
+<th align="center">传输介质</th>
+<th align="center">最大传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10BASE5</td>
+<td align="center">1983年</td>
+<td align="center">IEEE 802.3</td>
+<td align="center">10MBit&#x2F;s</td>
+<td align="center">曼彻斯特</td>
+<td align="center">粗同轴电缆</td>
+<td align="center">500m</td>
+</tr>
+<tr>
+<td align="center">10BASE2</td>
+<td align="center">1988年</td>
+<td align="center">IEEE 802.3a</td>
+<td align="center">10MBit&#x2F;s</td>
+<td align="center">曼彻斯特</td>
+<td align="center">细同轴电缆</td>
+<td align="center">185m</td>
+</tr>
+<tr>
+<td align="center">10BASE-T</td>
+<td align="center">1990年</td>
+<td align="center">IEEE 802.3i</td>
+<td align="center">10MBit&#x2F;s</td>
+<td align="center">曼彻斯特</td>
+<td align="center">双绞线</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">10BASE-F</td>
+<td align="center">1993年</td>
+<td align="center">IEEE 802.3j</td>
+<td align="center">10MBit&#x2F;s</td>
+<td align="center">曼彻斯特</td>
+<td align="center">光纤</td>
+<td align="center">2km</td>
+</tr>
+</tbody></table>
+<h2 id="快速以太网的主要标准"><a href="#快速以太网的主要标准" class="headerlink" title="快速以太网的主要标准"></a>快速以太网的主要标准</h2><table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">制定时间</th>
+<th align="center">IEEE 标准</th>
+<th align="center">传输速率</th>
+<th align="center">编码</th>
+<th align="center">传输介质</th>
+<th align="center">最大传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">100BASE-T</td>
+<td align="center">1995年</td>
+<td align="center">IEEE 802.3u</td>
+<td align="center">100MBit&#x2F;s</td>
+<td align="center">无</td>
+<td align="center">双绞线</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">100BASE-TX</td>
+<td align="center">1995年</td>
+<td align="center">IEEE 802.3u</td>
+<td align="center">100MBit&#x2F;s</td>
+<td align="center">4B5B&#x2F;MLT-3</td>
+<td align="center">双绞线<br>(2对5类)</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">100BASE-T4</td>
+<td align="center">1995年</td>
+<td align="center">IEEE 802.3u</td>
+<td align="center">100MBit&#x2F;s</td>
+<td align="center">8B6T&#x2F;PAM-3</td>
+<td align="center">双绞线<br>(4对3类)</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">100BASE-FX</td>
+<td align="center">1995年</td>
+<td align="center">IEEE 802.3u</td>
+<td align="center">100MBit&#x2F;s</td>
+<td align="center">4B&#x2F;5B NRZI</td>
+<td align="center">光缆<br>(MMF)</td>
+<td align="center">400m(半双工)<br>2km(全双工)</td>
+</tr>
+<tr>
+<td align="center">100BAEE-T2</td>
+<td align="center">1998年</td>
+<td align="center">IEEE 802.3y</td>
+<td align="center">100MBit&#x2F;s</td>
+<td align="center">PAM5x5</td>
+<td align="center">双绞线<br>(2对3类)</td>
+<td align="center">100m</td>
+</tr>
+</tbody></table>
+<p>100BASE-T 是 100BASE-TX、100BASE-T4、100BASE-T2 的统称。目前 100BASE-T4、100BASE-T2 不再使用，主要使用 100BASE-TX。</p>
+<h2 id="千兆以太网的主要标准"><a href="#千兆以太网的主要标准" class="headerlink" title="千兆以太网的主要标准"></a>千兆以太网的主要标准</h2><table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">制定时间</th>
+<th align="center">IEEE 标准</th>
+<th align="center">传输速率</th>
+<th align="center">编码</th>
+<th align="center">传输介质</th>
+<th align="center">最大传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1000BASE-SX</td>
+<td align="center">1998年</td>
+<td align="center">IEEE 802.3z</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B10B&#x2F;NRZ</td>
+<td align="center">MMF(波长850nm)</td>
+<td align="center">500m</td>
+</tr>
+<tr>
+<td align="center">1000BASE-LX</td>
+<td align="center">1998年</td>
+<td align="center">IEEE 802.3z</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B10B&#x2F;NRZ</td>
+<td align="center">MMF(波长1300nm)<br>SMF(波长1310nm)</td>
+<td align="center">550m<br>5km</td>
+</tr>
+<tr>
+<td align="center">1000BASE-ZX</td>
+<td align="center">1998年</td>
+<td align="center">IEEE 802.3z</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B10B&#x2F;NRZ</td>
+<td align="center">SMF(波长1550nm)</td>
+<td align="center">70~100km</td>
+</tr>
+<tr>
+<td align="center">1000BASE-CX</td>
+<td align="center">1998年</td>
+<td align="center">IEEE 802.3z</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B10B&#x2F;NRZ</td>
+<td align="center">150Ω平衡屏蔽双绞线</td>
+<td align="center">25m</td>
+</tr>
+<tr>
+<td align="center">1000BASE-T</td>
+<td align="center">1999年</td>
+<td align="center">IEEE 802.3ab</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B1Q4&#x2F;4D-PAM5</td>
+<td align="center">双绞线(4对超5类)</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">1000BASE-TX</td>
+<td align="center">2001年</td>
+<td align="center">TIA&#x2F;EIA-854</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B1Q4&#x2F;4D-PAM5</td>
+<td align="center">双绞线(4对6类)</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">1000BASE-BX</td>
+<td align="center">2004年</td>
+<td align="center">IEEE 802.3ah</td>
+<td align="center">1GBit&#x2F;s</td>
+<td align="center">8B10B&#x2F;NRZ</td>
+<td align="center">SMF(下行1490nm，上行1310nm)</td>
+<td align="center">10km</td>
+</tr>
+</tbody></table>
+<h2 id="万兆以太网的主要标准"><a href="#万兆以太网的主要标准" class="headerlink" title="万兆以太网的主要标准"></a>万兆以太网的主要标准</h2><table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">制定时间</th>
+<th align="center">IEEE 标准</th>
+<th align="center">传输速率</th>
+<th align="center">编码</th>
+<th align="center">传输介质</th>
+<th align="center">最大传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">10GBASE-SR</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">MMF(LAN PHY) 850nm</td>
+<td align="center">300m</td>
+</tr>
+<tr>
+<td align="center">10GBASE-LR</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">SMF(LAN PHY) 1310nm</td>
+<td align="center">10km</td>
+</tr>
+<tr>
+<td align="center">10GBASE-ER</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">SMF(LAN PHY) 1550nm</td>
+<td align="center">40km</td>
+</tr>
+<tr>
+<td align="center">10GBASE-SW</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B WIS</td>
+<td align="center">MMF(WAN PHY)</td>
+<td align="center">300m</td>
+</tr>
+<tr>
+<td align="center">10GBASE-LW</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B WIS</td>
+<td align="center">SMF(WAN PHY)</td>
+<td align="center">10km</td>
+</tr>
+<tr>
+<td align="center">10GBASE-EW</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3ae</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B WIS</td>
+<td align="center">SMF(WAN PHY)</td>
+<td align="center">40km</td>
+</tr>
+<tr>
+<td align="center">10GBASE-T</td>
+<td align="center">2022年</td>
+<td align="center">IEEE 802.3an</td>
+<td align="center">10GBit&#x2F;s</td>
+<td align="center">LDPC</td>
+<td align="center">UTP&#x2F;STP(6类)</td>
+<td align="center">100m</td>
+</tr>
+</tbody></table>
+<p>WIS ，广域网接口子层的简称。LDPC ，低密度奇偶校验码的简称。</p>
+<h2 id="40G-x2F-100G-以太网的主要标准"><a href="#40G-x2F-100G-以太网的主要标准" class="headerlink" title="40G&#x2F;100G 以太网的主要标准"></a>40G&#x2F;100G 以太网的主要标准</h2><table>
+<thead>
+<tr>
+<th align="center">条目</th>
+<th align="center">制定时间</th>
+<th align="center">IEEE 标准</th>
+<th align="center">传输速率</th>
+<th align="center">编码</th>
+<th align="center">传输介质</th>
+<th align="center">最大传输距离</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">40GBASE-KR4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">40GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">背板</td>
+<td align="center">1m</td>
+</tr>
+<tr>
+<td align="center">40GBASE-CR4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">40GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">同轴线缆</td>
+<td align="center">10m</td>
+</tr>
+<tr>
+<td align="center">40GBASE-SR4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">40GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">MMF</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">40GBASE-LR4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">40GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">SMF</td>
+<td align="center">10km</td>
+</tr>
+<tr>
+<td align="center">100GBASE-CR10</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">100GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">同轴线缆</td>
+<td align="center">10m</td>
+</tr>
+<tr>
+<td align="center">100GBASE-SR10</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">100GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">MMF</td>
+<td align="center">100m</td>
+</tr>
+<tr>
+<td align="center">100GBASE-LR4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">100GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">SMF</td>
+<td align="center">10km</td>
+</tr>
+<tr>
+<td align="center">100GBASE-ER4</td>
+<td align="center">2010年</td>
+<td align="center">IEEE 802.3ba</td>
+<td align="center">100GBit&#x2F;s</td>
+<td align="center">64B&#x2F;66B</td>
+<td align="center">SMF</td>
+<td align="center">40km</td>
+</tr>
+</tbody></table>
+<h1 id="以太网标准的数据处理"><a href="#以太网标准的数据处理" class="headerlink" title="以太网标准的数据处理"></a>以太网标准的数据处理</h1><p>以太网采用小端顺序方式传输比特流，也就是说 1 个字节（<code>8bit</code>）的数据，会从最低位开始传送，将每<code>8bit</code>数据中的 0 与 1 顺序颠倒进行传送。FDDI 以及令牌环等网络，则采用大端顺序进行传输数据。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/5.png" class="">
+
+<p>在网络上进行传输的二进制数据使用的字节排列顺序也叫做网络字节序。TCP&#x2F;IP 协议中都使用大端顺序开始传送数据。</p>
+<h1 id="碰撞域"><a href="#碰撞域" class="headerlink" title="碰撞域"></a>碰撞域</h1><p>碰撞域又称为冲突域，是指网络中一个站点发出的帧会与其他站点发出的帧产生碰撞或冲突的那部分网络。</p>
+<p>碰撞域越大，发生碰撞的概率越高。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img24.png" class="">
+
+<h1 id="在数据链路层扩展以太网"><a href="#在数据链路层扩展以太网" class="headerlink" title="在数据链路层扩展以太网"></a>在数据链路层扩展以太网</h1><p>扩展以太网更常用的方法是在数据链路层进行。早期使用网桥，现在使用以太网交换机。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img25.png" class="">
+
+<h2 id="以太网交换机的特点"><a href="#以太网交换机的特点" class="headerlink" title="以太网交换机的特点"></a>以太网交换机的特点</h2><p>以太网交换机实质上就是一个多接口的网桥。通常都有十几个或更多的接口。每个接口都直接与一个单台主机或另一个以太网交换机相连，并且一般都工作在全双工方式。</p>
+<p>以太网交换机具有并行性。能同时连通多对接口，使多对主机能同时通信。相互通信的主机都是独占传输媒体，无碰撞地传输数据。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img26.png" class="">
+
+<p>以太网交换机的每个接口是一个碰撞域。</p>
+<p>以太网交换机的接口有存储器，能在输出端口繁忙时把到来的帧进行缓存。</p>
+<p>以太网交换机是一种即插即用设备，其内部的帧交换表（又称为地址表）是通过自学习算法自动地逐渐建立起来的。</p>
+<p>以太网交换机使用了专用的交换结构芯片，用硬件转发，其转发速率要比使用软件转发的网桥快很多。</p>
+<p>以太网交换机的性能远远超过普通的集线器，而且价格并不贵。</p>
+<h2 id="以太网交换机的优点"><a href="#以太网交换机的优点" class="headerlink" title="以太网交换机的优点"></a>以太网交换机的优点</h2><ul>
+<li>用户独享带宽，增加了总容量。</li>
+<li>从共享总线以太网转到交换式以太网时，所有接入设备的软件和硬件、适配器等都不需要做任何改动。</li>
+<li>以太网交换机一般都具有多种速率的接口，方便了各种不同情况的用户。</li>
+</ul>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img6.png" class="">
+
+<h2 id="以太网交换机的自学习功能"><a href="#以太网交换机的自学习功能" class="headerlink" title="以太网交换机的自学习功能"></a>以太网交换机的自学习功能</h2><p>以太网交换机运行自学习算法自动维护交换表。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img7.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img8.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img9.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img10.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img11.png" class="">
+
+<p>以太网交换机的这种自学习方法使得以太网交换机能够即插即用，不必人工进行配置，因此非常方便。</p>
+<h2 id="交换机自学习和转发帧的步骤归纳"><a href="#交换机自学习和转发帧的步骤归纳" class="headerlink" title="交换机自学习和转发帧的步骤归纳"></a>交换机自学习和转发帧的步骤归纳</h2><img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img12.png" class="">
+
+<h2 id="理解以太网交换机的自学习功能"><a href="#理解以太网交换机的自学习功能" class="headerlink" title="理解以太网交换机的自学习功能"></a>理解以太网交换机的自学习功能</h2><img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img13.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img14.png" class="">
+
+<h2 id="交换机使用了生成树协议"><a href="#交换机使用了生成树协议" class="headerlink" title="交换机使用了生成树协议"></a>交换机使用了生成树协议</h2><p>IEEE 802.1D 标准制定了一个生成树协议 STP(<code>Spanning Tree Protocol</code>)。</p>
+<p>其要点是：不改变网络的实际拓扑，但在逻辑上则切断某些链路，使得从一台主机到所有其他主机的路径是无环路的树状结构，从而消除了兜圈子现象。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img15.png" class="">
+
+<h2 id="从总线以太网到星形以太网"><a href="#从总线以太网到星形以太网" class="headerlink" title="从总线以太网到星形以太网"></a>从总线以太网到星形以太网</h2><p>早期，以太网采用无源的总线结构。现在，采用以太网交换机的星形结构成为以太网的首选拓扑。</p>
+<p>总线以太网使用 CSMA&#x2F;CD 协议，以半双工方式工作。</p>
+<p>以太网交换机不使用共享总线，没有碰撞问题，因此不使用 CSMA&#x2F;CD 协议，以全双工方式工作。但仍然采用以太网的帧结构。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img16.png" class="">
+
+<p>局域网存在的以下几个方面的问题：扩展性、、安全性、可管理性等。</p>
+<p>所有计算机都处于同一个碰撞域（或冲突域）中和同一个广播域中。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img17.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img18.png" class="">
+
+<h2 id="广播域"><a href="#广播域" class="headerlink" title="广播域"></a>广播域</h2><p>广播域（<code>broadcast domain</code>）：指这样一部分网络，其中任何一台设备发出的广播通信都能被该部分网络中的所有其他设备所接收。</p>
+<p>采用以太网交换机的星形以太网，每个接口都处于一个独立的碰撞域（或冲突域）中，但所有计算机都处于同一个广播域中。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img19.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img20.png" class="">
+
+<h1 id="虚拟局域网"><a href="#虚拟局域网" class="headerlink" title="虚拟局域网"></a>虚拟局域网</h1><p>利用以太网交换机可以很方便地实现虚拟局域网 VLAN(<code>Virtual LAN</code>)。</p>
+<p>IEEE 802.1Q 对虚拟局域网 VLAN 的定义：虚拟局域网 VLAN 是由一些局域网网段构成的与物理位置无关的逻辑组，而这些网段具有某些共同的需求。每一个 VLAN 的帧都有一个明确的标识符，指明发送这个帧的计算机是属于哪一个 VLAN。</p>
+<p>虚拟局域网其实只是局域网给用户提供的一种服务，而并不是一种新型局域网。</p>
+<p>由于虚拟局域网是用户和网络资源的逻辑组合，因此可按照需要将有关设备和资源非常方便地重新组合，使用户从不同的服务器或数据库中存取所需的资源。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img21.png" class="">
+
+<p>10 台计算机划分为三个虚拟局域网：VLAN1, VLAN2 和 VLAN3。</p>
+<p>每个虚拟局域网是一个广播域。VLAN1, VLAN2 和 VLAN3 是三个不同的广播域。</p>
+<p>当 B1 向 VLAN2 工作组内成员发送数据时，工作站 B2 和 B3 将会收到其广播的信息。</p>
+<p>B1 发送数据时，VLAN1 和 VLAN3 中的工作站 A1，A2 和 C1 等都不会收到 B1 发出的广播信息。</p>
+<p>虚拟局域网限制了接收广播信息的工作站数，使得网络不会因传播过多的广播信息 (即“广播风暴”) 而引起性能恶化。</p>
+<p>虚拟局域网（VLAN）技术具有以下主要优点：改善了性能、简化了管理、降低了成本、改善了安全性。</p>
+<h2 id="划分虚拟局域网的方法"><a href="#划分虚拟局域网的方法" class="headerlink" title="划分虚拟局域网的方法"></a>划分虚拟局域网的方法</h2><ul>
+<li>基于交换机端口的方法：最简单、也是最常用的方法。属于在第一层划分虚拟局域网的方法。缺点：不允许用户移动。</li>
+<li>基于计算机网卡的MAC地址的方法：根据用户计算机的MAC地址划分虚拟局域网。属于在第二层划分虚拟局域网的方法。允许用户移动。缺点：需要输入和管理大量的MAC地址。如果用户的MAC地址改变了，则需要管理员重新配置VLAN。</li>
+<li>基于协议类型的方法：根据以太网帧的第三个字段“类型”字段确定该类型的协议属于哪一个虚拟局域网。属于在第二层划分虚拟局域网的方法。</li>
+<li>基于IP子网地址的方法：根据以太网帧的第三个字段“类型”字段和IP分组首部中的源 IP 地址字段确定该 IP 分组属于哪一个虚拟局域网。属于在第三层划分虚拟局域网的方法。</li>
+<li>基于高层应用或服务的方法：根据高层应用或服务、或者它们的组合划分虚拟局域网。更加灵活，但更加复杂。</li>
+</ul>
+<h2 id="虚拟局域网使用的以太网帧格式"><a href="#虚拟局域网使用的以太网帧格式" class="headerlink" title="虚拟局域网使用的以太网帧格式"></a>虚拟局域网使用的以太网帧格式</h2><p>IEEE 批准了 802.3ac 标准，该标准定义了以太网的帧格式的扩展，以支持虚拟局域网。</p>
+<p>虚拟局域网协议允许在以太网的帧格式中插入一个4字节的标识符，称为 VLAN 标记，用来指明该帧属于哪一个虚拟局域网。</p>
+<p>插入VLAN标记得出的帧称为 802.1Q 帧或带标记的以太网帧。</p>
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img22.png" class="">
+<img src="/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/img23.png" class=""> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BB%A5%E5%A4%AA%E7%BD%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/19/java/%E5%9F%BA%E7%A1%80/Java%E7%BB%A7%E6%89%BF%E5%92%8C%E5%A4%9A%E6%80%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Java 继承和多态
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/18/java/%E5%9F%BA%E7%A1%80/Java%E5%8C%85%EF%BC%88package%EF%BC%89/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java 包（package）</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

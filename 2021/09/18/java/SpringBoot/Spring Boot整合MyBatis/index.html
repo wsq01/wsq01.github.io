@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Spring Boot 整合MyBatis |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/SpringBoot/Spring Boot整合MyBatis"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Spring Boot 整合MyBatis
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/09/18/java/SpringBoot/Spring%20Boot%E6%95%B4%E5%90%88MyBatis/" class="article-date">
+  <time datetime="2021-09-18T09:09:34.000Z" itemprop="datePublished">2021-09-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring-Boot/">Spring Boot</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">9 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>MyBatis 是一个半自动化的 ORM 框架，所谓半自动化是指 MyBatis 只支持将数据库查出的数据映射到 POJO 实体类上，而实体到数据库的映射则需要我们自己编写 SQL 语句实现，相较于 Hibernate 这种完全自动化的框架，Mybatis 更加灵活，我们可以根据自身的需求编写 sql 语句来实现复杂的数据库操作。</p>
+<p>MyBatis 开发了一套基于 Spring Boot 模式的<code>starter</code>：<code>mybatis-spring-boot-starter</code>。</p>
+<h1 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h1><p>Spring Boot 整合 MyBatis 的第一步，就是在项目的<code>pom.xml</code>中引入<code>mybatis-spring-boot-starter</code>的依赖。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入 mybatis-spring-boot-starter 的依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="配置-MyBatis"><a href="#配置-MyBatis" class="headerlink" title="配置 MyBatis"></a>配置 MyBatis</h1><p>在 Spring Boot 的配置文件（<code>application.properties/yml</code>）中对 MyBatis 进行配置，例如指定<code>mapper.xml</code>的位置、实体类的位置、是否开启驼峰命名法等等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">###################################### MyBatis 配置######################################</span><br><span class="line">mybatis:</span><br><span class="line">  # 指定 mapper.xml 的位置</span><br><span class="line">  mapper-locations: classpath:mybatis/mapper/*.xml</span><br><span class="line">  #扫描实体类的位置,在此处指明扫描实体类的包，在 mapper.xml 中就可以不写实体类的全路径名</span><br><span class="line">  type-aliases-package: net.biancheng.www.bean</span><br><span class="line">  configuration:</span><br><span class="line">    #默认开启驼峰命名法，可以不用设置该属性</span><br><span class="line">    map-underscore-to-camel-case: true  </span><br></pre></td></tr></table></figure>
+<p>注意：使用 MyBatis 时，必须配置数据源信息，例如数据库 URL、数据库用户型、数据库密码和数据库驱动等。</p>
+<h1 id="创建实体类"><a href="#创建实体类" class="headerlink" title="创建实体类"></a>创建实体类</h1><p>在指定的数据库内创建一个<code>user</code>表，并插入一些数据，如下表。</p>
+<table>
+<thead>
+<tr>
+<th align="center">id</th>
+<th align="center">user_id</th>
+<th align="center">user_name</th>
+<th align="center">password</th>
+<th align="center">email</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">001</td>
+<td align="center">admin</td>
+<td align="center">admin</td>
+<td align="center"><a href="mailto:&#49;&#x32;&#51;&#52;&#53;&#54;&#55;&#x40;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;">&#49;&#x32;&#51;&#52;&#53;&#54;&#55;&#x40;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;</a></td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">002</td>
+<td align="center">user</td>
+<td align="center">123456</td>
+<td align="center"><a href="mailto:&#57;&#x38;&#x37;&#x36;&#53;&#52;&#x40;&#x71;&#113;&#x2e;&#99;&#x6f;&#x6d;">&#57;&#x38;&#x37;&#x36;&#53;&#52;&#x40;&#x71;&#113;&#x2e;&#99;&#x6f;&#x6d;</a></td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">003</td>
+<td align="center">bianchengbang</td>
+<td align="center">qwertyuiop</td>
+<td align="center"><a href="mailto:&#98;&#x69;&#97;&#x6e;&#99;&#104;&#x65;&#x6e;&#103;&#98;&#x61;&#110;&#x67;&#x40;&#x73;&#105;&#x6e;&#x61;&#x2e;&#99;&#111;&#109;">&#98;&#x69;&#97;&#x6e;&#99;&#104;&#x65;&#x6e;&#103;&#98;&#x61;&#110;&#x67;&#x40;&#x73;&#105;&#x6e;&#x61;&#x2e;&#99;&#111;&#109;</a></td>
+</tr>
+</tbody></table>
+<p>根据数据库<code>user</code>表，创建相应的实体类<code>User</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.bean;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> Integer id;</span><br><span class="line">  <span class="keyword">private</span> String userId;</span><br><span class="line">  <span class="keyword">private</span> String userName;</span><br><span class="line">  <span class="keyword">private</span> String password;</span><br><span class="line">  <span class="keyword">private</span> String email;</span><br><span class="line">  <span class="keyword">public</span> Integer <span class="title function_">getId</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> id;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setId</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.id = id;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getUserId</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> userId;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUserId</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.userId = userId == <span class="literal">null</span> ? <span class="literal">null</span> : userId.trim();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getUserName</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> userName;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUserName</span><span class="params">(String userName)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.userName = userName == <span class="literal">null</span> ? <span class="literal">null</span> : userName.trim();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> password;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPassword</span><span class="params">(String password)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.password = password == <span class="literal">null</span> ? <span class="literal">null</span> : password.trim();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getEmail</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> email;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEmail</span><span class="params">(String email)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.email = email == <span class="literal">null</span> ? <span class="literal">null</span> : email.trim();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="创建-Mapper-接口"><a href="#创建-Mapper-接口" class="headerlink" title="创建 Mapper 接口"></a>创建 Mapper 接口</h1><p>在<code>net.biancheng.www.mapper</code>中创建一个<code>UserMapper</code>接口，并在该类上使用<code>@Mapper</code>注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.mapper;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.User;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Mapper;</span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> &#123;</span><br><span class="line">  <span class="comment">//通过用户名密码查询用户数据</span></span><br><span class="line">  User <span class="title function_">getByUserNameAndPassword</span><span class="params">(User user)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当<code>mapper</code>接口较多时，可以在 Spring Boot 主启动类上使用<code>@MapperScan</code>注解扫描指定包下的<code>mapper</code>接口，而不再需要在每个<code>mapper</code>接口上都标注<code>@Mapper</code>注解。</p>
+<h1 id="创建-Mapper-映射文件"><a href="#创建-Mapper-映射文件" class="headerlink" title="创建 Mapper 映射文件"></a>创建 Mapper 映射文件</h1><p>在配置文件<code>application.properties/yml</code>通过<code>mybatis.mapper-locations</code>指定的位置中创建<code>UserMapper.xml</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;net.biancheng.www.mapper.UserMapper&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;BaseResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;INTEGER&quot;</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> <span class="attr">property</span>=<span class="string">&quot;userId&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;user_name&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> <span class="attr">property</span>=<span class="string">&quot;userName&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;password&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;email&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> <span class="attr">property</span>=<span class="string">&quot;email&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;Base_Column_List&quot;</span>&gt;</span></span><br><span class="line">    id, user_id, user_name, password, email</span><br><span class="line">  <span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--根据用户名密码查询用户信息--&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--application.yml 中通过 type-aliases-package 指定了实体类的为了，因此--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getByUserNameAndPassword&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">    select *</span><br><span class="line">    from user</span><br><span class="line">    where user_name = #&#123;userName,jdbcType=VARCHAR&#125;</span><br><span class="line">      and password = #&#123;password,jdbcType=VARCHAR&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用<code>Mapper</code>进行开发时，需要遵循以下规则：</p>
+<ul>
+<li><code>mapper</code>映射文件中<code>namespace</code>必须与对应的<code>mapper</code>接口的完全限定名一致。</li>
+<li><code>mapper</code>映射文件中<code>statement</code>的<code>id</code>必须与<code>mapper</code>接口中的方法的方法名一致</li>
+<li><code>mapper</code>映射文件中<code>statement</code>的<code>parameterType</code>指定的类型必须与<code>mapper</code>接口中方法的参数类型一致。</li>
+<li><code>mapper</code>映射文件中<code>statement</code>的<code>resultType</code>指定的类型必须与<code>mapper</code>接口中方法的返回值类型一致。</li>
+</ul>
+<h2 id="示例-1"><a href="#示例-1" class="headerlink" title="示例 1"></a>示例 1</h2><ol>
+<li>创建一个名为<code>UserService</code>的接口。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.service;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.User;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> User <span class="title function_">getByUserNameAndPassword</span><span class="params">(User user)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>创建<code>UserService</code>接口的实现类，并使用<code>@Service</code>注解将其以组件的形式添加到容器中。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.service.impl;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.User;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.mapper.UserMapper;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.service.UserService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"><span class="meta">@Service(&quot;userService&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  UserMapper userMapper;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> User <span class="title function_">getByUserNameAndPassword</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">loginUser</span> <span class="operator">=</span> userMapper.getByUserNameAndPassword(user);</span><br><span class="line">    <span class="keyword">return</span> loginUser;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>修改<code>LoginController</code>中的<code>doLogin()</code>方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.controller;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.User;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.service.UserService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginController</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  UserService userService;</span><br><span class="line">  <span class="meta">@RequestMapping(&quot;/user/login&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">doLogin</span><span class="params">(User user, Map&lt;String, Object&gt; map, HttpSession session)</span> &#123;</span><br><span class="line">    <span class="comment">//从数据库中查询用户信息</span></span><br><span class="line">    <span class="type">User</span> <span class="variable">loginUser</span> <span class="operator">=</span> userService.getByUserNameAndPassword(user);</span><br><span class="line">    <span class="keyword">if</span> (loginUser != <span class="literal">null</span>) &#123;</span><br><span class="line">      session.setAttribute(<span class="string">&quot;loginUser&quot;</span>, loginUser);</span><br><span class="line">      log.info(<span class="string">&quot;登陆成功，用户名：&quot;</span> + loginUser.getUserName());</span><br><span class="line">      <span class="comment">//防止重复提交使用重定向</span></span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;redirect:/main.html&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      map.put(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">      log.error(<span class="string">&quot;登陆失败&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;login&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>启动 Spring Boot，浏览器地址栏输入<code>“http://localhost:8080/”</code>，访问 AdminEx 系统的登陆页面，分别输入用户名“user”和密码“123456”。</li>
+</ol>
+<h1 id="注解方式"><a href="#注解方式" class="headerlink" title="注解方式"></a>注解方式</h1><p>我们知道<code>mapper</code>映射文件其实就是一个 XML 配置文件，它存在 XML 配置文件的通病，即编写繁琐，容易出错。即使是一个十分简单项目，涉及的 SQL 语句也都十分简单，我们仍然需要花费一定的时间在<code>mapper</code>映射文件的配置上。</p>
+<p>为了解决这个问题，MyBatis 针对实际实际业务中使用最多的“增删改查”操作，分别提供了以下注解来替换<code>mapper</code>映射文件，简化配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Select</span><br><span class="line">@Insert</span><br><span class="line">@Update</span><br><span class="line">@Delete</span><br></pre></td></tr></table></figure>
+<p>通过以上注解，基本可以满足我们对数据库的增删改查操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> net.biancheng.www.mapper;</span><br><span class="line"><span class="keyword">import</span> net.biancheng.www.bean.User;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.*;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> &#123;</span><br><span class="line">  <span class="meta">@Select(&quot;select * from user where user_name = #&#123;userName,jdbcType=VARCHAR&#125; and password = #&#123;password,jdbcType=VARCHAR&#125;&quot;)</span></span><br><span class="line">  List&lt;User&gt; <span class="title function_">getByUserNameAndPassword</span><span class="params">(User user)</span>;</span><br><span class="line">  <span class="meta">@Delete(&quot;delete from user where id = #&#123;id,jdbcType=INTEGER&#125;&quot;)</span></span><br><span class="line">  <span class="type">int</span> <span class="title function_">deleteByPrimaryKey</span><span class="params">(Integer id)</span>;</span><br><span class="line">  <span class="meta">@Insert(&quot;insert into user ( user_id, user_name, password, email)&quot; +</span></span><br><span class="line"><span class="meta">      &quot;values ( #&#123;userId,jdbcType=VARCHAR&#125;, #&#123;userName,jdbcType=VARCHAR&#125;, #&#123;password,jdbcType=VARCHAR&#125;, #&#123;email,jdbcType=VARCHAR&#125;)&quot;)</span></span><br><span class="line">  <span class="type">int</span> <span class="title function_">insert</span><span class="params">(User record)</span>;</span><br><span class="line">  <span class="meta">@Update(&quot; update user&quot; +</span></span><br><span class="line"><span class="meta">      &quot;    set user_id = #&#123;userId,jdbcType=VARCHAR&#125;,\n&quot; +</span></span><br><span class="line"><span class="meta">      &quot;      user_name = #&#123;userName,jdbcType=VARCHAR&#125;,\n&quot; +</span></span><br><span class="line"><span class="meta">      &quot;      password = #&#123;password,jdbcType=VARCHAR&#125;,\n&quot; +</span></span><br><span class="line"><span class="meta">      &quot;      email = #&#123;email,jdbcType=VARCHAR&#125;\n&quot; +</span></span><br><span class="line"><span class="meta">      &quot;    where id = #&#123;id,jdbcType=INTEGER&#125;&quot;)</span></span><br><span class="line">  <span class="type">int</span> <span class="title function_">updateByPrimaryKey</span><span class="params">(User record)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>mapper</code>接口中的任何一个方法，都只能使用一种配置方式，即注解和<code>mapper</code>映射文件二选一，但不同方法之间，这两种方式则可以混合使用，例如方法 1 使用注解方式，方法 2 使用<code>mapper</code>映射文件方式。</p>
+<p>我们可以根据 SQL 的复杂程度，选择不同的方式来提高开发效率。</p>
+<ul>
+<li>如果没有复杂的连接查询，我们可以使用注解的方式来简化配置；</li>
+<li>如果涉及的 sql 较为复杂时，则使用 XML （<code>mapper</code>映射文件）的方式更好一些。</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/09/18/java/SpringBoot/Spring%20Boot%E6%95%B4%E5%90%88MyBatis/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring-Boot/" rel="tag">Spring Boot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/10/22/others/HTTPS%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7%E7%9A%84%E4%B8%BB%E8%A6%81%E6%AD%A5%E9%AA%A4/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            HTTPS证书申请的主要步骤
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/09/15/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E7%BB%91%E5%AE%9A/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">SpringBoot 配置绑定</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

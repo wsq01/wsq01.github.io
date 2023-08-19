@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> 学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/SpringBoot/Spring-Boot-Starter常用依赖模块"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+     
+    <div class="article-meta">
+      <a href="/2022/10/29/java/SpringBoot/Spring-Boot-Starter%E5%B8%B8%E7%94%A8%E4%BE%9D%E8%B5%96%E6%A8%A1%E5%9D%97/" class="article-date">
+  <time datetime="2022-10-29T09:05:54.758Z" itemprop="datePublished">2022-10-29</time>
+</a>   
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">11.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">47 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>SpringBoot 提供的依赖模块都约定以<code>spring-boot-starter-</code>作为命名的前缀，并且皆位于<code>org.springframework.boot</code>包或者命名空间下。</p>
+<p>所有的<code>spring-boot-starter</code>都有约定俗成的默认配置，但允许我们调整这些配置以改变默认的配置行为，即“约定优先于配置”。</p>
+<h1 id="应用日志和spring-boot-starter-logging"><a href="#应用日志和spring-boot-starter-logging" class="headerlink" title="应用日志和spring-boot-starter-logging"></a>应用日志和spring-boot-starter-logging</h1><p>Java 的日志系统多种多样，从<code>java.util</code>默认提供的日志支持，到<code>log4j，log4j2，commons logging</code>等，复杂繁多，所以，应用日志系统的配置就会比较特殊，从而<code>spring-boot-starter-logging</code>也比较特殊一些。</p>
+<p>假如 maven 依赖中添加了<code>spring-boot-starter-logging</code>：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span> org.springframework.boot <span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span> spring-boot-starter-logging <span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>那么，我们的 SpringBoot 应用将自动使用 logback 作为应用日志框架，SpringBoot 启动的时候，由 org.springframework.boot.logging.Logging-Application-Listener 根据情况初始化并使用。</p>
+<p>SpringBoot 为我们提供了很多默认的日志配置，所以，只要将 spring-boot-starter-logging 作为依赖加入到当前应用的 classpath，则“开箱即用”，不需要做任何多余的配置，但假设我们要对默认 SpringBoot 提供的应用日志设定做调整，则可以通过几种方式进行配置调整：<br>遵循 logback 的约定，在 classpath 中使用自己定制的 logback.xml 配置文件。<br>在文件系统中任何一个位置提供自己的 logback.xml 配置文件，然后通过 logging.config 配置项指向这个配置文件来启用它，比如在 application.properties 中指定如下的配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logging.config=/&#123;some.path.you.defined&#125;/any-logfile-name-I-like.log</span><br></pre></td></tr></table></figure>
+<p>SpringBoot 默认允许我们通过在配置文件或者命令行等方式使用 logging.file 和 logging.path 来自定义日志文件的名称和存放路径，不过，这只是允许我们在 SpringBoot 框架预先定义的默认日志系统设定的基础上做有限的设置，如果我们希望更灵活的配置，最好通过框架特定的配置方式提供相应的配置文件，然后通过 logging.config 来启用。</p>
+<p>如果大家更习惯使用 log4j 或者 log4j2，那么也可以采用类似的方式将它们对应的<code>spring-boot-starter</code>依赖模块加到 Maven 依赖中即可：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span> org.springframework.boot <span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span> spring-boot-starter-log4j <span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 或者 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span> org.springframework.boot <span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span> spring-boot-starter-log4j2 <span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但一定不要将这些完成同一目的的 spring-boot-starter 都加到依赖中。</p>
+<h1 id="快速-Web-应用开发与-spring-boot-starter-web"><a href="#快速-Web-应用开发与-spring-boot-starter-web" class="headerlink" title="快速 Web 应用开发与 spring-boot-starter-web"></a>快速 Web 应用开发与 spring-boot-starter-web</h1><p>为了帮我们简化快速搭建并开发一个 Web 项目，SpringBoot 提供了<code>spring-boot-starter-web</code>自动配置模块。</p>
+<p>只要将<code>spring-boot-starter-web</code>加入项目的 maven 依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们就得到了一个直接可执行的 Web 应用，当前项目下运行<code>mvn spring-boot：run</code>就可以直接启动一个使用了嵌入式 tomcat 服务请求的 Web 应用，只不过，我们还没有提供任何服务 Web 请求的<code>Controller</code>，所以，访问任何路径都会返回一个 SpringBoot 默认提供的错误页面（一般称其为 whitelabel error page），我们可以在当前项目下新建一个服务根路径 Web 请求的 Controller 实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">  <span class="meta">@RequestMapping(&quot;/&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">index</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello, there&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新运行 mvn spring-boot：run 并访问<code>http://localhost：8080</code>，错误页面将被我们的<code>Controller</code>返回的消息所替代，一个简单的 Web 应用就这样完成了。</p>
+<h2 id="项目结构层面的约定"><a href="#项目结构层面的约定" class="headerlink" title="项目结构层面的约定"></a>项目结构层面的约定</h2><p>项目结构层面与传统打包为 war 的 Java Web 应用的差异在于，静态文件和页面模板的存放位置变了，原来是放在<code>src/main/webapp </code>目录下的一系列资源，现在都统一放在<code>src/main/resources</code>相应子目录下，比如：</p>
+<ul>
+<li><code>src/main/resources/static</code>用于存放各类静态资源，比如<code>css，js</code>等。</li>
+<li><code>src/main/resources/templates</code>用于存放模板文件，比如<code>*.vm</code>。</li>
+</ul>
+<p>当然，如果还是希望以 war 包的形式，而不是 SpringBoot 推荐使用的独立 jar 包形式发布 Web 应用，也可以继续原来 Java Web 应用的项目结构约定。</p>
+<h2 id="SpringMVC-框架层面的约定和定制"><a href="#SpringMVC-框架层面的约定和定制" class="headerlink" title="SpringMVC 框架层面的约定和定制"></a>SpringMVC 框架层面的约定和定制</h2><p><code>spring-boot-starter-web</code>默认将为我们自动配置如下一些 SpringMVC 必要组件：</p>
+<ul>
+<li>必要的<code>ViewResolver</code>，比如<code>ContentNegotiatingViewResolver</code>和<code>Bean-NameViewResolver</code>。</li>
+<li>将必要的<code>Converter、GenericConverter</code>和<code>Formatter</code>等<code>bean</code>注册到 IoC 容器。</li>
+<li>添加一系列的<code>HttpMessageConverter</code>以便支持对 Web 请求和相应的类型转换。</li>
+<li>自动配置和注册<code>MessageCodesResolver</code>。</li>
+<li>其他。</li>
+</ul>
+<p>任何时候，如果我们对默认提供的 SpringMVC 组件设定不满意，都可以在 IoC 容器中注册新的同类型的<code>bean</code>定义来替换，或者直接提供一个基于<code>WebMvcConfigurerAdapter</code>类型的<code>bean</code>定义来定制，甚至直接提供一个标注了<code>@EnableWebMvc</code>的<code>@Configuration</code>配置类完全接管所有 SpringMVC 的相关配置，自己完全重新配置。</p>
+<h1 id="spring-boot-starter-jdbc与数据访问"><a href="#spring-boot-starter-jdbc与数据访问" class="headerlink" title="spring-boot-starter-jdbc与数据访问"></a>spring-boot-starter-jdbc与数据访问</h1><p>若想 SpringBoot 为我们自动配置数据访问的基础设施，那么，我们需要直接或者间接地依赖 spring-jdbc，一旦 spring-jdbc 位于我们 SpringBoot 应用的 classpath，即会触发数据访问相关的自动配置行为，最简单的做法就是把 spring-boot-starter-jdbc 加为应用的依赖。</p>
+<p>默认情况下，如果我们没有配置任何 DataSource，那么，SpringBoot 会为我们自动配置一个基于嵌入式数据库的 DataSource，这种自动配置行为其实很适合于测试场景，但对实际的开发帮助不大，基本上我们会自己配置一个 DataSource 实例，或者通过自动配置模块提供的配置参数对 DataSource 实例进行自定义的配置。</p>
+<p>假设我们的 SpringBoot 应用只依赖一个数据库，那么，使用<code>DataSource</code>自动配置模块提供的配置参数是最方便的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring.datasource.url=jdbc:mysql://&#123;database host&#125;:3306/&#123;databaseName&#125;</span><br><span class="line">spring.datasource.username=&#123;database username&#125;</span><br><span class="line">spring.datasource.password=&#123;database password&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，自己配置一个 DataSource 也是可以的，SpringBoot 也会智能地选择我们自己配置的这个 DataSource 实例（只不过必要性真不大）。</p>
+<p>除了 DataSource 会自动配置，SpringBoot 还会自动配置相应的 JdbcTemplate、DataSourceTransactionManager 等关联“设施”，可谓服务周到，我们只要在使用的地方注入就可以了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SomeDao</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  JdbcTemplate jdbcTemplate;</span><br><span class="line">  <span class="keyword">public</span> &lt;T&gt; List&lt;T&gt; <span class="title function_">queryForList</span><span class="params">(String sql)</span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过，spring-boot-starter-jdbc 以及与其相关的自动配置也不总是带来便利，在某些场景下，我们可能会在一个应用中需要依赖和访问多个数据库，这个时候就会出现问题了。</p>
+<p>假设我们在 ApplicationContext 中配置了多个 DataSource 实例指向多个数据库：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource1</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="type">DruidDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DruidDataSource</span>();</span><br><span class="line">  dataSource.setUrl(...);</span><br><span class="line">  dataSource.setUsername(...);</span><br><span class="line">  dataSource.setPassword(...);</span><br><span class="line">  <span class="comment">// TODO other settings if necessary in the future.</span></span><br><span class="line">  <span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource2</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="type">DruidDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DruidDataSource</span>();</span><br><span class="line">  dataSource.setUrl(...);</span><br><span class="line">  dataSource.setUsername(...);</span><br><span class="line">  dataSource.setPassword(...);</span><br><span class="line">  <span class="comment">// TODO other settings if necessary in the future.</span></span><br><span class="line">  <span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么，启动 SpringBoot 应用的时候会抛出类似如下的异常（Exception）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception）：No qualifying bean of type [javax.sql.DataSource] is defined: expected single matching bean but found 2 </span><br></pre></td></tr></table></figure>
+<p>为了避免这种情况的发生，我们需要在 SpringBoot 的启动类上做点儿“手脚”：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication(exclude = &#123; DataSourceAutoConfiguration.class,</span></span><br><span class="line"><span class="meta">    DataSourceTransactionManagerAutoConfiguration.class &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnveilSpringChapter3Application</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    SpringApplication.run(UnveilSpringChapter3Application.class, args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是说，我们需要在这种场景下排除掉对 SpringBoot 默认提供的<code>DataSource</code>相关的自动配置。但如果我们还是想要享受 SpringBoot 提供的自动配置<code>DataSource</code>的机能，也可以通过为其中一个<code>DataSource</code>配置添加<code>org.springframework.context.annotation.Primary</code>这个<code>Annotation</code>的方式以实现两全其美：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@Primary</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource1</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="type">DruidDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DruidDataSource</span>();</span><br><span class="line">  dataSource.setUrl(...);</span><br><span class="line">  dataSource.setUsername(...);</span><br><span class="line">  dataSource.setPassword(...);</span><br><span class="line">  <span class="comment">// TODO other settings if necessary in the future.</span></span><br><span class="line">  <span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource2</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="type">DruidDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DruidDataSource</span>();</span><br><span class="line">  dataSource.setUrl(...);</span><br><span class="line">  dataSource.setUsername(...);</span><br><span class="line">  dataSource.setPassword(...);</span><br><span class="line">  <span class="comment">// TODO other settings if necessary in the future.</span></span><br><span class="line">  <span class="keyword">return</span> dataSource;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外，SpringBoot 还提供了很多其他数据访问相关的自动配置模块，比如<code>spring-boot-starter-data-jpa、spring-boot-starter-data-mongodb</code>等。</p>
+<p>如果选择了<code>spring-boot-starter-data-jpa</code>等关系数据库相关的数据访问自动配置模块，并且还需要同时依赖访问多个数据库，那么，也需要相应的在 SpringBoot 启动类中排除掉这些自动配置模块中的<code>AutoConfiguration</code>实现类（对应<code>spring-boot-starter-data-jpa</code>是<code>JpaRepositoriesAutoConfiguration</code>），或者标注某个<code>DataSource</code>为<code>@Primary</code>。</p>
+<h1 id="spring-boot-starter-aop"><a href="#spring-boot-starter-aop" class="headerlink" title="spring-boot-starter-aop"></a>spring-boot-starter-aop</h1><p>现在 Spring 框架提供的 AOP 方案倡导了一种各取所长的方案，即使用 SpringAOP 的面向对象的方式来编写和组织织入逻辑，并使用 AspectJ 的 Pointcut 描述语言配合 Annotation 来标注和指明织入点（Jointpoint）。</p>
+<p>SpringBoot 为我们提供了一个<code>spring-boot-starter-aop</code>自动配置模块。</p>
+<p>spring-boot-starter-aop 自动配置行为由两部分内容组成：<br>位于 spring-boot-autoconfigure的org.springframework.boot.autoconfigure.aop.AopAutoConfiguration 提供 @Configuration 配置类和相应的配置项。<br>spring-boot-starter-aop 模块自身提供了针对 spring-aop、aspectjrt 和 aspectjweaver 的依赖。</p>
+<p>一般情况下，只要项目依赖中加入了 spring-boot-starter-aop，其实就会自动触发 AOP 的关联行为，包括构建相应的 AutoProxyCreator，将横切关注点织入（Weave）相应的目标对象等，不过 AopAutoConfiguration 依然为我们提供了可怜的两个配置项，用来有限地干预 AOP 相关配置：<br>spring.aop.auto&#x3D;true<br>spring.aop.proxy-target-class&#x3D;false</p>
+<p>对我们来说，这两个配置项的最大意义在于：允许我们投反对票，比如可以选择关闭自动的 aop 配置（spring.aop.auto&#x3D;false），或者启用针对 class 而不是 interface 级别的 aop 代理（aop proxy）。</p>
+<p>AOP 的应用场景很多，我们不妨以当下最热门的 APM（Application Performance Monitoring）为实例场景，尝试使用 spring-boot-starter-aop 的支持打造一个应用性能监控的工具原型。<br>spring-boot-starter-aop 在构建 spring-boot-starter-metrics 自定义模块中的应用<br>对于应用性能监控来说，架构逻辑上其实很简单，基本上就是三步走（如图 1 所示）。</p>
+<p>本节暂时只构建一个 spring-boot-starter-metrics 自定义的自动配置模块用来解决“应用性能数据采集”的问题。<br>应用性能监控关键环节示意图<br>图 1  应用性能监控关键环节示意图</p>
+<p>在此之前，有几个原则我们需要先说明一下：</p>
+<p>虽然说采集应用性能数据可以帮助我们更好地分析和改进应用的性能指标，但这不意味着可以借着 APM 的名义对应用的核心职能形成侵害，加上应用性能数据采集功能一定会对应用的性能本身带来拖累，你拿到的所谓性能数据是分摊了你的数据采集方案带来的负担，所以，一般情况下，最好把应用性能数据采集模块的性能损耗控制在 10% 以内甚至更小。</p>
+<p>SpringAOP 其实提供了多种横切逻辑织入机制（Weaving），性能损耗上也是各有差别，从运行期间的动态代理和字节码增强 Weavng，到类加载期间的 Weaving，甚至高冷的 AspectJ 二次静态编译 Weaving，大家可以根据情况灵活把握。</p>
+<p>针对应用性能数据的采集，最好对应用开发者是透明的，通过配置外部化的形式，可以最大限度地剥离这部分对应用开发者来说非核心的关注点，只在部署和运行之前确定采集点并配置上线即可。</p>
+<p>虽然本节实例采用基于 @Annotation 的方式来标注性能采集点，但不意味着这是最优的方式，更多是基于技术方案（SpringAOP）的现状给出的一种实践方式。</p>
+<p>下面我们正式着手构建 spring-boot-starter-metrics 自定义的自动配置模块的设计和实现方案。</p>
+<p>笔者一向是只在有必要的时候才重新“造轮子”，绝不会为了炫技而去“造轮子”，所以，本次的主角我们选择 Java 中的 Dropwizard Metrics 这个类库作为打造我们 APM 原型的起点。</p>
+<p>Dropwizard Metrics 为我们提供了多种不同类型的应用数据度量方案，且通过相应的数据处理算法在性能和批量状态的管理上做了很优秀的工作，只不过，如果我们直接用它的 API 来对自己的应用代码进行度量的话，那写起来代码太多，而且这些性能代码混杂在应用的核心逻辑执行路径上，一个是界面不友好，另外一个就是不容易维护：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MockService</span> <span class="keyword">implements</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  MetricRegistry metricRegistry;</span><br><span class="line">  <span class="keyword">private</span> Timer timer;</span><br><span class="line">  <span class="keyword">private</span> Counter counter;</span><br><span class="line">  <span class="comment">// define more other metrics...</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSth</span><span class="params">()</span> &#123;</span><br><span class="line">    counter.inc();</span><br><span class="line">    Timer.<span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> timer.time();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;just do something.&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      context.stop();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    timer = metricRegistry.timer(<span class="string">&quot;timerToProfilingDoSthMethod&quot;</span>);</span><br><span class="line">    counter = metricRegistry.counter(<span class="string">&quot;counterForDoSthMethod&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，对于这些非功能性的性能度量代码，我们可以使用 AOP 的方式剥离到相应的 Aspect 中单独维护，而为了能够将这些性能度量的 Aspect 挂接到指定的待度量代码上，基于现有的方案选型。</p>
+<p>可以使用 metrics-annotation 提供的一系列 Annotation 来标注织入位置，这样，开发者只要在需要度量的代码位置上标注相应的 Annotation，我们提供的 spring-boot-starter-metrics 自定义的自动配置模块就会自动地收集这些位置上指定的性能度量数据。</p>
+<p>首先，我们通过 <a target="_blank" rel="noopener" href="http://start.spring.io/">http://start.spring.io/</a> 构建一个 SpringBoot 的脚手架项目，选择以 Maven 编译（选择用 Gradle 的同学自行甄别后面的配置如何具体进行），然后在创建好的 SpringBoot 脚手架项目的 pom.xml 中添加如下必要配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="string"><span class="tag">      http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.keevol<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-metrics<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>spring-boot-starter-metrics<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">description</span>&gt;</span>auto configuration module for dropwizard metrics<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">metrics.version</span>&gt;</span>3.1.2<span class="tag">&lt;/<span class="name">metrics.version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">properties</span>&gt;</span> <span class="comment">&lt;!--其他配置 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span></span><br><span class="line">        $&#123;metrics.version&#125;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-annotation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>aspectjrt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.8.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>pom.xml 中有几个关键配置需要关注：<br>继承了 spring-boot-starter-parent，用于加入 springboot 的相关依赖。<br>添加了 spring-boot-starter-aop 依赖。<br>添加了 io.dropwizard.metrics 下相应的依赖，用来引入 dropwizard metrics 类库和必要的 Annotations。<br>添加了 spring-boot-starter-actuator，这个自动配置模块教程后面会跟大家进一步介绍，在这里我们主要是引入它对 dropwizard metrics 和 JMX 的一部分自动配置逻辑，比如针对 MetricRegistry 和 MBeanServer 的自动配置，这样我们就可以直接 @Autowired 来注入使用 MetricRegistry 和 MBeanServer。</p>
+<p>至于 aspectjrt，是使用了最新的版本，原则上spring-boot-starter-aop已经有依赖，这里可以不用明确添加配置。</p>
+<p>如果单单是一个提供必要依赖的自动配置模块，那么到这里其实就可以结束了，但我们的 spring-boot-starter-metrics 需要使用 AOP 提供相应的横切关注点逻辑。</p>
+<p>所以，还需要编写并提供一些必要的代码组件，因此，最少我们先要提供一个 @Configuration 配置类，用于将我们即将提供的这些 AOP 逻辑暴露给使用者：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan(&#123; &quot;com.keevol.springboot.metrics.lifecycle&quot;,</span></span><br><span class="line"><span class="meta">    &quot;com.keevol.springboot.metrics.aop&quot; &#125;)</span></span><br><span class="line"><span class="meta">@AutoConfigureAfter(AopAutoConfiguration.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DropwizardMetricsMBeansAutoConfiguration</span> &#123;</span><br><span class="line">  <span class="meta">@Value(&quot;$&#123;metrics.mbeans.domain.name:com.keevol.metrics&#125;&quot;)</span></span><br><span class="line">  String metricsMBeansDomainName;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  MBeanServer mbeanServer;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  MetricRegistry metricRegistry;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> JmxReporter <span class="title function_">jmxReporter</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">JmxReporter</span> <span class="variable">reporter</span> <span class="operator">=</span> JmxReporte.forRegistry(metricRegistry)</span><br><span class="line">        .inDomain(metricsMBeansDomainName).registerWith(mbeanServer)</span><br><span class="line">        .build();</span><br><span class="line">    <span class="keyword">return</span> reporter;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后就是将这个配置类添加到 META-INF&#x2F;spring.factories：</p>
+<p>org.springframework.boot.autoconfigure.EnableAutoConfiguration&#x3D;\com.keevol.springboot.metrics.autocfg.DropwizardMetricsMBeansAuto-ConfigurationOK，<br>不要认为将 spring-boot-starter-metrics 打包作为类库发布出去就可以了，AOP 相关的代码还没写。</p>
+<p>我们回头来看 DropwizardMetricsMBeansAutoConfiguration 配置类，这个配置类的实现很简单，注入了 MBeanServer 和 MetricRegistry 的实例，并开放了一个 metrics.mbeans.domain.name 配置属性（默认值 com.keevol.metrics）便于使用者指定自定义的 MBean 暴露和访问的命名空间。</p>
+<p>当然，以上给这些其实都不是重点，因为它们都只是为了将我们要采集的性能数据指标以 JMX 的形式暴露出去而服务的，重点在于 DropwizardMetricsMBeansAutoConfiguration 头顶上的那几顶“帽子”：<br>@Configuration 自然不必说了，这是一个 JavaConfig 配置类。<br>@ComponentScan（{“com.keevol.springboot.metrics.lifecycle”，”com.keevol.springboot.metrics.aop”}），为了简便，让 @ComponentScan 把这两个 java package 下的所有组件都加载到 IoC 容器中，这些组件就包括我们要提供的一系列与 AOP 和 Dropwizard Metrics 相关的实现逻辑。<br>@AutoConfigureAfter（AopAutoConfiguration.class）告诉 SpringBoot：“我希望 DropwizardMetricsMBeansAutoConfiguration 在 AopAutoConfiguration 完成之后进行配置”。</p>
+<p>现在，最后的秘密就隐藏在 @ComponentScan 背后的两个 java package 之下了。</p>
+<p>首先是 com.keevol.springboot.metrics.aop，在这个 java package 下面，我们只提供了一个 AutoMetricsAspect，其定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Aspectpublic</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AutoMetricsAspect</span> &#123;</span><br><span class="line">  <span class="keyword">protected</span> ConcurrentMap&lt;String, Meter&gt; meters = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line">  <span class="keyword">protected</span> ConcurrentMap&lt;String, Meter&gt; exceptionMeters = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line">  <span class="keyword">protected</span> ConcurrentMap&lt;String, Timer&gt; timers = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line">  <span class="keyword">protected</span> ConcurrentMap&lt;String, Counter&gt; counters = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  MetricRegistry metricRegistry;</span><br><span class="line">  <span class="meta">@Pointcut(value = &quot;execution(public * *(..))&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publicMethods</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Before(&quot;publicMethods() &amp;&amp; @annotation(countedAnnotation)&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">instrumentCounted</span><span class="params">(JoinPoint jp, Counted countedAnnotation)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> name(jp.getTarget().getClass(), StringUtils.hasLength(countedAnnotation.name()) ? countedAnnotation.name() : jp.getSignature().getName(), <span class="string">&quot;counter&quot;</span>);</span><br><span class="line">      <span class="type">Counter</span> <span class="variable">counter</span> <span class="operator">=</span> counters.computeIfAbsent(name, key -&gt; metricRegistry.counter(key));</span><br><span class="line">      counter.inc();</span><br><span class="line">  &#125;   </span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Before(&quot;publicMethods() &amp;&amp; @annotation(meteredAnnotation)&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">instrumentMetered</span><span class="params">(JoinPoint jp, Metered meteredAnnotation)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> name(jp.getTarget().getClass(), StringUtils.hasLength(meteredAnnotation.name()) ? meteredAnnotation.name() : jp.getSignature().getName(), <span class="string">&quot;meter&quot;</span>);</span><br><span class="line">      <span class="type">Meter</span> <span class="variable">meter</span> <span class="operator">=</span> meters.computeIfAbsent(name, key -&gt; metricRegistry.meter(key));</span><br><span class="line">      meter.mark();</span><br><span class="line">  &#125;   </span><br><span class="line">  <span class="meta">@AfterThrowing(pointcut = &quot;publicMethods() &amp;&amp; @annotation(exMe-teredAnnotation)&quot;, throwing = &quot;ex&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">instrumentExceptionMetered</span><span class="params">(JoinPoint jp, Throwable ex, ExceptionMetered exMeteredAnnotation)</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> name(jp.getTarget().getClass(), StringUtils.hasLength(exMeteredAnnotation.name()) ? exMeteredAnnotation.name() : jp.getSignature().getName(), <span class="string">&quot;meter&quot;</span>, <span class="string">&quot;exception&quot;</span>);</span><br><span class="line">      <span class="type">Meter</span> <span class="variable">meter</span> <span class="operator">=</span> exceptionMeters.computeIfAbsent(name, meterName -&gt; metricRegistry.meter(meterName));</span><br><span class="line">      meter.mark();</span><br><span class="line">  &#125;   </span><br><span class="line">  <span class="meta">@Around(&quot;publicMethods() &amp;&amp; @annotation(timedAnnotation)&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> Object <span class="title function_">instrumentTimed</span><span class="params">(ProceedingJoinPoint pjp, Timed timedAnnotation)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> name(pjp.getTarget().getClass(), StringUtils.hasLength(timedAnnotation.name()) ? timedAnnotation.name() : pjp.getSignature().getName(), <span class="string">&quot;timer&quot;</span>);</span><br><span class="line">    <span class="type">Timer</span> <span class="variable">timer</span> <span class="operator">=</span> timers.computeIfAbsent(name, inputName -&gt; metricRegistry.timer(inputName));</span><br><span class="line">    Timer.<span class="type">Context</span> <span class="variable">tc</span> <span class="operator">=</span> timer.time();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> pjp.proceed();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      tc.stop();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@Aspect+@Component 的目的在于告诉 Spring 框架：“我是一个 AOP 的 Aspect 实现类并且你可以通过 @ComponentScan 把我加入 IoC 容器之中。”当然，这不是重点。</p>
+<p>io.dropwizard.metrics：metrics-annotation 这个依赖包为我们提供了几个有趣的 Annotation：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Timed</span><br><span class="line">Gauge</span><br><span class="line">Counted</span><br><span class="line">Metered</span><br><span class="line">ExceptionMetered</span><br></pre></td></tr></table></figure>
+<p>这些语义良好的 Annotation 定义可以用来标注相应的 AOP 逻辑扩展点，比如，针对同一个 MockService，我们可以将性能数据的度量和采集简化为只标注一两个 Annotation 就可以了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MockService</span> &#123;</span><br><span class="line">  <span class="meta">@Timed</span></span><br><span class="line">  <span class="meta">@Counted</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSth</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;just do something.&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是，Annotation 注定只是 Annotation，它们只是一些标记信息，要让它们发挥作用，需要有“伯乐”的眷顾，所以，AutoMetricsAspect 在这里就是这些 Dropwizard Metrics Annotation 的“伯乐”。</p>
+<p>通过拦截每一个 public 方法并检查方法上是否存在某个 metrics annotation，我们就可以根据具体的 metrics annotation 的类型，为匹配的方法注入相应性能数据采集代码逻辑，从而完成整个基于 AOP 和 dropwizard metrics 的应用性能数据采集方案的实现。</p>
+<p>受限于 SpringAOP 自身的一些限制，并不是所有 AOP 的 Joinpoint 类型都支持，而且，以上原型代码方向也不见得是性能最优的方案，大家需要结合自己的目标和手上可用的技术手段，根据自己的具体应用场景具体分析和权衡。</p>
+<h1 id="spring-boot-starter-security与应用安全"><a href="#spring-boot-starter-security与应用安全" class="headerlink" title="spring-boot-starter-security与应用安全"></a>spring-boot-starter-security与应用安全</h1><p>spring-boot-starter-security 主要面向 Web 应用安全，配合 spring-boot-starter-web。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0</span></span></span><br><span class="line"><span class="string"><span class="tag">        http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.keevol.unveilspring.chapter3<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>web-security-demo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>web-security-demo<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>web security demo project for Spring Boot<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span> /&gt;</span> <span class="comment">&lt;!-- lookup parent from repository --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span> <span class="comment">&lt;!--其他依赖 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在当前项目中只要添加需要的 Controller 实现，一个添加了基本安全防护的 Web 应用就诞生了。spring-boot-starter-security 默认会提供一个基于 HTTP Basic 认证的安全防护策略，默认用户名为 user，访问密码则在当前 Web 应用启动的时候，打印到控制台，类似于：<br>2017-01-01 13:57:00.596 INFO 17966 — [ost-startStop-1] b.a.s.Au-thenticationManagerConfiguration : Using default security password: 560ff91b-0ae7-492c-ad16-603e1adec54c </p>
+<p>如果我们希望对 HTTP Basic 认证的用户名和密码进行定制，可以通过如下配置项进行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">security.user.name=&#123;个人希望设置的用户名&#125;</span><br><span class="line">security.user.password=&#123;个人希望使用的访问密码&#125; </span><br></pre></td></tr></table></figure>
+<p>除此之外，spring-boot-starter-security 还会默认启用一些必要的 Web 安全防护，比如针对 XSS、CSRF 等常见针对 Web 应用的攻击，同时，也会将一些常见的静态资源路径排除在安全防护之外。</p>
+<p>但是，说实话，spring-boot-starter-security 提供的默认安全策略相对于真正的生产环境来说，还是太弱了。但也没办法，既要安全，又要便利，spring-boot-starter-security 默认情况下已经尽量做到够好了。</p>
+<p>不过好在 SpringSecurity 扩展性不错，要在其上构建一套真正严谨有效的 Web 应用安全防护体系也并非难事，只不过，需要我们先能够从其架构设计上理解并把握它，然后再在 SpringSecurity 和 SpringBoot 的基础上构建一套符合自身需要的 Web 应用安全方案。</p>
+<h2 id="了解-SpringSecurity-基本设计"><a href="#了解-SpringSecurity-基本设计" class="headerlink" title="了解 SpringSecurity 基本设计"></a>了解 SpringSecurity 基本设计</h2><p>SpringSecurity 框架不但囊括了基本的认证和授权功能，而且还提供了加密解密、统一登录等一系列相关支持。</p>
+<p>我们可以将 Spring Security 的几个核心概念按照图 1 所示勾勒在一起：<br>SpringSecurity核心概念示意图<br>图 1  SpringSecurity 核心概念示意图</p>
+<p>访问者（Accessor）需要访问某个资源（Resources）是这个场景中最原始的需求，但并不是谁都可以访问资源，也不是任何资源都允许任何人来访问，所以，中间我们要加入一些检查和防护。</p>
+<p>在访问资源的所经之路上，可能需要上山、过桥、下海行船，不管怎么样，这些所经之路对于我们要防护的资源来说都是比较好的设置关卡点，对应上图就是 FilterInvocation（对应 Web 应用场景）、MethodInvocation 以及 Joinpoint，这些在 Spring Security 框架中统称 Secured Object（s）。</p>
+<p>我们知道了在哪里设置关卡最合适，下一步就是设置关卡，对应不同的所经之路，我们分别设置类似 FilterSecurityInterceptor、Method-SecurityInterceptor 以及 AspectJSecurityInterceptor 这样的关卡来负责拦截非法资源访问的闯入者们。</p>
+<p>而在 Spring Security 框架的设计中，关卡的概念统一抽象为 AbstractSecurityInterceptor，而 FilterSecurity-Interceptor、MethodSecurityInterceptor 以及 AspectJSecurityInterceptor 都是它的具体实现类。</p>
+<p>现在把门儿的倒是有了，可是他们不知道该拦谁，不该拦谁，所以，我们需要有类似神盾局（S.H.I.E.L.D）这样的机构，由这个机构来决定谁可以放行，谁必须阻截，而在 SpringSecurity 框架中 AccessDecisionManager 就是这个控制机构，AccessDecisionManager 将决定谁可以访问哪些资源。</p>
+<p>现在剩下最后一个问题，这个谁怎么定义？我们总得知道当前这个访问者是谁才能告知 AccessDecisionManager 阻截还是放行，所以，SpringSecurity 框架中的 AuthenticationManager 将解决的是访问者身份认证的问题，只有确定你在册了，才可以给你授权访问（除非匿名访问某些公共资源）。</p>
+<p>AuthenticationManager、AccessDecisionManager 和 AbstractSecurityInterceptor 属于 Spring Security 框架的基础铁三角。AuthenticationManager 和 Access-DecisionManager 负责制定规则，AbstractSecurityInterceptor 负责执行。</p>
+<p>所有针对不同应用场景的安全方案，基本上都是在这个基础核心的基础上衍生出来的，比如，Web 安全。</p>
+<p>Spring Security 的 Web 安全方案基于 Java 的 Servlet API 规范进行构建，所以，像 Play Framework 这种脱离 Servlet 规范的 Web 框架，则无法享受到 SpringSecurity 提供的默认的 Web 安全方案（当然，依然可以基于基本模型实现扩展方案）。</p>
+<p>既然是基于 Servlet API 规范，那么，要实现关卡的“特效”，则非 javax.servlet.Filter 莫属了。在使用 Spring 框架开发 Filter 的时候，为了让 Filter 可以享受到依赖注入的好处，我们一般是实现 GenericFilterBean 并注册到 IoC 容器。</p>
+<p>为了能够启用这些注册到 IoC 容器的 Filter，我们一般要在 web.xml 或者相应的 JavaConfig 的配置中声明一个 org.springframework.web.filter.DelegatingFilterProxy，使其 filter-name 与 IoC 容器中我们希望启用的 Filter 对应“挂钩”，SpringSecurity 的 Web 安全方案的启用也是这个原理。</p>
+<p>SpringSecurity 默认会需要声明一个默认名称为“springSecurityFilterChain”的 org.springframework.web.filter.DelegatingFilterProxy（web.xml 方式或者 JavaConfig 方式），然后指向 IoC 容器中注册的一个 org.springframework.security.web.FilterChainProxy 实例。</p>
+<p>FilterChainProxy 通过扩展 GenericFilterBean 间接实现了 Filter 接口，同时持有一组 SecurityFilterChain，使它可以针对不同的 Web 资源进行特定的防护，这些“角儿”之间的关系大体上如图 2 所示。<br>FilterChainProxy相关组件关系示意图<br>图 2  FilterChainProxy 相关组件关系示意图</p>
+<p>当然，这些还只是“骨架”，真正执行防护任务的其实是一个个 org.springframework.security.web.SecurityFilterChain 中定义的一系列 Filter：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public interface SecurityFilterChain &#123;</span><br><span class="line">    boolean matches(HttpServletRequest request);</span><br><span class="line">    List&lt;Filter&gt; getFilters();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们经常看到如下的 xml schema 形式的配置格式的时候：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">http</span> <span class="attr">auto-config</span>=<span class="string">&#x27;true&#x27;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intercept-url</span> <span class="attr">pattern</span>=<span class="string">&quot;/login.jsp*&quot;</span> <span class="attr">access</span>=<span class="string">&quot;IS_AUTHENTICATED_ANONYMOUSLY&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intercept-url</span> <span class="attr">pattern</span>=<span class="string">&quot;/**&quot;</span> <span class="attr">access</span>=<span class="string">&quot;ROLE_USER&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">form-login</span> <span class="attr">login-page</span>=<span class="string">&#x27;/login.jsp&#x27;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">http</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其实一个个 http 元素背后对应的就是一个个 SecurityFilterChain 实例，而 http 元素的那些子元素，比如 intercept-url，则对应的就是一个个 Filter。</p>
+<p>默认情况下，Spring Security 为 SecurityFilterChain 中的 Filter 序列设定了一个注册框架，以 100 为间隔步长，按照一个合理的顺序来规划和排布常用的 Filter 实现（代码参考FilterComparator）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">int order = 100;</span><br><span class="line">put(ChannelProcessingFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(ConcurrentSessionFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(WebAsyncManagerIntegrationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(SecurityContextPersistenceFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(HeaderWriterFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(CsrfFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(LogoutFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(X509AuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(AbstractPreAuthenticatedProcessingFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">filterToOrder.put(&quot;org.springframework.security.cas.web.CasAuthenticationFilter&quot;, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(UsernamePasswordAuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(ConcurrentSessionFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">filterToOrder.put(&quot;org.springframework.security.openid.OpenIDAuthenticationFilter&quot;, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(DefaultLoginPageGeneratingFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(ConcurrentSessionFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(DigestAuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(BasicAuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(RequestCacheAwareFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(SecurityContextHolderAwareRequestFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(JaasApiIntegrationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(RememberMeAuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(AnonymousAuthenticationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(SessionManagementFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(ExceptionTranslationFilter.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(FilterSecurityInterceptor.class, order);</span><br><span class="line">order += STEP;</span><br><span class="line">put(SwitchUserFilter.class, order); </span><br></pre></td></tr></table></figure>
+<p>这些 Filter 虽然很多，但可以简单划分为几类，除个别 Filter 在每个 SecurityFilterChain 都需要，其他可以根据需要选用并添加：<br>可以认为是信道与状态管理，比如 ChannelProcessingFilter 用于处理 http 或者 https 之间的切换，而 SecurityContextPersistenceFilter 用于重建或者销毁必要的 SecurityContext 状态。<br>是常见 Web 安全防护类，比如 CsrfFilter。<br>是认证和授权，比如 BasicAuthenticationFilter、CasAuthen-ticationFilter 等。</p>
+<p>最需要重点关注的是 FilterSecurityInterceptor，还记得我们前面说到的 secured object 吧。FilterSecurityInterceptor 就属于放在 Web 访问路径上的那道“关卡”，现在，它的真实位置和效能终于浮出水面了。</p>
+<p>ExceptionTranslationFilter 属于另一个需要关注的核心类，它负责接待或者送客，如果访客来访，对方没有报上名来，那么，它会让访客去登记认证（去找 AuthenticationManager 做认证），如果对方报上名了，但认证失败，那么不好意思，请重新认证或者走人。当然，它拒绝访客的方式是抛出相应的 Exception，所以名字叫 ExceptionTranslationFilter。</p>
+<p>最后，这个 Filter 序列因为间隔了 100 的步长，所以，我们可以在其中穿插自己的 Filter 实现类，为定制和扩展 SpringSecurity 的防护体系提供了机会。</p>
+<h2 id="进一步定制spring-boot-starter-security"><a href="#进一步定制spring-boot-starter-security" class="headerlink" title="进一步定制spring-boot-starter-security"></a>进一步定制spring-boot-starter-security</h2><p>除了使用 SecurityProperties 暴露的配置项（以 security.* 开头）对 spring-boot-starter-security 进行简单的配置，我们还可以通过给出一个继承了 WebSecurityConfigurerAdapter 的 JavaConfig 配置类对 spring-boot-starter-security 的行为进行更深一级的定制。</p>
+<p>使用 WebSecurityConfigurerAdapter 的好处在于，我们依然可以使用 spring-boot-starter-security 默认约定的一些行为，只需要对必要的行为进行调整，比如：<br>使用其他的 AuthenticationManager 实例。<br>对默认 HttpSecurity 定义的资源访问的规则进行重新定义。<br>对默认提供的 WebSecurity 行为进行调整。</p>
+<p>为了能够让这些调整生效，我们定义的 WebSecurityConfigurerAdapter 实现类一般在顺序上需要先于 spring-boot-starter-security 默认提供的配置，故此，一般配合@Order（SecurityProperties.ACCESS_OVERRIDE_ORDER）进行标注，代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DemoSecurityConfiguration</span> <span class="keyword">extends</span> <span class="title class_">WebSecurity</span>-ConfigurerAdapter &#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="title function_">DemoSecurityConfiguration</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(<span class="literal">true</span>); <span class="comment">// 取消默认提供的安全相关Filters配置</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 通过Override其他方法实现对web安全的定制</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>WebSecurityConfigurerAdapter 其实是为我们预先设定了一个框架，并开放了有限的一些扩展点允许我们对 Web 安全相关的设定进行定制，某些场景下还是会感觉“掣肘”，或者，某些有“洁癖”的开发者，往往不想使用在某些场景下显得并非必要的默认设定。</p>
+<p>这个时候，我们可以直接实现并注册一个标注了 @EnableWebSecurity 的 JavaConfig 配置类到 IoC 容器，从而实现一种“颠覆性”的定制，即跟 spring-boot-starter-security 默认提供的 Web 安全相关配置一刀两断，完全自建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OverhaulSecurityConfiguration</span> &#123;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> AuthenticationManager <span class="title function_">authenticationManager</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> AccessDecisionManager <span class="title function_">accessDecisionManager</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> SecurityFilterChain <span class="title function_">mySecurityFilterChain</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 其他web安全相关组件和依赖配置&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="spring-boot-starter-actuator与应用监控"><a href="#spring-boot-starter-actuator与应用监控" class="headerlink" title="spring-boot-starter-actuator与应用监控"></a>spring-boot-starter-actuator与应用监控</h1><p>所有的应用开发完成之后，其最终目的都是为了上线运行，SpringBoot 应用也不例外，而在应用运行的漫长生命周期内，为了保障其可以持续稳定的服务，我们通常需要对其进行监控，从而可以了解应用的运行状态，并根据情况决定是否需要对其运行状态进行调整。</p>
+<p>顺应需求，SpringBoot 框架提供了<code>spring-boot-starter-actuator</code>自动配置模块用于支持 SpringBoot 应用的监控。</p>
+<p>为了能够感知应用的运行状态，我们通常会设置一些监控指标并采集分析，这些监控指标的采集需要在应用内部设置相应的监控点，这类监控点一般只是读取状态数据，我们通常称它们为<code>Sensor</code>，即中文一般称为“传感器”的东西。</p>
+<p>应用的运行状态数据通过<code>Sensors</code>采集上来之后，我们通常会有专门的系统对这些数据进行分析和判断，一旦某个指标数据超出了预定的阈值，这往往意味着应用的运行状态在这个指标上出现了“不健康”的现象，我们希望对这个指标进行调整，而为了能够执行调整，我们需要预先在应用内部设置对应的执行调整逻辑的控制器。</p>
+<p>比如，直接关闭的开关，或者可以执行微调甚至像刹车一样直接快速拉低某个指标值的装置，这些控制器就称为<code>Actuator</code>。虽然我们日常天天在说“监控，监控”，但实际上“监”跟“控”是两个概念，<code>Sensor</code>更多服务于“监”的场景，而<code>Actuator</code>则服务于“控”的场景。</p>
+<p><code>spring-boot-starter-actuator</code>自动配置模块默认提供了很多<code>endpoint</code>，虽然自动配置模块名为<code>spring-boot-starter-actuator</code>，但实际上这些<code>endpoint</code>可以按照“监”和“控”划分为两类：</p>
+<ol>
+<li><p><code>Sensor</code>类<code>endpoints</code></p>
+</li>
+<li><p><code>Actuator</code>类<code>endpoints</code></p>
+</li>
+</ol>
+<ul>
+<li><code>shutdown</code>：用于关闭当前 SpringBoot 应用的<code>endpoint</code>。</li>
+<li><code>dump</code>：用于执行线程的<code>dump</code>操作。</li>
+</ul>
+<p>默认情况下，除了<code>shutdown</code>这个<code>endpoint</code>（因为比较危险，如果没有安全防护，谁都可以访问它，然后关闭应用），其他<code>endpoints</code>都是默认启用的。</p>
+<p>生产环境下，如果没有启用安全防护（比如没有依赖<code>spring-boot-starter-security</code>），那么，建议遵循<code>Deny By Default</code>原则，将所有的<code>endpoints</code>都关掉，然后根据具体情况单独启用某些 <code>endpoint</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">endpoints.enabled=falseendpoints.info.enabled=trueendpoints.health.enabled=true...</span><br></pre></td></tr></table></figure>
+<p>所有配置项以<code>endpoints.</code>为前缀，然后根据<code>endpoint</code>名称划分具体配置项。大部分<code>endpoints</code>都是开箱即用，但依然有些<code>endpoint</code>提供给我们进一步扩展的权利，比如健康状态检查相关的<code>endpoint（health endpoint）</code>。</p>
+<h2 id="自定义应用的健康状态检查"><a href="#自定义应用的健康状态检查" class="headerlink" title="自定义应用的健康状态检查"></a>自定义应用的健康状态检查</h2><p>应用的健康状态检查是很普遍的监控需求，SpringBoot 也预先通过<code>org.springframework.boot.actuate.autoconfigure.HealthIndicatorAutoConfiguration</code>为我们提供了一些常见服务的监控检查支持，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DataSourceHealthIndicator</span><br><span class="line">DiskSpaceHealthIndicator</span><br><span class="line">RedisHealthIndicator</span><br><span class="line">SolrHealthIndicator</span><br><span class="line">MongoHealthIndicator</span><br></pre></td></tr></table></figure>
+<p>如果这些默认提供的健康检查支持依然无法满足我们的需要，SpringBoot 还允许我们提供更多的<code>HealthIndicator</code>实现，只要将这些<code>HealthIndicator</code>实现类注册到 IoC 容器，SpringBoot 会自动发现并使用它们。</p>
+<p>假设需要检查依赖的 dubbo 服务是否处于健康状态，我们可以实现一个<code>DubboHealthIndicator</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.config.spring.ReferenceBean;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.rpc.service.EchoService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.actuate.health.AbstractHealthIndicator;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.actuate.health.Health;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DubboHealthIndicator</span> <span class="keyword">extends</span> <span class="title class_">AbstractHealthIndicator</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ReferenceBean bean;</span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">DubboHealthIndicator</span><span class="params">(ReferenceBean bean)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.bean = bean;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doHealthCheck</span><span class="params">(Health.Builder builder)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    builder.withDetail(<span class="string">&quot;interface&quot;</span>, bean.getObjectType());</span><br><span class="line">    <span class="keyword">final</span> <span class="type">EchoService</span> <span class="variable">service</span> <span class="operator">=</span> (EchoService) bean.getObject();</span><br><span class="line">    service.$echo(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">    builder.up();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要实现一个自定义的<code>HealthIndicator</code>，一般我们不会直接实现（<code>Implements</code>）<code>HealthIndicator</code>接口，而是继承<code>AbstractHealthIndicator</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractHealthIndicator</span> <span class="keyword">implements</span> <span class="title class_">HealthIndicator</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">final</span> Health <span class="title function_">health</span><span class="params">()</span> &#123;</span><br><span class="line">    Health.<span class="type">Builder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Health</span>.Builder();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      doHealthCheck(builder);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">      builder.down(ex);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> builder.build();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">doHealthCheck</span><span class="params">(Health.Builder builder)</span> <span class="keyword">throws</span> Exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>好处就是，我们只需实现<code>doHealthCheck</code>，在其中实现我们面向的具体服务的健康检查逻辑就可以了，因此，在<code>DubboHealthIndicator</code>实现类中，我们通过 dubbo 框架提供的<code>EchoService</code>直接检查相应的 dubbo 服务健康状态即可，只要没有任何异常抛出，我们就认为检查的 dubbo 服务是状态健康的，所以，最后会通过 Health.Builder 的 up() 方法标记服务状态为正常运行。</p>
+<p>为了完成对 dubbo 服务的健康检查，只实现一个 DubboHealthIndicator 是不够的，我们还需要将其注册到 IoC 容器中，但是一个一个单独注册太费劲了，而且还要自己提供针对某个 dubbo 服务的 ReferenceBean 依赖实例。</p>
+<p>所以，为了一劳永逸，也为了其他人能够同样方便地使用针对 dubbo 服务的健康检查支持，我们可以在 DubboHealthIndicator 的基础上实现一个 spring-boot-starter-dubbo-health-indicator 自动配置模块，即：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(name = &#123; &quot;com.alibaba.dubbo.rpc.Exporter&quot; &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DubboHealthIndicatorConfiguration</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  HealthAggregator healthAggregator;</span><br><span class="line">  <span class="meta">@Autowired(required = false)</span></span><br><span class="line">  Map&lt;String, ReferenceBean&gt; references;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> HealthIndicator <span class="title function_">dubboHealthIndicator</span><span class="params">()</span> &#123;</span><br><span class="line">    Map&lt;String, HealthIndicator&gt; indicators = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String key : references.keySet()) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">ReferenceBean</span> <span class="variable">bean</span> <span class="operator">=</span> references.get(key);</span><br><span class="line">        indicators.put(key.startsWith(<span class="string">&quot;&amp;&quot;</span>) ? key.replaceFirst(<span class="string">&quot;&amp;&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">                : key, <span class="keyword">new</span> <span class="title class_">DubboHealthIndicator</span>(bean));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CompositeHealthIndicator</span>(healthAggregator, indicators);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们在 spring-boot-starter-dubbo-health-indicator 的 META-INF&#x2F;spring.factories 文件中添加如下配置：<br>org.springframework.boot.autoconfigure.EnableAutoConfiguration&#x3D;\com.keevol…DubboHealthIndicatorConfiguration </p>
+<p>现在，发布 spring-boot-starter-dubbo-health-indicator 并依赖它就可以自动享受到针对当前应用引用的所有 dubbo 服务进行健康检查的服务。</p>
+<p>那么针对 Map&lt;String，ReferenceBean&gt;references 的依赖注入是从哪里来的？</p>
+<p>其实 Spring 框架支持依赖注入 Key 的类型为 String 的 Map，遇到这种类型的 Map 声明（Map），Spring 框架将扫描容器中所有类型为 T 的 bean，然后以该 bean 的 name 作为 Map 的 Key，以 bean 实例作为对应的 Value，从而构建一个 Map 并注入到依赖处。<br>开放的 endpoints 才真正“有用”<br>不管是 spring-boot-starter-actuator 默认提供的 endpoint 实现，还是我们自己给出的 endpoint 实现，如果只是实现了放在 SpringBoot 应用的“身体内部”，那么它们不会发挥任何作用，只有将它们采集的信息暴露开放给外部监控者，或者允许外部监控者访问它们，这些 endpoints 才会真正发挥出它们的最大“功效”。</p>
+<p>首先，spring-boot-starter-actuator 会通过 org.springframework.boot.actuate.autoconfigure.EndpointMBeanExportAutoConfiguration 将所有的 org.springframework.boot.actuate.endpoint.Endpoint 实例以 JMX MBean 的形式开放给外部监控者使用。</p>
+<p>默认情况下，这些 Endpoint 对应的 JMX MBean 会放在 org.springframework.boot 命名空间下面，不过可以通过 endpoints.jmx.domain 配置项进行更改，比如 endpoints.jmx.domain&#x3D;com.keevol.management。</p>
+<p>EndpointMBeanExportAutoConfiguration 为我们提供了一条很好的应用监控实践之路，既然它会把所有的 org.springframework.boot.actuate.endpoint.Endpoint 实例都作为 JMX Mbean 开放出去，那么，我们就可以提供一批用于某些场景下的自定义 Endpoint 实现类，比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloEndpoint</span> <span class="keyword">extends</span> <span class="title class_">AbstractEndpoint</span>&lt;String&gt; &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">HelloEndpoint</span><span class="params">(String id)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(id, <span class="literal">false</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">invoke</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello, SpringBoot&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，将像 HelloEndpoint 这样的实现类注册到 SpringBoot 应用的 IoC 容器，就可以扩展 SpringBoot 的 endpoints 功能了。</p>
+<p>Endpoint 其实更适合简单的 Sensor 场景（即用于读取或者提供信息），或者简单功能的 actuator 场景（不需要行为参数），如果需要对 SpringBoot 进行更细粒度的监控，可以考虑直接使用 Spring 框架的 JMX 支持。</p>
+<p>除了可以使用 JMX 将 spring-boot-starter-actuator 提供的（或者我们自己提供的）endpoints 开放访问，如果当前 SpringBoot 应用恰好又是一个 Web 应用。那么，这些 endpoints 还会通过 HTTP 协议开放给外部访问，与一般的 Web 请求处理一样，使用的也是 Web 应用使用的 HTTP 服务器和地址端口。</p>
+<p>因为每个 Endpoint 都有一个 id 作为唯一标识，所以，这些 endpoints 的默认访问路径其实就是它们的 id，比如 info 这个 endpoint 的 HTTP 访问路径就是 &#x2F;info，而 beans 这个 endpoint 的 HTTP 访问路径则是 &#x2F;beans，以此类推。</p>
+<p>SpringBoot 允许我们通过 management. 为前缀的配置项对 endpoints 的 HTTP 开放行为进行调整：<br>使用 management.context-path&#x3D;设置自定义的 endpoints 访问上下文路径，默认直接根路径，即 &#x2F;info，&#x2F;beans 等形式。<br>使用 management.address&#x3D; 配置单独的 HTTP 服务监听地址，比如只允许本地访问。</p>
+<p>management.address&#x3D;127.0.0.1 使用 management.port&#x3D;设置单独的监听端口，默认与 web 应用的对外服务端口相同。</p>
+<p>我们可以通过 management.port&#x3D;8888 将管理接口的 HTTP 对外监听端口设置为 8888，但如果 management.port&#x3D;-1，则意味着我们将关闭管理接口的 HTTP 对外服务。</p>
+<p>JMX 和 HTTP 是 endpoints 对外开放访问最常用的方式，鉴于 Java 的序列化漏洞以及 JMX 的远程访问防火墙问题，建议用 HTTP 并配合安全防护将 SpringBoot 应用的 endpoints 开放给外部监控者使用。<br>用还是不用，这是个问题<br>endpoints 属于 spring-boot-starter-actuator 提供的主要功能之一，除此之外，spring-boot-starter-actuator 还提供了更多针对应用监控的支持和实现方案。</p>
+<ol>
+<li>CrshAutoConfiguration 与 spring-boot-starter-remote-shell<br>spring-boot-starter-actuator 提供了基于 CRaSH（<a target="_blank" rel="noopener" href="http://www.crashub.org/%EF%BC%89%E7%9A%84%E8%BF%9C%E7%A8%8B">http://www.crashub.org/）的远程</a> Shell（Remote Shell）支持，从笔者角度来看，这是一把双刃剑，不建议在生产环境使用，因为提供给自己便利的同时，也为黑客朋友们提供了便利。如果实在要用，请加强安全认证和防护。</li>
+</ol>
+<p>不过，这里我们还是会为大家分析一下 spring-boot-starter-actuator 是如何提供针对 CRaSH 的支持的。</p>
+<p>spring-boot-starter-actuator 提供了 org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration 自动配置类，该类会在 org.crsh.plugin.PluginLifeCycle 出现在 classpath 中的时候生效。</p>
+<p>所以，只要将 CRaSH 作为依赖加入应用的 classpath 依赖就可以了，最简单直接的做法是让需要启用 CRaSH 的 SpringBoot 应用依赖 spring-boot-starter-remote-shell 自动配置模块，spring-boot-starter-remote-shell 的主要功效就是提供了针对 CRaSH 的各项依赖。<br>2. SpringBoot 的 Metrics 与 Dropwizard 的 Metrics<br>SpringBoot 提供了一套自己的针对系统指标的度量框架，这个框架的核心设计如图 2 所示。<br>SpringBoot框架的Metrics核心类设计示意图<br>图 2  SpringBoot 框架的 Metrics 核心类设计示意图</p>
+<p>基本上，我们只需关注 org.springframework.boot.actuate.endpoint.PublicMetrics 即可，它可以理解为提供一组 Metric 的集合，我们既可以通过 PublicMetrics 来汇总和管理 Metric，也可以通过 MetricRepository 来存储和管理 Metric。</p>
+<p>一旦使用了 spring-boot-starter-actuator，只要当前 SpringBoot 应用的 ApplicationContext 中存在任何 PublicMetrics 实例，EndpointAutoConfiguration 就会将这些 PublicMetrics 采集汇总到一起，然后通过 MetricsEndpoint 将它们开放出去。</p>
+<p>spring-boot-starter-actuator 提供的 org.springframework.boot.actuate.autoconfigure.PublicMetricsAutoConfiguration 默认会把一个 SystemPublicMetrics 开放出来，用于提供系统各项指标的度量和状态采集，另外一个就是会把当前 SpringBoot 应用的 ApplicationContext 的 org.springframework.boot.actuate.metrics.repository.MetricRepository 实例中的所有 Metric 汇总并开放出去。</p>
+<p>默认如果用户没有给出任何自定义的 MetricRepository，spring-boot-starter-actuator 会提供一个 InMemoryMetricRepository 实现，如果我们将 Dropwizard 的 Metrics 类库作为依赖加入 classpath，那么，Dropwizard Metrics 的 MetricRegistry 中所有的度量指标项也会通过 PublicMetrics 的形式开发暴露出来。</p>
+<p>虽然 SpringBoot 提供的 metrics 框架也能帮助我们完成系统和应用指标的度量，但笔者更倾向于使用 Dropwizard 这种特定场景下比较完善的方案，从 metrics 的类型，到外围系统的集成，Dropwizard metrics 都更加成熟和完备。<br>3. Auditing 与 Trace<br>SpringBoot 的 Auditing 和 Trace 支持都遵循数据&#x2F;事件+Repository 的设计（如图 3 所示）。<br>SpringBoot框架Audit和Trace功能支持核心类示意图<br>图 3  SpringBoot 框架 Audit 和 Trace 功能支持核心类示意图</p>
+<p>我们可能只是通过打印日志时候的 Logger 名称来区分并记录 Audit 事件，然后通过日志采集通道汇总分析就可以了，而不用非要实现一个 LogFileBasedAuditEventRepository 或者 ElasticSearchBasedAuditEventRepository 之类的实现，否则看起来难免有些“学究”气。对于 Trace 来说也是同样道理，我们可能直接使用完备的 APM 方案而不是单一或者少量 Trace 事件的记录。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/10/29/java/SpringBoot/Spring-Boot-Starter%E5%B8%B8%E7%94%A8%E4%BE%9D%E8%B5%96%E6%A8%A1%E5%9D%97/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/10/29/java/SpringBoot/SpringBoot%E5%85%A5%E9%97%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/10/29/java/SpringBoot/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

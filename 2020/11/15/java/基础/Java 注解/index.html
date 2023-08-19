@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Java 注解 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-java/基础/Java 注解"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java 注解
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/11/15/java/%E5%9F%BA%E7%A1%80/Java%20%E6%B3%A8%E8%A7%A3/" class="article-date">
+  <time datetime="2020-11-15T03:31:41.000Z" itemprop="datePublished">2020-11-15</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">16 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>注解（<code>Annotation</code>）都是<code>@</code>符号开头的。</p>
+<p>注解并不能改变程序的运行结果，也不会影响程序运行的性能。有些注解可以在编译时给用户提示或警告，有的注解可以在运行时读写字节码文件信息。</p>
+<p>注解可以用元数据这个词来描述，即一种描述数据的数据。所以可以说注解就是源代码的元数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码重写了<code>Object</code>类的<code>toString()</code>方法并使用了<code>@Override</code>注解。如果不使用<code>@Override</code>注解标记代码，程序也能够正常执行。使用<code>@Override</code>注解就相当于告诉编译器这个方法是一个重写方法，如果父类中不存在该方法，编译器便会报错，提示该方法没有重写父类中的方法。这样可以防止不小心拼写错误造成麻烦。</p>
+<p>注解常见的作用有以下几种：</p>
+<ul>
+<li>生成帮助文档。这是最常见的，也是 Java 最早提供的注解。常用的有<code>@see、@param</code>和<code>@return</code>等；</li>
+<li>跟踪代码依赖性，实现替代配置文件功能。作用就是减少配置。现在的框架基本都使用了这种配置来减少配置文件的数量；</li>
+<li>在编译时进行格式检查。如把<code>@Override</code>注解放在方法前，如果这个方法并不是重写了父类方法，则编译时就能检查出。</li>
+</ul>
+<p>无论是哪一种注解，本质上都是一种接口类型。到 Java 8 为止 Java SE 提供了 11 个内置注解。其中有 5 个是基本注解，它们来自于<code>java.lang</code>包。有 6 个是元注解，它们来自于<code>java.lang.annotation</code>包，自定义注解会用到元注解。</p>
+<blockquote>
+<p>提示：元注解就是负责注解其他的注解。</p>
+</blockquote>
+<p>基本注解包括：<code>@Override、@Deprecated、@SuppressWarnings、@SafeVarargs</code>和<code>@FunctionalInterface</code>。</p>
+<h1 id="Override注解"><a href="#Override注解" class="headerlink" title="@Override注解"></a>@Override注解</h1><p><code>@Override</code>注解是用来指定方法重写的，只能修饰方法并且只能用于方法重写，不能修饰其它的元素。它可以强制一个子类必须重写父类方法或者实现接口的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">  ...</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">t0String</span><span class="params">()</span> &#123; <span class="comment">//toString()</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Person [name=&quot;</span> + name + <span class="string">&quot;, age=&quot;</span> + age + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码第 6 行是重写<code>Object</code>类的<code>toString()</code>方法，该方法使用<code>@Override</code>注解。如果<code>toString()</code>不小心写成了<code>t0String()</code>，那么程序会发生编译错误。</p>
+<p>所以<code>@Override</code>的作用是告诉编译器检查这个方法，保证父类要包含一个被该方法重写的方法，否则就会编译出错。这样可以避免一些低级错误。</p>
+<p>当然如果代码中的方法前面不加<code>@Override</code>注解，即便是方法编辑错误了，编译器也不会有提示。这时<code>Object</code>父类的<code>toString()</code>方法并没有被重写，将会引起程序出现 Bug。</p>
+<h1 id="Deprecated注解"><a href="#Deprecated注解" class="headerlink" title="@Deprecated注解"></a>@Deprecated注解</h1><p><code>@Deprecated</code>可以用来注解类、接口、成员方法和成员变量等，用于表示某个元素（类、方法等）已过时。当其他程序使用已过时的元素时，编译器将会给出警告。</p>
+<p>Java 9 为<code>@Deprecated</code>注解增加了以下两个属性：</p>
+<ul>
+<li><code>forRemoval</code>：该<code>boolean</code>类型的属性指定该 API 在将来是否会被删除。</li>
+<li><code>since</code>：该<code>String</code>类型的属性指定该 API 从哪个版本被标记为过时。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="comment">// since属性指定从哪个版本开始被标记成过时，forRemoval指定该API将来会被删除</span></span><br><span class="line">  <span class="meta">@Deprecated(since = &quot;9&quot;, forRemoval = true)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;hello！&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeprecatedTest</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 下面使用info()方法时将会被编译器警告</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Test</span>().print();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面程序的第 12 行代码使用了<code>Test</code>的<code>print()</code>方法，而<code>Test</code>类中定义<code>print()</code>方法时使用了<code>@Deprecated</code>修饰，表明该方法已过时，所以将会引起编译器警告。</p>
+<p><code>@Deprecated</code>的作用与文档注释中的<code>@deprecated</code>标记的作用基本相同，但它们的用法不同，前者无须放在文档注释语法（<code>/** ... */</code>部分）中，而是直接用于修饰程序中的程序单元，如方法、类和接口等。</p>
+<h1 id="SuppressWarnings：抑制编译器警告"><a href="#SuppressWarnings：抑制编译器警告" class="headerlink" title="@SuppressWarnings：抑制编译器警告"></a>@SuppressWarnings：抑制编译器警告</h1><p><code>@SuppressWarnings</code>注解指示被该注解修饰的程序元素（以及该程序元素中的所有子元素）取消显示指定的编译器警告，且会一直作用于该程序元素的所有子元素。例如，使用<code>@SuppressWarnings</code>修饰某个类取消显示某个编译器警告，同时又修饰该类里的某个方法取消显示另一个编译器警告，那么该方法将会同时取消显示这两个编译器警告。</p>
+<p><code>@SuppressWarnings</code>注解主要用在取消一些编译器产生的警告对代码左侧行列的遮挡，有时候这样会挡住我们断点调试时打的断点。</p>
+<p>如果你确认程序中的警告没有问题，可以不用理会。通常情况下，如果程序中使用没有泛型限制的集合将会引起编译器警告，为了避免这种编译器警告，可以使用<code>@SuppressWarnings</code>注解消除这些警告。</p>
+<p>注解的使用有以下三种：</p>
+<ul>
+<li>抑制单类型的警告：<code>@SuppressWarnings(&quot;unchecked&quot;)</code></li>
+<li>抑制多类型的警告：<code>@SuppressWarnings(&quot;unchecked&quot;,&quot;rawtypes&quot;)</code></li>
+<li>抑制所有类型的警告：<code>@SuppressWarnings(&quot;unchecked&quot;)</code></li>
+</ul>
+<p>抑制警告的关键字如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th align="center">关键字</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">all</td>
+<td align="center">抑制所有警告</td>
+</tr>
+<tr>
+<td align="center">boxing</td>
+<td align="center">抑制装箱、拆箱操作时候的警告</td>
+</tr>
+<tr>
+<td align="center">cast</td>
+<td align="center">抑制映射相关的警告</td>
+</tr>
+<tr>
+<td align="center">dep-ann</td>
+<td align="center">抑制启用注释的警告</td>
+</tr>
+<tr>
+<td align="center">deprecation</td>
+<td align="center">抑制过期方法警告</td>
+</tr>
+<tr>
+<td align="center">fallthrough</td>
+<td align="center">抑制在 switch 中缺失 breaks 的警告</td>
+</tr>
+<tr>
+<td align="center">finally</td>
+<td align="center">抑制 finally 模块没有返回的警告</td>
+</tr>
+<tr>
+<td align="center">hiding</td>
+<td align="center">抑制相对于隐藏变量的局部变量的警告</td>
+</tr>
+<tr>
+<td align="center">incomplete-switch</td>
+<td align="center">忽略不完整的 switch 语句</td>
+</tr>
+<tr>
+<td align="center">nls</td>
+<td align="center">忽略非 nls 格式的字符</td>
+</tr>
+<tr>
+<td align="center">null</td>
+<td align="center">忽略对 null 的操作</td>
+</tr>
+<tr>
+<td align="center">rawtypes</td>
+<td align="center">使用 generics 时忽略没有指定相应的类型</td>
+</tr>
+<tr>
+<td align="center">restriction</td>
+<td align="center">抑制禁止使用劝阻或禁止引用的警告</td>
+</tr>
+<tr>
+<td align="center">serial</td>
+<td align="center">忽略在 serializable 类中没有声明 serialVersionUID 变量</td>
+</tr>
+<tr>
+<td align="center">static-access</td>
+<td align="center">抑制不正确的静态访问方式警告</td>
+</tr>
+<tr>
+<td align="center">synthetic-access</td>
+<td align="center">抑制子类没有按最优方法访问内部类的警告</td>
+</tr>
+<tr>
+<td align="center">unchecked</td>
+<td align="center">抑制没有进行类型检查操作的警告</td>
+</tr>
+<tr>
+<td align="center">unqualified-field-access</td>
+<td align="center">抑制没有权限访问的域的警告</td>
+</tr>
+<tr>
+<td align="center">unused</td>
+<td align="center">抑制没被使用过的代码的警告</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">  <span class="meta">@SuppressWarnings(&#123; &quot;deprecation&quot; &#125;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Person</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">    p.setNameAndAge(<span class="string">&quot;zhangsan&quot;</span>, <span class="number">20</span>);</span><br><span class="line">    p.name = <span class="string">&quot;lisi&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="SafeVarargs注解"><a href="#SafeVarargs注解" class="headerlink" title="@SafeVarargs注解"></a>@SafeVarargs注解</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 传递可变参数，参数是泛型集合</span></span><br><span class="line">    display(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);</span><br><span class="line">    <span class="comment">// 传递可变参数，参数是非泛型集合</span></span><br><span class="line">    display(<span class="string">&quot;10&quot;</span>, <span class="number">20</span>, <span class="number">30</span>); <span class="comment">// 会有编译警告</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">display</span><span class="params">(T... array)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (T arg : array) &#123;</span><br><span class="line">      System.out.println(arg.getClass().getName() + <span class="string">&quot;:&quot;</span> + arg);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码第 8 行声明了一种可变参数方法<code>display</code>，<code>display</code>方法参数个数可以变化，它可以接受不确定数量的相同类型的参数。可以通过在参数类型名后面加入…的方式来表示这是可变参数。可变参数方法中的参数类型相同，为此声明参数是需要指定泛型。</p>
+<p>但是调用可变参数方法时，应该提供相同类型的参数，代码第 4 行调用时没有警告，而代码第 6 行调用时则会发生警告，这个警告是<code>unchecked</code>（未检查不安全代码），就是因为将非泛型变量赋值给泛型变量所发生的。</p>
+<p>可用<code>@SafeVarargs</code>注解抑制编译器警告。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">// 传递可变参数，参数是泛型集合</span></span><br><span class="line">    display(<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>);</span><br><span class="line">    <span class="comment">// 传递可变参数，参数是非泛型集合</span></span><br><span class="line">    display(<span class="string">&quot;10&quot;</span>, <span class="number">20</span>, <span class="number">30</span>); <span class="comment">// 没有@SafeVarargs会有编译警告</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@SafeVarargs</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">display</span><span class="params">(T... array)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (T arg : array) &#123;</span><br><span class="line">      System.out.println(arg.getClass().getName() + <span class="string">&quot;：&quot;</span> + arg);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码在可变参数<code>display</code>前添加了<code>@SafeVarargs</code>注解，当然也可以使用<code>@SuppressWarnings(&quot;unchecked&quot;)</code>注解，但是两者相比较来说<code>@SafeVarargs</code>注解更适合。</p>
+<p>注意：<code>@SafeVarargs</code>注解不适用于非<code>static</code>或非<code>final</code>声明的方法，对于未声明为<code>static</code>或<code>final</code>的方法，如果要抑制<code>unchecked</code>警告，可以使用<code>@SuppressWarnings</code>注解。</p>
+<h1 id="FunctionalInterface注解"><a href="#FunctionalInterface注解" class="headerlink" title="@FunctionalInterface注解"></a>@FunctionalInterface注解</h1><p>如果接口中只有一个抽象方法（可以包含多个默认方法或多个<code>static</code>方法），那么该接口就是函数式接口。<code>@FunctionalInterface</code>就是用来指定某个接口必须是函数式接口，所以<code>@FunInterface</code>只能修饰接口，不能修饰其它程序元素。</p>
+<p>函数式接口就是为 Java 8 的<code>Lambda</code>表达式准备的，Java 8 允许使用<code>Lambda</code>表达式创建函数式接口的实例，因此 Java 8 专门增加了<code>@FunctionalInterface</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">FunInterface</span> &#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;zhangsaan&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span>; <span class="comment">// 只定义一个抽象方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译上面程序，可能丝毫看不出程序中的<code>@FunctionalInterface</code>有何作用，因为<code>@FunctionalInterface</code>注解的作用只是告诉编译器检查这个接口，保证该接口只能包含一个抽象方法，否则就会编译出错。如果在上面的<code>FunInterface</code>接口中再增加一个抽象方法<code>abc()</code>，编译程序时将出现如下错误提示：<br><code>“@FunctionInterface”批注无效；FunInterface不是functional接口</code>。</p>
+<h1 id="元注解作用及使用"><a href="#元注解作用及使用" class="headerlink" title="元注解作用及使用"></a>元注解作用及使用</h1><p>元注解是负责对其它注解进行说明的注解，自定义注解时可以使用元注解。Java 5 定义了 4 个注解，分别是<code>@Documented、@Target、@Retention</code>和<code>@Inherited</code>。Java 8 又增加了<code>@Repeatable</code>和<code>@Native</code>两个注解。这些注解都可以在<code>java.lang.annotation</code>包中找到。</p>
+<h2 id="Documented"><a href="#Documented" class="headerlink" title="@Documented"></a>@Documented</h2><p><code>@Documented</code>是一个标记注解，没有成员变量。用<code>@Documented</code>注解修饰的注解类会被 JavaDoc 工具提取成文档。默认情况下，JavaDoc 是不包括注解的，但如果声明注解时指定了<code>@Documented</code>，就会被 JavaDoc 之类的工具处理，所以注解类型信息就会被包括在生成的帮助文档中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyDocumented &#123;</span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">value</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;这是@Documented注解&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 测试类：</span></span><br><span class="line"><span class="meta">@MyDocumented</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DocumentedTest</span> &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 测试document</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">  <span class="meta">@MyDocumented</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">Test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Target"><a href="#Target" class="headerlink" title="@Target"></a>@Target</h2><p><code>@Target</code>注解用来指定一个注解的使用范围，即被<code>@Target</code>修饰的注解可以用在什么地方。<code>@Target</code>注解有一个成员变量（<code>value</code>）用来设置适用目标，<code>value</code>是<code>java.lang.annotation.ElementType</code>枚举类型的数组，下表为<code>ElementType</code>常用的枚举常量。</p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">CONSTRUCTOR</td>
+<td align="center">用于构造方法</td>
+</tr>
+<tr>
+<td align="center">FIELD</td>
+<td align="center">用于成员变量（包括枚举常量）</td>
+</tr>
+<tr>
+<td align="center">LOCAL_VARIABLE</td>
+<td align="center">用于局部变量</td>
+</tr>
+<tr>
+<td align="center">METHOD</td>
+<td align="center">用于方法</td>
+</tr>
+<tr>
+<td align="center">PACKAGE</td>
+<td align="center">用于包</td>
+</tr>
+<tr>
+<td align="center">PARAMETER</td>
+<td align="center">用于类型参数</td>
+</tr>
+<tr>
+<td align="center">TYPE</td>
+<td align="center">用于类、接口（包括注解类型）或 enum 声明</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123; ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyTarget &#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="meta">@MyTarget</span></span><br><span class="line">  String name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上代码第 4 行会编译错误，错误信息为：<code>The annotation @MyTarget is disallowed for this location</code>。提示此位置不允许使用注解<code>@MyDocumented</code>，<code>@MyTarget</code>不能修饰成员变量，只能修饰方法。</p>
+<h2 id="Retention"><a href="#Retention" class="headerlink" title="@Retention"></a>@Retention</h2><p><code>@Retention</code>用于描述注解的生命周期，也就是该注解被保留的时间长短。<code>@Retention</code>注解中的成员变量（<code>value</code>）用来设置保留策略，<code>value</code>是<code>java.lang.annotation.RetentionPolicy</code>枚举类型，<code>RetentionPolicy</code>有 3 个枚举常量。</p>
+<ul>
+<li><code>SOURCE</code>：在源文件中有效（即源文件保留）</li>
+<li><code>CLASS</code>：在<code>class</code>文件中有效（即 class 保留）</li>
+<li><code>RUNTIME</code>：在运行时有效（即运行时保留）</li>
+</ul>
+<p>生命周期大小排序为<code>SOURCE &lt; CLASS &lt; RUNTIME</code>，前者能使用的地方后者一定也能使用。如果需要在运行时去动态获取注解信息，那只能用<code>RUNTIME</code>注解；如果要在编译时进行一些预处理操作，比如生成一些辅助代码（如<code>ButterKnife</code>），就用<code>CLASS</code>注解；如果只是做一些检查性的操作，比如<code>@Override</code>和<code>@SuppressWarnings</code>，则可选用<code>SOURCE</code>注解。</p>
+<h2 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h2><p><code>@Inherited</code>是一个标记注解，用来指定该注解可以被继承。使用<code>@Inherited</code>注解的<code>Class</code>类，表示这个注解可以被用于该<code>Class</code>类的子类。就是说如果某个类使用了被<code>@Inherited</code>修饰的注解，则其子类将自动具有该注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个自定义注解</span></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE &#125;)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyInherited &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 测试类代码如下：</span></span><br><span class="line"><span class="meta">@MyInherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestA</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    System.out.println(TestA.class.getAnnotation(MyInherited.class));</span><br><span class="line">    System.out.println(TestB.class.getAnnotation(MyInherited.class));</span><br><span class="line">    System.out.println(TestC.class.getAnnotation(MyInherited.class));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestB</span> <span class="keyword">extends</span> <span class="title class_">TestA</span> &#123;&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestC</span> <span class="keyword">extends</span> <span class="title class_">TestB</span> &#123;&#125;</span><br><span class="line"><span class="comment">// 运行结果为：</span></span><br><span class="line"><span class="comment">//@MyInherited()</span></span><br><span class="line"><span class="comment">//@MyInherited()</span></span><br><span class="line"><span class="comment">//@MyInherited()</span></span><br></pre></td></tr></table></figure>
+<h2 id="Repeatable"><a href="#Repeatable" class="headerlink" title="@Repeatable"></a>@Repeatable</h2><p><code>@Repeatable</code>注解是 Java 8 新增加的，它允许在相同的程序元素中重复注解，在需要对同一种注解多次使用时，往往需要借助<code>@Repeatable</code>注解。Java 8 版本以前，同一个程序元素前最多只能有一个相同类型的注解，如果需要在同一个元素前使用多个相同类型的注解，则必须使用注解“容器”。</p>
+<p>Java 8 之前的做法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Roles &#123;</span><br><span class="line">  Role[] roles();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Roles &#123;</span><br><span class="line">  Role[] value();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RoleTest</span> &#123;</span><br><span class="line">  <span class="meta">@Roles(roles = &#123;@Role(roleName = &quot;role1&quot;), @Role(roleName = &quot;role2&quot;)&#125;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">doString</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Java 8 之后增加了重复注解，使用方式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Roles &#123;</span><br><span class="line">  Role[] value();</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Repeatable(Roles.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Role &#123;</span><br><span class="line">  String <span class="title function_">roleName</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RoleTest</span> &#123;</span><br><span class="line">  <span class="meta">@Role(roleName = &quot;role1&quot;)</span></span><br><span class="line">  <span class="meta">@Role(roleName = &quot;role2&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">doString</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不同的地方是，创建重复注解<code>Role</code>时加上了<code>@Repeatable</code>注解，指向存储注解<code>Roles</code>，这样在使用时就可以直接重复使用<code>Role</code>注解。从上面例子看出，使用<code>@Repeatable</code>注解更符合常规思维，可读性强一点。</p>
+<p>两种方法获得的效果相同。重复注解只是一种简化写法，这种简化写法是一种假象，多个重复注解其实会被作为“容器”注解的<code>value</code>成员的数组元素处理。</p>
+<h2 id="Native"><a href="#Native" class="headerlink" title="@Native"></a>@Native</h2><p>使用<code>@Native</code>注解修饰成员变量，则表示这个变量可以被本地代码引用，常常被代码生成工具使用。<code>@Native</code>注解不常使用。</p>
+<h1 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h1><p>声明自定义注解使用<code>@interface</code>关键字实现。定义注解与定义接口非常像。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个简单的注解类型</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Test &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码声明了一个<code>Test</code>注解。默认情况下，注解可以在程序的任何地方使用，通常用于修饰类、接口、方法和变量等。</p>
+<p>定义注解和定义类相似，注解前面的访问修饰符和类一样有两种，分别是公有访问权限（<code>public</code>）和默认访问权限（默认不写）。一个源程序文件中可以声明多个注解，但只能有一个是公有访问权限的注解。且源程序文件命名和公有访问权限的注解名一致。</p>
+<p>不包含任何成员变量的注解称为标记注解，例如上面声明的<code>Test</code>注解以及基本注解中的<code>@Override</code>注解都属于标记注解。根据需要，注解中可以定义成员变量，成员变量以无形参的方法形式来声明，其方法名和返回值定义了该成员变量的名字和类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyTag &#123;</span><br><span class="line">  <span class="comment">// 定义带两个成员变量的注解</span></span><br><span class="line">  <span class="comment">// 注解中的成员变量以方法的形式来定义</span></span><br><span class="line">  String <span class="title function_">name</span><span class="params">()</span>;</span><br><span class="line">  <span class="type">int</span> <span class="title function_">age</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码中声明了一个<code>MyTag</code>注解，定义了两个成员变量，分别是<code>name</code>和<code>age</code>。成员变量也可以有访问权限修饰符，但是只能有公有权限和默认权限。</p>
+<p>如果在注解里定义了成员变量，那么使用该注解时就应该为它的成员变量指定值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="comment">// 使用带成员变量的注解时，需要为成员变量赋值</span></span><br><span class="line">  <span class="meta">@MyTag(name=&quot;xx&quot;, age=6)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">info</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注解中的成员变量也可以有默认值，可使用<code>default</code>关键字。如下代码定义了<code>@MyTag</code>注解，该注解里包含了<code>name</code>和<code>age</code>两个成员变量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyTag &#123;</span><br><span class="line">  <span class="comment">// 定义了两个成员变量的注解</span></span><br><span class="line">  <span class="comment">// 使用default为两个成员变量指定初始值</span></span><br><span class="line">  String <span class="title function_">name</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">  <span class="type">int</span> <span class="title function_">age</span><span class="params">()</span> <span class="keyword">default</span> <span class="number">7</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果为注解的成员变量指定了默认值，那么使用该注解时就可以不为这些成员变量赋值，而是直接使用默认值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="comment">// 使用带成员变量的注解</span></span><br><span class="line">  <span class="comment">// MyTag注释的成员变量有默认值，所以可以不为它的成员变量赋值</span></span><br><span class="line">  <span class="meta">@MyTag</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">info</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然也可以在使用<code>MyTag</code>注解时为成员变量指定值，如果为<code>MyTag</code>的成员变量指定了值，则默认值不会起作用。</p>
+<p>根据注解是否包含成员变量，可以分为如下两类。</p>
+<ul>
+<li>标记注解：没有定义成员变量的注解类型被称为标记注解。这种注解仅利用自身的存在与否来提供信息，<code>@Override、@Test</code>等都是标记注解。</li>
+<li>元数据注解：包含成员变量的注解，因为它们可以接受更多的元数据，所以也被称为元数据注解。</li>
+</ul>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/11/15/java/%E5%9F%BA%E7%A1%80/Java%20%E6%B3%A8%E8%A7%A3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/12/10/%E5%AF%86%E7%A0%81%E6%8A%80%E6%9C%AF/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            对称密码
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/11/14/java/%E5%9F%BA%E7%A1%80/Java%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Java 输入输出流</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

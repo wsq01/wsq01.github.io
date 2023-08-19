@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>JS面试题 |  学海无涯</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?b1b5dee3bb1719c8a439f8070118dc80";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <!-- <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script> -->
+      <link href="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.css" rel="stylesheet">
+      <script src="https://cdn.bootcdn.net/ajax/libs/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      <canvas class="fireworks"></canvas>
+      <style>
+        .fireworks {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 99999;
+          pointer-events: none;
+        }
+      </style>
+      
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-前端/js/实战/JS面试题"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  JS面试题
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/04/13/%E5%89%8D%E7%AB%AF/js/%E5%AE%9E%E6%88%98/JS%E9%9D%A2%E8%AF%95%E9%A2%98/" class="article-date">
+  <time datetime="2023-04-13T06:25:50.767Z" itemprop="datePublished">2023-04-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a> / <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/JS/">JS</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="typeof相关"><a href="#typeof相关" class="headerlink" title="typeof相关"></a>typeof相关</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typeof</span> <span class="variable language_">console</span>.<span class="property">log</span> <span class="comment">// &quot;function&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="title class_">NaN</span> <span class="comment">// &quot;number&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Function</span>(); <span class="comment">// &quot;function&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Date</span>(); <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Boolean</span>(<span class="literal">true</span>); <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">1</span>); <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;abc&quot;</span>); <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> /\*.<span class="property">js</span>/; <span class="comment">// &quot;object&quot;</span></span><br><span class="line"><span class="keyword">typeof</span> (<span class="keyword">typeof</span> <span class="number">1</span>) === <span class="string">&#x27;string&#x27;</span>; <span class="comment">// typeof返回的肯定是一个字符串</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="title class_">Symbol</span>.<span class="property">iterator</span>; <span class="comment">// &#x27;symbol&#x27;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">undefined</span> === <span class="string">&#x27;undefined&#x27;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="title class_">Math</span>.<span class="property">sin</span> === <span class="string">&#x27;function&#x27;</span>; <span class="comment">// true</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="built_in">isNaN</span>; <span class="comment">// &#x27;function&#x27;</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="built_in">isNaN</span>(); <span class="comment">// &#x27;boolean&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>].<span class="title function_">map</span>(<span class="built_in">parseInt</span>) <span class="comment">// 1, NaN, NaN</span></span><br></pre></td></tr></table></figure>
+
+<p>总结：<br><code>typeof</code>运算符返回7种类型:<code>undefined,string,number,boolean,symbol,object,function</code>。<br>前5个是值类型，后4个是引用类型，<code>typeof</code>只能区分值类型的详细类型，对引用类型无法区分,只能区分<code>function</code>类型。</p>
+<h2 id="数值相关"><a href="#数值相关" class="headerlink" title="数值相关"></a>数值相关</h2><h4 id="判断下面的值"><a href="#判断下面的值" class="headerlink" title="判断下面的值"></a>判断下面的值</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="string">&quot;0a&quot;</span>); <span class="comment">// 0</span></span><br><span class="line"><span class="comment">// parseInt(&quot;0a&quot;)==&gt;parseInt(&quot;0&quot;)==&gt;parseInt(&quot;0&quot;,10)==&gt;0</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&quot;010a&quot;</span>); <span class="comment">// 8</span></span><br><span class="line"><span class="comment">// parseInt(&quot;010a&quot;)==&gt;parseInt(&quot;010&quot;)==&gt;parseInt(&quot;10&quot;,8)==&gt;8</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&quot;0xt&quot;</span>); <span class="comment">// NaN</span></span><br><span class="line"><span class="comment">// parseInt(&quot;0xt&quot;)==&gt;parseInt(&quot;&quot;,16)==&gt;NaN</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Number</span>.<span class="property">MIN_VALUE</span> &gt; <span class="number">0</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h4 id="下面代码输出什么"><a href="#下面代码输出什么" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> two   = <span class="number">0.2</span></span><br><span class="line"><span class="keyword">var</span> one   = <span class="number">0.1</span></span><br><span class="line"><span class="keyword">var</span> eight = <span class="number">0.8</span></span><br><span class="line"><span class="keyword">var</span> six   = <span class="number">0.6</span></span><br><span class="line">[two - one == one, eight - six == two] <span class="comment">// [true, false]</span></span><br></pre></td></tr></table></figure>
+<h4 id="表达式的结果是什么"><a href="#表达式的结果是什么" class="headerlink" title="表达式的结果是什么"></a>表达式的结果是什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">111111111111111110000</span>, b = <span class="number">1111</span>;</span><br><span class="line">a + b;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">A: 111111111111111111111</span></span><br><span class="line"><span class="comment">B: 111111111111111110000</span></span><br><span class="line"><span class="comment">C: NaN</span></span><br><span class="line"><span class="comment">D: Infinity</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>答案：B</p>
+<p>解析：<br>精度最多只能到53个二进制位，这意味着，绝对值小于2的53次方的整数，即-2<sup>53</sup>到2<sup>53</sup>，都可以精确表示。<br>大于2<sup>53</sup>的数值，都无法保持精度。由于2<sup>53</sup>是一个16位的十进制数值，所以简单的法则就是，JavaScript 对15位的十进制数都可以精确处理。大于2<sup>53</sup>以后，多出来的有效数字（最后三位的111）都会无法保存，变成0。</p>
+<h4 id="下面代码输出什么-1"><a href="#下面代码输出什么-1" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span> &lt; <span class="number">2</span> &lt; <span class="number">3</span>, <span class="number">3</span> &lt; <span class="number">2</span> &lt; <span class="number">1</span>] <span class="comment">// [true, true]</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="运算符相关"><a href="#运算符相关" class="headerlink" title="运算符相关"></a>运算符相关</h2><h4 id="下面代码输出什么-2"><a href="#下面代码输出什么-2" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> val = <span class="string">&#x27;smtg&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Value is &#x27;</span> + (val === <span class="string">&#x27;smtg&#x27;</span>) ? <span class="string">&#x27;Something&#x27;</span> : <span class="string">&#x27;Nothing&#x27;</span>);</span><br><span class="line"><span class="comment">// Something</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br><code>+</code>运算符的优先级比三目运算符的优先级高。</p>
+<h4 id="下面代码输出什么-3"><a href="#下面代码输出什么-3" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">isOdd</span>(<span class="params">num</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> num % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">isEven</span>(<span class="params">num</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> num % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">isSane</span>(<span class="params">num</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">isEven</span>(num) || <span class="title function_">isOdd</span>(num);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> values = [<span class="number">7</span>, <span class="number">4</span>, <span class="string">&#x27;13&#x27;</span>, -<span class="number">9</span>, <span class="title class_">Infinity</span>];</span><br><span class="line">values.<span class="title function_">map</span>(isSane);</span><br><span class="line"><span class="comment">// [true, true, true, false, false]</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>余数运算符（<code>%</code>）返回前一个运算子被后一个运算子除，所得的余数，运算结果的正负号由第一个运算子的正负号决定，因此<code>-9 % 2 === -1</code>。<br><code>Infinity % 2</code>返回<code>NaN</code>。</p>
+<h4 id="下面代码输出什么-4"><a href="#下面代码输出什么-4" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[] == [] <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>两个复合类型（对象、数组、函数）的数据比较时，不是比较它们的值是否相等，而是比较它们是否指向同一个地址。</p>
+<h4 id="下面代码输出什么-5"><a href="#下面代码输出什么-5" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> x = y = <span class="number">1</span>;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(y);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line"><span class="comment">// 1, error</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>赋值运算符的计算顺序是从右开始计算，即右结合。<br><code>y</code>是全局变量。</p>
+<h4 id="下面代码输出什么-6"><a href="#下面代码输出什么-6" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">    b = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">    c = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>];</span><br><span class="line">a ==  b</span><br><span class="line">a === b</span><br><span class="line">a &gt;   c</span><br><span class="line">a &lt;   c</span><br><span class="line"><span class="comment">// false, false, false, true</span></span><br></pre></td></tr></table></figure>
+<p>解析：</p>
+<ul>
+<li>非相等运算符：如果运算子是对象，会转为原始类型的值，再进行比较。对象转换成原始类型的值，算法是先调用<code>valueOf</code>方法；如果返回的还是对象，再接着调用<code>toString</code>方法。</li>
+<li>非相等运算符：两个字符串进行比较时，字符串按照字典顺序进行比较。</li>
+<li>相等运算符和严格相等运算符：两个复合类型（对象、数组、函数）的数据比较时，不是比较它们的值是否相等，而是比较它们是否指向同一个地址。</li>
+<li>数组的<code>valueOf</code>方法返回数组本身，数组的<code>toString</code>方法返回数组的字符串形式。</li>
+<li>对于两个对象的比较，严格相等运算符比较的是地址，而大于或小于运算符比较的是值。</li>
+</ul>
+<h2 id="标准库相关"><a href="#标准库相关" class="headerlink" title="标准库相关"></a>标准库相关</h2><h4 id="下面代码输出什么-7"><a href="#下面代码输出什么-7" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">showCase</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span>(value) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Case A&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;B&#x27;</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Case B&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="attr">undefined</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;undefined&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="attr">default</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Do not know!&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">showCase</span>(<span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&#x27;A&#x27;</span>)); <span class="comment">// Do not know</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>需要注意的是，<code>switch</code>语句后面的表达式，与case语句后面的表示式比较运行结果时，采用的是严格相等运算符（<code>===</code>）。<br><code>new String(&#39;A&#39;)</code>返回的是一个对象。</p>
+<h4 id="下面代码输出什么-8"><a href="#下面代码输出什么-8" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">showCase2</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span>(value) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;A&#x27;</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Case A&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;B&#x27;</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Case B&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="attr">undefined</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;undefined&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="attr">default</span>:</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Do not know!&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">showCase2</span>(<span class="title class_">String</span>(<span class="string">&#x27;A&#x27;</span>)); <span class="comment">// Case A</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br><code>String</code>函数可以将任意类型的值转化成字符串，因此<code>String(&#39;A&#39;) === &#39;A&#39; =&gt; true</code>。</p>
+<h4 id="下面代码输出什么-9"><a href="#下面代码输出什么-9" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ary = [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>];</span><br><span class="line">ary[<span class="number">10</span>] = <span class="number">10</span>;</span><br><span class="line">ary.<span class="title function_">filter</span>(<span class="keyword">function</span>(<span class="params">x</span>) &#123; <span class="keyword">return</span> x === <span class="literal">undefined</span>;&#125;);</span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>当数组的某个位置是空元素，即两个逗号之间没有任何值，我们称该数组存在空位。<br>数组的某个位置是空位，与某个位置是<code>undefined</code>，是不一样的。如果是空位，使用数组的<code>forEach</code>方法、<code>for...in</code>结构、<code>Object.keys</code>等方法进行遍历，空位都会被跳过。如果某个位置是<code>undefined</code>，遍历的时候就不会被跳过。</p>
+<h2 id="作用域相关"><a href="#作用域相关" class="headerlink" title="作用域相关"></a>作用域相关</h2><h4 id="下面代码输出什么-10"><a href="#下面代码输出什么-10" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(a)</span><br><span class="line">    a = <span class="number">5</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">window</span>.<span class="property">a</span>)</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">20</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(a)</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>依次输出：<code>undefined -&gt; 10 -&gt; 20</code></p>
+<p>解析：<br>在立即执行函数中，<code>var a = 20;</code>语句定义了一个局部变量<code>a</code>，由于js的变量声明提升机制，局部变量<code>a</code>的声明会被提升至立即执行函数的函数体最上方，且由于这样的提升并不包括赋值，因此第一条打印语句会打印<code>undefined</code>，最后一条语句会打印20。</p>
+<p>由于变量声明提升，<code>a = 5;</code>这条语句执行时，局部的变量<code>a</code>已经声明，因此它产生的效果是对局部的变量<code>a</code>赋值，此时<code>window.a</code>依旧是最开始赋值的10。</p>
+<h4 id="下面代码输出什么-11"><a href="#下面代码输出什么-11" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">&#x27;Tom&#x27;</span>;</span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> name == <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">  name = <span class="string">&#x27;Jack&#x27;</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Goodbye &#x27;</span> + name);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hello &#x27;</span> + name);</span><br><span class="line">&#125;</span><br><span class="line">&#125;)();</span><br><span class="line"><span class="comment">// Hello Tom</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>1、首先在进入函数作用域当中，获取<code>name</code>属性<br>2、在当前作用域没有找到<code>name</code><br>3、通过作用域链找到最外层，得到<code>name</code>属性<br>4、执行<code>else</code>的内容，得到<code>Hello Tom</code></p>
+<h2 id="连续赋值"><a href="#连续赋值" class="headerlink" title="连续赋值"></a>连续赋值</h2><h4 id="下面代码输出什么-12"><a href="#下面代码输出什么-12" class="headerlink" title="下面代码输出什么"></a>下面代码输出什么</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;<span class="attr">n</span>: <span class="number">1</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> b = a;</span><br><span class="line">a.<span class="property">x</span> = a = &#123;<span class="attr">n</span>: <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a.<span class="property">x</span>) 	</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b.<span class="property">x</span>)</span><br><span class="line"><span class="comment">// undefined &#123;n: 2&#125;</span></span><br></pre></td></tr></table></figure>
+<p>解析：<br>1、第3行，<code>.</code>运算符优先级比<code>=</code>高，所以这里首先执行<code>a.x</code>，相当于为<code>a</code>（或者<code>b</code>）所指向的<code>&#123;n: 1&#125;</code>对象新增了一个属性<code>x</code>，即此时对象将变为<code>&#123;n: 1, x: undefined&#125;</code>。<br>2、<code>=</code>从右往左进行赋值，<code>a = &#123;n: 2&#125;</code>，此时<code>a</code>的引用已经变成了<code>&#123;n: 2&#125;</code>这个对象，<code>a = &#123;n: 2&#125;</code>这条赋值语句返回<code>&#123;n: 2&#125;</code>。<br>3、执行<code>a.x = &#123;n：2&#125;</code>，此时因为<code>a.x</code>已经绑定到了<code>&#123;n: 1 , x: undefined&#125;</code>这个内存地址，也就是<code>b.x</code>，于是<code>&#123; n: 1, x: undefined&#125; =&gt; &#123;n: 1, x: &#123; n: 2&#125;&#125;</code>，即<code>b.x = &#123; n: 2 &#125;</code>。</p>
+<h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><h4 id="promise输出结果"><a href="#promise输出结果" class="headerlink" title="promise输出结果"></a>promise输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="title function_">resolve</span>()</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>)</span><br><span class="line">&#125;)</span><br><span class="line">promise.<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// =&gt; 1</span></span><br><span class="line"><span class="comment">// =&gt; 2</span></span><br><span class="line"><span class="comment">// =&gt; 4</span></span><br><span class="line"><span class="comment">// =&gt; 3</span></span><br></pre></td></tr></table></figure>
+<h4 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">first</span> = (<span class="params"></span>) =&gt; (<span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>);</span><br><span class="line">  <span class="keyword">let</span> p = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">7</span>);</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">5</span>);</span><br><span class="line">        <span class="title function_">resolve</span>(<span class="number">6</span>);</span><br><span class="line">    &#125;, <span class="number">0</span>)</span><br><span class="line">    <span class="title function_">resolve</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="title function_">resolve</span>(<span class="number">2</span>);</span><br><span class="line">  p.<span class="title function_">then</span>(<span class="function">(<span class="params">arg</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arg);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line"><span class="title function_">first</span>().<span class="title function_">then</span>(<span class="function">(<span class="params">arg</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(arg);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// =&gt; 3</span></span><br><span class="line"><span class="comment">// =&gt; 7</span></span><br><span class="line"><span class="comment">// =&gt; 4</span></span><br><span class="line"><span class="comment">// =&gt; 1</span></span><br><span class="line"><span class="comment">// =&gt; 2</span></span><br><span class="line"><span class="comment">// =&gt; 5</span></span><br></pre></td></tr></table></figure>
+<h4 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;once&#x27;</span>)</span><br><span class="line">    <span class="title function_">resolve</span>(<span class="string">&#x27;success&#x27;</span>)</span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> start = <span class="title class_">Date</span>.<span class="title function_">now</span>()</span><br><span class="line">promise.<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res, <span class="title class_">Date</span>.<span class="title function_">now</span>() - start)</span><br><span class="line">&#125;)</span><br><span class="line">promise.<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res, <span class="title class_">Date</span>.<span class="title function_">now</span>() - start)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">once</span></span><br><span class="line"><span class="comment">success 1005</span></span><br><span class="line"><span class="comment">success 1007</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">process.<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextTick&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;then&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line"><span class="title function_">setImmediate</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setImmediate&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">end</span></span><br><span class="line"><span class="comment">nextTick</span></span><br><span class="line"><span class="comment">then</span></span><br><span class="line"><span class="comment">setImmediate</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="封装一个异步加载图片的方法"><a href="#封装一个异步加载图片的方法" class="headerlink" title="封装一个异步加载图片的方法"></a>封装一个异步加载图片的方法</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">loadImageAsync</span>(<span class="params">url</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve,reject</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> image = <span class="keyword">new</span> <span class="title class_">Image</span>();</span><br><span class="line">    image.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(image) </span><br><span class="line">    &#125;;</span><br><span class="line">    image.<span class="property">onerror</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">reject</span>(<span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Could not load image at&#x27;</span> + url));</span><br><span class="line">    &#125;;</span><br><span class="line">    image.<span class="property">src</span> = url;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何使用Promise让三个灯不断交替重复亮灯？"><a href="#红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何使用Promise让三个灯不断交替重复亮灯？" class="headerlink" title="红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何使用Promise让三个灯不断交替重复亮灯？"></a>红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何使用Promise让三个灯不断交替重复亮灯？</h4><p>题目要求红灯亮过后，绿灯才能亮，绿灯亮过后，黄灯才能亮，黄灯亮过后，红灯才能亮……所以怎么通过Promise实现？</p>
+<p>换句话说，就是红灯亮起时，承诺2s秒后亮绿灯，绿灯亮起时承诺1s后亮黄灯，黄灯亮起时，承诺3s后亮红灯……这显然是一个Promise链式调用，看到这里你心里或许就有思路了，我们需要将我们的每一个亮灯动作写在<code>then()</code>方法中，同时返回一个新的<code>Promise</code>，并将其状态由<code>pending</code>设置为<code>fulfilled</code>，允许下一盏灯亮起。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">red</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;red&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">green</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;green&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">yellow</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;yellow&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="title function_">myLight</span> = (<span class="params">timer, cb</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">cb</span>();</span><br><span class="line">      <span class="title function_">resolve</span>();</span><br><span class="line">    &#125;, timer);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="title function_">myStep</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">myLight</span>(<span class="number">3000</span>, red);</span><br><span class="line">  &#125;).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">myLight</span>(<span class="number">2000</span>, green);</span><br><span class="line">  &#125;).<span class="title function_">then</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">myLight</span>(<span class="number">1000</span>, yellow);</span><br><span class="line">  &#125;).<span class="title function_">then</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="title function_">myStep</span>();</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;;</span><br><span class="line"><span class="title function_">myStep</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// output:</span></span><br><span class="line"><span class="comment">// =&gt; red</span></span><br><span class="line"><span class="comment">// =&gt; green</span></span><br><span class="line"><span class="comment">// =&gt; yellow</span></span><br><span class="line"><span class="comment">// =&gt; red</span></span><br><span class="line"><span class="comment">// =&gt; green</span></span><br><span class="line"><span class="comment">// =&gt; yellow</span></span><br><span class="line"><span class="comment">// =&gt; red</span></span><br></pre></td></tr></table></figure>
+<h4 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="keyword">function</span> <span class="title function_">success</span> (res) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;error&#x27;</span>)</span><br><span class="line">  &#125;, <span class="keyword">function</span> <span class="title function_">fail1</span> (e) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;fail1: &#x27;</span>, e)</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="keyword">function</span> <span class="title function_">fail2</span> (e) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;fail2: &#x27;</span>, e)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<p><code>.then</code>可以接收两个参数，第一个是处理成功的函数，第二个是处理错误的函数。</p>
+<p><code>.catch</code>是<code>.then</code>第二个参数的简便写法，但是它们用法上有一点需要注意：<code>.then</code>的第二个处理错误的函数捕获不了第一个处理成功的函数抛出的错误，而后续的<code>.catch</code>可以捕获之前的错误。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">运行结果：</span><br><span class="line">fail2:  Error: error</span><br><span class="line">    at success (&lt;anonymous&gt;)</span><br></pre></td></tr></table></figure>
+<h4 id="输出结果-4"><a href="#输出结果-4" class="headerlink" title="输出结果"></a>输出结果</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;error!!!&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;then: &#x27;</span>, res)</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;catch: &#x27;</span>, err)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<p><code>.then</code>或者<code>.catch</code>中<code>return</code>一个<code>error</code>对象并不会抛出错误，所以不会被后续的<code>.catch</code>捕获，因为返回任意一个非<code>promise</code>的值都会被包裹成<code>promise</code>对象，即<code>return new Error(&#39;error!!!&#39;)</code>等价于<code>return Promise.resolve(new Error(&#39;error!!!&#39;))</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">运行结果：</span><br><span class="line"></span><br><span class="line">then:  Error: error!!!</span><br><span class="line">    at &lt;anonymous&gt;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/04/13/%E5%89%8D%E7%AB%AF/js/%E5%AE%9E%E6%88%98/JS%E9%9D%A2%E8%AF%95%E9%A2%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS/" rel="tag">JS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JS%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag">JS面试题</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/04/13/%E5%89%8D%E7%AB%AF/js/%E8%BF%9B%E9%98%B6/JS%20%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5(Browser)/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            (no title)
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/04/13/%E5%89%8D%E7%AB%AF/js/%E5%AE%9E%E6%88%98/leetcode%E7%9C%9F%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title"></div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+    
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2023
+        <i class="ri-heart-fill heart_icon"></i> WSQ
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="学海无涯"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+
+<script src="/js/clickBoom1.js"></script>
+ 
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>复制</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
